@@ -140,7 +140,7 @@ export default function MySafetyPage() {
       <div className="flex flex-1 min-h-0 relative">
         {!emergencyMode && <Sidebar activeTab="safety" />}
 
-        <main className="flex-1 p-5 lg:p-6 max-w-7xl mx-auto space-y-6">
+        <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6">
           {/* Top Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
             <div>

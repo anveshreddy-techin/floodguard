@@ -382,9 +382,54 @@ body {
 }
 
 /* ============================================================
-   UTILITY OVERRIDES
+   UTILITY OVERRIDES & MOBILE ERGONOMICS
    ============================================================ */
 ::selection {
   background: rgba(56, 189, 248, 0.3);
   color: #ffffff;
 }
+
+/* Touch & Mobile Optimization */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  touch-action: manipulation;
+  overscroll-behavior-y: none;
+}
+
+/* Safe Area Inset Support (iPhone Notch & Android Gestures) */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.safe-pb-nav {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
+}
+
+/* No-scrollbar horizontal swipeable container */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile Bottom Navigation Bar Styles */
+.mobile-nav-bar {
+  background: rgba(5, 10, 23, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(56, 189, 248, 0.15);
+  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.mobile-nav-active {
+  color: #38bdf8;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+}
+

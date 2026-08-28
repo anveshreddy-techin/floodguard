@@ -45,7 +45,7 @@ export default function AuditPage() {
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="audit" />
-        <main className="flex-1 p-5 overflow-y-auto">
+        <main className="flex-1 p-3.5 sm:p-5 max-w-7xl mx-auto w-full pb-24 md:pb-6 overflow-y-auto">
 
           {/* Header */}
           <div className="flex items-center justify-between mb-6">

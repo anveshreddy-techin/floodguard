@@ -12,7 +12,7 @@ import { CommandTimeline } from '@/components/ui/CommandTimeline';
 import { CopilotDrawer } from '@/components/ui/CopilotDrawer';
 import { useLocation } from '@/context/LocationContext';
 import { useEnvironment } from '@/context/EnvironmentContext';
-import { Bot, Layers, ChevronRight } from 'lucide-react';
+import { Bot, Layers, ChevronRight, Activity, ChevronUp, ChevronDown, ShieldAlert } from 'lucide-react';
 import { DataMode } from '@/types';
 import { useRouter } from 'next/navigation';
 
@@ -24,6 +24,7 @@ export default function CommandCenterPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState('NOW');
   const [copilotOpen, setCopilotOpen] = useState(false);
+  const [mobileHudOpen, setMobileHudOpen] = useState(false);
 
   useEffect(() => {
     setPage('command-center');
@@ -31,7 +32,7 @@ export default function CommandCenterPage() {
     setRiskState('HIGH');
     setRainfallMm(48);
     setRiverStage(3.8);
-  }, []);
+  }, [setPage, setMode, setRiskState, setRainfallMm, setRiverStage]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -39,7 +40,7 @@ export default function CommandCenterPage() {
       if (e.key === 's' || e.key === 'S') router.push('/safety');
       if (e.key === 'h' || e.key === 'H') router.push('/hindcast');
       if (e.key === 'r' || e.key === 'R') router.push('/replay');
-      if (e.key === 'Escape') { setDrawerOpen(false); setCopilotOpen(false); }
+      if (e.key === 'Escape') { setDrawerOpen(false); setCopilotOpen(false); setMobileHudOpen(false); }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -47,11 +48,11 @@ export default function CommandCenterPage() {
 
   return (
     /* Full-viewport — map fills everything, content floats over */
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-screen overflow-hidden select-none">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
 
       <div className="flex flex-1 min-h-0 relative">
-        {/* Sidebar floats over left edge — translucent */}
+        {/* Sidebar floats over left edge — hidden on mobile */}
         <Sidebar activeTab="overview" />
 
         {/* ── HERO: Full-bleed GIS Map ── */}
@@ -65,17 +66,55 @@ export default function CommandCenterPage() {
             simulatedTimeStep={currentStep}
           />
 
-          {/* ── Floating Copilot Button ── */}
+          {/* ── Floating Copilot Button (Top Right) ── */}
           <button
             onClick={() => setCopilotOpen(true)}
-            className="absolute top-4 right-4 z-30 btn-primary px-4 py-2 text-white rounded-xl text-xs font-black font-mono flex items-center gap-2 shadow-2xl"
+            className="absolute top-3 right-3 z-30 btn-primary px-3 py-1.5 sm:px-4 sm:py-2 text-white rounded-xl text-xs font-black font-mono flex items-center gap-1.5 sm:gap-2 shadow-2xl active:scale-95 transition"
           >
-            <Bot className="w-4 h-4 text-cyan-300 animate-pulse" />
+            <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-300 animate-pulse" />
             <span>COPILOT</span>
           </button>
 
-          {/* ── Floating Intelligence Stack (RIGHT, over map) ── */}
-          <div className="absolute top-4 right-4 bottom-20 w-80 xl:w-[340px] z-20 flex flex-col gap-3 pt-14 pointer-events-none">
+          {/* ── Mobile Expandable HUD Sheet Button (Mobile Only) ── */}
+          <div className="md:hidden absolute top-3 left-3 z-30">
+            <button
+              onClick={() => setMobileHudOpen(!mobileHudOpen)}
+              className="fp fp-operational px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-cyan-300 flex items-center gap-1.5 shadow-xl active:scale-95 transition"
+            >
+              <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <span>Risk: 68.5 (HIGH)</span>
+              {mobileHudOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
+            </button>
+          </div>
+
+          {/* ── Mobile Slide-Up HUD Modal ── */}
+          {mobileHudOpen && (
+            <div className="md:hidden absolute inset-x-2 bottom-16 top-14 z-30 fp-operational rounded-3xl p-4 overflow-y-auto space-y-3 animate-slide-up shadow-2xl">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span className="text-xs font-mono font-black text-cyan-300 uppercase">
+                  DISASTER INTELLIGENCE HUD
+                </span>
+                <button
+                  onClick={() => setMobileHudOpen(false)}
+                  className="text-xs font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded-lg"
+                >
+                  Close ✕
+                </button>
+              </div>
+              <RiskDial
+                score={selectedLocation?.riskScore || 68.5}
+                level={selectedLocation?.riskLevel || 'HIGH'}
+                trendDelta={14.2}
+                primaryDriver="Rainfall 48mm/3h + Soil 82% Saturation"
+                dataFreshness="Updated 3 min ago"
+              />
+              <InteractiveAlertStream />
+              <WhyRiskChangedPanel />
+            </div>
+          )}
+
+          {/* ── Desktop Floating Intelligence Stack (RIGHT, over map) ── */}
+          <div className="hidden md:flex absolute top-4 right-4 bottom-20 w-80 xl:w-[340px] z-20 flex-col gap-3 pt-14 pointer-events-none">
             <div className="pointer-events-auto">
               <RiskDial
                 score={selectedLocation?.riskScore || 68.5}
@@ -91,8 +130,8 @@ export default function CommandCenterPage() {
             </div>
           </div>
 
-          {/* ── Floating Hotkey Hint (bottom-left over map) ── */}
-          <div className="absolute bottom-20 left-4 z-20 fp rounded-xl px-3 py-2 text-[10px] font-mono text-slate-400 flex items-center gap-2">
+          {/* ── Desktop Floating Hotkey Hint (bottom-left over map) ── */}
+          <div className="hidden md:flex absolute bottom-20 left-4 z-20 fp rounded-xl px-3 py-2 text-[10px] font-mono text-slate-400 items-center gap-2">
             <span className="text-cyan-400 font-bold">HOTKEYS:</span>
             <span className="bg-slate-900/80 px-1.5 py-0.5 rounded text-cyan-300 border border-slate-700">S</span>
             <span>Safety</span>

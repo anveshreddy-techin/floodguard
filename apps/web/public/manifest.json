@@ -1,0 +1,19 @@
+{
+  "name": "FloodGuard AI — Disaster Intelligence HUD",
+  "short_name": "FloodGuard",
+  "description": "Hyper-Local Multi-Source Flash-Flood Intelligence Platform (SIH26192 Theme 4)",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050a17",
+  "theme_color": "#050a17",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "weather", "emergency", "navigation"]
+}
