@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LocationProvider } from "@/context/LocationContext";
+import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 
 export const metadata: Metadata = {
   title: "FloodGuard AI — Flash Flood Early Warning & Response",
@@ -13,10 +14,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased bg-[#050a17] text-slate-100 min-h-screen selection:bg-cyan-500 selection:text-white">
+    <html lang="en" className="dark">
+      <body className="antialiased bg-[#040814] text-slate-100 min-h-screen selection:bg-cyan-500 selection:text-white relative">
         <LocationProvider>
-          {children}
+          <AnimatedBackground />
+          <div className="relative z-10">
+            {children}
+          </div>
         </LocationProvider>
       </body>
     </html>
