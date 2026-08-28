@@ -1,0 +1,9 @@
+{
+  "name": "floodguard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "cd apps/web && npm install && npm run build && cd ../.. && rm -rf out && cp -r apps/web/out out",
+    "export": "npm run build"
+  }
+}
