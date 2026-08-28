@@ -14,7 +14,8 @@ import {
   Activity, 
   Radio,
   Layers,
-  Key
+  Sparkles,
+  Zap
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -26,11 +27,11 @@ export default function LoginPage() {
   const [authStage, setAuthStage] = useState<'IDLE' | 'SIGNING_IN' | 'VERIFYING' | 'SUCCESS'>('IDLE');
   const [particleOffset, setParticleOffset] = useState(0);
 
-  // Animated environmental terrain vectors
+  // Animated environmental terrain loop
   useEffect(() => {
     const interval = setInterval(() => {
       setParticleOffset((prev) => (prev + 1) % 100);
-    }, 50);
+    }, 45);
     return () => clearInterval(interval);
   }, []);
 
@@ -46,37 +47,38 @@ export default function LoginPage() {
         setAuthStage('SUCCESS');
         setTimeout(() => {
           router.push('/');
-        }, 600);
+        }, 500);
       }, 500);
-    }, 600);
+    }, 500);
   };
 
   return (
-    <div className="min-h-screen bg-[#070d1e] text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
+    <div className="min-h-screen bg-[#050a17] text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
       {/* Top Brand Bar */}
-      <header className="h-16 border-b border-[#223354] px-8 flex items-center justify-between z-30">
+      <header className="h-16 border-b border-[#223354] px-8 flex items-center justify-between z-30 glass-panel">
         <div className="flex items-center gap-3">
-          <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping" />
+          <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping shadow-[0_0_10px_rgba(6,182,212,1)]" />
           <span className="font-mono font-black text-lg tracking-wider text-slate-100">
             FLOODGUARD <span className="text-cyan-400">AI</span>
           </span>
-          <span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+          <span className="text-[10px] font-mono bg-slate-900 text-cyan-300 px-2 py-0.5 rounded-lg border border-cyan-800 font-bold">
             SIH26192
           </span>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-xs text-slate-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+        <div className="flex items-center gap-2 font-mono text-xs text-slate-300 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
           <span>SYSTEM: OPERATIONAL</span>
         </div>
       </header>
 
       {/* Main Split-Screen Workspace */}
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 max-w-7xl w-full mx-auto p-6 sm:p-12 items-center gap-12">
-        {/* Left: Environmental Intelligence Visualization */}
+        {/* Left: Living Topographic Terrain Animation */}
         <div className="hidden lg:flex flex-col justify-between space-y-6">
           <div className="space-y-3">
-            <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
+            <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-1.5 font-bold">
+              <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
               DISASTER INTELLIGENCE COMMAND SUITE
             </span>
             <h1 className="text-3xl sm:text-4xl font-black text-slate-100 tracking-tight leading-tight">
@@ -89,103 +91,111 @@ export default function LoginPage() {
           </div>
 
           {/* Living SVG Topographic Terrain Animation */}
-          <div className="relative w-full h-64 bg-[#0a122c] border border-[#223354] rounded-2xl overflow-hidden shadow-2xl p-4 flex items-center justify-center">
+          <div className="relative w-full h-64 glass-panel-glow rounded-3xl overflow-hidden shadow-2xl p-4 flex items-center justify-center">
             <svg viewBox="0 0 400 200" className="w-full h-full object-cover">
+              <defs>
+                <filter id="loginGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+
               {/* Contours */}
-              <path d="M 20,40 Q 150,10 300,50 T 380,30 L 390,190 L 10,190 Z" fill="#0d1838" stroke="#1c2c58" strokeWidth="1.2" />
-              <path d="M 30,80 Q 180,50 320,90 T 370,70 L 380,190 L 20,190 Z" fill="#101e46" stroke="#22366c" strokeWidth="1.2" />
-              <path d="M 50,130 Q 200,100 340,140 T 360,120 L 370,190 L 40,190 Z" fill="#142658" stroke="#2c4488" strokeWidth="1.2" />
+              <path d="M 20,40 Q 150,10 300,50 T 380,30 L 390,190 L 10,190 Z" fill="#0b1532" stroke="#1c2c58" strokeWidth="1.2" />
+              <path d="M 30,80 Q 180,50 320,90 T 370,70 L 380,190 L 20,190 Z" fill="#0e1b40" stroke="#22366c" strokeWidth="1.2" />
+              <path d="M 50,130 Q 200,100 340,140 T 360,120 L 370,190 L 40,190 Z" fill="#122354" stroke="#2c4488" strokeWidth="1.2" />
 
               {/* Animated Stream Network */}
-              <path d="M 80,40 Q 180,80 240,130 T 340,180" fill="none" stroke="#0284c7" strokeWidth="3" />
+              <path d="M 80,40 Q 180,80 240,130 T 340,180" fill="none" stroke="#0284c7" strokeWidth="4" />
               <path
                 d="M 80,40 Q 180,80 240,130 T 340,180"
                 fill="none"
                 stroke="#38bdf8"
                 strokeWidth="2"
                 strokeDasharray="8 12"
-                strokeDashoffset={-particleOffset * 1.5}
+                strokeDashoffset={-particleOffset * 1.8}
+                filter="url(#loginGlow)"
               />
 
               {/* Pulsing Nodes */}
-              <circle cx="80" cy="40" r="5" fill="#38bdf8" className="animate-pulse" />
-              <circle cx="240" cy="130" r="6" fill="#f97316" className="animate-ping opacity-75" />
-              <circle cx="240" cy="130" r="6" fill="#f97316" />
-              <circle cx="340" cy="180" r="5" fill="#10b981" />
+              <circle cx="80" cy="40" r="6" fill="#38bdf8" className="animate-pulse" filter="url(#loginGlow)" />
+              <circle cx="240" cy="130" r="7" fill="#f97316" className="animate-ping opacity-75" />
+              <circle cx="240" cy="130" r="7" fill="#f97316" filter="url(#loginGlow)" />
+              <circle cx="340" cy="180" r="6" fill="#10b981" filter="url(#loginGlow)" />
             </svg>
 
-            <div className="absolute bottom-3 left-4 text-[10px] font-mono text-cyan-300 bg-[#070d1e]/80 px-2 py-1 rounded border border-[#223354]">
-              LIVE TERRAIN TELEMETRY STREAM
+            <div className="absolute bottom-3 left-4 text-[10px] font-mono text-cyan-300 bg-[#050a17]/90 px-2.5 py-1 rounded-lg border border-cyan-500/30">
+              LIVE TOPOGRAPHIC VECTOR TELEMETRY
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3 text-xs font-mono">
-            <div className="bg-[#0e1630] p-3 rounded-lg border border-[#223354]">
+            <div className="glass-panel p-3.5 rounded-2xl">
               <div className="text-slate-400 text-[10px]">MONITORED BASINS</div>
               <div className="text-sm font-bold text-slate-100 mt-0.5">85.4 km²</div>
             </div>
-            <div className="bg-[#0e1630] p-3 rounded-lg border border-[#223354]">
+            <div className="glass-panel p-3.5 rounded-2xl">
               <div className="text-slate-400 text-[10px]">LEAD TIME ADVANTAGE</div>
               <div className="text-sm font-bold text-cyan-300 mt-0.5">45 Minutes</div>
             </div>
-            <div className="bg-[#0e1630] p-3 rounded-lg border border-[#223354]">
+            <div className="glass-panel p-3.5 rounded-2xl">
               <div className="text-slate-400 text-[10px]">VERIFIED TRUTHFULNESS</div>
               <div className="text-sm font-bold text-emerald-400 mt-0.5">100% AUDITED</div>
             </div>
           </div>
         </div>
 
-        {/* Right: Premium Authentication Form */}
-        <div className="w-full max-w-md mx-auto bg-[#0e1630]/95 border border-[#223354] rounded-2xl p-8 shadow-2xl space-y-6 backdrop-blur-xl">
+        {/* Right: Glassmorphism Authentication Form */}
+        <div className="w-full max-w-md mx-auto glass-panel-glow rounded-3xl p-8 shadow-2xl space-y-6">
           <div className="space-y-1">
-            <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">
+            <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
               AUTHENTICATION GATEWAY
             </span>
-            <h2 className="text-xl font-bold text-slate-100">Sign in to Command Center</h2>
+            <h2 className="text-2xl font-black text-slate-100 tracking-tight">Sign in to Command Center</h2>
             <p className="text-xs text-slate-400">
               Authorized emergency operators, analysts, and researchers
             </p>
           </div>
 
-          {/* Form */}
+          {/* Form Controls */}
           <div className="space-y-4 text-xs">
             {/* Email Field */}
-            <div className="space-y-1">
-              <label className="text-[11px] font-medium text-slate-300 font-mono">OPERATOR EMAIL</label>
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold text-slate-300 font-mono">OPERATOR EMAIL</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-cyan-400 transition"
+                  className="w-full pl-10 pr-3 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition"
                   placeholder="operator@floodguard.demo"
                 />
               </div>
             </div>
 
             {/* Password Field */}
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <div className="flex justify-between items-center">
-                <label className="text-[11px] font-medium text-slate-300 font-mono">SECURITY CREDENTIAL</label>
+                <label className="text-[11px] font-bold text-slate-300 font-mono">SECURITY CREDENTIAL</label>
                 {capsLockActive && (
                   <span className="text-[10px] text-amber-400 font-mono">CAPS LOCK IS ON</span>
                 )}
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full pl-9 pr-10 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-cyan-400 transition font-mono"
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition font-mono"
                   placeholder="••••••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200"
+                  className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-200"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -196,7 +206,7 @@ export default function LoginPage() {
             <button
               onClick={() => handleSignIn('AUTHORITY_OPERATOR')}
               disabled={authStage !== 'IDLE'}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition shadow-lg text-xs"
+              className="w-full py-3 btn-glow-cyan text-white rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-2xl text-xs font-mono tracking-wider"
             >
               {authStage === 'IDLE' && (
                 <>
@@ -216,28 +226,28 @@ export default function LoginPage() {
           </div>
 
           {/* Quick Demo Role Selector (For Judges & Evaluators) */}
-          <div className="pt-4 border-t border-slate-800 space-y-2">
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-widest text-center">
-              FAST-TRACK DEMO ROLES (SIH EVALUATION)
+          <div className="pt-4 border-t border-slate-800 space-y-2.5">
+            <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest text-center font-bold">
+              ⚡ FAST-TRACK DEMO ROLES (SIH EVALUATION)
             </div>
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => handleSignIn('COMMANDER')}
-                className="p-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 font-mono text-[11px] font-medium text-center transition"
+                className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-blue-600/30 border border-slate-700 hover:border-cyan-400 text-cyan-300 font-mono text-[11px] font-bold text-center transition shadow-md active:scale-95"
               >
                 COMMANDER
               </button>
               <button
                 onClick={() => handleSignIn('ANALYST')}
-                className="p-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-amber-300 font-mono text-[11px] font-medium text-center transition"
+                className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-amber-600/30 border border-slate-700 hover:border-amber-400 text-amber-300 font-mono text-[11px] font-bold text-center transition shadow-md active:scale-95"
               >
                 ANALYST
               </button>
               <button
                 onClick={() => handleSignIn('FIELD_OFFICER')}
-                className="p-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-emerald-300 font-mono text-[11px] font-medium text-center transition"
+                className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-400 text-emerald-300 font-mono text-[11px] font-bold text-center transition shadow-md active:scale-95"
               >
-                FIELD RESCUE
+                RESCUE
               </button>
             </div>
           </div>
@@ -245,9 +255,9 @@ export default function LoginPage() {
       </main>
 
       {/* Footer */}
-      <footer className="h-12 border-t border-[#223354] px-8 flex items-center justify-between text-[11px] font-mono text-slate-500 z-30">
+      <footer className="h-12 border-t border-[#223354] px-8 flex items-center justify-between text-[11px] font-mono text-slate-400 z-30 glass-panel">
         <div>FloodGuard AI Decision Support • Not a replacement for official authorities</div>
-        <div>DATA ACCURACY: 100% AUDITED</div>
+        <div className="text-emerald-400 font-bold">DATA ACCURACY: 100% AUDITED</div>
       </footer>
     </div>
   );
