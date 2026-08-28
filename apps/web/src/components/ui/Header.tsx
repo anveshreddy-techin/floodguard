@@ -6,7 +6,7 @@ import { DataModeBadge } from './Badges';
 import { DataMode } from '@/types';
 import { CommandPalette } from './CommandPalette';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
-import { Search, Bot, ShieldAlert, Radio, Activity, Clock, Globe, Sparkles } from 'lucide-react';
+import { Search, Bot, ShieldAlert, Radio, Activity, Clock, Globe, Sparkles, ShieldCheck } from 'lucide-react';
 
 export const Header: React.FC<{
   dataMode?: DataMode;
@@ -19,8 +19,8 @@ export const Header: React.FC<{
   return (
     <>
       <header className="h-14 border-b border-[#223354] bg-[#050a17]/95 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 select-none glass-panel">
-        {/* Left: Brand Identity & Synced Region Selector */}
-        <div className="flex items-center gap-3 sm:gap-5">
+        {/* Left: Brand Identity, Theme 4 Badge & Region Selector */}
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping shadow-[0_0_10px_rgba(6,182,212,1)]" />
             <div className="text-base font-black tracking-wider bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent group-hover:brightness-125 transition">
@@ -28,9 +28,11 @@ export const Header: React.FC<{
             </div>
           </Link>
 
-          <span className="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded-lg bg-slate-900 text-cyan-300 border border-cyan-800 font-mono font-bold">
-            SIH26192
-          </span>
+          {/* Official SIH Theme 4 Badge */}
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-rose-950/80 border border-rose-700/80 text-[10px] font-mono text-rose-300 font-bold shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+            <span>THEME 4: DISASTER MANAGEMENT</span>
+          </div>
 
           {/* Region Dropdown Synced Globally */}
           <div className="hidden md:flex items-center gap-1.5 bg-[#09122a] border border-[#223354] px-3 py-1 rounded-xl text-xs font-mono text-slate-200">
@@ -55,7 +57,7 @@ export const Header: React.FC<{
           className="hidden lg:flex items-center gap-2.5 bg-[#09122a] border border-[#223354] hover:border-cyan-400/60 px-3.5 py-1.5 rounded-xl text-xs text-slate-400 hover:text-slate-200 transition font-mono shadow-inner group"
         >
           <Search className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition" />
-          <span>Quick command or view...</span>
+          <span>Search disaster views & tools...</span>
           <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.2 rounded text-[10px] text-cyan-300 font-bold">
             Ctrl+K
           </span>

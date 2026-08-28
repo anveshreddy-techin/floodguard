@@ -10,12 +10,9 @@ import {
   Activity, 
   Database, 
   Radio, 
-  Settings, 
   UploadCloud, 
-  AlertTriangle, 
   FileText, 
   Compass, 
-  Cpu, 
   BarChart3, 
   Award,
   PlayCircle,
@@ -23,7 +20,11 @@ import {
   ChevronLeft,
   ChevronRight,
   HeartPulse,
-  LucideIcon
+  LucideIcon,
+  ShieldCheck,
+  Zap,
+  Flame,
+  LifeBuoy
 } from 'lucide-react';
 
 interface NavItem {
@@ -33,10 +34,13 @@ interface NavItem {
   icon: LucideIcon;
   shortcut?: string;
   badge?: string;
+  phase?: 'BEFORE' | 'DURING' | 'AFTER';
 }
 
 interface NavSection {
   title: string;
+  phaseDesc?: string;
+  phaseColor?: string;
   items: NavItem[];
 }
 
@@ -49,88 +53,96 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
 
   const navSections: NavSection[] = [
     {
-      title: 'COMMAND',
+      title: 'DURING • RESPONSE & RESCUE',
+      phaseDesc: 'Disaster In-Progress Operations',
+      phaseColor: 'text-rose-400',
       items: [
-        { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, shortcut: 'M' },
-        { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, shortcut: 'S', badge: 'V10' },
+        { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, shortcut: 'M', badge: 'LIVE' },
+        { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, shortcut: 'S', badge: 'HUD' },
+        { id: 'incidents', label: 'Incident Command', href: '/incidents', icon: FileText },
       ],
     },
     {
-      title: 'INTELLIGENCE',
+      title: 'BEFORE • PLANNING & MITIGATION',
+      phaseDesc: 'Pre-Disaster Risk Reduction',
+      phaseColor: 'text-cyan-400',
       items: [
         { id: 'map', label: 'Hyper-Local GIS', href: '/map', icon: Map },
         { id: 'cascade', label: 'Upstream Cascade', href: '/cascade', icon: Layers },
         { id: 'village', label: 'Village Dossier', href: '/village/demo-village-003', icon: Map },
-        { id: 'ledger', label: 'Prediction Ledger', href: '/ledger', icon: Database },
-        { id: 'events', label: 'Event Memory', href: '/events', icon: History },
-        { id: 'hindcast', label: 'Historical Hindcast', href: '/hindcast', icon: History, shortcut: 'H' },
-      ],
-    },
-    {
-      title: 'OPERATIONS',
-      items: [
-        { id: 'incidents', label: 'Incident Command', href: '/incidents', icon: FileText },
-        { id: 'flight-recorder', label: 'Flight Recorder', href: '/flight-recorder', icon: Radio },
-      ],
-    },
-    {
-      title: 'LABS',
-      items: [
-        { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle },
-        { id: 'replay', label: 'Historical Replay', href: '/replay', icon: History, shortcut: 'R' },
+        { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle, badge: 'WHAT-IF' },
         { id: 'sensors', label: 'IoT & Telemetry', href: '/sensors', icon: Activity },
         { id: 'upload', label: 'Data Ingestion', href: '/upload', icon: UploadCloud },
       ],
     },
     {
-      title: 'GOVERNANCE',
+      title: 'AFTER • AUDIT, MEMORY & LEARNING',
+      phaseDesc: 'Post-Disaster Forensic Review',
+      phaseColor: 'text-purple-400',
       items: [
-        { id: 'audit', label: 'Audit & Provenance', href: '/audit', icon: FileText },
-        { id: 'system', label: 'System Health', href: '/system', icon: HeartPulse },
+        { id: 'flight-recorder', label: 'Flight Recorder', href: '/flight-recorder', icon: Radio, badge: 'BLACK-BOX' },
+        { id: 'hindcast', label: 'Historical Hindcast', href: '/hindcast', icon: History, shortcut: 'H' },
+        { id: 'replay', label: 'Historical Replay', href: '/replay', icon: History, shortcut: 'R' },
+        { id: 'ledger', label: 'Prediction Ledger', href: '/ledger', icon: Database },
+        { id: 'events', label: 'Event Memory', href: '/events', icon: History },
         { id: 'benchmark', label: 'Event Benchmark', href: '/benchmark', icon: BarChart3 },
+        { id: 'audit', label: 'Audit & Provenance', href: '/audit', icon: ShieldCheck },
+        { id: 'system', label: 'System Health', href: '/system', icon: HeartPulse },
       ],
     },
     {
-      title: 'SIGNATURE & EVALUATION',
+      title: 'SPECIAL • EVALUATION ARENA',
+      phaseDesc: 'SIH26192 Flagship Features',
+      phaseColor: 'text-amber-400',
       items: [
         { id: 'predict-save-prove', label: 'Predict · Save · Prove', href: '/predict-save-prove', icon: Award, badge: 'FLAGSHIP' },
-        { id: 'challenge', label: 'Judge Challenge Mode', href: '/challenge', icon: HelpCircle, badge: 'EVAL' },
+        { id: 'challenge', label: 'Judge Challenge Mode', href: '/challenge', icon: HelpCircle, badge: 'ARENA' },
       ],
     },
   ];
 
   return (
     <aside
-      className={`border-r border-[#223354] bg-[#070d1e] flex flex-col justify-between transition-all duration-300 select-none z-30 ${
-        collapsed ? 'w-16' : 'w-60 xl:w-64'
+      className={`border-r border-[#223354] bg-[#050a17]/95 flex flex-col justify-between transition-all duration-300 select-none z-30 ${
+        collapsed ? 'w-16' : 'w-64 xl:w-72'
       }`}
     >
       <div className="p-3 space-y-4 overflow-y-auto flex-1">
-        {/* Collapse Toggle Button */}
+        {/* Collapse Toggle & Disaster Theme Tag */}
         <div className="flex items-center justify-between px-1">
           {!collapsed && (
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">
-              NAVIGATION
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+              <span className="text-[10px] font-mono font-black text-slate-300 uppercase tracking-wider">
+                DISASTER MANAGEMENT
+              </span>
+            </div>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1 rounded-lg bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition ml-auto"
+            className="p-1 rounded-lg bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition ml-auto active:scale-95"
             title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           >
             {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
           </button>
         </div>
 
-        {/* Navigation Sections */}
+        {/* 3-Phase Categorized Navigation Sections */}
         {navSections.map((section) => (
           <div key={section.title} className="space-y-1">
             {!collapsed && (
-              <div className="text-[9px] font-mono font-semibold text-slate-500 px-2 uppercase tracking-wider">
-                {section.title}
+              <div className="px-2 pt-1">
+                <div className={`text-[9px] font-mono font-bold tracking-wider ${section.phaseColor || 'text-slate-400'}`}>
+                  {section.title}
+                </div>
+                {section.phaseDesc && (
+                  <div className="text-[8px] font-mono text-slate-500">
+                    {section.phaseDesc}
+                  </div>
+                )}
               </div>
             )}
-            <div className="space-y-0.5">
+            <div className="space-y-0.5 mt-1">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -151,7 +163,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
                     </div>
 
                     {!collapsed && item.badge && (
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 shrink-0 font-bold">
+                      <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded shrink-0 font-bold ${
+                        item.badge === 'LIVE'
+                          ? 'bg-rose-950 text-rose-300 border border-rose-800'
+                          : item.badge === 'HUD'
+                          ? 'bg-cyan-950 text-cyan-300 border border-cyan-800'
+                          : 'bg-slate-900 text-slate-300 border border-slate-700'
+                      }`}>
                         {item.badge}
                       </span>
                     )}
@@ -169,11 +187,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
         ))}
       </div>
 
-      {/* Footer / Shortcut Help */}
+      {/* Footer / Disaster Management Theme Tag */}
       {!collapsed && (
-        <div className="p-3 border-t border-[#223354] text-[10px] font-mono text-slate-500 flex items-center justify-between bg-[#050914]">
-          <span>SIH26192 • V10.0</span>
-          <span className="text-emerald-400">100% AUDITED</span>
+        <div className="p-3 border-t border-[#223354] text-[10px] font-mono text-slate-400 flex items-center justify-between bg-[#030712] glass-panel">
+          <span className="font-bold text-cyan-300">SIH26192 • THEME 4</span>
+          <span className="text-emerald-400 font-bold">100% AUDITED</span>
         </div>
       )}
     </aside>
