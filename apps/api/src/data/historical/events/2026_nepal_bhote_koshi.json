@@ -1,0 +1,89 @@
+{
+  "event_id": "2026_nepal_bhote_koshi",
+  "event_name": "2026 Nepal Bhote Koshi / Rasuwa Cascading Disaster",
+  "event_type": "GLOF",
+  "status": "MONITORING",
+  "start_time": "2026-08-26T08:40:00Z",
+  "end_time": null,
+  "country": "Nepal (Transboundary origin: Gyirong, Tibet)",
+  "region": "Rasuwa District, Bagmati Province",
+  "lat": 28.265,
+  "lon": 85.372,
+  "watershed": "Bhote Koshi / Trishuli River Basin",
+  "river": "Bhote Koshi & Trishuli River",
+  "hazard_chain": [
+    "1. Catastrophic ~600m high-altitude rock and hanging glacier detachment in Lhende Khola catchment (Tibet)",
+    "2. Narrow valley impoundment forming temporary high-head barrier lake",
+    "3. Sudden overtopping and hyper-velocity transboundary debris surge crossing into Nepal at Rasuwagadhi (~08:40 AM)",
+    "4. Destruction of Miteri (Friendship) Bridge, border dry port, and police posts at Timure",
+    "5. Downstream stage surge of 8-12m sweeping through Syabrubesi, Betrawati, and Trishuli corridor"
+  ],
+  "cause_primary": "Transboundary High-Altitude Rock-Ice Avalanche Damming & Outburst Surge",
+  "cause_contributing": [
+    "Cryospheric thermal degradation on high-altitude Tibetan peaks",
+    "Non-precipitation trigger (clear/baseline monsoon conditions, not cloudburst)",
+    "Absence of real-time automated cross-border hydrological telemetry"
+  ],
+  "cause_confidence": "HIGH",
+  "data_availability_before_event": "DHM Rasuwagadhi border sensor recorded rapid water surge at 08:40 AM then went offline at 08:50 AM due to structural impact.",
+  "key_facts": [
+    {
+      "fact": "Over 547 fatalities reported and hundreds missing as of August 28, 2026 (Active Search & Rescue Operation)",
+      "source": "Nepal Army / Armed Police Force / NDRRMA Nepal Situation Bulletin #04",
+      "verification_status": "PRELIMINARY"
+    },
+    {
+      "fact": "Miteri (Friendship) Bridge and Rasuwagadhi border post infrastructure completely destroyed",
+      "source": "Ministry of Home Affairs (MoHA Nepal) / Kathmandu Post",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "fact": "Downstream alerts extended into Nuwakot, Dhading, Gorkha, and Chitwan districts",
+      "source": "DHM Nepal National Flood Early Warning Bulletin",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "evidence_claims": [
+    {
+      "claim_id": "clm-2026-rasuwa-01",
+      "event_id": "2026_nepal_bhote_koshi",
+      "source": "NDRRMA / Nepal Army SAR Command",
+      "publication_time": "2026-08-28T10:00:00Z",
+      "retrieval_time": "2026-08-28T16:30:00Z",
+      "claim": "Casualty count actively evolving; preliminary count exceeds 547 missing across border transit, pilgrims, and local settlements.",
+      "claim_type": "CASUALTY",
+      "confidence": "MEDIUM",
+      "verification_status": "PRELIMINARY"
+    },
+    {
+      "claim_id": "clm-2026-rasuwa-02",
+      "event_id": "2026_nepal_bhote_koshi",
+      "source": "DHM Nepal Hydrology Division",
+      "publication_time": "2026-08-26T09:15:00Z",
+      "retrieval_time": "2026-08-28T16:30:00Z",
+      "claim": "Border telemetry station destroyed within 10 minutes of surge arrival; rapid rate-of-rise reached 8.4 m/hr prior to sensor failure.",
+      "claim_type": "IMPACT",
+      "confidence": "HIGH",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "lessons": [
+    "Sudden sensor communication loss during high rate-of-rise must trigger an automated CRITICAL alert rather than be treated as missing data",
+    "Transboundary Himalayan valleys require satellite SAR tripwire alerts and automated downstream siren interlocks",
+    "Gorge hydrodynamic propagation lead times (15-25 m/s) must govern downstream settlement evacuation windows"
+  ],
+  "source_version": "v1.4",
+  "review_status": "PRELIMINARY",
+  "model_teachable": true,
+  "fingerprint": {
+    "fingerprint_id": "fp-2026-rasuwa",
+    "rainfall_peak_intensity_mmh": 8.0,
+    "antecedent_precipitation_index": 45.0,
+    "catchment_area_sqkm": 210.0,
+    "average_slope_deg": 38.0,
+    "elevation_drop_m": 3400.0,
+    "river_stage_rise_rate_mh": 8.4,
+    "hazard_chain_signature": ["TRANSBOUNDARY_AVALANCHE", "TEMPORARY_BARRIER_LAKE", "EXPLOSIVE_SURGE", "SENSOR_FLATLINE"],
+    "geology_type": "Tibetan Tethyan Sedimentary & Higher Himalayan Granite Gneiss"
+  }
+}

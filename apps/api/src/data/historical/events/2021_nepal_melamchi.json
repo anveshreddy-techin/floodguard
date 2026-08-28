@@ -1,0 +1,73 @@
+{
+  "event_id": "2021_nepal_melamchi",
+  "event_name": "2021 Nepal Melamchi Cascading Debris Flood",
+  "event_type": "DEBRIS_FLOOD",
+  "status": "HISTORICAL",
+  "start_time": "2021-06-15T12:00:00Z",
+  "end_time": "2021-06-17T20:00:00Z",
+  "country": "Nepal",
+  "region": "Sindhupalchok District, Bagmati Province",
+  "lat": 27.833,
+  "lon": 85.583,
+  "watershed": "Melamchi - Indrawati River Basin",
+  "river": "Melamchi River",
+  "hazard_chain": [
+    "1. Intense pre-monsoon precipitation on glaciated upper Bhemathang plateau (~3,600m)",
+    "2. Huge landslide damming at Pemdan/Bhemathang deposit zone",
+    "3. Repeated dam breach sending multiple pulses of sediment-laden slurry downstream",
+    "4. Severe sedimentation burying Melamchi Water Supply Project headworks under 10m of sand/gravel",
+    "5. Destructive bank scouring and bridge collapse at Melamchi Bazaar settlement"
+  ],
+  "cause_primary": "Upstream Landslide Damming and Breaching Compound with Orographic Rain",
+  "cause_contributing": [
+    "Post-2015 Gorkha earthquake structural weakening of steep slopes",
+    "Thawing permafrost and heavy rainfall eroding massive relict moraine deposits at Bhemathang",
+    "Confined valley geometry accelerating flow energy before widening at Melamchi town"
+  ],
+  "cause_confidence": "HIGH",
+  "data_availability_before_event": "DHM Nepal automatic weather stations in lower valley; no sensor telemetry in upper high-elevation Bhemathang headwaters.",
+  "key_facts": [
+    {
+      "fact": "Over 25 reported casualties and hundreds of homes destroyed in Melamchi Bazaar and Helambu",
+      "source": "DHM Nepal / MoHA Nepal Disaster Portal",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "fact": "Melamchi Water Supply intake headworks buried under up to 15 meters of sediment",
+      "source": "Melamchi Water Supply Development Board / ICIMOD Special Assessment 2021",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "evidence_claims": [
+    {
+      "claim_id": "clm-2021-melamchi-01",
+      "event_id": "2021_nepal_melamchi",
+      "source": "ICIMOD / Department of Hydrology and Meteorology (DHM) Nepal",
+      "publication_time": "2021-08-01T00:00:00Z",
+      "retrieval_time": "2026-08-28T16:00:00Z",
+      "claim": "Cascading multi-hazard process initiated by Bhemathang landslide dam burst.",
+      "claim_type": "CAUSE",
+      "confidence": "HIGH",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "lessons": [
+    "Sediment volume can exceed water volume by multiple factors in debris cascades",
+    "Upstream unmonitored plateaus require satellite SAR change detection tripwires",
+    "Downstream flood warning sirens must be linked across transboundary/upper-catchment sensors"
+  ],
+  "source_version": "v1.0",
+  "review_status": "VERIFIED",
+  "model_teachable": true,
+  "fingerprint": {
+    "fingerprint_id": "fp-2021-melamchi",
+    "rainfall_peak_intensity_mmh": 42.0,
+    "antecedent_precipitation_index": 78.0,
+    "catchment_area_sqkm": 172.0,
+    "average_slope_deg": 32.0,
+    "elevation_drop_m": 2800.0,
+    "river_stage_rise_rate_mh": 2.4,
+    "hazard_chain_signature": ["PLATEAU_LANDSLIDE", "TEMPORARY_DAMMING", "MULTIPLE_SURGE_PULSES", "DEBRIS_BURIAL"],
+    "geology_type": "Lesser Himalayan Metasedimentary & Colluvial Fan"
+  }
+}

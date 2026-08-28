@@ -1,0 +1,92 @@
+{
+  "event_id": "2023_nepal_events",
+  "event_name": "2023 Nepal Flash Flood & Landslide-Dam Breaches (Multi-Event Catalog)",
+  "event_type": "FLASH_FLOOD",
+  "status": "HISTORICAL",
+  "start_time": "2023-06-17T00:00:00Z",
+  "end_time": "2023-08-20T23:59:59Z",
+  "country": "Nepal",
+  "region": "Eastern Nepal (Sankhuwasabha/Panchthar) & Trans-Himalayan Mustang (Kagbeni)",
+  "lat": 27.280,
+  "lon": 87.350,
+  "watershed": "Hewa Khola / Tamor Basin & Jhong Khola / Kali Gandaki",
+  "river": "Hewa Khola & Jhong Khola",
+  "sub_events": [
+    {
+      "sub_id": "2023_hewa_khola",
+      "name": "Eastern Nepal Hewa Khola Flash Flood (June 17-18, 2023)",
+      "trigger": "Intense early monsoon cloudburst on steep catchment",
+      "impact": "5 dead, 28 missing at Super Hewa Hydropower project, bridge destroyed"
+    },
+    {
+      "sub_id": "2023_kagbeni_mustang",
+      "name": "Kagbeni Mustang Landslide-Dam Outburst Flood (August 13, 2023)",
+      "trigger": "Periglacial scree slope collapse damming Jhong Khola canyon with sudden breach",
+      "impact": "0 deaths due to community warning, 50+ houses and Kagbeni bridge buried/damaged"
+    },
+    {
+      "sub_id": "2023_sudurpashchim",
+      "name": "Western Nepal Monsoon Inundation (August 2023)",
+      "trigger": "Sustained monsoon trough causing low-gradient river drainage backwater",
+      "impact": "Urban inundation of Dhangadhi, seasonal displacement"
+    }
+  ],
+  "hazard_chain": [
+    "1. Convective early-monsoon rainfall in high-gradient river valleys",
+    "2. Friable scree and colluvium slope collapse forming temporary channel chokes",
+    "3. Hydraulic barrier breach creating debris pulses",
+    "4. Severe backwater inundation and bridge destruction at settlement bottlenecks"
+  ],
+  "cause_primary": "Compounded Early-Monsoon Cloudbursts and Rain-Shadow Landslide Dam Outbursts (LDOF)",
+  "cause_contributing": [
+    "Unconsolidated periglacial deposits in rain-shadow basins (Mustang)",
+    "Concentrated hydropower workforce camps on active alluvial terraces",
+    "Bridge structure constriction creating upstream backwater surge"
+  ],
+  "cause_confidence": "HIGH",
+  "data_availability_before_event": "DHM automated stations operational in lower valleys; tributary stream gauges lacked real-time micro-telemetry.",
+  "key_facts": [
+    {
+      "fact": "Hewa Khola flash flood caused 33 casualties (5 confirmed, 28 missing) and damaged 30 hydropower projects",
+      "source": "NDRRMA Nepal Situation Report / IPPAN Report 2023",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "fact": "Kagbeni event demonstrated zero casualties via community early warning despite USD 7.4M structural loss",
+      "source": "District Administration Office Mustang / NDRRMA Nepal",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "evidence_claims": [
+    {
+      "claim_id": "clm-2023-np-01",
+      "event_id": "2023_nepal_events",
+      "source": "NDRRMA Nepal",
+      "publication_time": "2023-08-20T00:00:00Z",
+      "retrieval_time": "2026-08-28T16:00:00Z",
+      "claim": "Distinct regional triggers observed between Eastern monsoon flash floods and Western rain-shadow LDOFs.",
+      "claim_type": "CAUSE",
+      "confidence": "HIGH",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "lessons": [
+    "Low absolute precipitation (25-40mm) in arid scree zones can trigger high-energy debris bursts",
+    "Early-monsoon flash floods frequently strike hydropower construction camps before seasonal warnings activate",
+    "Community sirens and rapid manual phone chains save lives when sensor networks are sparse"
+  ],
+  "source_version": "v1.0",
+  "review_status": "VERIFIED",
+  "model_teachable": true,
+  "fingerprint": {
+    "fingerprint_id": "fp-2023-nepal",
+    "rainfall_peak_intensity_mmh": 38.0,
+    "antecedent_precipitation_index": 62.0,
+    "catchment_area_sqkm": 95.0,
+    "average_slope_deg": 36.0,
+    "elevation_drop_m": 1900.0,
+    "river_stage_rise_rate_mh": 3.1,
+    "hazard_chain_signature": ["EARLY_MONSOON_SURGE", "LDOF_BREACH", "BRIDGE_BOTTLENECK"],
+    "geology_type": "Higher Himalayan Crystalline & Tethyan Sedimentary Scree"
+  }
+}

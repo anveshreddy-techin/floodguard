@@ -1,8 +1,9 @@
 import React from 'react';
 import { DataModeBadge } from './Badges';
+import { DataMode } from '@/types';
 
 export const Header: React.FC<{
-  dataMode?: 'LIVE' | 'HISTORICAL' | 'UPLOAD' | 'DEMO' | 'SIMULATION' | 'REPLAY';
+  dataMode?: DataMode;
   systemStatus?: string;
 }> = ({ dataMode = 'DEMO', systemStatus = 'OPERATIONAL' }) => {
   return (

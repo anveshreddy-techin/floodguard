@@ -1,0 +1,78 @@
+{
+  "event_id": "2021_chamoli_rishiganga",
+  "event_name": "2021 Chamoli Rock-Ice Avalanche & Debris Surge",
+  "event_type": "GLOF",
+  "status": "HISTORICAL",
+  "start_time": "2021-02-07T04:50:00Z",
+  "end_time": "2021-02-08T18:00:00Z",
+  "country": "India",
+  "region": "Chamoli District, Uttarakhand",
+  "lat": 30.383,
+  "lon": 79.733,
+  "watershed": "Rishiganga - Dhauliganga - Alaknanda Basin",
+  "river": "Rishiganga & Dhauliganga Rivers",
+  "hazard_chain": [
+    "1. Massive wedge failure of ~27 million m³ rock and hanging glacier from Ronti peak (~5,600m ASL)",
+    "2. High-energy vertical free-fall of 1,800m pulverizing ice into frictional water/slurry",
+    "3. Hyper-velocity debris flow travelling down Ronti Gad and Rishiganga valley (>20 m/s)",
+    "4. Total destruction of Rishiganga 13.2 MW Small Hydro Project within 6 minutes",
+    "5. Impact on Tapovan Vishnugad 520 MW Hydro Project barrage and headrace tunnels"
+  ],
+  "cause_primary": "Catastrophic Rock-Ice Avalanche Detachment (No Rainfall Trigger)",
+  "cause_contributing": [
+    "Permafrost warming and debuttressing of steep rock face",
+    "High structural kinetic energy melting embedded glacier ice instantaneously",
+    "Winter conditions without rainfall alert baseline — pure geomechanical/cryospheric trigger"
+  ],
+  "cause_confidence": "HIGH",
+  "data_availability_before_event": "Seismic stations recorded precursory tremor at ~04:51 UTC, Sentinel-2 / Planet imagery showed wedge cracks in 2016-2020.",
+  "key_facts": [
+    {
+      "fact": "Over 200 fatalities and missing workers primarily at Tapovan tunnel and Rishiganga sites",
+      "source": "NDRF / NIDM Chamoli Disaster Report 2021",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "fact": "Zero rainfall reported — weather was clear and sunny across Chamoli district on 7 Feb 2021",
+      "source": "IMD Weather Station Joshimath",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "fact": "Flow peak discharge estimated at ~15,000 m³/s near Rishiganga confluence",
+      "source": "Nature Geoscience Multi-Author Consortium Study (Shugar et al., 2021)",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "evidence_claims": [
+    {
+      "claim_id": "clm-2021-01",
+      "event_id": "2021_chamoli_rishiganga",
+      "source": "NIDM / Ministry of Home Affairs",
+      "publication_time": "2021-03-15T00:00:00Z",
+      "retrieval_time": "2026-08-28T16:00:00Z",
+      "claim": "204 missing individuals across Tapovan, Raini, and downstream riverbeds.",
+      "claim_type": "CASUALTY",
+      "confidence": "HIGH",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "lessons": [
+    "Rainfall-only alert systems fail on cryospheric and mass-wasting triggers",
+    "Downstream hydro barrages require automated upstream radar/acoustic tripwires",
+    "Seismic signal inversion can provide a 10-15 minute early detection window"
+  ],
+  "source_version": "v1.0",
+  "review_status": "VERIFIED",
+  "model_teachable": true,
+  "fingerprint": {
+    "fingerprint_id": "fp-2021-chamoli",
+    "rainfall_peak_intensity_mmh": 0.0,
+    "antecedent_precipitation_index": 12.0,
+    "catchment_area_sqkm": 140.0,
+    "average_slope_deg": 41.0,
+    "elevation_drop_m": 3100.0,
+    "river_stage_rise_rate_mh": 6.5,
+    "hazard_chain_signature": ["ROCK_ICE_AVALANCHE", "FRICTIONAL_MELT", "DEBRIS_FLOW", "TUNNEL_INUNDATION"],
+    "geology_type": "Vaikrita Group High-Grade Metamorphic Gneiss & Hanging Ice"
+  }
+}

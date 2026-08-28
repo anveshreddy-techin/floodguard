@@ -124,7 +124,7 @@ async def system_version():
 
 # ─── Routers ───────────────────────────────────────────────────────────────────
 
-from .routers import auth, locations, risk, alerts, incidents, iot, uploads, simulation, audit, system, hazards, shelters, copilot
+from .routers import auth, locations, risk, alerts, incidents, iot, uploads, simulation, audit, system, hazards, shelters, copilot, hindcast, predictions, safety
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(locations.router, prefix="/api/v1/locations", tags=["Locations & GIS"])
@@ -139,3 +139,6 @@ app.include_router(uploads.router, prefix="/api/v1/uploads", tags=["Data Upload"
 app.include_router(simulation.router, prefix="/api/v1/simulation", tags=["Simulation"])
 app.include_router(audit.router, prefix="/api/v1/audit", tags=["Audit"])
 app.include_router(system.router, prefix="/api/v1/system", tags=["System"])
+app.include_router(hindcast.router, tags=["Historical Hindcast"])
+app.include_router(predictions.router, tags=["Prediction Memory"])
+app.include_router(safety.router, tags=["User Safety & Location Guidance"])

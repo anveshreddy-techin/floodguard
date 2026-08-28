@@ -219,7 +219,7 @@ export default function DashboardPage() {
               <div className="text-slate-200 text-xs font-semibold">{activeAlerts[0].title}</div>
               <div className="text-slate-300 text-xs mt-1">{activeAlerts[0].description}</div>
               <div className="flex items-center justify-between text-[11px] text-slate-400 mt-3 pt-2 border-t border-rose-900/50">
-                <span>Created: {new Date(activeAlerts[0].created_at).toLocaleTimeString()}</span>
+                <span>Created: {new Date(activeAlerts[0].created_at || Date.now()).toLocaleTimeString()}</span>
                 <span className="font-mono text-purple-300">DATA MODE: {activeAlerts[0].data_mode}</span>
               </div>
             </div>
