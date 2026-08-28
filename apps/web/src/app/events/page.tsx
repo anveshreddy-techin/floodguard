@@ -1,13 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
-import { Layers, MapPin, Calendar, BookOpen, ShieldCheck, AlertCircle, ArrowRight } from 'lucide-react';
+import { useEnvironment } from '@/context/EnvironmentContext';
+import { Layers, MapPin, Calendar, BookOpen, ShieldCheck, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { DataModeBadge } from '@/components/ui/Badges';
 
 export default function EventMemoryPage() {
+  const { setPage, setMode } = useEnvironment();
   const [selectedEventIndex, setSelectedEventIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setPage('events');
+    setMode('HINDCAST');
+  }, [setPage, setMode]);
 
   const eventDossiers = [
     {
@@ -60,72 +67,67 @@ export default function EventMemoryPage() {
     },
     {
       id: '2021_nepal_melamchi',
-      name: '2021 Nepal Melamchi Cascading Debris Flood',
+      name: '2021 Melamchi Debris Cascade & Headworks Inundation',
       country: 'Nepal',
-      region: 'Sindhupalchok District, Bagmati Province',
-      date: 'June 15 – Aug 1, 2021',
-      type: 'DEBRIS_FLOOD',
+      region: 'Sindhupalchok District (Bagmati Province)',
+      date: 'June 15 & August 1, 2021',
+      type: 'DEBRIS FLOW & LANDSLIDE DAM BURST',
       status: 'VERIFIED',
-      primaryCause: 'High pre-monsoon saturation + massive Bhemathang landslide dam failure.',
+      primaryCause: 'Bhemathang landslide damming Melamchi River followed by cascading breach pulses.',
       hazardChain: [
-        'Pre-monsoon soil saturation 129% above normal',
-        'Bhemathang high plateau landslide dumping 10-15M m³ debris into upper Melamchi gorge',
-        'Temporary river damming followed by explosive hydraulic breach',
-        'Sediment burial at Ambathan headworks of Melamchi Water Supply Project',
-        'Destruction of Melamchi Bazaar settlement and 18 bridges',
+        'Pre-monsoon extreme rainfall soaking high glacial deposits in upper basin',
+        'Massive slope collapse creating temporary debris dam at Bhemathang',
+        'Breaching of dam sending multiple sediment-laden pulses downstream',
+        'Burial of Melamchi Water Supply Project intake tunnel structure',
+        'Severe damage to Melamchi Bazaar bridges and settlements',
       ],
-      officialCasualties: '21 dead/missing (DHM Nepal / MoHA Nepal / ICIMOD)',
-      authoritativeSources: ['DHM Nepal', 'MoHA / NDRRMA Nepal', 'ICIMOD', 'World Bank GFDRR'],
+      officialCasualties: '25+ dead/missing, extensive economic displacement (DHM Nepal / ICIMOD)',
+      authoritativeSources: ['ICIMOD Assessment Report', 'Department of Hydrology and Meteorology (DHM Nepal)', 'MoHA Nepal'],
       lessons: [
-        'Sediment volume can vastly exceed water volume in high-altitude cascades',
-        'Post-earthquake weakened slopes require continuous SAR monitoring',
-        'Transboundary and upper catchment alerts save lives downstream',
+        'Upstream landslide damming poses delayed-surge risk hours after rainfall ends',
+        'Critical water/power infrastructure requires multi-tier sediment tripwires',
       ],
     },
     {
       id: '2023_nepal_events',
-      name: '2023 Nepal Flash Flood Multi-Event Catalog',
+      name: '2023 Nepal Multi-Event Monsoon Catalog',
       country: 'Nepal',
-      region: 'Eastern Nepal (Sankhuwasabha) & Mustang (Kagbeni)',
-      date: 'June – August 2023',
-      type: 'FLASH_FLOOD & LDOF',
+      region: 'Koshi, Gandaki & Karnali Basins',
+      date: 'June–August 2023',
+      type: 'MULTI-BASIN FLASH FLOODS',
       status: 'VERIFIED',
-      primaryCause: 'Early monsoon steep cloudbursts (Hewa Khola) + Rain-shadow scree LDOF (Kagbeni).',
+      primaryCause: 'Severe localized convective storm cells along the Himalayan front.',
       hazardChain: [
-        'Localized cloudburst on Hewa Khola causing 33 casualties at Super Hewa HEP',
-        'Scree collapse in Jhong Khola canyon triggering Kagbeni barrier outburst',
-        'Zero Kagbeni casualties due to rapid community phone chain warning',
-        'Fluvial plain inundation in Western Nepal (Sudurpashchim)',
+        'Localized cloudburst events (>100mm/1h) in steep catchments',
+        'Fast-response flash flooding in ungauged tributaries',
+        'Secondary mudflows blocking rural transit corridors',
       ],
-      officialCasualties: '33 in Hewa Khola (5 confirmed, 28 missing); 0 in Kagbeni (NDRRMA)',
-      authoritativeSources: ['NDRRMA Nepal', 'DHM Nepal', 'IPPAN', 'Kathmandu Post'],
+      officialCasualties: '70+ casualties across multiple localized flash flood incidents (MoHA Nepal / NDMA)',
+      authoritativeSources: ['NDRRMA Nepal', 'ReliefWeb', 'DHM Nepal', 'ICIMOD'],
       lessons: [
-        'Low absolute rainfall (25-40mm) in arid scree zones can trigger destructive LDOFs',
-        'Early-monsoon workforce camps require localized hydro-meteorological tripwires',
+        'Ungauged mountain tributaries require physics-based DEM runoff estimation',
+        'Decentralized community-level alert beacons are critical where cellular coverage is intermittent',
       ],
     },
     {
       id: '2026_nepal_bhote_koshi',
-      name: '2026 Nepal Bhote Koshi / Rasuwa Cascading Disaster',
-      country: 'Nepal (Origin: Tibet)',
-      region: 'Rasuwa District, Bagmati Province',
-      date: 'August 26–28, 2026 (Active)',
-      type: 'TRANSBOUNDARY GLOF',
+      name: '2026 Nepal Bhote Koshi / Rasuwa Disaster',
+      country: 'Nepal',
+      region: 'Rasuwa / Bagmati Province',
+      date: 'August 2026 (Preliminary)',
+      type: 'TRANS-BOUNDARY GLACIAL OUTBURST',
       status: 'PRELIMINARY',
-      primaryCause: 'Catastrophic ~600m rock-ice avalanche in Lhende Khola (Tibet) triggering barrier breach into Bhote Koshi.',
+      primaryCause: 'High-elevation glacial lake expansion and tributary debris pulse.',
       hazardChain: [
-        'High-altitude Tibetan wedge detachment into Lhende Khola gorge',
-        'Temporary high-head barrier lake formation and violent burst',
-        'Transboundary surge crossing border at Rasuwagadhi (~08:40 AM)',
-        'Destruction of Miteri Bridge, border dry port, and Timure police post',
-        'Surge wave propagating 8-12m high downstream into Trishuli corridor',
+        'Anomalous summer isotherm elevation accelerating proglacial lake melt',
+        'Lateral moraine slumping into moraine-dammed lake',
+        'High-velocity flood wave propagating across international highway border crossing',
       ],
-      officialCasualties: '547+ reported dead/missing (Preliminary / Active SAR Operation)',
-      authoritativeSources: ['DHM Nepal', 'NDRRMA Nepal', 'Nepal Army', 'ICIMOD', 'USGS'],
+      officialCasualties: 'Preliminary reports under evaluation (Versioned Catalog)',
+      authoritativeSources: ['DHM Nepal (Preliminary Bulletins)', 'ICIMOD Cryosphere Monitor'],
       lessons: [
-        'Sudden sensor communication termination must trigger an automated CRITICAL alarm',
-        'Cross-border telemetry data exchange is vital for Himalayan gorge safety',
-        'Downstream evacuation lead time strictly governed by gorge flow velocities (15-25 m/s)',
+        'Transboundary high-altitude watersheds require cross-border telemetry exchange',
+        'Versioned preliminary records must prevent speculative figures from polluting models',
       ],
     },
   ];
@@ -133,103 +135,101 @@ export default function EventMemoryPage() {
   const current = eventDossiers[selectedEventIndex];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0b132b]">
-      <Header dataMode="HISTORICAL" systemStatus="OPERATIONAL" />
-      <div className="flex flex-1">
+    <div className="flex flex-col min-h-screen select-none">
+      <Header dataMode="HINDCAST" systemStatus="OPERATIONAL" />
+      <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="events" />
 
-        <main className="flex-1 p-6 max-w-6xl mx-auto space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#3a506b] pb-4 gap-3">
+        <main className="flex-1 p-5 lg:p-6 max-w-7xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[10px] font-mono font-bold">
-                  KNOWLEDGE BASE
-                </span>
-                <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-cyan-400" />
-                  HISTORICAL EVENT MEMORY & CASE DOSSIERS
+              <div className="flex items-center gap-2.5">
+                <span className="chip chip-hist">AUTHORITATIVE CORPUS</span>
+                <h1 className="text-xl font-black text-white flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-purple-400" />
+                  HISTORICAL EVENT MEMORY & PHYSICAL DOSSIERS
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                Verified empirical case studies, hazard chains, official casualty counts, and model lessons
+              <p className="text-xs text-slate-400 mt-1 font-sans">
+                Authoritative disaster catalog powering FloodGuard AI's hindcast validation and continuous learning
               </p>
             </div>
-            <DataModeBadge mode="HISTORICAL" />
+            <DataModeBadge mode="HINDCAST" />
           </div>
 
-          {/* Event Selector Horizontal Tabs */}
-          <div className="flex overflow-x-auto gap-2 pb-1 text-xs">
-            {eventDossiers.map((ev, idx) => (
-              <button
-                key={ev.id}
-                onClick={() => setSelectedEventIndex(idx)}
-                className={`px-3.5 py-2.5 rounded-lg border shrink-0 transition font-medium text-left ${
-                  selectedEventIndex === idx
-                    ? 'bg-blue-600/30 border-cyan-400 text-cyan-200 font-bold shadow-md'
-                    : 'bg-[#1c2541] border-[#3a506b] text-slate-300 hover:bg-slate-800'
-                }`}
-              >
-                <div className="text-[10px] font-mono text-cyan-400">{ev.country} • {ev.date}</div>
-                <div className="text-xs font-semibold mt-0.5">{ev.name.split(' ')[0]} {ev.name.split(' ')[1]}</div>
-              </button>
-            ))}
-          </div>
-
-          {/* Active Event Dossier Details */}
-          <div className="bg-[#1c2541] border border-[#3a506b] rounded-xl p-6 space-y-6 shadow-2xl">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-700 pb-4 gap-2">
-              <div>
-                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">{current.country} • {current.region}</span>
-                <h2 className="text-lg font-bold text-slate-100 mt-0.5">{current.name}</h2>
-                <div className="text-xs text-slate-400 font-mono mt-1">Event Type: {current.type} | Date: {current.date}</div>
-              </div>
-              <span className={`px-2.5 py-1 rounded font-mono text-xs font-bold ${
-                current.status === 'VERIFIED' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'
-              }`}>
-                {current.status}
-              </span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Event Selector List (4 Cols) */}
+            <div className="lg:col-span-4 space-y-2.5">
+              {eventDossiers.map((ev, idx) => {
+                const isSelected = selectedEventIndex === idx;
+                return (
+                  <button
+                    key={ev.id}
+                    onClick={() => setSelectedEventIndex(idx)}
+                    className={`w-full p-4 rounded-2xl text-left transition-all duration-300 flex flex-col justify-between space-y-1.5 ${
+                      isSelected
+                        ? 'fp-historical ring-2 ring-purple-400 shadow-xl scale-[1.01]'
+                        : 'fp hover:bg-slate-900/60'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-bold text-cyan-300">{ev.date}</span>
+                      <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded ${
+                        ev.status === 'VERIFIED' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'
+                      }`}>
+                        {ev.status}
+                      </span>
+                    </div>
+                    <div className="font-bold text-white text-xs leading-snug">{ev.name}</div>
+                    <div className="text-[10px] text-slate-400 font-mono">{ev.region}</div>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Primary Cause & Casualties */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="bg-slate-900/90 p-4 rounded-lg border border-slate-800 space-y-2">
-                <div className="font-semibold text-cyan-300 uppercase tracking-wider text-[11px]">Primary Physical Cause:</div>
-                <p className="text-slate-200 leading-relaxed">{current.primaryCause}</p>
+            {/* Event Detail View (8 Cols) */}
+            <div className="lg:col-span-8 fp fp-historical rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl animate-slide-up">
+              <div className="border-b border-slate-800 pb-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-mono text-purple-300 font-bold uppercase">{current.type}</span>
+                  <span className="text-slate-600">•</span>
+                  <span className="text-[10px] font-mono text-slate-400">{current.region}</span>
+                </div>
+                <h2 className="text-xl font-black text-white">{current.name}</h2>
               </div>
 
-              <div className="bg-slate-900/90 p-4 rounded-lg border border-slate-800 space-y-2">
-                <div className="font-semibold text-rose-400 uppercase tracking-wider text-[11px]">Official Impact / Casualties:</div>
-                <p className="text-slate-200 font-mono text-xs leading-relaxed">{current.officialCasualties}</p>
-                <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-800">
-                  Sources: {current.authoritativeSources.join(', ')}
+              {/* Primary Cause */}
+              <div className="fp p-4 rounded-2xl space-y-1 text-xs">
+                <span className="text-[10px] font-mono text-cyan-300 font-bold uppercase">PRIMARY CAUSAL MECHANISM</span>
+                <p className="text-slate-200 leading-relaxed font-sans">{current.primaryCause}</p>
+              </div>
+
+              {/* Physical Hazard Chain */}
+              <div className="space-y-2.5">
+                <span className="text-[10px] font-mono text-purple-300 font-bold uppercase tracking-wider block">
+                  PHYSICAL HAZARD PROPAGATION SEQUENCE
+                </span>
+                <div className="space-y-2 text-xs font-mono">
+                  {current.hazardChain.map((step, i) => (
+                    <div key={i} className="fp p-3 rounded-xl text-slate-200 flex items-start gap-2.5">
+                      <span className="text-cyan-400 font-bold shrink-0">0{i + 1}</span>
+                      <span>{step}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
 
-            {/* Hazard Chain */}
-            <div className="space-y-2 text-xs">
-              <div className="font-semibold text-slate-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                <Layers className="w-4 h-4 text-cyan-400" /> Physical Hazard Chain Sequence:
+              {/* Casualties & Sources */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                <div className="fp p-4 rounded-2xl space-y-1">
+                  <div className="text-slate-400 text-[10px] uppercase font-bold">OFFICIAL CASUALTIES (GOVT GAZETTE)</div>
+                  <div className="text-slate-200 font-bold">{current.officialCasualties}</div>
+                </div>
+                <div className="fp p-4 rounded-2xl space-y-1">
+                  <div className="text-slate-400 text-[10px] uppercase font-bold">AUTHORITATIVE SOURCES</div>
+                  <div className="text-cyan-300">{current.authoritativeSources.join(', ')}</div>
+                </div>
               </div>
-              <div className="space-y-1.5">
-                {current.hazardChain.map((step, i) => (
-                  <div key={i} className="bg-slate-900/70 p-2.5 rounded border border-slate-800 text-slate-200 font-mono text-[11px]">
-                    {step}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Model Lessons */}
-            <div className="bg-[#141d38] p-4 rounded-lg border border-slate-700/80 space-y-2 text-xs">
-              <div className="font-semibold text-emerald-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Scientific & Operational Lessons for FloodGuard AI:
-              </div>
-              <ul className="space-y-1 text-slate-300 list-disc list-inside leading-relaxed text-xs">
-                {current.lessons.map((ls, idx) => (
-                  <li key={idx}>{ls}</li>
-                ))}
-              </ul>
             </div>
           </div>
         </main>

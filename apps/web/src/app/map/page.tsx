@@ -1,18 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
 import { LiveRiskMap } from '@/components/ui/LiveRiskMap';
 import { VillageIntelligenceDrawer } from '@/components/ui/VillageIntelligenceDrawer';
+import { useEnvironment } from '@/context/EnvironmentContext';
 import { Map, Layers, Compass, Radio, ShieldAlert, Crosshair, ArrowRight } from 'lucide-react';
 import { DataModeBadge } from '@/components/ui/Badges';
 
 export default function HyperLocalGISPage() {
+  const { setPage, setMode } = useEnvironment();
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
+  useEffect(() => {
+    setPage('map');
+    setMode('DEMO');
+  }, [setPage, setMode]);
+
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#070d1e] text-slate-100 overflow-hidden select-none">
+    <div className="flex flex-col h-screen w-screen overflow-hidden select-none">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
 
       <div className="flex flex-1 min-h-0 relative">

@@ -103,9 +103,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
 
   return (
     <aside
-      className={`border-r border-[#223354] bg-[#050a17]/95 flex flex-col justify-between transition-all duration-300 select-none z-30 ${
+      className={`border-r border-slate-800/60 bg-slate-950/80 backdrop-blur-xl flex flex-col justify-between transition-all duration-300 select-none z-30 ${
         collapsed ? 'w-16' : 'w-64 xl:w-72'
       }`}
+      style={{ boxShadow: '2px 0 20px rgba(0,0,0,0.4)' }}
     >
       <div className="p-3 space-y-4 overflow-y-auto flex-1">
         {/* Collapse Toggle & Disaster Theme Tag */}
@@ -120,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1 rounded-lg bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition ml-auto active:scale-95"
+            className="p-1 rounded-lg bg-slate-900/80 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition ml-auto active:scale-95"
             title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           >
             {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
@@ -153,17 +154,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
                     title={collapsed ? item.label : undefined}
                     className={`flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition font-medium group relative ${
                       isActive
-                        ? 'bg-blue-600/30 text-cyan-300 font-bold border border-cyan-400/40 shadow-inner'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/80 border border-transparent'
+                        ? 'bg-cyan-500/10 text-cyan-300 font-bold border border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.1)]'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <Icon className={`w-4 h-4 shrink-0 transition ${isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
+                      <Icon className={`w-4 h-4 shrink-0 transition ${isActive ? 'text-cyan-400' : 'text-slate-500 group-hover:text-slate-300'}`} />
                       {!collapsed && <span className="truncate text-xs">{item.label}</span>}
                     </div>
 
                     {!collapsed && item.badge && (
-                      <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded shrink-0 font-bold ${
+                      <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded shrink-0 font-bold ${
                         item.badge === 'LIVE'
                           ? 'bg-rose-950 text-rose-300 border border-rose-800'
                           : item.badge === 'HUD'
@@ -187,9 +188,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
         ))}
       </div>
 
-      {/* Footer / Disaster Management Theme Tag */}
+      {/* Footer / Theme Badge */}
       {!collapsed && (
-        <div className="p-3 border-t border-[#223354] text-[10px] font-mono text-slate-400 flex items-center justify-between bg-[#030712] glass-panel">
+        <div className="p-3 border-t border-slate-800/60 text-[10px] font-mono text-slate-400 flex items-center justify-between bg-slate-950/60">
           <span className="font-bold text-cyan-300">SIH26192 • THEME 4</span>
           <span className="text-emerald-400 font-bold">100% AUDITED</span>
         </div>

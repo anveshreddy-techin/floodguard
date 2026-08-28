@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LocationProvider } from "@/context/LocationContext";
-import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
+import { EnvironmentProvider } from "@/context/EnvironmentContext";
+import { EnvironmentLayer } from "@/components/ui/EnvironmentLayer";
 
 export const metadata: Metadata = {
   title: "FloodGuard AI — Flash Flood Early Warning & Response",
@@ -10,18 +11,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="dark">
-      <body className="antialiased bg-[#040814] text-slate-100 min-h-screen selection:bg-cyan-500 selection:text-white relative">
-        <LocationProvider>
-          <AnimatedBackground />
-          <div className="relative z-10">
-            {children}
-          </div>
-        </LocationProvider>
+      <body className="antialiased min-h-screen overflow-x-hidden">
+        <EnvironmentProvider>
+          <LocationProvider>
+            {/* 8-Layer living environment — always behind content */}
+            <EnvironmentLayer />
+            {/* Application content — floats over environment */}
+            <div className="env-content min-h-screen flex flex-col">
+              {children}
+            </div>
+          </LocationProvider>
+        </EnvironmentProvider>
       </body>
     </html>
   );

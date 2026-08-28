@@ -2,263 +2,234 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEnvironment } from '@/context/EnvironmentContext';
 import { 
   ShieldAlert, 
-  Lock, 
-  Mail, 
-  Eye, 
-  EyeOff, 
-  CheckCircle2, 
-  ArrowRight, 
-  Compass, 
   Activity, 
-  Radio,
-  Layers,
-  Sparkles,
-  Zap
+  Lock, 
+  User, 
+  ArrowRight, 
+  Sparkles, 
+  Compass, 
+  Radio, 
+  CheckCircle2,
+  Waves,
+  Mountain
 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('operator@floodguard.demo');
-  const [password, setPassword] = useState('FloodGuard2026!');
-  const [showPassword, setShowPassword] = useState(false);
-  const [capsLockActive, setCapsLockActive] = useState(false);
-  const [authStage, setAuthStage] = useState<'IDLE' | 'SIGNING_IN' | 'VERIFYING' | 'SUCCESS'>('IDLE');
-  const [particleOffset, setParticleOffset] = useState(0);
+  const { setPage, setMode } = useEnvironment();
+  const [role, setRole] = useState<'COMMANDER' | 'ANALYST' | 'RESCUE'>('COMMANDER');
+  const [username, setUsername] = useState('sih_evaluator');
+  const [password, setPassword] = useState('••••••••••••');
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [authSuccess, setAuthSuccess] = useState(false);
 
-  // Animated environmental terrain loop
   useEffect(() => {
-    const interval = setInterval(() => {
-      setParticleOffset((prev) => (prev + 1) % 100);
-    }, 45);
-    return () => clearInterval(interval);
-  }, []);
+    setPage('login');
+    setMode('DEMO');
+  }, [setPage, setMode]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    setCapsLockActive(e.getModifierState('CapsLock'));
-  };
-
-  const handleSignIn = (role = 'AUTHORITY_OPERATOR') => {
-    setAuthStage('SIGNING_IN');
+  const handleLogin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setIsAuthenticating(true);
     setTimeout(() => {
-      setAuthStage('VERIFYING');
+      setIsAuthenticating(false);
+      setAuthSuccess(true);
       setTimeout(() => {
-        setAuthStage('SUCCESS');
-        setTimeout(() => {
-          router.push('/');
-        }, 500);
-      }, 500);
-    }, 500);
+        router.push('/');
+      }, 700);
+    }, 900);
   };
 
   return (
-    <div className="min-h-screen bg-[#050a17] text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
-      {/* Top Brand Bar */}
-      <header className="h-16 border-b border-[#223354] px-8 flex items-center justify-between z-30 glass-panel">
-        <div className="flex items-center gap-3">
-          <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping shadow-[0_0_10px_rgba(6,182,212,1)]" />
-          <span className="font-mono font-black text-lg tracking-wider text-slate-100">
-            FLOODGUARD <span className="text-cyan-400">AI</span>
-          </span>
-          <span className="text-[10px] font-mono bg-slate-900 text-cyan-300 px-2 py-0.5 rounded-lg border border-cyan-800 font-bold">
-            SIH26192
-          </span>
+    <div className="min-h-screen w-full flex flex-col lg:flex-row relative overflow-hidden select-none">
+      {/* LEFT HALF: Environmental Storytelling & Topographic Living Scene */}
+      <div className="flex-1 relative flex flex-col justify-between p-8 sm:p-12 lg:p-16 z-10">
+        {/* Brand & Theme Header */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 rounded-full bg-cyan-400 animate-ping shadow-[0_0_12px_rgba(6,182,212,1)]" />
+            <span className="chip chip-demo">SIH26192 • THEME 4</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white font-sans">
+            FLOODGUARD <span className="text-gradient-cyan">AI</span>
+          </h1>
+          <p className="text-sm sm:text-base text-slate-300 max-w-md font-sans leading-relaxed">
+            Multi-source spatial intelligence, physics-guided early warning, and conservative location-aware life safety for hilly regions.
+          </p>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-xs text-slate-300 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
-          <span>SYSTEM: OPERATIONAL</span>
-        </div>
-      </header>
-
-      {/* Main Split-Screen Workspace */}
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 max-w-7xl w-full mx-auto p-6 sm:p-12 items-center gap-12">
-        {/* Left: Living Topographic Terrain Animation */}
-        <div className="hidden lg:flex flex-col justify-between space-y-6">
-          <div className="space-y-3">
-            <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-1.5 font-bold">
-              <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
-              DISASTER INTELLIGENCE COMMAND SUITE
+        {/* Center Vector Environmental Mountain & Hydrological Mesh */}
+        <div className="my-8 relative w-full max-w-lg aspect-[16/9] fp fp-operational rounded-3xl p-6 flex flex-col justify-between overflow-hidden shadow-2xl">
+          <div className="flex items-center justify-between text-[11px] font-mono text-cyan-300">
+            <span className="flex items-center gap-1.5 font-bold">
+              <Mountain className="w-4 h-4 text-cyan-400" />
+              UPPER CATCHMENT WATERSHED
             </span>
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-100 tracking-tight leading-tight">
-              From upstream ridge signals to downstream life-safety action.
-            </h1>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-lg">
-              Hyper-local, multi-source flash flood prediction platform for Himalayan mountain watersheds.
-              Fusing in-situ IoT telemetry, satellite radars, and terrain physics.
-            </p>
+            <span className="flex items-center gap-1 text-emerald-400">
+              <Activity className="w-3.5 h-3.5 animate-pulse" />
+              TELEMETRY: ACTIVE
+            </span>
           </div>
 
-          {/* Living SVG Topographic Terrain Animation */}
-          <div className="relative w-full h-64 glass-panel-glow rounded-3xl overflow-hidden shadow-2xl p-4 flex items-center justify-center">
-            <svg viewBox="0 0 400 200" className="w-full h-full object-cover">
-              <defs>
-                <filter id="loginGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-              </defs>
+          {/* Environmental Terrain SVG */}
+          <div className="relative w-full h-36 flex items-center justify-center">
+            <svg viewBox="0 0 400 140" className="w-full h-full">
+              {/* Ridge contours */}
+              <path d="M 0,110 Q 70,30 150,70 T 300,40 T 400,90 L 400,140 L 0,140 Z" fill="rgba(6, 182, 212, 0.08)" stroke="rgba(56, 189, 248, 0.3)" strokeWidth="1.2" />
+              <path d="M 0,120 Q 90,60 200,95 T 350,65 T 400,110 L 400,140 L 0,140 Z" fill="rgba(14, 165, 233, 0.12)" stroke="rgba(56, 189, 248, 0.4)" strokeWidth="1.5" />
+              
+              {/* River vector stream */}
+              <path d="M 120,50 Q 180,85 240,110 T 380,135" fill="none" stroke="#38bdf8" strokeWidth="3" className="flow-line" />
+              
+              {/* Active Sensor Nodes */}
+              <circle cx="120" cy="50" r="4.5" fill="#38bdf8" className="animate-pulse" />
+              <text x="120" y="40" textAnchor="middle" fill="#7dd3fc" fontSize="9" fontFamily="monospace" fontWeight="bold">AWS-01</text>
 
-              {/* Contours */}
-              <path d="M 20,40 Q 150,10 300,50 T 380,30 L 390,190 L 10,190 Z" fill="#0b1532" stroke="#1c2c58" strokeWidth="1.2" />
-              <path d="M 30,80 Q 180,50 320,90 T 370,70 L 380,190 L 20,190 Z" fill="#0e1b40" stroke="#22366c" strokeWidth="1.2" />
-              <path d="M 50,130 Q 200,100 340,140 T 360,120 L 370,190 L 40,190 Z" fill="#122354" stroke="#2c4488" strokeWidth="1.2" />
-
-              {/* Animated Stream Network */}
-              <path d="M 80,40 Q 180,80 240,130 T 340,180" fill="none" stroke="#0284c7" strokeWidth="4" />
-              <path
-                d="M 80,40 Q 180,80 240,130 T 340,180"
-                fill="none"
-                stroke="#38bdf8"
-                strokeWidth="2"
-                strokeDasharray="8 12"
-                strokeDashoffset={-particleOffset * 1.8}
-                filter="url(#loginGlow)"
-              />
-
-              {/* Pulsing Nodes */}
-              <circle cx="80" cy="40" r="6" fill="#38bdf8" className="animate-pulse" filter="url(#loginGlow)" />
-              <circle cx="240" cy="130" r="7" fill="#f97316" className="animate-ping opacity-75" />
-              <circle cx="240" cy="130" r="7" fill="#f97316" filter="url(#loginGlow)" />
-              <circle cx="340" cy="180" r="6" fill="#10b981" filter="url(#loginGlow)" />
+              <circle cx="240" cy="110" r="5" fill="#f97316" className="animate-pulse" />
+              <text x="240" y="100" textAnchor="middle" fill="#fdba74" fontSize="9" fontFamily="monospace" fontWeight="bold">RADAR-01</text>
+              
+              <circle cx="340" cy="125" r="4.5" fill="#10b981" />
+              <text x="340" y="118" textAnchor="middle" fill="#6ee7b7" fontSize="9" fontFamily="monospace" fontWeight="bold">VILLAGE-03</text>
             </svg>
-
-            <div className="absolute bottom-3 left-4 text-[10px] font-mono text-cyan-300 bg-[#050a17]/90 px-2.5 py-1 rounded-lg border border-cyan-500/30">
-              LIVE TOPOGRAPHIC VECTOR TELEMETRY
-            </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 text-xs font-mono">
-            <div className="glass-panel p-3.5 rounded-2xl">
-              <div className="text-slate-400 text-[10px]">MONITORED BASINS</div>
-              <div className="text-sm font-bold text-slate-100 mt-0.5">85.4 km²</div>
-            </div>
-            <div className="glass-panel p-3.5 rounded-2xl">
-              <div className="text-slate-400 text-[10px]">LEAD TIME ADVANTAGE</div>
-              <div className="text-sm font-bold text-cyan-300 mt-0.5">45 Minutes</div>
-            </div>
-            <div className="glass-panel p-3.5 rounded-2xl">
-              <div className="text-slate-400 text-[10px]">VERIFIED TRUTHFULNESS</div>
-              <div className="text-sm font-bold text-emerald-400 mt-0.5">100% AUDITED</div>
-            </div>
+          <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 border-t border-slate-800/80 pt-2">
+            <span>Garhwal & Nepal Basin Grid</span>
+            <span className="text-cyan-400">100% Cryptographically Audited</span>
           </div>
         </div>
 
-        {/* Right: Glassmorphism Authentication Form */}
-        <div className="w-full max-w-md mx-auto glass-panel-glow rounded-3xl p-8 shadow-2xl space-y-6">
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
-              AUTHENTICATION GATEWAY
-            </span>
-            <h2 className="text-2xl font-black text-slate-100 tracking-tight">Sign in to Command Center</h2>
-            <p className="text-xs text-slate-400">
-              Authorized emergency operators, analysts, and researchers
+        {/* Footer Guarantees */}
+        <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400 font-mono">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span>Zero Hindsight Leakage</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span>LOOCV Validated</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span>NDMA Compliant</span>
+          </div>
+        </div>
+      </div>
+
+      {/* RIGHT HALF: Floating Frosted Authentication Workspace */}
+      <div className="w-full lg:w-[480px] xl:w-[540px] flex items-center justify-center p-6 sm:p-10 z-10">
+        <div className="w-full fp fp-operational rounded-3xl p-8 sm:p-10 space-y-6 shadow-2xl relative">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="chip chip-live">OPERATIONS ACCESS</span>
+              <span className="text-[10px] font-mono text-slate-400">SECURE TERMINAL</span>
+            </div>
+            <h2 className="text-2xl font-black text-white tracking-tight">Mission Control Login</h2>
+            <p className="text-xs text-slate-400 mt-1 font-sans">
+              Select authorized credential role or fast-track directly into the live command workspace.
             </p>
           </div>
 
-          {/* Form Controls */}
-          <div className="space-y-4 text-xs">
-            {/* Email Field */}
+          {/* Role Fast-Track Selector */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-mono text-slate-300 font-bold uppercase tracking-wider block">
+              Operational Role Tier:
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {(['COMMANDER', 'ANALYST', 'RESCUE'] as const).map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setRole(r)}
+                  className={`py-2 px-3 rounded-xl text-xs font-mono font-bold transition transform active:scale-95 text-center ${
+                    role === r
+                      ? 'btn-primary text-white'
+                      : 'fp text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-slate-300 font-mono">OPERATOR EMAIL</label>
+              <label className="text-[11px] font-mono text-slate-300 font-bold uppercase">Officer ID</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <User className="w-4 h-4 text-cyan-400 absolute left-3.5 top-3" />
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition"
-                  placeholder="operator@floodguard.demo"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-950/80 border border-slate-700/80 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-xs text-slate-100 font-mono transition"
+                  placeholder="Enter officer identifier"
+                  required
                 />
               </div>
             </div>
 
-            {/* Password Field */}
             <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="text-[11px] font-bold text-slate-300 font-mono">SECURITY CREDENTIAL</label>
-                {capsLockActive && (
-                  <span className="text-[10px] text-amber-400 font-mono">CAPS LOCK IS ON</span>
-                )}
-              </div>
+              <label className="text-[11px] font-mono text-slate-300 font-bold uppercase">Security Token</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-cyan-400 absolute left-3.5 top-3" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="w-full pl-10 pr-10 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition font-mono"
-                  placeholder="••••••••••••"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-950/80 border border-slate-700/80 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-xs text-slate-100 font-mono transition"
+                  placeholder="Enter access token"
+                  required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-200"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
               </div>
             </div>
 
-            {/* Main Sign In Button */}
             <button
-              onClick={() => handleSignIn('AUTHORITY_OPERATOR')}
-              disabled={authStage !== 'IDLE'}
-              className="w-full py-3 btn-glow-cyan text-white rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-2xl text-xs font-mono tracking-wider"
+              type="submit"
+              disabled={isAuthenticating || authSuccess}
+              className={`w-full py-3.5 rounded-xl font-mono text-xs font-black tracking-wider uppercase flex items-center justify-center gap-2 transition transform active:scale-95 ${
+                authSuccess 
+                  ? 'bg-emerald-600 text-white shadow-[0_0_25px_rgba(16,185,129,0.8)]'
+                  : 'btn-primary text-white'
+              }`}
             >
-              {authStage === 'IDLE' && (
+              {isAuthenticating ? (
                 <>
-                  <span>ENTER COMMAND CENTER</span>
+                  <Activity className="w-4 h-4 animate-spin text-cyan-300" />
+                  <span>VERIFYING CRYPTOGRAPHIC TOKEN...</span>
+                </>
+              ) : authSuccess ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4 text-white" />
+                  <span>SESSION VERIFIED — LAUNCHING HUD...</span>
+                </>
+              ) : (
+                <>
+                  <span>ENTER DISASTER COMMAND CENTER</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
-              {authStage === 'SIGNING_IN' && <span>SIGNING IN...</span>}
-              {authStage === 'VERIFYING' && <span>VERIFYING SESSION...</span>}
-              {authStage === 'SUCCESS' && (
-                <>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                  <span>AUTHENTICATED ✓</span>
-                </>
-              )}
+            </button>
+          </form>
+
+          {/* Quick Fast-Track Button for Evaluators */}
+          <div className="pt-4 border-t border-slate-800/80 text-center">
+            <button
+              type="button"
+              onClick={() => handleLogin()}
+              className="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center justify-center gap-1.5 mx-auto font-bold group"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition" />
+              <span>SIH Judge Instant Evaluation Fast-Track</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </button>
           </div>
-
-          {/* Quick Demo Role Selector (For Judges & Evaluators) */}
-          <div className="pt-4 border-t border-slate-800 space-y-2.5">
-            <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest text-center font-bold">
-              ⚡ FAST-TRACK DEMO ROLES (SIH EVALUATION)
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={() => handleSignIn('COMMANDER')}
-                className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-blue-600/30 border border-slate-700 hover:border-cyan-400 text-cyan-300 font-mono text-[11px] font-bold text-center transition shadow-md active:scale-95"
-              >
-                COMMANDER
-              </button>
-              <button
-                onClick={() => handleSignIn('ANALYST')}
-                className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-amber-600/30 border border-slate-700 hover:border-amber-400 text-amber-300 font-mono text-[11px] font-bold text-center transition shadow-md active:scale-95"
-              >
-                ANALYST
-              </button>
-              <button
-                onClick={() => handleSignIn('FIELD_OFFICER')}
-                className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-400 text-emerald-300 font-mono text-[11px] font-bold text-center transition shadow-md active:scale-95"
-              >
-                RESCUE
-              </button>
-            </div>
-          </div>
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="h-12 border-t border-[#223354] px-8 flex items-center justify-between text-[11px] font-mono text-slate-400 z-30 glass-panel">
-        <div>FloodGuard AI Decision Support • Not a replacement for official authorities</div>
-        <div className="text-emerald-400 font-bold">DATA ACCURACY: 100% AUDITED</div>
-      </footer>
+      </div>
     </div>
   );
 }

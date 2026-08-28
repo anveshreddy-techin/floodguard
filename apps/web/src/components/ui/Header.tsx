@@ -18,7 +18,7 @@ export const Header: React.FC<{
 
   return (
     <>
-      <header className="h-14 border-b border-[#223354] bg-[#050a17]/95 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 select-none glass-panel">
+      <header className="h-14 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-xl px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 select-none" style={{ boxShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>
         {/* Left: Brand Identity, Theme 4 Badge & Region Selector */}
         <div className="flex items-center gap-3 sm:gap-4">
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -35,7 +35,7 @@ export const Header: React.FC<{
           </div>
 
           {/* Region Dropdown Synced Globally */}
-          <div className="hidden md:flex items-center gap-1.5 bg-[#09122a] border border-[#223354] px-3 py-1 rounded-xl text-xs font-mono text-slate-200">
+          <div className="hidden md:flex items-center gap-1.5 fp px-3 py-1 rounded-xl text-xs font-mono text-slate-200">
             <Globe className="w-3.5 h-3.5 text-cyan-400" />
             <select
               value={selectedLocation.id}
@@ -43,7 +43,7 @@ export const Header: React.FC<{
               className="bg-transparent text-xs text-slate-200 focus:outline-none cursor-pointer font-bold"
             >
               {LOCATIONS.map((loc) => (
-                <option key={loc.id} value={loc.id} className="bg-[#0e1630] text-slate-200">
+                <option key={loc.id} value={loc.id} className="bg-slate-900 text-slate-200">
                   {loc.name} ({loc.region})
                 </option>
               ))}
@@ -54,11 +54,11 @@ export const Header: React.FC<{
         {/* Center: Command Palette Trigger Button */}
         <button
           onClick={() => setCommandPaletteOpen(true)}
-          className="hidden lg:flex items-center gap-2.5 bg-[#09122a] border border-[#223354] hover:border-cyan-400/60 px-3.5 py-1.5 rounded-xl text-xs text-slate-400 hover:text-slate-200 transition font-mono shadow-inner group"
+          className="hidden lg:flex items-center gap-2.5 fp hover:border-cyan-400/60 px-3.5 py-1.5 rounded-xl text-xs text-slate-400 hover:text-slate-200 transition font-mono shadow-inner group"
         >
           <Search className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition" />
           <span>Search disaster views & tools...</span>
-          <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.2 rounded text-[10px] text-cyan-300 font-bold">
+          <span className="bg-slate-900/80 border border-slate-700 px-1.5 py-0.5 rounded text-[10px] text-cyan-300 font-bold">
             Ctrl+K
           </span>
         </button>
@@ -67,14 +67,14 @@ export const Header: React.FC<{
         <div className="flex items-center gap-2 sm:gap-3">
           <DataModeBadge mode={dataMode} />
 
-          <div className="flex items-center gap-2 px-2.5 py-1 bg-slate-900 border border-slate-700 rounded-xl text-xs">
+          <div className="flex items-center gap-2 px-2.5 py-1 fp rounded-xl text-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
             <span className="font-mono text-[11px] text-slate-300 font-bold">SYS: {systemStatus}</span>
           </div>
 
           <Link
             href="/login"
-            className="btn-glow-cyan px-3 py-1 rounded-xl text-xs font-mono font-bold text-white transition shadow-md"
+            className="btn-primary px-3 py-1 rounded-xl text-xs font-mono font-bold text-white transition shadow-md"
           >
             LOGIN
           </Link>

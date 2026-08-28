@@ -1,14 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
-import { Radio, Activity, Cpu, ShieldAlert, UserCheck, Compass, CheckCircle2, ArrowDown } from 'lucide-react';
-import { RiskBadge, DataModeBadge } from '@/components/ui/Badges';
+import { useEnvironment } from '@/context/EnvironmentContext';
+import { Radio, Activity, Cpu, ShieldAlert, UserCheck, Compass, CheckCircle2, ArrowDown, Fingerprint } from 'lucide-react';
+import { DataModeBadge } from '@/components/ui/Badges';
 import { FlightEventType } from '@/types';
 
 export default function FlightRecorderPage() {
+  const { setPage, setMode } = useEnvironment();
   const [selectedEventIndex, setSelectedEventIndex] = useState<number>(1);
+
+  useEffect(() => {
+    setPage('flight-recorder');
+    setMode('DEMO');
+  }, [setPage, setMode]);
 
   const flightEvents = [
     {
@@ -19,6 +26,7 @@ export default function FlightRecorderPage() {
       desc: 'Ground AWS station reported 48.0mm in 3 hours on upper ridge slopes.',
       traceId: 'tr-flt-01',
       actor: 'IngestionPipeline',
+      color: '#38bdf8',
       evidence: ['Rainfall rate: 16.0 mm/h', 'Barometric drop: -2.4 hPa', 'HMAC signature: valid'],
     },
     {
@@ -29,6 +37,7 @@ export default function FlightRecorderPage() {
       desc: 'Multi-source fusion escalated composite score from 42.0 (MODERATE) to 68.5 (HIGH).',
       traceId: 'tr-flt-02',
       actor: 'RiskEngineDaemon',
+      color: '#a855f7',
       evidence: ['Precipitation factor: 75/100 (wt 0.35)', 'Soil Saturation: 82% (wt 0.25)', 'Terrain slope: 28° (wt 0.20)'],
     },
     {
@@ -39,6 +48,7 @@ export default function FlightRecorderPage() {
       desc: 'Alert generated for Sunderbans Nagar micro-watershed. Warning pushed to Incident Command.',
       traceId: 'tr-flt-03',
       actor: 'AlertRouter',
+      color: '#f97316',
       evidence: ['Severity: HIGH', 'Target: Sunderbans Nagar (demo-village-003)'],
     },
     {
@@ -49,6 +59,7 @@ export default function FlightRecorderPage() {
       desc: 'Location engine detected demo user within 0.85 km of surge line. Generated Guidance Level 2.',
       traceId: 'tr-flt-04',
       actor: 'UserExposureEngine',
+      color: '#ef4444',
       evidence: ['Candidate route: North Ridge Elevated Trail', 'Blocked: Riverbed Bypass NH-58 Link'],
     },
     {
@@ -59,6 +70,7 @@ export default function FlightRecorderPage() {
       desc: 'Operator confirmed alert; assigned Task T-1 to place Community High School shelter on standby.',
       traceId: 'tr-flt-05',
       actor: 'DutyOfficer@district.eoc',
+      color: '#10b981',
       evidence: ['Action: ACKNOWLEDGE_AND_DISPATCH', 'Shelter: Community High School (Cap 450)'],
     },
   ];
@@ -66,24 +78,22 @@ export default function FlightRecorderPage() {
   const selected = flightEvents[selectedEventIndex];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0b132b]">
+    <div className="flex flex-col min-h-screen select-none">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="flight-recorder" />
 
-        <main className="flex-1 p-6 max-w-5xl mx-auto space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#3a506b] pb-4 gap-3">
+        <main className="flex-1 p-5 lg:p-6 max-w-6xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[10px] font-mono font-bold">
-                  BLACK BOX AUDIT
-                </span>
-                <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
+                <span className="chip chip-demo">BLACK BOX AUDIT</span>
+                <h1 className="text-xl font-black text-white flex items-center gap-2">
                   <Radio className="w-5 h-5 text-amber-400" />
                   FLOODGUARD FLIGHT RECORDER
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-400 mt-1 font-sans">
                 Synchronized audit stream of telemetry arrival, model execution, risk transitions, and operator interventions
               </p>
             </div>
@@ -91,64 +101,84 @@ export default function FlightRecorderPage() {
           </div>
 
           {/* Chronological Step Sequence */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-3">
-              {flightEvents.map((evt, idx) => (
-                <div
-                  key={evt.index}
-                  onClick={() => setSelectedEventIndex(idx)}
-                  className={`p-4 rounded-xl border text-xs cursor-pointer transition flex items-start gap-3.5 ${
-                    selectedEventIndex === idx
-                      ? 'bg-blue-600/20 border-cyan-400 text-slate-100 ring-1 ring-cyan-500'
-                      : 'bg-[#1c2541] border-[#3a506b] text-slate-300 hover:bg-slate-800/80'
-                  }`}
-                >
-                  <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center font-mono font-bold text-cyan-400 shrink-0">
-                    {evt.index}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] text-cyan-400 uppercase tracking-wider">{evt.type}</span>
-                      <span className="font-mono text-[10px] text-slate-400">{evt.time}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="lg:col-span-7 space-y-3">
+              {flightEvents.map((evt, idx) => {
+                const isSelected = selectedEventIndex === idx;
+                return (
+                  <div
+                    key={evt.index}
+                    onClick={() => setSelectedEventIndex(idx)}
+                    className={`p-4 rounded-2xl cursor-pointer transition-all duration-300 flex items-start gap-3.5 ${
+                      isSelected
+                        ? 'fp-operational ring-2 ring-cyan-400 shadow-xl scale-[1.01]'
+                        : 'fp hover:bg-slate-900/60'
+                    }`}
+                  >
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center font-mono font-bold text-xs shrink-0"
+                      style={{
+                        backgroundColor: `${evt.color}25`,
+                        color: evt.color,
+                        border: `1px solid ${evt.color}60`
+                      }}
+                    >
+                      {evt.index}
                     </div>
-                    <div className="font-bold text-slate-100 text-sm mt-0.5">{evt.title}</div>
-                    <p className="text-slate-300 text-xs mt-1 leading-relaxed">{evt.desc}</p>
-                    <div className="text-[10px] text-slate-500 font-mono mt-1">Actor: {evt.actor} • Trace: {evt.traceId}</div>
+
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold" style={{ color: evt.color }}>
+                          {evt.type}
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400">{evt.time}</span>
+                      </div>
+                      <div className="font-bold text-white text-xs leading-snug">{evt.title}</div>
+                      <div className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">{evt.desc}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
-            {/* Event Deep Inspector */}
-            <div className="bg-[#1c2541] border border-[#3a506b] rounded-xl p-5 space-y-4 text-xs h-fit sticky top-6">
-              <div className="border-b border-slate-700 pb-3">
-                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider">FLIGHT RECORDER INSPECTOR</span>
-                <h3 className="font-bold text-slate-100 text-sm mt-0.5">Event #{selected.index}: {selected.type}</h3>
-                <div className="text-[11px] text-slate-400 font-mono mt-0.5">{selected.time}</div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="text-slate-400 font-mono text-[10px] uppercase">Event Description:</div>
-                <p className="text-slate-200 leading-relaxed bg-slate-900 p-2.5 rounded border border-slate-800">
-                  {selected.desc}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="text-cyan-400 font-mono text-[10px] uppercase">Recorded Evidence Stack:</div>
-                <div className="space-y-1.5 font-mono text-[11px]">
-                  {selected.evidence.map((ev, i) => (
-                    <div key={i} className="bg-slate-900/80 p-2 rounded border border-slate-800 text-slate-300 flex items-center gap-1.5">
-                      <span className="text-cyan-400">•</span>
-                      <span>{ev}</span>
-                    </div>
-                  ))}
+            {/* Selected Trace Details */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="fp fp-operational rounded-3xl p-6 space-y-4 shadow-2xl animate-slide-up">
+                <div className="border-b border-slate-800 pb-3">
+                  <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">
+                    EVENT RECORD #{selected.index}
+                  </span>
+                  <h3 className="text-base font-black text-white mt-1">{selected.title}</h3>
                 </div>
-              </div>
 
-              <div className="pt-2 border-t border-slate-800 font-mono text-[10px] text-slate-400">
-                Trace ID: <span className="text-slate-200">{selected.traceId}</span>
+                <div className="space-y-2 text-xs font-mono">
+                  <div className="flex justify-between text-slate-300">
+                    <span className="text-slate-400">Timestamp:</span>
+                    <span className="font-bold text-cyan-300">{selected.time}</span>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span className="text-slate-400">Trace ID:</span>
+                    <span className="text-purple-300 font-bold">{selected.traceId}</span>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span className="text-slate-400">Executing Actor:</span>
+                    <span className="text-slate-200">{selected.actor}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-2 border-t border-slate-800">
+                  <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
+                    CRYPTOGRAPHIC EVIDENCE INPUTS
+                  </span>
+                  <div className="space-y-1.5 text-xs font-mono">
+                    {selected.evidence.map((ev, i) => (
+                      <div key={i} className="fp p-2.5 rounded-xl text-slate-200 flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <span>{ev}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
+import { useEnvironment } from '@/context/EnvironmentContext';
 import { 
   Database, 
   Search, 
@@ -22,9 +23,14 @@ import {
 import { RiskBadge, UncertaintyBadge, DataModeBadge } from '@/components/ui/Badges';
 
 export default function PredictionLedgerPage() {
+  const { setPage, setMode } = useEnvironment();
   const [filterMode, setFilterMode] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedSnapshot, setSelectedSnapshot] = useState<any | null>(null);
+
+  useEffect(() => {
+    setPage('ledger');
+    setMode('DEMO');
+  }, [setPage, setMode]);
 
   const ledgerRecords = [
     {
@@ -121,25 +127,23 @@ export default function PredictionLedgerPage() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#040814] text-slate-100 select-none">
+    <div className="flex flex-col min-h-screen select-none">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="ledger" />
 
-        <main className="flex-1 p-6 max-w-6xl mx-auto space-y-6">
-          {/* Header with Glowing Text Gradient */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#223354] pb-5 gap-3">
+        <main className="flex-1 p-5 lg:p-6 max-w-6xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="px-3 py-1 rounded-xl bg-cyan-950/80 text-cyan-300 border border-cyan-800 text-[10px] font-mono font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]">
-                  APPEND-ONLY IMMUTABLE STORE
-                </span>
-                <h1 className="text-2xl font-black tracking-tight text-gradient-cyan flex items-center gap-2.5">
-                  <Database className="w-6 h-6 text-cyan-400 animate-pulse" />
+                <span className="chip chip-demo">APPEND-ONLY IMMUTABLE STORE</span>
+                <h1 className="text-xl font-black text-white flex items-center gap-2">
+                  <Database className="w-5 h-5 text-cyan-400" />
                   PREDICTION MEMORY & AUDIT LEDGER
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1.5 font-sans">
+              <p className="text-xs text-slate-400 mt-1 font-sans">
                 Cryptographic black-box record of every model prediction, what was known at that exact moment, and what happened later
               </p>
             </div>
@@ -152,8 +156,8 @@ export default function PredictionLedgerPage() {
             </div>
           </div>
 
-          {/* Search & Mode Filter Bar with Glassmorphism */}
-          <div className="glass-panel-glow rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
+          {/* Search & Mode Filter Bar with Floating Panel */}
+          <div className="fp fp-operational rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
             <div className="relative w-full sm:w-96">
               <Search className="w-4 h-4 text-cyan-400 absolute left-3.5 top-3" />
               <input
@@ -161,21 +165,21 @@ export default function PredictionLedgerPage() {
                 placeholder="Search location, disaster, or prediction hash..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-900/90 border border-slate-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-xs text-slate-200 placeholder-slate-500 font-mono transition"
+                className="w-full pl-10 pr-4 py-2 bg-slate-950/80 border border-slate-700/80 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-xs text-slate-200 placeholder-slate-500 font-mono transition"
               />
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-xs">
               <span className="text-slate-400 text-[11px] font-bold">DATA MODE:</span>
-              <div className="flex items-center bg-slate-900/90 border border-slate-800 rounded-xl p-1 shadow-inner">
+              <div className="flex items-center fp rounded-xl p-1 shadow-inner">
                 {['ALL', 'DEMO', 'HINDCAST'].map((mode) => (
                   <button
                     key={mode}
                     onClick={() => setFilterMode(mode)}
                     className={`px-3 py-1 rounded-lg text-[11px] font-bold transition transform active:scale-95 ${
                       filterMode === mode
-                        ? 'btn-glow-cyan text-white shadow-md'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                        ? 'btn-primary text-white shadow-md'
+                        : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
                     {mode}
@@ -185,21 +189,21 @@ export default function PredictionLedgerPage() {
             </div>
           </div>
 
-          {/* Stream of Sealed Prediction Cards with Dynamic Glassmorphism Hover Effects */}
+          {/* Stream of Sealed Prediction Cards */}
           <div className="space-y-4">
             {filtered.map((record) => (
               <div
                 key={record.id}
-                className="glass-panel rounded-3xl p-6 border border-cyan-500/20 hover:border-cyan-400/70 hover:shadow-[0_0_30px_rgba(6,182,212,0.25)] transition-all duration-300 transform hover:-translate-y-1 space-y-4 relative overflow-hidden group"
+                className="fp fp-operational rounded-3xl p-6 transition-all duration-300 transform hover:-translate-y-1 space-y-4 relative overflow-hidden group shadow-2xl"
               >
-                {/* Top Row: IDs, Badges, and Timestamps */}
+                {/* Top Row */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3.5 gap-2">
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-cyan-400 text-xs font-black tracking-wider bg-slate-900/90 px-2.5 py-0.5 rounded-lg border border-cyan-500/30">
+                      <span className="font-mono text-cyan-400 text-xs font-black tracking-wider bg-slate-950 px-2.5 py-0.5 rounded-lg border border-cyan-500/30">
                         {record.id}
                       </span>
-                      <h2 className="text-base font-black text-slate-100 group-hover:text-cyan-300 transition">
+                      <h2 className="text-base font-black text-white group-hover:text-cyan-300 transition">
                         {record.where}
                       </h2>
                     </div>
@@ -216,24 +220,24 @@ export default function PredictionLedgerPage() {
                   </div>
                 </div>
 
-                {/* Middle Row: Model Config & Outcome Verification */}
+                {/* Middle Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="bg-[#070d1e]/90 p-4 rounded-2xl border border-slate-800 space-y-2">
+                  <div className="fp p-4 rounded-2xl space-y-2">
                     <div className="text-slate-400 text-[10px] uppercase font-bold flex items-center justify-between">
                       <span>MODEL CONFIGURATION</span>
                       <span className="text-cyan-400">SCORE: {record.riskScore}/100</span>
                     </div>
-                    <div className="text-slate-200 font-bold text-xs">{record.modelVersion}</div>
+                    <div className="text-white font-bold text-xs">{record.modelVersion}</div>
                     <div className="grid grid-cols-2 gap-1.5 pt-1 text-[10px] text-slate-300">
                       {record.contributors.map((c, i) => (
-                        <div key={i} className="bg-slate-900 px-2 py-1 rounded border border-slate-800">
+                        <div key={i} className="fp px-2 py-1 rounded">
                           <span className="text-slate-400">{c.name}:</span> <span className="text-cyan-300 font-bold">{c.val}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="bg-[#070d1e]/90 p-4 rounded-2xl border border-slate-800 space-y-2">
+                  <div className="fp p-4 rounded-2xl space-y-2">
                     <div className="text-emerald-400 text-[10px] uppercase font-bold flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                       <span>WHAT HAPPENED LATER (OUTCOME VERIFICATION)</span>
@@ -247,7 +251,7 @@ export default function PredictionLedgerPage() {
                   </div>
                 </div>
 
-                {/* Bottom Row: Cryptographic Digest & Inspection Actions */}
+                {/* Bottom Row */}
                 <div className="flex flex-col sm:flex-row items-center justify-between pt-2 border-t border-slate-800/80 text-xs font-mono gap-3">
                   <div className="flex items-center gap-2 text-[10px] text-slate-400">
                     <Fingerprint className="w-3.5 h-3.5 text-purple-400" />
@@ -257,14 +261,14 @@ export default function PredictionLedgerPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href="/flight-recorder"
-                      className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 font-bold flex items-center gap-1.5 transition text-[11px]"
+                      className="fp px-3 py-1.5 rounded-xl text-cyan-300 font-bold flex items-center gap-1.5 transition text-[11px]"
                     >
                       <span>BLACK-BOX TRACE</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                     <Link
                       href="/hindcast"
-                      className="btn-glow-cyan px-3 py-1.5 rounded-xl text-white font-bold flex items-center gap-1.5 transition text-[11px]"
+                      className="btn-primary px-3 py-1.5 rounded-xl text-white font-bold flex items-center gap-1.5 transition text-[11px]"
                     >
                       <span>REPLAY HINDSIGHT</span>
                       <ArrowRight className="w-3.5 h-3.5" />
