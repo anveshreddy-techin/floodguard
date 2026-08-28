@@ -11,12 +11,14 @@ import { WhyRiskChangedPanel } from '@/components/ui/WhyRiskChangedPanel';
 import { VillageIntelligenceDrawer } from '@/components/ui/VillageIntelligenceDrawer';
 import { CommandTimeline } from '@/components/ui/CommandTimeline';
 import { CopilotDrawer } from '@/components/ui/CopilotDrawer';
-import { Bot, ShieldAlert, Layers, Compass, HelpCircle } from 'lucide-react';
-import { DataMode, RiskLevel } from '@/types';
+import { useLocation } from '@/context/LocationContext';
+import { Bot, ShieldAlert, Layers, Compass, HelpCircle, Sparkles } from 'lucide-react';
+import { DataMode } from '@/types';
 
 export default function CommandCenterPage() {
   const router = useRouter();
-  const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const { selectedLocation, setSelectedLocation } = useLocation();
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<string>('NOW');
   const [copilotOpen, setCopilotOpen] = useState<boolean>(false);
   const [dataMode, setDataMode] = useState<DataMode>('DEMO');
@@ -30,7 +32,7 @@ export default function CommandCenterPage() {
       if (e.key === 'h' || e.key === 'H') router.push('/hindcast');
       if (e.key === 'r' || e.key === 'R') router.push('/replay');
       if (e.key === 'Escape') {
-        setSelectedLocation(null);
+        setDrawerOpen(false);
         setCopilotOpen(false);
       }
     };
@@ -39,7 +41,7 @@ export default function CommandCenterPage() {
   }, [router]);
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#070d1e] text-slate-100 overflow-hidden select-none">
+    <div className="flex flex-col h-screen w-screen bg-[#050a17] text-slate-100 overflow-hidden select-none">
       {/* Top Application Header */}
       <Header dataMode={dataMode} systemStatus="OPERATIONAL" />
 
@@ -53,7 +55,10 @@ export default function CommandCenterPage() {
           {/* GIS Map Canvas (Visual Hero) */}
           <div className="flex-1 relative min-h-0">
             <LiveRiskMap
-              onSelectLocation={(loc) => setSelectedLocation(loc)}
+              onSelectLocation={(loc) => {
+                setSelectedLocation(loc);
+                setDrawerOpen(true);
+              }}
               selectedLocationId={selectedLocation?.id}
               simulatedTimeStep={currentStep}
             />
@@ -61,7 +66,7 @@ export default function CommandCenterPage() {
             {/* Floating Grounded Copilot Launcher Button */}
             <button
               onClick={() => setCopilotOpen(true)}
-              className="absolute top-4 right-4 z-20 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-2xl transition border border-cyan-400/40"
+              className="absolute top-4 right-4 z-20 btn-glow-cyan px-4 py-2 text-white rounded-xl text-xs font-black font-mono flex items-center gap-2 shadow-2xl transition border border-cyan-400/50"
             >
               <Bot className="w-4 h-4 text-cyan-300 animate-pulse" />
               <span>GROUNDED COPILOT</span>
@@ -75,13 +80,13 @@ export default function CommandCenterPage() {
           />
         </main>
 
-        {/* Right Command Intelligence Stack (Scrollable) */}
-        <aside className="w-80 xl:w-96 bg-[#0a122c] flex flex-col justify-between p-3.5 gap-3.5 overflow-y-auto shrink-0 border-l border-[#223354]">
+        {/* Right Command Intelligence Stack */}
+        <aside className="w-80 xl:w-96 bg-[#070d1e]/95 flex flex-col justify-between p-3.5 gap-3.5 overflow-y-auto shrink-0 border-l border-[#223354] backdrop-blur-xl">
           <div className="space-y-3.5">
             {/* Risk Dial Trajectory */}
             <RiskDial
-              score={68.5}
-              level="HIGH"
+              score={selectedLocation?.riskScore || 68.5}
+              level={selectedLocation?.riskLevel || 'HIGH'}
               trendDelta={14.2}
               primaryDriver="Rainfall Accumulation (48mm/3h)"
               dataFreshness="Updated 3 min ago"
@@ -96,20 +101,20 @@ export default function CommandCenterPage() {
 
           {/* Keyboard Navigation Tooltip Helper */}
           <div className="pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400 flex items-center justify-between">
-            <span>SHORTCUTS:</span>
+            <span className="font-bold text-cyan-400">HOTKEYS:</span>
             <div className="flex items-center gap-1.5">
-              <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-cyan-400">M Map</span>
-              <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-cyan-400">S Safety</span>
-              <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-cyan-400">H Hindcast</span>
+              <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-cyan-300">M Map</span>
+              <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-cyan-300">S Safety</span>
+              <span className="bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-cyan-300">H Hindcast</span>
             </div>
           </div>
         </aside>
 
         {/* Slide-in Location Intelligence Drawer */}
-        {selectedLocation && (
+        {drawerOpen && selectedLocation && (
           <VillageIntelligenceDrawer
             location={selectedLocation}
-            onClose={() => setSelectedLocation(null)}
+            onClose={() => setDrawerOpen(false)}
           />
         )}
 
