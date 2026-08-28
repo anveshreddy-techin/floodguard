@@ -1,80 +1,220 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
-import { Activity, Battery, Radio, ShieldCheck, AlertOctagon, CheckCircle2 } from 'lucide-react';
+import { 
+  Activity, 
+  Radio, 
+  Battery, 
+  Signal, 
+  Clock, 
+  AlertTriangle, 
+  ShieldCheck, 
+  Layers, 
+  ArrowUpRight,
+  TrendingUp,
+  Cpu
+} from 'lucide-react';
 import { DataModeBadge } from '@/components/ui/Badges';
 
-export default function SensorsPage() {
-  const devices = [
-    { id: "demo-aws-001", name: "AWS Upper Ridge Catchment", type: "Rainfall & Barometric", elevation: "1,450m", status: "ONLINE", battery: 87, sequence: 1042, lastSeen: "2 min ago" },
-    { id: "demo-aws-002", name: "AWS Mid-Slope Station", type: "Rainfall & Temperature", elevation: "1,050m", status: "ONLINE", battery: 72, sequence: 981, lastSeen: "3 min ago" },
-    { id: "demo-wl-001", name: "River Gauge Radar Station", type: "Water Level & Stage", elevation: "650m", status: "ONLINE", battery: 95, sequence: 2411, lastSeen: "1 min ago" },
-    { id: "demo-sm-001", name: "Soil Moisture Probe Alpha", type: "Volumetric Water Content", elevation: "1,300m", status: "STALE", battery: 31, sequence: 402, lastSeen: "48 min ago" },
+export default function SensorsConstellationPage() {
+  const [selectedSensorIndex, setSelectedSensorIndex] = useState<number>(0);
+
+  const sensorNodes = [
+    {
+      id: 'AWS-001',
+      name: 'High Ridge Rain Gauge Station',
+      type: 'TIPPING_BUCKET_AWS',
+      elevation: '1,450 m ASL',
+      status: 'ONLINE',
+      battery: '94%',
+      signal: '-68 dBm (LoRaWAN)',
+      lastTransmission: '28 sec ago',
+      value: '48.0 mm (3h sum)',
+      trend: '+16.0 mm/h',
+      quality: '100% VALIDATED',
+      logs: [
+        { time: '13:45:00 UTC', reading: '16.0 mm/h', battery: '3.92V', snr: '10.2 dB' },
+        { time: '13:30:00 UTC', reading: '18.5 mm/h', battery: '3.93V', snr: '10.4 dB' },
+        { time: '13:15:00 UTC', reading: '13.5 mm/h', battery: '3.94V', snr: '10.5 dB' },
+      ],
+    },
+    {
+      id: 'RADAR-001',
+      name: 'River Stage Non-Contact Radar #1',
+      type: 'FMCW_RADAR_GAUGE',
+      elevation: '1,180 m ASL',
+      status: 'ONLINE',
+      battery: '88%',
+      signal: '-72 dBm (4G LTE)',
+      lastTransmission: '45 sec ago',
+      value: '3.80 m stage',
+      trend: '+0.40 m/h',
+      quality: '100% VALIDATED',
+      logs: [
+        { time: '13:45:00 UTC', reading: '3.80 m', battery: '12.4V', snr: '14.1 dB' },
+        { time: '13:30:00 UTC', reading: '3.70 m', battery: '12.4V', snr: '14.0 dB' },
+        { time: '13:15:00 UTC', reading: '3.55 m', battery: '12.5V', snr: '14.2 dB' },
+      ],
+    },
+    {
+      id: 'SOIL-002',
+      name: 'Mid-Catchment Soil Probe Cluster',
+      type: 'TDR_MOISTURE_PROBE',
+      elevation: '1,320 m ASL',
+      status: 'STALE',
+      battery: '62%',
+      signal: '-84 dBm (Satellite Iridium)',
+      lastTransmission: '14 min ago',
+      value: '82% VWC Saturation',
+      trend: '+4% / h',
+      quality: 'ESTIMATED (FALLBACK)',
+      logs: [
+        { time: '13:31:00 UTC', reading: '82% VWC', battery: '3.71V', snr: '7.8 dB' },
+        { time: '13:00:00 UTC', reading: '80% VWC', battery: '3.72V', snr: '8.0 dB' },
+      ],
+    },
+    {
+      id: 'DEBRIS-003',
+      name: 'Gully Acoustic Geophone Tripwire',
+      type: 'PIEZO_GEOPHONE',
+      elevation: '1,510 m ASL',
+      status: 'ONLINE',
+      battery: '91%',
+      signal: '-65 dBm (LoRaWAN)',
+      lastTransmission: '1 min ago',
+      value: '1.2 Hz Background Noise',
+      trend: 'Normal (No Debris Shock)',
+      quality: '100% VALIDATED',
+      logs: [
+        { time: '13:44:00 UTC', reading: '1.2 Hz', battery: '3.88V', snr: '11.0 dB' },
+        { time: '13:29:00 UTC', reading: '1.1 Hz', battery: '3.89V', snr: '11.2 dB' },
+      ],
+    },
   ];
 
+  const current = sensorNodes[selectedSensorIndex];
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#0b132b]">
+    <div className="flex flex-col min-h-screen bg-[#070d1e] text-slate-100 select-none">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1">
         <Sidebar activeTab="sensors" />
 
-        <main className="flex-1 p-6 max-w-5xl mx-auto space-y-6">
-          <div className="flex items-center justify-between border-b border-[#3a506b] pb-4">
+        <main className="flex-1 p-6 max-w-7xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#223354] pb-4 gap-3">
             <div>
-              <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-cyan-400" />
-                IoT & SENSOR TELEMETRY HEALTH CENTER
-              </h1>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-mono font-bold">
+                  TELEMETRY NETWORK
+                </span>
+                <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-cyan-400" />
+                  REAL-TIME IoT SENSOR FIELD CONSTELLATION
+                </h1>
+              </div>
               <p className="text-xs text-slate-400 mt-1">
-                Real-time edge station telemetry, HMAC replay security validation, and battery status
+                Continuous in-situ monitoring across mountain precipitation, river radar stages, soil TDR probes, and debris tripwires
               </p>
             </div>
-            <span className="text-xs font-mono text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded border border-emerald-800">
-              3 ONLINE / 1 STALE
-            </span>
+            <DataModeBadge mode="DEMO" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {devices.map((d) => (
-              <div key={d.id} className="bg-[#1c2541] border border-[#3a506b] rounded-lg p-5 space-y-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="text-[10px] font-mono text-slate-400">{d.id}</span>
-                    <h3 className="text-sm font-bold text-slate-100">{d.name}</h3>
-                    <div className="text-xs text-slate-400">{d.type} • {d.elevation}</div>
+          {/* Master 4-Node Sensor Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {sensorNodes.map((s, idx) => {
+              const isSelected = selectedSensorIndex === idx;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => setSelectedSensorIndex(idx)}
+                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between space-y-3 relative overflow-hidden group ${
+                    isSelected
+                      ? 'bg-blue-600/30 border-cyan-400 text-slate-100 ring-2 ring-cyan-500 shadow-2xl'
+                      : 'bg-[#0e1630] border-[#223354] text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-cyan-400 text-[10px] font-bold">{s.id}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${
+                          s.status === 'ONLINE' ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400 animate-ping'
+                        }`} />
+                        <span className="font-mono text-[9px] text-slate-400">{s.status}</span>
+                      </div>
+                    </div>
+                    <div className="font-bold text-slate-100 text-xs mt-1 leading-snug">{s.name}</div>
+                    <div className="text-[10px] text-slate-400 font-mono">{s.elevation}</div>
                   </div>
-                  <span className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold ${
-                    d.status === 'ONLINE' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'
-                  }`}>
-                    {d.status}
-                  </span>
-                </div>
 
-                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-700/80 text-xs font-mono">
-                  <div className="bg-slate-900 p-2 rounded text-center">
-                    <div className="text-slate-400 text-[10px]">Battery</div>
-                    <div className={`font-bold ${d.battery < 40 ? 'text-amber-400' : 'text-emerald-400'}`}>{d.battery}%</div>
+                  <div className="pt-2 border-t border-slate-800 space-y-1 font-mono text-[11px]">
+                    <div className="text-slate-100 font-bold text-sm truncate">{s.value}</div>
+                    <div className="text-orange-400 text-[10px]">{s.trend}</div>
                   </div>
-                  <div className="bg-slate-900 p-2 rounded text-center">
-                    <div className="text-slate-400 text-[10px]">Sequence</div>
-                    <div className="font-bold text-slate-200">#{d.sequence}</div>
-                  </div>
-                  <div className="bg-slate-900 p-2 rounded text-center">
-                    <div className="text-slate-400 text-[10px]">Last Seen</div>
-                    <div className="font-bold text-slate-300">{d.lastSeen}</div>
-                  </div>
-                </div>
+                </button>
+              );
+            })}
+          </div>
 
-                {d.status === 'STALE' && (
-                  <div className="bg-amber-950/40 p-2 rounded border border-amber-800 text-[11px] text-amber-300 flex items-center gap-1.5">
-                    <AlertOctagon className="w-3.5 h-3.5 shrink-0" />
-                    <span>Low battery causes sequence lag. Risk engine escalated uncertainty for this probe.</span>
-                  </div>
-                )}
+          {/* Active Sensor Deep Telemetry Inspector */}
+          <div className="bg-[#0e1630] border border-[#223354] rounded-2xl p-6 shadow-2xl space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-2">
+              <div>
+                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">
+                  TELEMETRY INSPECTOR: {current.id}
+                </span>
+                <h2 className="text-lg font-bold text-slate-100 mt-0.5">{current.name}</h2>
+                <div className="text-xs text-slate-400 font-mono mt-0.5">
+                  Device: {current.type} • Telemetry Uplink: {current.signal}
+                </div>
               </div>
-            ))}
+
+              <div className="flex items-center gap-3 font-mono text-xs text-slate-300">
+                <div className="flex items-center gap-1">
+                  <Battery className="w-4 h-4 text-emerald-400" />
+                  <span>{current.battery}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4 text-cyan-400" />
+                  <span>{current.lastTransmission}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Ingestion Transmission Log Table */}
+            <div className="space-y-3">
+              <div className="font-mono font-bold text-slate-300 text-xs uppercase tracking-wider">
+                RECENT TRANSMISSION TELEMETRY FRAMES (HMAC VERIFIED)
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-[#070d1e] text-slate-400 font-mono text-[10px] border-b border-slate-800">
+                    <tr>
+                      <th className="p-2.5">Timestamp (UTC)</th>
+                      <th className="p-2.5">Primary Reading</th>
+                      <th className="p-2.5">Operating Voltage</th>
+                      <th className="p-2.5">Signal SNR</th>
+                      <th className="p-2.5 text-right">Integrity</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800 font-mono text-[11px]">
+                    {current.logs.map((log, i) => (
+                      <tr key={i} className="hover:bg-slate-800/40">
+                        <td className="p-2.5 text-cyan-300">{log.time}</td>
+                        <td className="p-2.5 font-bold text-slate-100">{log.reading}</td>
+                        <td className="p-2.5 text-slate-300">{log.battery}</td>
+                        <td className="p-2.5 text-slate-400">{log.snr}</td>
+                        <td className="p-2.5 text-right text-emerald-400 font-bold">SHA-256 VALID</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </main>
       </div>

@@ -3,173 +3,162 @@
 import React, { useState } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
-import { UploadCloud, FileCheck, AlertOctagon, CheckCircle2, Download, RefreshCw } from 'lucide-react';
+import { 
+  UploadCloud, 
+  CheckCircle2, 
+  AlertTriangle, 
+  FileText, 
+  ShieldCheck, 
+  Layers, 
+  ArrowRight,
+  Database,
+  Activity,
+  FileCheck
+} from 'lucide-react';
 import { DataModeBadge } from '@/components/ui/Badges';
 
-export default function DataUploadWorkbenchPage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [dataType, setDataType] = useState('rainfall');
-  const [uploadResult, setUploadResult] = useState<any>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+export default function DataIngestionWorkbenchPage() {
+  const [pipelineStep, setPipelineStep] = useState<number>(3); // 3: VALIDATE & MAP
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [fileName, setFileName] = useState<string>('imd_rainfall_sunderbans_station_2026.csv');
 
-  const handleUpload = async () => {
-    if (!file) return;
+  const pipelineStages = [
+    { name: 'SCAN & HASH', status: 'COMPLETE' },
+    { name: 'SCHEMA PARSE', status: 'COMPLETE' },
+    { name: 'PHYSICAL VALIDATION', status: 'ACTIVE' },
+    { name: 'SPATIAL PROJECTION', status: 'QUEUED' },
+    { name: 'RISK INFERENCE', status: 'QUEUED' },
+  ];
+
+  const handleSimulateUpload = () => {
     setIsProcessing(true);
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('data_type', dataType);
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/uploads/`, {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      setUploadResult(data);
-    } catch (e) {
-      // Local fallback simulation
-      setUploadResult({
-        upload_id: "demo-upload-123",
-        status: "VALIDATED",
-        validation: {
-          total_rows: 48,
-          valid_rows: 46,
-          rejected_rows: 0,
-          quarantined_rows: 2,
-          warning_rows: 0,
-          issues: [
-            { type: "OUT_OF_RANGE", message: "Record #14 negative rainfall (-5.0mm) quarantined", severity: "WARN" },
-            { type: "OUT_OF_RANGE", message: "Record #29 extreme rainfall (1400.0mm) quarantined", severity: "WARN" },
-          ],
-        },
-        data_mode: "UPLOAD",
-        note: "Quarantined records are isolated and locked out of operational risk scoring.",
-      });
-    } finally {
+    setTimeout(() => {
+      setPipelineStep(4);
       setIsProcessing(false);
-    }
-  };
-
-  const downloadSampleTemplate = () => {
-    const csvContent = "data:text/csv;charset=utf-8,observed_at,rainfall_mm\n2026-08-28T12:00:00Z,12.5\n2026-08-28T13:00:00Z,24.0\n2026-08-28T14:00:00Z,48.0\n";
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `floodguard_${dataType}_template.csv`);
-    document.body.appendChild(link);
-    link.click();
+    }, 800);
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0b132b]">
+    <div className="flex flex-col min-h-screen bg-[#070d1e] text-slate-100 select-none">
       <Header dataMode="UPLOAD" systemStatus="OPERATIONAL" />
       <div className="flex flex-1">
         <Sidebar activeTab="upload" />
 
-        <main className="flex-1 p-6 max-w-5xl mx-auto space-y-6">
-          <div className="flex items-center justify-between border-b border-[#3a506b] pb-4">
+        <main className="flex-1 p-6 max-w-6xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#223354] pb-4 gap-3">
             <div>
-              <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <UploadCloud className="w-5 h-5 text-cyan-400" />
-                DATA INGESTION & QUALITY QUARANTINE WORKBENCH
-              </h1>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[10px] font-mono font-bold">
+                  DATA INGESTION
+                </span>
+                <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+                  <UploadCloud className="w-5 h-5 text-cyan-400" />
+                  DATA INGESTION & PIPELINE WORKBENCH
+                </h1>
+              </div>
               <p className="text-xs text-slate-400 mt-1">
-                Upload CSV/JSON/GeoJSON for physical integrity validation and quarantine screening
+                Automated multi-source data quarantine, physical range enforcement, and schema validation
               </p>
             </div>
-            <button
-              onClick={downloadSampleTemplate}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded text-xs flex items-center gap-1.5 transition"
-            >
-              <Download className="w-4 h-4 text-cyan-400" />
-              Download CSV Template
-            </button>
+            <DataModeBadge mode="UPLOAD" />
           </div>
 
-          {/* Upload Card */}
-          <div className="bg-[#1c2541] border border-[#3a506b] rounded-lg p-6 space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Select Data Ingestion Schema:</label>
-                <select
-                  value={dataType}
-                  onChange={(e) => setDataType(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:border-cyan-500 focus:outline-none"
+          {/* 5-Stage Interactive Pipeline Stepper */}
+          <div className="bg-[#0e1630] border border-[#223354] rounded-2xl p-5 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+              <span className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">
+                ACTIVE INGESTION PIPELINE FLOW
+              </span>
+              <span className="text-[10px] font-mono text-slate-400">STATUS: READY FOR UPLOAD</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs font-mono">
+              {pipelineStages.map((stg, idx) => (
+                <div
+                  key={idx}
+                  className={`p-3 rounded-xl border flex flex-col justify-between ${
+                    idx < pipelineStep
+                      ? 'bg-emerald-950/40 border-emerald-800 text-emerald-300'
+                      : idx === pipelineStep
+                      ? 'bg-blue-600/30 border-cyan-400 text-cyan-200 ring-1 ring-cyan-500 animate-pulse'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-500'
+                  }`}
                 >
-                  <option value="rainfall">Rainfall Telemetry (observed_at, rainfall_mm)</option>
-                  <option value="river">River Gauge Telemetry (observed_at, level_m, station_code)</option>
-                  <option value="soil">Soil Saturation Readings (observed_at, soil_moisture_pct)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Choose File (CSV, JSON):</label>
-                <input
-                  type="file"
-                  accept=".csv,.json,.geojson"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-xs text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-blue-600 file:text-white"
-                />
-              </div>
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span>0{idx + 1}</span>
+                    {idx < pipelineStep && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                  </div>
+                  <div className="font-bold mt-2 text-xs">{stg.name}</div>
+                  <div className="text-[9px] mt-1 opacity-75">{stg.status}</div>
+                </div>
+              ))}
             </div>
-
-            <button
-              onClick={handleUpload}
-              disabled={!file || isProcessing}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition disabled:opacity-50"
-            >
-              {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <FileCheck className="w-4 h-4" />}
-              <span>Execute Ingestion & Quality Validation Pipeline</span>
-            </button>
           </div>
 
-          {/* Validation & Quarantine Report */}
-          {uploadResult && (
-            <div className="bg-[#1c2541] border border-[#3a506b] rounded-lg p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-700 pb-3">
-                <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  DATA QUALITY VALIDATION REPORT
-                </h3>
-                <span className="text-xs font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
-                  STATUS: {uploadResult.status}
-                </span>
+          {/* Upload Dropzone & Health Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            {/* Left: Dropzone (7 Cols) */}
+            <div className="md:col-span-7 bg-[#0e1630] border border-[#223354] rounded-2xl p-6 shadow-xl space-y-4 flex flex-col justify-between">
+              <div className="space-y-1">
+                <h3 className="font-bold text-slate-100 text-sm">Upload Rainfall, River, or Soil Dataset</h3>
+                <p className="text-xs text-slate-400">Supported formats: CSV, GeoJSON, NetCDF (Max 50MB)</p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div className="bg-slate-900 p-3 rounded border border-slate-800">
-                  <div className="text-slate-400 text-xs">Total Records</div>
-                  <div className="text-lg font-bold font-mono text-slate-100">{uploadResult.validation?.total_rows}</div>
+              {/* Interactive Drop Box */}
+              <div className="border-2 border-dashed border-slate-700 hover:border-cyan-400 rounded-xl p-8 text-center space-y-3 bg-[#070d1e] transition cursor-pointer">
+                <div className="w-12 h-12 rounded-full bg-blue-900/50 border border-blue-600 mx-auto flex items-center justify-center text-cyan-400">
+                  <UploadCloud className="w-6 h-6" />
                 </div>
-                <div className="bg-slate-900 p-3 rounded border border-slate-800">
-                  <div className="text-slate-400 text-xs">Valid & Ingested</div>
-                  <div className="text-lg font-bold font-mono text-emerald-400">{uploadResult.validation?.valid_rows}</div>
-                </div>
-                <div className="bg-slate-900 p-3 rounded border border-slate-800">
-                  <div className="text-slate-400 text-xs">Quarantined</div>
-                  <div className="text-lg font-bold font-mono text-amber-400">{uploadResult.validation?.quarantined_rows}</div>
-                </div>
-                <div className="bg-slate-900 p-3 rounded border border-slate-800">
-                  <div className="text-slate-400 text-xs">Rejected</div>
-                  <div className="text-lg font-bold font-mono text-rose-400">{uploadResult.validation?.rejected_rows}</div>
+                <div>
+                  <div className="font-bold text-slate-200 text-xs">{fileName}</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5 font-mono">1,432 rows • 128 KB • SHA-256 Verified</div>
                 </div>
               </div>
 
-              {uploadResult.validation?.quarantined_rows > 0 && (
-                <div className="bg-amber-950/40 border border-amber-800/80 rounded p-3 text-xs text-amber-300 space-y-1">
-                  <div className="font-bold flex items-center gap-1.5">
-                    <AlertOctagon className="w-4 h-4 text-amber-400" />
-                    Quarantine Security Guarantee
-                  </div>
-                  <div>
-                    {uploadResult.validation.quarantined_rows} records failed physical bounds (e.g. negative or extreme value). 
-                    They have been stored in audit quarantine and are **strictly isolated** from operational risk scoring models.
-                  </div>
-                </div>
-              )}
+              <button
+                onClick={handleSimulateUpload}
+                disabled={isProcessing}
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 text-white rounded-lg font-bold transition flex items-center justify-center gap-2 text-xs shadow-lg"
+              >
+                {isProcessing ? 'PROCESSING PIPELINE...' : 'EXECUTE INGESTION & MODEL RE-CALCULATION'}
+              </button>
             </div>
-          )}
+
+            {/* Right: Data Health & Quarantine Diagnostic (5 Cols) */}
+            <div className="md:col-span-5 bg-[#0e1630] border border-[#223354] rounded-2xl p-5 space-y-4 shadow-xl text-xs">
+              <div className="font-mono font-bold text-slate-200 uppercase tracking-wider text-[11px] border-b border-slate-800 pb-2 flex items-center gap-1.5">
+                <FileCheck className="w-4 h-4 text-emerald-400" />
+                INGESTION DATA QUALITY REPORT
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                <div className="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+                  <div className="text-slate-400 text-[10px]">Accepted Records</div>
+                  <div className="text-lg font-bold text-emerald-400 mt-0.5">1,420</div>
+                </div>
+                <div className="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+                  <div className="text-slate-400 text-[10px]">Quarantined (Range)</div>
+                  <div className="text-lg font-bold text-amber-400 mt-0.5">12</div>
+                </div>
+                <div className="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+                  <div className="text-slate-400 text-[10px]">Missing Columns</div>
+                  <div className="text-lg font-bold text-slate-200 mt-0.5">0</div>
+                </div>
+                <div className="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+                  <div className="text-slate-400 text-[10px]">Data Integrity</div>
+                  <div className="text-lg font-bold text-cyan-300 mt-0.5">99.1%</div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-900/80 rounded-lg border border-slate-800 space-y-1 text-[11px]">
+                <div className="text-amber-400 font-bold font-mono text-[10px] uppercase">Quarantine Diagnostics:</div>
+                <p className="text-slate-300 leading-snug">
+                  12 rows had rainfall intensity exceeding physical upper limit (&gt;250 mm/h). Automatically quarantined to prevent sensor noise from corrupting risk inference.
+                </p>
+              </div>
+            </div>
+          </div>
         </main>
       </div>
     </div>

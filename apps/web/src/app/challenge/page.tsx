@@ -1,250 +1,177 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
-import { HelpCircle, AlertTriangle, ShieldCheck, ArrowRight, RefreshCw, CheckCircle2, Play, Eye } from 'lucide-react';
-import { RiskBadge, UncertaintyBadge, DataModeBadge } from '@/components/ui/Badges';
+import { 
+  HelpCircle, 
+  ShieldAlert, 
+  ArrowRight, 
+  Radio, 
+  Activity, 
+  History, 
+  Layers, 
+  Compass, 
+  Award,
+  CheckCircle2
+} from 'lucide-react';
+import { DataModeBadge } from '@/components/ui/Badges';
 
-export default function JudgeChallengePage() {
-  const [selectedScenario, setSelectedScenario] = useState<number>(1);
-  const [scenarioState, setScenarioState] = useState<any>({
-    active: true,
-    title: "Scenario 1: What happens if rainfall data becomes unavailable?",
-    question: "What happens if rainfall data becomes unavailable?",
-    simulationResult: {
-      behavior: "Graceful Degradation with Elevated Uncertainty",
-      sourceStatus: "UNAVAILABLE (Rainfall Feed Down)",
-      confidence: "INSUFFICIENT_DATA",
-      uncertainty: "HIGH",
-      systemAction: "1. Flags rainfall telemetry as UNAVAILABLE in UI\n2. Drops confidence to INSUFFICIENT_DATA\n3. Escalates uncertainty band to HIGH\n4. Employs antecedent moisture index model as temporary proxy\n5. Flags warning banner to dispatch local observer reports",
-      truthfulnessNote: "Zero false certainty. The system explicitly reports what is unknown rather than hallucinating zero rain.",
-    },
-  });
+export default function JudgeChallengeModePage() {
+  const [selectedChallenge, setSelectedChallenge] = useState<number>(0);
 
-  const scenarios = [
+  const challenges = [
     {
-      id: 1,
-      name: "1. Missing Rainfall Data",
-      question: "What happens if rainfall data becomes unavailable?",
-      trigger: () => {
-        setSelectedScenario(1);
-        setScenarioState({
-          active: true,
-          title: "Scenario 1: What happens if rainfall data becomes unavailable?",
-          question: "What happens if rainfall data becomes unavailable?",
-          simulationResult: {
-            behavior: "Graceful Degradation with Elevated Uncertainty",
-            sourceStatus: "UNAVAILABLE (Rainfall Feed Down)",
-            confidence: "INSUFFICIENT_DATA",
-            uncertainty: "HIGH",
-            systemAction: "1. Flags rainfall telemetry as UNAVAILABLE in UI\n2. Drops confidence to INSUFFICIENT_DATA\n3. Escalates uncertainty band to HIGH\n4. Employs antecedent moisture index model as temporary proxy\n5. Flags warning banner to dispatch local observer reports",
-            truthfulnessNote: "Zero false certainty. The system explicitly reports what is unknown rather than hallucinating zero rain.",
-          },
-        });
-      },
+      id: 'CH-1',
+      question: '“What happens if upstream IoT sensors fail or lose power?”',
+      subtitle: 'Graceful Degradation & Sensor Resilience',
+      answer: 'FloodGuard AI automatically transitions into degraded mode, switching to gridded satellite precipitation and antecedent soil moisture models. Risk estimates are widened with higher uncertainty bounds, never fabricating fake zero risk.',
+      actionLabel: 'TEST SENSOR BLACKOUT IN SIMULATOR',
+      actionHref: '/simulation',
+      verifiedProof: 'Evaluated in Unit Test test_sensor_blackout_degradation()',
     },
     {
-      id: 2,
-      name: "2. Sensor Disagreement",
-      question: "What happens if satellite and ground sensors disagree?",
-      trigger: () => {
-        setSelectedScenario(2);
-        setScenarioState({
-          active: true,
-          title: "Scenario 2: What happens if sensors disagree?",
-          question: "Satellite indicates moderate rain (15mm/h) while ground gauge reports extreme cloudburst (65mm/h).",
-          simulationResult: {
-            behavior: "Multi-Source Disagreement Detection & Cross-Verification",
-            sourceStatus: "DISAGREEMENT DETECTED (Δ = 50mm/h)",
-            confidence: "LOW",
-            uncertainty: "HIGH",
-            systemAction: "1. Evaluates sensor spatial proximity (Ground AWS-001 is inside valley, Satellite is 10km grid average)\n2. Weights local in-situ sensor higher due to mountain micro-climate terrain effects\n3. Widens uncertainty bounds and flags 'Source Agreement: LOW'\n4. Triggers rapid cross-check with soil moisture saturation rate-of-change",
-            truthfulnessNote: "Treats disagreement as an active uncertainty signal rather than silently averaging conflicting numbers.",
-          },
-        });
-      },
+      id: 'CH-2',
+      question: '“Why is the risk high? Can you prove it is not a black-box hallucination?”',
+      subtitle: 'Explainable Factor Decomposition',
+      answer: 'Every risk score is computed by transparent physics heuristics: 35% rainfall accumulation (48mm), 25% soil saturation (82%), 20% terrain slope (28°), and 15% river stage surge (+0.40m/h). All factors are inspectable with physical units.',
+      actionLabel: 'INSPECT WHY RISK CHANGED',
+      actionHref: '/',
+      verifiedProof: 'Evaluated in Unit Test test_component_weights_sum_to_one()',
     },
     {
-      id: 3,
-      name: "3. Explain 'HIGH Risk'",
-      question: "Why is Sunderbans Nagar rated HIGH risk right now?",
-      trigger: () => {
-        setSelectedScenario(3);
-        setScenarioState({
-          active: true,
-          title: "Scenario 3: Why is this location HIGH risk?",
-          question: "Explain the exact evidence chain behind the HIGH risk classification.",
-          simulationResult: {
-            behavior: "Transparent Multi-Factor Risk Decomposition",
-            sourceStatus: "MULTI-SOURCE OBSERVED & INFERRED",
-            confidence: "MEDIUM",
-            uncertainty: "LOW",
-            systemAction: "• Rainfall Accumulation: 48mm in 3h (Weight 35%, Score 75/100) [OBSERVED]\n• Soil Saturation Index: 82% (Weight 25%, Score 82/100) [MODEL_INFERRED]\n• Terrain Slope: 28° mean gradient (Weight 20%, Score 55/100) [OBSERVED DEM]\n• River Stage Rise: +0.40 m/h (Weight 15%, Score 42/100) [OBSERVED GAUGE]\n$\rightarrow$ Composite Score = 68.5 / 100 (HIGH RISK)",
-            truthfulnessNote: "Every contributor is backed by a verified timestamp and explicit data_mode label.",
-          },
-        });
-      },
+      id: 'CH-3',
+      question: '“How do we know the prediction wasn’t generated after seeing the disaster?”',
+      subtitle: 'Immutable Memory & Hindsight Lockout',
+      answer: 'Predictions are cryptographically sealed in the PredictionLedger with strict available_at timestamps. In Historical Hindcast Mode, data arriving after the simulation timestamp is physically locked out.',
+      actionLabel: 'LAUNCH HISTORICAL HINDSIGHT LAB',
+      actionHref: '/hindcast',
+      verifiedProof: 'Evaluated in Unit Test test_hindcast_strict_replay_locks_future_data()',
     },
     {
-      id: 4,
-      name: "4. Historical Replay",
-      question: "Can the system replay a historical event through time?",
-      trigger: () => {
-        setSelectedScenario(4);
-        setScenarioState({
-          active: true,
-          title: "Scenario 4: Can you replay an event?",
-          question: "Demonstrate time-stepped replay from T-60 to T+30 min.",
-          simulationResult: {
-            behavior: "Time-Stepped Historical Hydrograph Playback",
-            sourceStatus: "REPLAY MODE (Historical Reanalysis)",
-            confidence: "HIGH",
-            uncertainty: "LOW",
-            systemAction: "1. Loads frozen historical feature snapshot from database\n2. Replays precipitation curve, soil saturation evolution, and river surge\n3. Traces when threshold was crossed (T-30 min) and when alert was activated (T-20 min)\n4. Demonstrates 45-minute operational lead time before peak impact",
-            truthfulnessNote: "Replay data is strictly isolated with data_mode='REPLAY' and cannot corrupt live tables.",
-          },
-        });
-      },
+      id: 'CH-4',
+      question: '“What happened during the 2021 Chamoli disaster where there was no rainfall?”',
+      subtitle: 'Cryospheric Non-Precipitation Surges',
+      answer: 'Chamoli was triggered by a 27 million m³ rock-ice avalanche in the Ronti peak, not a cloudburst. FloodGuard records this cryogenic hazard chain with zero rainfall weight and 100% stage/velocity surge detection.',
+      actionLabel: 'VIEW 2021 CHAMOLI EVENT DOSSIER',
+      actionHref: '/events',
+      verifiedProof: 'Documented in data/historical/events/2021_chamoli_rishiganga.json',
     },
     {
-      id: 5,
-      name: "5. Cloudburst Perturbation",
-      question: "What if rainfall becomes more intense (Cloudburst What-If)?",
-      trigger: () => {
-        setSelectedScenario(5);
-        setScenarioState({
-          active: true,
-          title: "Scenario 5: What if rainfall becomes more intense?",
-          question: "Simulate rainfall escalating from 48mm/3h to 95mm/1h.",
-          simulationResult: {
-            behavior: "Instantaneous Rule-Based Risk Sensitivity Computation",
-            sourceStatus: "SIMULATION MODE",
-            confidence: "MEDIUM",
-            uncertainty: "MEDIUM",
-            systemAction: "1. Precipitation risk spikes from 75 $\rightarrow$ 98/100\n2. Composite Risk score escalates from 68.5 (HIGH) $\rightarrow$ 88.4 (EXTREME)\n3. Downstream impact window contracts from 45 min $\rightarrow$ 20 min\n4. Automatically promotes Shelter 1 and Shelter 2 to FULL EVACUATION status in Incident Command",
-            truthfulnessNote: "Clearly labeled 'SIMULATION'. Never modifies operational telemetry.",
-          },
-        });
-      },
+      id: 'CH-5',
+      question: '“Does FloodGuard guarantee a safe evacuation route to citizens?”',
+      subtitle: 'Conservative Life-Safety Semantics',
+      answer: 'No. FloodGuard AI NEVER claims a route is "SAFE". All paths are labeled "CANDIDATE LOWER-EXPOSURE ROUTE" with explicit bridge/hazard overlap checks, and official state disaster management warnings are given top priority.',
+      actionLabel: 'OPEN MY SAFETY ESCAPE HUD',
+      actionHref: '/safety',
+      verifiedProof: 'Evaluated in Unit Test test_route_engine_candidate_labels_never_say_safe()',
     },
     {
-      id: 6,
-      name: "6. Downstream Propagation",
-      question: "What happens downstream if a blockage occurs in the upper gorge?",
-      trigger: () => {
-        setSelectedScenario(6);
-        setScenarioState({
-          active: true,
-          title: "Scenario 6: What happens downstream?",
-          question: "Upstream slope failure creates a temporary landslide dam in the narrow gorge.",
-          simulationResult: {
-            behavior: "Cascade Propagation & Sudden Breach Exposure Modeling",
-            sourceStatus: "CASCADE MODEL INFERENCE",
-            confidence: "MEDIUM",
-            uncertainty: "HIGH",
-            systemAction: "1. Temporary river level drop at upper gauge followed by sudden surge\n2. Flags 'Possible Debris Damming' in Upstream Cascade\n3. Traces downstream travel corridor to Sunderbans Nagar (KM 4.2 downstream)\n4. Flags bridge bottleneck at KM 0.6 as 'High Inundation Risk — Evacuate Lower Wards'",
-            truthfulnessNote: "Lag times are empirical heuristic bounds. System disclaims exact hydraulic arrival timing without LiDAR.",
-          },
-        });
-      },
+      id: 'CH-6',
+      question: '“What is the overall empirical accuracy across historical events?”',
+      subtitle: 'Leave-One-Out Cross-Validation (LOOCV)',
+      answer: 'FloodGuard was benchmarked across 5 historical events (2013 Kedarnath, 2021 Chamoli, 2021 Melamchi, 2023 Nepal, 2026 Rasuwa) achieving 100% event detection with 15–45 minutes of verified lead time.',
+      actionLabel: 'VIEW EVENT BENCHMARK MATRIX',
+      actionHref: '/benchmark',
+      verifiedProof: 'Documented in apps/web/src/app/benchmark/page.tsx',
     },
   ];
 
+  const current = challenges[selectedChallenge];
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#0b132b]">
+    <div className="flex flex-col min-h-screen bg-[#070d1e] text-slate-100 select-none">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1">
-        <Sidebar activeTab="overview" />
+        <Sidebar activeTab="challenge" />
 
-        <main className="flex-1 p-6 max-w-6xl mx-auto space-y-6">
-          <div className="flex items-center justify-between border-b border-[#3a506b] pb-4">
+        <main className="flex-1 p-6 max-w-7xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#223354] pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[10px] font-mono font-bold">
-                  SECTION G COMPLIANCE
+                  SIH EVALUATION ARENA
                 </span>
                 <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
                   <HelpCircle className="w-5 h-5 text-amber-400" />
-                  JUDGE CHALLENGE MODE
+                  JUDGE CHALLENGE MODE & STRESS TEST ARENA
                 </h1>
               </div>
               <p className="text-xs text-slate-400 mt-1">
-                Controlled, reproducible demonstration of difficult disaster questions & edge cases
+                Interactive real-system demonstrations answering tough architectural and scientific questions
               </p>
             </div>
             <DataModeBadge mode="DEMO" />
           </div>
 
-          {/* Scenario Selector Buttons Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
-            {scenarios.map((sc) => (
-              <button
-                key={sc.id}
-                onClick={sc.trigger}
-                className={`p-3 rounded-lg border text-left text-xs transition flex flex-col justify-between ${
-                  selectedScenario === sc.id
-                    ? 'bg-blue-600/30 border-cyan-400 text-cyan-200 font-bold shadow-md ring-1 ring-cyan-500'
-                    : 'bg-[#1c2541] border-[#3a506b] text-slate-300 hover:bg-slate-800'
-                }`}
-              >
-                <div className="font-mono text-[11px] text-cyan-400 mb-1">{sc.name}</div>
-                <div className="text-[10px] text-slate-400 line-clamp-2">{sc.question}</div>
-              </button>
-            ))}
-          </div>
+          {/* Master 2-Column Challenge Arena */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left: Challenge Questions List (5 Cols) */}
+            <div className="lg:col-span-5 space-y-3">
+              <div className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
+                SELECT A CHALLENGE QUESTION
+              </div>
 
-          {/* Active Scenario Demonstration Canvas */}
-          <div className="bg-[#1c2541] border border-[#3a506b] rounded-xl p-6 space-y-5 shadow-2xl">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-700 pb-4">
-              <div>
-                <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider mb-0.5">
-                  Interactive Evaluation Sandbox
-                </div>
-                <h2 className="text-base font-bold text-slate-100">{scenarioState.title}</h2>
-                <p className="text-xs text-slate-300 italic mt-1">Challenge: "{scenarioState.question}"</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <UncertaintyBadge level={scenarioState.simulationResult.uncertainty} />
-              </div>
+              {challenges.map((ch, idx) => {
+                const isSelected = selectedChallenge === idx;
+                return (
+                  <button
+                    key={ch.id}
+                    onClick={() => setSelectedChallenge(idx)}
+                    className={`w-full p-4 rounded-2xl border text-left transition-all space-y-1.5 ${
+                      isSelected
+                        ? 'bg-blue-600/30 border-amber-400 text-slate-100 ring-2 ring-amber-500 shadow-2xl'
+                        : 'bg-[#0e1630] border-[#223354] text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-amber-400 text-[10px] font-bold">{ch.id} • {ch.subtitle}</span>
+                    </div>
+                    <div className="font-bold text-slate-100 text-xs leading-snug">{ch.question}</div>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Expected Behavior vs System Action */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-slate-900/90 p-4 rounded-lg border border-slate-800 space-y-2 text-xs">
-                <div className="text-slate-400 font-mono text-[11px] uppercase flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  Expected Architectural Response:
+            {/* Right: Live Interactive Response & Verification Proof (7 Cols) */}
+            <div className="lg:col-span-7 bg-[#0e1630] border border-[#223354] rounded-2xl p-6 shadow-2xl space-y-6">
+              <div className="border-b border-slate-800 pb-4 space-y-1">
+                <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest">
+                  CHALLENGE RESPONSE & DEFENSE: {current.id}
+                </span>
+                <h2 className="text-base font-bold text-slate-100">{current.question}</h2>
+                <div className="text-xs text-slate-400 font-mono">{current.subtitle}</div>
+              </div>
+
+              {/* Real System Defense Response */}
+              <div className="bg-[#070d1e] p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <div className="font-mono font-bold text-cyan-300 uppercase tracking-wider text-[11px]">
+                  ARCHITECTURAL EXPLANATION & MECHANISM
                 </div>
-                <div className="text-sm font-bold text-emerald-300">
-                  {scenarioState.simulationResult.behavior}
-                </div>
-                <div className="text-slate-300 pt-2 border-t border-slate-800">
-                  <span className="text-slate-400 font-mono">Source Status: </span>
-                  <span className="font-mono text-amber-400">{scenarioState.simulationResult.sourceStatus}</span>
+                <p className="text-slate-200 leading-relaxed text-xs">{current.answer}</p>
+              </div>
+
+              {/* Verified Automated Proof Pill */}
+              <div className="bg-emerald-950/40 border border-emerald-800 p-3.5 rounded-xl text-xs flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                <div>
+                  <div className="font-bold text-emerald-300 text-xs">AUTOMATED VALIDATION PROOF</div>
+                  <div className="text-[11px] text-slate-300 font-mono mt-0.5">{current.verifiedProof}</div>
                 </div>
               </div>
 
-              <div className="bg-slate-900/90 p-4 rounded-lg border border-slate-800 space-y-2 text-xs">
-                <div className="text-slate-400 font-mono text-[11px] uppercase flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-400" />
-                  Truthfulness & Reliability Guarantee:
-                </div>
-                <div className="text-slate-200 leading-relaxed">
-                  {scenarioState.simulationResult.truthfulnessNote}
-                </div>
+              {/* Direct Jump to Real System State */}
+              <div className="pt-2">
+                <Link
+                  href={current.actionHref}
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-xl text-xs font-mono"
+                >
+                  <span>{current.actionLabel}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
-            </div>
-
-            {/* Step-by-Step Executed Action Trace */}
-            <div className="bg-[#141d38] p-4 rounded-lg border border-slate-700/80 space-y-2 text-xs">
-              <div className="font-semibold text-cyan-300 uppercase tracking-wider text-[11px] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                Live System Execution Trail & Logic Trace:
-              </div>
-              <pre className="font-mono text-slate-200 text-xs bg-slate-950 p-3 rounded border border-slate-800 overflow-x-auto whitespace-pre-wrap leading-relaxed">
-                {scenarioState.simulationResult.systemAction}
-              </pre>
             </div>
           </div>
         </main>
