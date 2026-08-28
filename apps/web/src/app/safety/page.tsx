@@ -16,22 +16,22 @@ import {
   Activity, 
   RefreshCw,
   Eye,
-  Sliders
+  Sliders,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import { RiskBadge, UncertaintyBadge, DataModeBadge } from '@/components/ui/Badges';
 import { GuidanceLevel, ExposureStatus, RiskLevel } from '@/types';
 
 export default function MySafetyPage() {
   const [locationMode, setLocationMode] = useState<'DEMO' | 'BROWSER' | 'MANUAL'>('DEMO');
-  const [permissionGranted, setPermissionGranted] = useState<boolean>(true);
   const [userCoords, setUserCoords] = useState<{ lat: number; lon: number }>({ lat: 30.5050, lon: 79.1550 });
-  const [monitoringActive, setMonitoringActive] = useState<boolean>(true);
   const [sensorFailure, setSensorFailure] = useState<boolean>(false);
   const [hazardDistanceKm, setHazardDistanceKm] = useState<number>(0.85);
   const [simulatedExposureStage, setSimulatedExposureStage] = useState<number>(2); // 0: Outside, 1: Near, 2: High, 3: Extreme
   const [rescueRequested, setRescueRequested] = useState<boolean>(false);
+  const [emergencyMode, setEmergencyMode] = useState<boolean>(false);
 
-  // Auto-calculated exposure state based on stage
   const exposureLevels: Array<{
     status: ExposureStatus;
     risk: RiskLevel;
@@ -107,7 +107,6 @@ export default function MySafetyPage() {
         (pos) => {
           setUserCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
           setLocationMode('BROWSER');
-          setPermissionGranted(true);
         },
         () => {
           alert('Location permission denied or unavailable. Using manual/demo position.');
@@ -118,14 +117,14 @@ export default function MySafetyPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0b132b]">
+    <div className={`flex flex-col min-h-screen bg-[#070d1e] text-slate-100 ${emergencyMode ? 'ring-4 ring-rose-600' : ''}`}>
       <Header dataMode={locationMode === 'DEMO' ? 'DEMO' : 'LIVE'} systemStatus="OPERATIONAL" />
       <div className="flex flex-1">
-        <Sidebar activeTab="safety" />
+        {!emergencyMode && <Sidebar activeTab="safety" />}
 
         <main className="flex-1 p-6 max-w-5xl mx-auto space-y-6">
-          {/* Top Title & Location Mode Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#3a506b] pb-4 gap-3">
+          {/* Top Title & Mode Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#223354] pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-mono font-bold">
@@ -133,7 +132,7 @@ export default function MySafetyPage() {
                 </span>
                 <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
                   <Compass className="w-5 h-5 text-cyan-400" />
-                  MY SAFETY & LOCATION-AWARE GUIDANCE
+                  MY SAFETY & ESCAPE GUIDANCE HUD
                 </h1>
               </div>
               <p className="text-xs text-slate-400 mt-1">
@@ -143,25 +142,27 @@ export default function MySafetyPage() {
 
             <div className="flex items-center gap-2 text-xs">
               <button
+                onClick={() => setEmergencyMode(!emergencyMode)}
+                className={`px-3 py-1.5 rounded-lg border font-mono text-[11px] font-bold flex items-center gap-1.5 transition ${
+                  emergencyMode ? 'bg-rose-600 text-white border-rose-500 shadow-lg' : 'bg-slate-900 text-slate-400 hover:text-slate-200 border-slate-700'
+                }`}
+              >
+                {emergencyMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+                <span>{emergencyMode ? 'EXIT EMERGENCY HUD' : 'EMERGENCY MODE'}</span>
+              </button>
+
+              <button
                 onClick={handleRequestBrowserLocation}
                 className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 rounded-lg flex items-center gap-1.5 font-medium transition"
               >
                 <MapPin className="w-3.5 h-3.5 text-cyan-400" />
                 <span>{locationMode === 'BROWSER' ? 'Using Device GPS' : 'Allow Device Location'}</span>
               </button>
-              <button
-                onClick={() => { setLocationMode('DEMO'); setUserCoords({ lat: 30.5050, lon: 79.1550 }); }}
-                className={`px-3 py-1.5 rounded-lg border font-mono text-[11px] font-bold ${
-                  locationMode === 'DEMO' ? 'bg-cyan-950 text-cyan-300 border-cyan-700' : 'bg-slate-900 text-slate-400 border-slate-800'
-                }`}
-              >
-                DEMO POSITION
-              </button>
             </div>
           </div>
 
           {/* Official Emergency Priority Banner */}
-          <div className="bg-amber-950/70 border-2 border-amber-600/80 rounded-xl p-4 text-xs space-y-1.5 shadow-lg">
+          <div className="bg-amber-950/80 border-2 border-amber-600 rounded-xl p-4 text-xs space-y-1.5 shadow-lg">
             <div className="flex items-center justify-between">
               <span className="font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 font-mono text-[11px]">
                 <ShieldAlert className="w-4 h-4 text-amber-400" />
@@ -174,110 +175,137 @@ export default function MySafetyPage() {
             <p className="text-slate-200 leading-relaxed">
               "Local administration advises all residents in low-lying riverbanks of Upper Catchment to stay alert, avoid crossing swollen streams, and monitor local siren broadcasts."
             </p>
-            <div className="text-[10px] text-amber-400/90 italic">
-              Official government notices always supersede model-generated suggestions.
-            </div>
           </div>
 
-          {/* Main User Exposure Card */}
-          <div className={`p-6 rounded-xl border space-y-4 shadow-2xl ${
-            currentExp.risk === 'EXTREME'
-              ? 'bg-rose-950/40 border-rose-600 ring-1 ring-rose-500'
-              : currentExp.risk === 'HIGH'
-              ? 'bg-orange-950/30 border-orange-600/80 ring-1 ring-orange-500/40'
-              : currentExp.risk === 'MODERATE'
-              ? 'bg-amber-950/20 border-amber-700/60'
-              : 'bg-[#1c2541] border-[#3a506b]'
-          }`}>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-700 pb-3 gap-2">
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold font-mono text-sm ${
-                  currentExp.risk === 'EXTREME' ? 'bg-rose-600 text-white' : currentExp.risk === 'HIGH' ? 'bg-orange-600 text-white' : 'bg-cyan-600 text-white'
-                }`}>
-                  L{currentExp.guidanceLvl}
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
-                    LOCATION RISK EXPOSURE
-                  </div>
-                  <h2 className="text-base font-bold text-slate-100">{currentExp.title}</h2>
-                </div>
+          {/* Master Visual Schematic Diagram (Specification Core) */}
+          <div className="bg-[#0e1630] border border-[#223354] rounded-2xl p-6 shadow-2xl space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-2">
+              <div>
+                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">
+                  LOCATION-AWARE EVACUATION VECTOR
+                </span>
+                <h2 className="text-xl font-bold text-slate-100 mt-0.5 flex items-center gap-2">
+                  <ShieldAlert className="w-5 h-5 text-orange-400" />
+                  {currentExp.title}
+                </h2>
               </div>
               <RiskBadge level={currentExp.risk} />
             </div>
 
-            <p className="text-xs text-slate-200 leading-relaxed">
-              {currentExp.msg}
-            </p>
-
-            {/* Telemetry Context */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 text-xs font-mono">
-              <div className="bg-slate-900/90 p-2.5 rounded border border-slate-800">
-                <div className="text-slate-400 text-[10px]">Hazard Proximity</div>
-                <div className="font-bold text-cyan-300 mt-0.5">{hazardDistanceKm} km from river</div>
-              </div>
-              <div className="bg-slate-900/90 p-2.5 rounded border border-slate-800">
-                <div className="text-slate-400 text-[10px]">Data Freshness</div>
-                <div className="font-bold text-emerald-400 mt-0.5">Updated 3 min ago</div>
-              </div>
-              <div className="bg-slate-900/90 p-2.5 rounded border border-slate-800">
-                <div className="text-slate-400 text-[10px]">Guidance Status</div>
-                <div className="font-bold text-amber-300 mt-0.5">
-                  {sensorFailure ? 'DEGRADED (STALE)' : 'ACTIVE MONITORING'}
+            {/* ASCII / Graphical Route Schematic Vector */}
+            <div className="bg-[#070d1e] p-6 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-around gap-6">
+              {/* YOU Node */}
+              <div className="flex flex-col items-center text-center space-y-1">
+                <div className="w-14 h-14 rounded-full bg-blue-600/30 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 font-mono font-bold text-lg animate-pulse shadow-lg">
+                  🔵
                 </div>
+                <div className="font-bold text-slate-100 text-sm">YOU</div>
+                <div className="text-[10px] font-mono text-slate-400">Accuracy: ±15m</div>
               </div>
-              <div className="bg-slate-900/90 p-2.5 rounded border border-slate-800">
-                <div className="text-slate-400 text-[10px]">Coordinates</div>
-                <div className="font-bold text-slate-300 mt-0.5">{userCoords.lat.toFixed(4)}, {userCoords.lon.toFixed(4)}</div>
+
+              {/* Vector Connector */}
+              <div className="flex-1 flex flex-col items-center justify-center space-y-1 w-full max-w-xs">
+                <div className="text-xs font-mono font-bold text-cyan-300 flex items-center gap-1">
+                  <span>1.4 km Elevated Route</span>
+                </div>
+                <div className="w-full h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-500 rounded-full relative">
+                  <div className="w-2.5 h-2.5 rounded-full bg-white absolute top-1/2 -translate-y-1/2 right-0 shadow-md" />
+                </div>
+                <div className="text-[10px] font-mono text-slate-400">Via North Ridge Trail</div>
+              </div>
+
+              {/* CANDIDATE SHELTER Node */}
+              <div className="flex flex-col items-center text-center space-y-1">
+                <div className="w-14 h-14 rounded-full bg-emerald-600/30 border-2 border-emerald-400 flex items-center justify-center text-emerald-300 font-mono font-bold text-lg shadow-lg">
+                  🟢
+                </div>
+                <div className="font-bold text-emerald-300 text-sm">CANDIDATE SHELTER</div>
+                <div className="text-[10px] font-mono text-slate-400">Community High School</div>
+              </div>
+            </div>
+
+            {/* Why Panel + Status */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+              <div className="bg-slate-900/90 p-4 rounded-lg border border-slate-800 space-y-2">
+                <div className="text-cyan-300 font-bold uppercase tracking-wider text-[11px]">
+                  WHY IS RISK ELEVATED?
+                </div>
+                <ul className="space-y-1 text-slate-300 text-xs">
+                  <li className="flex items-center gap-1.5"><span className="text-orange-400">•</span> Heavy localized rainfall (48mm in 3h)</li>
+                  <li className="flex items-center gap-1.5"><span className="text-orange-400">•</span> River stage rising rapidly (+0.40 m/h)</li>
+                  <li className="flex items-center gap-1.5"><span className="text-orange-400">•</span> Saturated mountain catchment slopes (82%)</li>
+                </ul>
+              </div>
+
+              <div className="bg-slate-900/90 p-4 rounded-lg border border-slate-800 space-y-2">
+                <div className="text-slate-400 font-bold uppercase tracking-wider text-[11px]">
+                  ROUTE STATUS & INTEGRITY
+                </div>
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Route Classification:</span>
+                    <span className="font-bold text-emerald-400">CANDIDATE ROUTE</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Surface Safety:</span>
+                    <span className="text-amber-300 font-bold">SAFETY NOT VERIFIED</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] text-slate-400 pt-1 border-t border-slate-800">
+                    <span>Data Freshness:</span>
+                    <span className="text-cyan-300">UPDATED 3 MIN AGO</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Interactive Simulation Controls (For Judge Evaluation) */}
-          <div className="bg-[#141d38] border border-cyan-800/60 rounded-xl p-4 text-xs space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-cyan-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                <Sliders className="w-4 h-4 text-cyan-400" />
-                SIMULATION & STRESS TEST CONTROLS (DEMO SANDBOX)
-              </span>
-              <span className="text-[10px] text-slate-400 font-mono">SECTION 78 COMPLIANCE</span>
-            </div>
+          {/* Interactive Simulation Sandbox */}
+          {!emergencyMode && (
+            <div className="bg-[#141d38] border border-cyan-800/60 rounded-xl p-4 text-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-cyan-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                  <Sliders className="w-4 h-4 text-cyan-400" />
+                  SIMULATION & STRESS TEST CONTROLS (DEMO SANDBOX)
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">SECTION 78 COMPLIANCE</span>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="text-[11px] text-slate-300 mb-1 block">Simulate User Exposure Level:</label>
-                <div className="grid grid-cols-4 gap-1.5">
-                  {['Outside', 'Near', 'High', 'Extreme'].map((lbl, idx) => (
-                    <button
-                      key={lbl}
-                      onClick={() => setSimulatedExposureStage(idx)}
-                      className={`p-2 rounded text-[11px] font-medium transition ${
-                        simulatedExposureStage === idx ? 'bg-blue-600 text-white font-bold' : 'bg-slate-900 text-slate-400 hover:bg-slate-800'
-                      }`}
-                    >
-                      {lbl}
-                    </button>
-                  ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] text-slate-300 mb-1 block">Simulate User Exposure Level:</label>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {['Outside', 'Near', 'High', 'Extreme'].map((lbl, idx) => (
+                      <button
+                        key={lbl}
+                        onClick={() => setSimulatedExposureStage(idx)}
+                        className={`p-2 rounded text-[11px] font-medium transition ${
+                          simulatedExposureStage === idx ? 'bg-blue-600 text-white font-bold' : 'bg-slate-900 text-slate-400 hover:bg-slate-800'
+                        }`}
+                      >
+                        {lbl}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-end">
+                  <label className="flex items-center gap-2 cursor-pointer bg-slate-900 p-2 rounded border border-slate-800">
+                    <input
+                      type="checkbox"
+                      checked={sensorFailure}
+                      onChange={(e) => setSensorFailure(e.target.checked)}
+                      className="w-4 h-4 accent-cyan-400 rounded"
+                    />
+                    <span className="text-slate-300 text-[11px]">Simulate Upstream Sensor Blackout (Degraded Guidance)</span>
+                  </label>
                 </div>
               </div>
-
-              <div className="flex flex-col justify-end">
-                <label className="flex items-center gap-2 cursor-pointer bg-slate-900 p-2 rounded border border-slate-800">
-                  <input
-                    type="checkbox"
-                    checked={sensorFailure}
-                    onChange={(e) => setSensorFailure(e.target.checked)}
-                    className="w-4 h-4 accent-cyan-400 rounded"
-                  />
-                  <span className="text-slate-300 text-[11px]">Simulate Upstream Sensor Blackout (Degraded Guidance)</span>
-                </label>
-              </div>
             </div>
-          </div>
+          )}
 
-          {/* Candidate Evacuation Routes (Truthfully Labeled) */}
-          <div className="bg-[#1c2541] border border-[#3a506b] rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-700 pb-3">
+          {/* Candidate Routes List */}
+          <div className="bg-[#0e1630] border border-[#223354] rounded-xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
                   <Navigation className="w-4 h-4 text-cyan-400" />
@@ -328,7 +356,7 @@ export default function MySafetyPage() {
           </div>
 
           {/* Rescue & Help Dispatch Button */}
-          <div className="bg-[#1c2541] border border-[#3a506b] rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-[#0e1630] border border-[#223354] rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
                 Emergency Assistance & Rescue Dispatch

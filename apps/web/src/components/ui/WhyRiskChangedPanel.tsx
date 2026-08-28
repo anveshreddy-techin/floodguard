@@ -1,0 +1,116 @@
+'use client';
+
+import React, { useState } from 'react';
+import { HelpCircle, AlertCircle, TrendingUp, Info, ChevronRight } from 'lucide-react';
+import { RiskContributor } from '@/types';
+
+export const WhyRiskChangedPanel: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'CONTRIBUTORS' | 'CHANGED' | 'MISSING'>('CONTRIBUTORS');
+
+  const contributors = [
+    { name: 'Rainfall Accumulation (3h)', score: 75, weight: 0.35, points: '+26.2', color: 'bg-orange-500', note: '48mm on upper ridge exceeds flash flood threshold' },
+    { name: 'Soil Saturation Index', score: 82, weight: 0.25, points: '+20.5', color: 'bg-amber-500', note: '82% moisture saturation on steep hillslope colluvium' },
+    { name: 'Terrain Gradient & Slope', score: 55, weight: 0.20, points: '+11.0', color: 'bg-blue-500', note: '28° mean catchment slope accelerates runoff concentration' },
+    { name: 'River Stage Rate-of-Rise', score: 42, weight: 0.15, points: '+6.3', color: 'bg-cyan-500', note: 'Gauge reading 3.80m rising +0.40m/hr' },
+  ];
+
+  const deltas = [
+    { param: '3h Rainfall', previous: '22 mm', current: '48 mm', change: '+26 mm (+118%)', status: 'ESCALATING' },
+    { param: 'Soil Saturation', previous: '74%', current: '82%', change: '+8% (+11%)', status: 'CRITICAL' },
+    { param: 'River Level', previous: '3.40 m', current: '3.80 m', change: '+0.40 m/h', status: 'RISING' },
+    { param: 'Composite Risk', previous: '51.5 (MOD)', current: '68.5 (HIGH)', change: '+17.0 pts', status: 'HIGH RISK' },
+  ];
+
+  const missingGaps = [
+    { source: 'IMD AWS High-Altitude Gauge', status: 'UNAVAILABLE', detail: 'Real-time telemetry down; using open fallback model' },
+    { source: 'In-Situ Soil Moisture Probes', status: 'MODEL_INFERRED', detail: 'Derived from antecedent precipitation index model' },
+    { source: 'Drone LiDAR Bathymetry', status: 'NOT CONFIGURED', detail: 'High-res channel depth contouring requires aerial LiDAR' },
+  ];
+
+  return (
+    <div className="bg-[#0e1630] border border-[#223354] rounded-xl p-4 space-y-3 shadow-xl text-xs">
+      {/* Tab Selectors */}
+      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setActiveTab('CONTRIBUTORS')}
+            className={`px-2.5 py-1 rounded text-[11px] font-mono transition font-medium ${
+              activeTab === 'CONTRIBUTORS' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            WHY RISK?
+          </button>
+          <button
+            onClick={() => setActiveTab('CHANGED')}
+            className={`px-2.5 py-1 rounded text-[11px] font-mono transition font-medium ${
+              activeTab === 'CHANGED' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            WHAT CHANGED?
+          </button>
+          <button
+            onClick={() => setActiveTab('MISSING')}
+            className={`px-2.5 py-1 rounded text-[11px] font-mono transition font-medium ${
+              activeTab === 'MISSING' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            WHAT'S MISSING?
+          </button>
+        </div>
+      </div>
+
+      {/* Tab 1: Contributors Decomposition */}
+      {activeTab === 'CONTRIBUTORS' && (
+        <div className="space-y-2.5">
+          {contributors.map((c, i) => (
+            <div key={i} className="bg-slate-900/80 p-2.5 rounded border border-slate-800 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-slate-200 text-[11px]">{c.name}</span>
+                <span className="font-mono text-cyan-400 text-[11px] font-bold">
+                  {c.score}/100 <span className="text-slate-400 text-[10px]">({c.points} pts)</span>
+                </span>
+              </div>
+              <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div className={`h-full ${c.color} transition-all duration-500`} style={{ width: `${c.score}%` }} />
+              </div>
+              <div className="text-[10px] text-slate-400 font-mono italic">{c.note}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Tab 2: What Changed? (Delta comparison) */}
+      {activeTab === 'CHANGED' && (
+        <div className="space-y-2">
+          {deltas.map((d, i) => (
+            <div key={i} className="bg-slate-900/80 p-2.5 rounded border border-slate-800 flex items-center justify-between">
+              <div>
+                <div className="font-semibold text-slate-200 text-[11px]">{d.param}</div>
+                <div className="text-[10px] text-slate-400 font-mono">Previous: {d.previous} → Current: {d.current}</div>
+              </div>
+              <div className="text-right">
+                <div className="font-mono text-orange-400 font-bold text-[11px]">{d.change}</div>
+                <span className="text-[9px] font-mono bg-orange-950 text-orange-300 px-1 rounded">{d.status}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Tab 3: What's Missing? (Data Gaps) */}
+      {activeTab === 'MISSING' && (
+        <div className="space-y-2">
+          {missingGaps.map((g, i) => (
+            <div key={i} className="bg-slate-900/80 p-2.5 rounded border border-slate-800 space-y-0.5">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-slate-200 text-[11px]">{g.source}</span>
+                <span className="text-[9px] font-mono bg-amber-950 text-amber-300 px-1 rounded border border-amber-800">{g.status}</span>
+              </div>
+              <p className="text-[10px] text-slate-400 leading-relaxed">{g.detail}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
