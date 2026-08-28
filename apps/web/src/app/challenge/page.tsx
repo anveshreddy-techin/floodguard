@@ -74,6 +74,15 @@ export default function JudgeChallengeModePage() {
       actionHref: '/safety',
       verifiedProof: 'Evaluated in Section 78 Safe Route Verification Protocol',
     },
+    {
+      id: 'CH-6',
+      question: '“What is your Post-SIH Ministry Deployment & Field Implementation Roadmap?”',
+      subtitle: 'Ministry of Education (MIC) & AICTE Guidelines Alignment',
+      answer: 'Structured 6–12 month phased rollout with Ministry of Home Affairs (MHA) and State EOCs. Phase I: Alpha sensor testbed; Phase II: IMD/CWC live pipeline integration; Phase III: State Disaster Management Authority commissioning. Student-owned IP with lifetime free government access, cybersecurity audits, and quarterly MIC reporting.',
+      actionLabel: 'INSPECT 12-MONTH IMPLEMENTATION ROADMAP',
+      actionHref: '/predict-save-prove',
+      verifiedProof: 'Documented in docs/SIH_DEPLOYMENT_GUIDELINES_ROADMAP.md (15 MIC Clauses Compliant)',
+    },
   ];
 
   const current = challenges[selectedChallenge];
