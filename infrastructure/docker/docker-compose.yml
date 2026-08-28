@@ -1,0 +1,77 @@
+# FloodGuard AI — Docker Compose
+# Brings up: database (PostgreSQL + PostGIS), API (FastAPI), Web (Next.js)
+# 
+# Usage:
+#   make docker-up    — start all services
+#   make docker-down  — stop all services
+#   make migrate      — run database migrations
+#   make seed         — seed demo data
+
+version: "3.9"
+
+services:
+  db:
+    image: postgis/postgis:15-3.4
+    container_name: floodguard_db
+    environment:
+      POSTGRES_USER: floodguard
+      POSTGRES_PASSWORD: floodguard
+      POSTGRES_DB: floodguard
+    ports:
+      - "5432:5432"
+    volumes:
+      - floodguard_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U floodguard"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../../apps/api
+      dockerfile: Dockerfile
+    container_name: floodguard_api
+    environment:
+      DATABASE_URL: postgresql+asyncpg://floodguard:floodguard@db:5432/floodguard
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_change_in_production_min32chars}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEMO_MODE: ${DEMO_MODE:-true}
+      DEFAULT_DATA_MODE: ${DEFAULT_DATA_MODE:-DEMO}
+      WEATHER_PROVIDER: ${WEATHER_PROVIDER:-open_meteo}
+      RAINFALL_PROVIDER: ${RAINFALL_PROVIDER:-demo}
+      RIVER_PROVIDER: ${RIVER_PROVIDER:-demo}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_JSON: ${LOG_JSON:-true}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  web:
+    build:
+      context: ../../apps/web
+      dockerfile: Dockerfile
+    container_name: floodguard_web
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      NEXT_PUBLIC_DEMO_MODE: ${DEMO_MODE:-true}
+      NEXT_PUBLIC_APP_VERSION: "0.1.0"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  floodguard_pgdata:
+    name: floodguard_pgdata
