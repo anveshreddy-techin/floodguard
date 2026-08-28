@@ -5,6 +5,7 @@ import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
 import { PlayCircle, Sliders, RefreshCw, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { RiskBadge, DataModeBadge, UncertaintyBadge } from '@/components/ui/Badges';
+import { RiskLevel, UncertaintyLevel } from '@/types';
 
 export default function ScenarioSimulationPage() {
   const [rainfallMmH, setRainfallMmH] = useState(48);
@@ -14,10 +15,20 @@ export default function ScenarioSimulationPage() {
   const [sensorFailurePct, setSensorFailurePct] = useState(25);
   const [upstreamAnomaly, setUpstreamAnomaly] = useState(true);
 
-  const [simResults, setSimResults] = useState({
+  const [simResults, setSimResults] = useState<{
+    composite_risk_score: number;
+    risk_level: RiskLevel;
+    uncertainty: UncertaintyLevel;
+    components: {
+      rainfall_risk: number;
+      soil_risk: number;
+      terrain_risk: number;
+      river_risk: number;
+    };
+  }>({
     composite_risk_score: 68.5,
-    risk_level: 'HIGH' as const,
-    uncertainty: 'MEDIUM' as const,
+    risk_level: 'HIGH',
+    uncertainty: 'MEDIUM',
     components: {
       rainfall_risk: 75.0,
       soil_risk: 82.0,
@@ -46,18 +57,17 @@ export default function ScenarioSimulationPage() {
       const data = await res.json();
       setSimResults(data.results);
     } catch (e) {
-      // Local calculation fallback
       const r_risk = Math.min(100, (rainfallMmH / 50) * 100);
       const s_risk = soilMoisturePct;
       const t_risk = 50;
       const riv_risk = Math.min(100, (riverLevelM / 10) * 100);
       const score = Math.min(100, r_risk * 0.35 + s_risk * 0.25 + t_risk * 0.20 + riv_risk * 0.15 + (upstreamAnomaly ? 5 : 0));
-      const level = score >= 75 ? 'EXTREME' : score >= 55 ? 'HIGH' : score >= 35 ? 'MODERATE' : 'LOW';
+      const level: RiskLevel = score >= 75 ? 'EXTREME' : score >= 55 ? 'HIGH' : score >= 35 ? 'MODERATE' : 'LOW';
 
       setSimResults({
         composite_risk_score: Math.round(score * 10) / 10,
-        risk_level: level as any,
-        uncertainty: sensorFailurePct > 20 ? 'HIGH' : 'MEDIUM',
+        risk_level: level,
+        uncertainty: (sensorFailurePct > 20 ? 'HIGH' : 'MEDIUM') as UncertaintyLevel,
         components: {
           rainfall_risk: Math.round(r_risk * 10) / 10,
           soil_risk: Math.round(s_risk * 10) / 10,
@@ -89,7 +99,6 @@ export default function ScenarioSimulationPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Parameters Control Form */}
             <div className="bg-[#1c2541] border border-[#3a506b] rounded-lg p-5 space-y-4">
               <h3 className="text-sm font-semibold text-slate-100 flex items-center gap-2 border-b border-slate-700 pb-2">
                 <Sliders className="w-4 h-4 text-cyan-400" />
@@ -178,7 +187,6 @@ export default function ScenarioSimulationPage() {
               </button>
             </div>
 
-            {/* Recomputed Simulation Output Card */}
             <div className="bg-[#1c2541] border border-[#3a506b] rounded-lg p-5 space-y-4 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between border-b border-slate-700 pb-2 mb-4">
