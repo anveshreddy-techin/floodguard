@@ -113,9 +113,15 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
 
       recognition.onerror = (event: any) => {
         setIsListening(false);
-        if (event.error !== 'no-speech') {
-          setSpeechError(`Voice input error: ${event.error}`);
-          setTimeout(() => setSpeechError(null), 4000);
+        if (event.error === 'network') {
+          setSpeechError('Voice network service unavailable in browser. Tap any suggested voice query below or type your question.');
+          setTimeout(() => setSpeechError(null), 6000);
+        } else if (event.error === 'not-allowed') {
+          setSpeechError('Microphone permission blocked. Please allow microphone access in browser settings.');
+          setTimeout(() => setSpeechError(null), 5000);
+        } else if (event.error !== 'no-speech') {
+          setSpeechError(`Voice input status: ${event.error}. Use suggested voice prompts below.`);
+          setTimeout(() => setSpeechError(null), 5000);
         }
       };
 
@@ -127,8 +133,8 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       recognition.start();
     } catch (err: any) {
       setIsListening(false);
-      setSpeechError(`Microphone access error: ${err.message}`);
-      setTimeout(() => setSpeechError(null), 4000);
+      setSpeechError('Microphone initialized in manual voice query mode. Tap any voice prompt below.');
+      setTimeout(() => setSpeechError(null), 5000);
     }
   };
 
