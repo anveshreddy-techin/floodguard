@@ -24,7 +24,8 @@ import {
   Globe, 
   PhoneCall,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Download
 } from 'lucide-react';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
 
@@ -197,8 +198,21 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           ))}
         </div>
 
-        {/* Drawer Footer with Quick Emergency Call */}
+        {/* Drawer Footer with APK Download & Emergency Call */}
         <div className="p-3 border-t border-slate-800/80 bg-slate-950/90 space-y-2">
+          <button
+            onClick={() => {
+              onClose();
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-apk-modal'));
+              }
+            }}
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:brightness-110 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.4)] active:scale-95 transition"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>DOWNLOAD ANDROID APK (v1.0.4)</span>
+          </button>
+
           <Link
             href="/safety"
             onClick={onClose}
@@ -209,7 +223,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           </Link>
 
           <div className="flex items-center justify-between text-[9px] font-mono text-slate-500 px-1 pt-1">
-            <span>v10.0 • Mobile HUD</span>
+            <span>v1.0.4 • Android & Web HUD</span>
             <span className="text-emerald-400 font-bold">100% Cryptographic Audit</span>
           </div>
         </div>

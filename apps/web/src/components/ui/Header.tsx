@@ -77,8 +77,21 @@ export const Header: React.FC<{
           </span>
         </button>
 
-        {/* Right: Mode Badge, Live System Pill & Login Button */}
-        <div className="flex items-center gap-1.5 sm:gap-3">
+        {/* Right: Mode Badge, Live System Pill, APK & Login Button */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-apk-modal'));
+              }
+            }}
+            className="px-2.5 sm:px-3 py-1 rounded-xl text-xs font-mono font-bold bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/80 text-emerald-300 flex items-center gap-1.5 shadow-[0_0_12px_rgba(16,185,129,0.3)] active:scale-95 transition"
+            title="Download Android APK / Install PWA"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            <span>APK</span>
+          </button>
+
           <DataModeBadge mode={dataMode} />
 
           <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 fp rounded-xl text-xs">
