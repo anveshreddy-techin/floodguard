@@ -58,6 +58,14 @@ export const CommandTimeline: React.FC<CommandTimelineProps> = ({
           ))}
         </div>
 
+        <button
+          onClick={() => { setIsPlaying(false); onStepChange('T-60m'); }}
+          className="p-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition active:scale-95"
+          title="Reset to T-60m"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+        </button>
+
         {/* Step Scrubber Pills */}
         <div className="flex items-center gap-1 bg-slate-900/90 border border-slate-800 rounded-xl p-1 shadow-inner">
           {timelineSteps.map((step) => {

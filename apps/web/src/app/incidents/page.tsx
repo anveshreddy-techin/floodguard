@@ -59,10 +59,18 @@ const INCIDENTS = [
 export default function IncidentCommandPage() {
   const { setPage, setMode } = useEnvironment();
   const [selectedId, setSelectedId] = useState('INC-2026-001');
+  const [incidents, setIncidents] = useState(INCIDENTS);
 
   useEffect(() => { setPage('incidents'); setMode('DEMO'); }, []);
 
-  const incident = INCIDENTS.find(i => i.id === selectedId)!;
+  const toggleTask = (incId: string, taskIdx: number) => {
+    setIncidents(prev => prev.map(inc =>
+      inc.id !== incId ? inc :
+      { ...inc, tasks: inc.tasks.map((t, i) => i === taskIdx ? { ...t, done: !t.done } : t) }
+    ));
+  };
+
+  const incident = incidents.find(i => i.id === selectedId)!
   const stageColor = STAGE_DATA[incident.stage]?.color || '#6b7280';
 
   return (
@@ -195,35 +203,60 @@ export default function IncidentCommandPage() {
 
                 <div className="fp fp-operational rounded-2xl p-4 space-y-2.5 animate-slide-up">
                   <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider font-bold flex items-center justify-between">
-                    <span>TASK CHECKLIST</span>
+                    <span>TASK CHECKLIST (INTERACTIVE)</span>
                     <span className="text-slate-400">{incident.tasks.filter(t=>t.done).length}/{incident.tasks.length} done</span>
                   </div>
                   {incident.tasks.map((task, i) => (
-                    <div key={i} className={`flex items-center gap-2.5 text-xs p-2 rounded-xl ${
-                      task.done ? 'text-emerald-300' : 'text-slate-300'
-                    }`}>
+                    <button
+                      key={i}
+                      onClick={() => toggleTask(incident.id, i)}
+                      className={`flex items-center gap-2.5 text-xs p-2.5 rounded-xl w-full text-left transition active:scale-98 cursor-pointer ${
+                        task.done ? 'bg-emerald-950/20 text-emerald-300 border border-emerald-800/40' : 'bg-slate-900/60 text-slate-200 hover:text-white hover:bg-slate-800/60 border border-slate-800'
+                      }`}
+                    >
                       <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                        task.done ? 'border-emerald-500 bg-emerald-900/40' : 'border-slate-700'
+                        task.done ? 'border-emerald-500 bg-emerald-900/60' : 'border-slate-600 bg-slate-800'
                       }`}>
                         {task.done && <CheckCircle2 className="w-3 h-3 text-emerald-400" />}
                       </div>
-                      <span className={task.done ? 'line-through opacity-60' : ''}>{task.label}</span>
-                    </div>
+                      <span className={task.done ? 'line-through opacity-70' : 'font-medium'}>{task.label}</span>
+                    </button>
                   ))}
                 </div>
               </div>
 
-              {/* Action bar */}
+              {/* Action bar with Stage Progression Buttons */}
               <div className="fp rounded-2xl p-4 flex flex-wrap items-center gap-3">
-                <Link href="/safety" className="btn-danger px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2">
+                <Link href="/safety" className="btn-danger px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-lg active:scale-95">
                   <ShieldAlert className="w-3.5 h-3.5" /> CITIZEN GUIDANCE HUD
                 </Link>
-                <Link href="/ledger" className="btn-primary px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2">
+                <Link href="/ledger" className="btn-primary px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-lg active:scale-95">
                   <FileText className="w-3.5 h-3.5" /> AUDIT TRAIL
                 </Link>
-                <Link href="/flight-recorder" className="btn-ghost px-4 py-2 rounded-xl text-slate-300 text-xs font-bold font-mono flex items-center gap-2">
-                  <Radio className="w-3.5 h-3.5" /> FLIGHT RECORDER
+                <Link href="/flight-recorder" className="btn-ghost px-4 py-2 rounded-xl text-slate-300 text-xs font-bold font-mono flex items-center gap-2 hover:text-white active:scale-95">
+                  <Radio className="w-3.5 h-3.5 text-cyan-400" /> FLIGHT RECORDER
                 </Link>
+
+                {incident.stage < 5 && (
+                  <button
+                    onClick={() => setIncidents(prev => prev.map(inc =>
+                      inc.id !== selectedId ? inc : { ...inc, stage: Math.min(5, inc.stage + 1) }
+                    ))}
+                    className="ml-auto btn-primary px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-lg active:scale-95 transition"
+                  >
+                    <ArrowRight className="w-3.5 h-3.5" /> ADVANCE STAGE
+                  </button>
+                )}
+                {incident.stage > 0 && (
+                  <button
+                    onClick={() => setIncidents(prev => prev.map(inc =>
+                      inc.id !== selectedId ? inc : { ...inc, stage: Math.max(0, inc.stage - 1) }
+                    ))}
+                    className={`fp px-3 py-2 rounded-xl text-slate-400 text-xs font-bold font-mono flex items-center gap-2 active:scale-95 transition hover:text-slate-200 ${incident.stage >= 5 ? 'ml-auto' : ''}`}
+                  >
+                    PREV STAGE
+                  </button>
+                )}
               </div>
             </div>
           </div>

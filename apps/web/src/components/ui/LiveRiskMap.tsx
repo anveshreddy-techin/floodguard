@@ -231,6 +231,38 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
             </g>
           )}
 
+          {activeLayer === 'SOIL' && (
+            <g>
+              <ellipse cx="340" cy="200" rx="220" ry="140" fill="#b45309" fillOpacity="0.25" className="animate-pulse" />
+              <ellipse cx="340" cy="200" rx="220" ry="140" fill="none" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="6,4" />
+              <ellipse cx="220" cy="140" rx="130" ry="90" fill="#78350f" fillOpacity="0.22" />
+              <text x="340" y="180" textAnchor="middle" fill="#fbbf24" fontSize="12" fontWeight="bold" fontFamily="monospace">SOIL SATURATION: 82%</text>
+              <text x="340" y="196" textAnchor="middle" fill="#fde68a" fontSize="9" fontFamily="monospace">CRITICAL COLLUVIUM SLOPES — HIGH RUNOFF COEFFICIENT</text>
+            </g>
+          )}
+
+          {activeLayer === 'TERRAIN' && (
+            <g>
+              <path d="M 50,50 Q 200,20 400,60 T 750,40" fill="none" stroke="rgba(167,139,250,0.7)" strokeWidth="1.5" strokeDasharray="5,4" />
+              <path d="M 80,120 Q 240,90 440,140 T 720,110" fill="none" stroke="rgba(167,139,250,0.6)" strokeWidth="1.2" strokeDasharray="5,4" />
+              <path d="M 120,200 Q 300,160 500,220 T 700,190" fill="none" stroke="rgba(167,139,250,0.5)" strokeWidth="1" strokeDasharray="5,4" />
+              <path d="M 160,300 Q 350,260 550,310 T 680,280" fill="none" stroke="rgba(167,139,250,0.4)" strokeWidth="0.8" strokeDasharray="5,4" />
+              <text x="210" y="80" textAnchor="middle" fill="#c4b5fd" fontSize="10" fontWeight="bold" fontFamily="monospace">▲ 3,583m ASL</text>
+              <text x="420" y="150" textAnchor="middle" fill="#c4b5fd" fontSize="10" fontWeight="bold" fontFamily="monospace">▲ 2,450m ASL</text>
+              <text x="580" y="220" textAnchor="middle" fill="#c4b5fd" fontSize="10" fontWeight="bold" fontFamily="monospace">28° Mean Catchment Slope</text>
+            </g>
+          )}
+
+          {activeLayer === 'RIVER' && (
+            <g>
+              <path d="M 180,90 Q 280,140 360,220 T 480,280 T 640,420" fill="none" stroke="#0284c7" strokeWidth="24" strokeOpacity="0.25" strokeLinecap="round" />
+              <path d="M 180,90 Q 280,140 360,220 T 480,280 T 640,420" fill="none" stroke="#38bdf8" strokeWidth="10" strokeOpacity="0.6" strokeLinecap="round" />
+              <path d="M 180,90 Q 280,140 360,220 T 480,280 T 640,420" fill="none" stroke="#f97316" strokeWidth="2.5" strokeDasharray="6,4" className="animate-pulse" />
+              <text x="360" y="248" textAnchor="middle" fill="#38bdf8" fontSize="12" fontWeight="bold" fontFamily="monospace">RIVER STAGE: 3.80m</text>
+              <text x="360" y="264" textAnchor="middle" fill="#fdba74" fontSize="9" fontFamily="monospace">RATE-OF-RISE: +0.40 m/h (SURGE)</text>
+            </g>
+          )}
+
           {/* River & Tributary Vector Network (Strahler Orders) */}
           <g>
             {/* Primary River Channel (Order 3) */}

@@ -38,6 +38,7 @@ export default function CommandCenterPage() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.key === 's' || e.key === 'S') router.push('/safety');
+      if (e.key === 'm' || e.key === 'M') router.push('/map');
       if (e.key === 'h' || e.key === 'H') router.push('/hindcast');
       if (e.key === 'r' || e.key === 'R') router.push('/replay');
       if (e.key === 'Escape') { setDrawerOpen(false); setCopilotOpen(false); setMobileHudOpen(false); }
@@ -133,6 +134,8 @@ export default function CommandCenterPage() {
           {/* ── Desktop Floating Hotkey Hint (bottom-left over map) ── */}
           <div className="hidden md:flex absolute bottom-20 left-4 z-20 fp rounded-xl px-3 py-2 text-[10px] font-mono text-slate-400 items-center gap-2">
             <span className="text-cyan-400 font-bold">HOTKEYS:</span>
+            <span className="bg-slate-900/80 px-1.5 py-0.5 rounded text-cyan-300 border border-slate-700">M</span>
+            <span>Map</span>
             <span className="bg-slate-900/80 px-1.5 py-0.5 rounded text-cyan-300 border border-slate-700">S</span>
             <span>Safety</span>
             <span className="bg-slate-900/80 px-1.5 py-0.5 rounded text-cyan-300 border border-slate-700">H</span>
