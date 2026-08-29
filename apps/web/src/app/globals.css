@@ -21,24 +21,32 @@
   --terrain-slope:   rgba(56, 189, 248, 0.025);
   --terrain-valley:  rgba(99, 102, 241, 0.03);
 
-  /* -- Hazard Semantic Colors -- */
-  --hazard-low:      #10b981;
-  --hazard-moderate: #eab308;
-  --hazard-high:     #f97316;
-  --hazard-extreme:  #ef4444;
+  /* -- Spec-Refined Hazard Semantic Colors -- */
+  --hazard-safe:     #2ECC71; /* Safe <25/100 */
+  --hazard-alert:    #F39C12; /* Alert 25-50/100 */
+  --hazard-caution:  #E67E22; /* Caution 50-75/100 */
+  --hazard-danger:   #E74C3C; /* Danger >75/100 */
+  --hazard-low:      #2ECC71;
+  --hazard-moderate: #F39C12;
+  --hazard-high:     #E67E22;
+  --hazard-extreme:  #E74C3C;
 
-  /* -- Water & Signal -- */
-  --water-calm:      rgba(56, 189, 248, 0.4);
-  --water-rising:    rgba(14, 165, 233, 0.7);
-  --water-surge:     rgba(59, 130, 246, 0.9);
-  --signal-node:     rgba(6, 182, 212, 0.6);
-  --signal-line:     rgba(56, 189, 248, 0.12);
+  /* -- Spec-Refined Water Features -- */
+  --water-channel:   #00A8E8; /* Bright cyan */
+  --water-gauge:     #1E90FF; /* Dodger blue */
+  --water-inundate:  #0073E6; /* Saturated blue */
+  --water-bg:        #001D3D; /* Dark navy blend */
+  --water-calm:      rgba(0, 168, 232, 0.4);
+  --water-rising:    rgba(30, 144, 255, 0.7);
+  --water-surge:     rgba(0, 115, 230, 0.9);
+  --signal-node:     rgba(0, 168, 232, 0.8);
+  --signal-line:     rgba(0, 168, 232, 0.2);
 
   /* -- Panel System -- */
-  --panel-bg:        rgba(8, 14, 30, 0.82);
-  --panel-border:    rgba(56, 189, 248, 0.12);
-  --panel-highlight: rgba(56, 189, 248, 0.06);
-  --panel-shadow:    0 8px 40px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --panel-bg:        rgba(10, 18, 36, 0.85);
+  --panel-border:    rgba(0, 168, 232, 0.2);
+  --panel-highlight: rgba(0, 168, 232, 0.08);
+  --panel-shadow:    0 8px 40px rgba(0, 0, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* ============================================================
@@ -429,7 +437,89 @@ html, body {
 }
 
 .mobile-nav-active {
-  color: #38bdf8;
-  text-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+  color: #00A8E8;
+  text-shadow: 0 0 12px rgba(0, 168, 232, 0.8);
+}
+
+/* ============================================================
+   FLOODGUARD MAP VISUALIZATION ENHANCEMENT ANIMATIONS
+   60fps GPU Accelerated Interactive Animation System
+   ============================================================ */
+
+/* 2.5s Loop Pulse Animation */
+@keyframes pulseRisk {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.18); opacity: 0.75; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 2.5s Loop Halo Pulse */
+@keyframes haloPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 0.25; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* 3.0s Loop Gradient Shift */
+@keyframes colorShiftRisk {
+  0% { fill: #E67E22; filter: drop-shadow(0 0 8px rgba(230, 126, 34, 0.8)); }
+  50% { fill: #E74C3C; filter: drop-shadow(0 0 16px rgba(231, 76, 60, 1)); }
+  100% { fill: #E67E22; filter: drop-shadow(0 0 8px rgba(230, 126, 34, 0.8)); }
+}
+
+/* Neon Glow Effect */
+@keyframes glowNeon {
+  0% { filter: drop-shadow(0 0 4px rgba(0, 168, 232, 0.5)); }
+  50% { filter: drop-shadow(0 0 18px rgba(0, 168, 232, 0.95)); }
+  100% { filter: drop-shadow(0 0 4px rgba(0, 168, 232, 0.5)); }
+}
+
+/* Water Level Update Flash */
+@keyframes waterUpdate {
+  0% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(-3px); filter: brightness(1.4); }
+  100% { transform: translateY(0); filter: brightness(1); }
+}
+
+/* River Stream Flow Particles */
+@keyframes riverStreamFlow {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Staggered Bounce In */
+@keyframes bounceMarker {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-pulse-risk {
+  animation: pulseRisk 2.5s infinite ease-in-out;
+  will-change: transform, opacity;
+}
+
+.animate-halo-pulse {
+  animation: haloPulse 2.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  will-change: transform, opacity;
+}
+
+.animate-color-shift {
+  animation: colorShiftRisk 3s infinite ease-in-out;
+  will-change: fill, filter;
+}
+
+.animate-glow-neon {
+  animation: glowNeon 2.5s infinite ease-in-out;
+  will-change: filter;
+}
+
+.animate-water-update {
+  animation: waterUpdate 0.8s ease-out;
+}
+
+.animate-bounce-marker {
+  animation: bounceMarker 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  will-change: transform, opacity;
 }
 
