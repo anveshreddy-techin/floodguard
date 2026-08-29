@@ -77,8 +77,22 @@ export const Header: React.FC<{
           </span>
         </button>
 
-        {/* Right: Mode Badge, Live System Pill, APK & Login Button */}
+        {/* Right: AI Copilot, APK, Mode Badge, Live System Pill, & Login Button */}
         <div className="flex items-center gap-1.5 sm:gap-2.5">
+          {/* AI Copilot Button */}
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-copilot'));
+              }
+            }}
+            className="px-2.5 sm:px-3 py-1 rounded-xl text-xs font-mono font-bold bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 flex items-center gap-1.5 shadow-[0_0_12px_rgba(6,182,212,0.3)] active:scale-95 transition"
+            title="Open Grounded AI Disaster Intelligence Assistant (Hotkey: A)"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+            <span>AI COPILOT</span>
+          </button>
+
           <button
             onClick={() => {
               if (typeof window !== 'undefined') {

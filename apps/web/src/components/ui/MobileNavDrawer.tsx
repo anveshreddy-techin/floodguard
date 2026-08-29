@@ -198,8 +198,21 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           ))}
         </div>
 
-        {/* Drawer Footer with APK Download & Emergency Call */}
+        {/* Drawer Footer with AI Assistant, APK Download & Emergency Call */}
         <div className="p-3 border-t border-slate-800/80 bg-slate-950/90 space-y-2">
+          <button
+            onClick={() => {
+              onClose();
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-copilot'));
+              }
+            }}
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:brightness-110 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] active:scale-95 transition"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>OPEN GROUNDED AI COPILOT</span>
+          </button>
+
           <button
             onClick={() => {
               onClose();
@@ -207,7 +220,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 window.dispatchEvent(new CustomEvent('open-apk-modal'));
               }
             }}
-            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:brightness-110 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.4)] active:scale-95 transition"
+            className="w-full py-2 rounded-xl bg-slate-900 border border-emerald-500/50 hover:bg-slate-800 text-emerald-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
           >
             <Download className="w-3.5 h-3.5" />
             <span>DOWNLOAD ANDROID APK (v1.0.4)</span>
@@ -216,7 +229,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           <Link
             href="/safety"
             onClick={onClose}
-            className="btn-danger w-full py-2.5 rounded-xl text-xs font-mono font-bold text-white flex items-center justify-center gap-2 shadow-lg"
+            className="btn-danger w-full py-2 rounded-xl text-xs font-mono font-bold text-white flex items-center justify-center gap-2 shadow-lg"
           >
             <PhoneCall className="w-3.5 h-3.5 animate-bounce" />
             <span>EMERGENCY ESCAPE HUD</span>
