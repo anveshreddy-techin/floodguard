@@ -444,7 +444,7 @@ export default function HyperLocalGISPage() {
           </div>
 
           {/* Desktop Left-Floating GIS Layer Control Box */}
-          <div className="hidden md:flex absolute top-16 left-4 bottom-6 w-72 z-20 flex-col gap-3 pointer-events-none">
+          <div className="hidden md:flex absolute top-16 left-4 bottom-6 w-72 z-[600] flex-col gap-3 pointer-events-none">
             <div className="pointer-events-auto fp fp-operational rounded-2xl p-4 space-y-3 shadow-2xl text-xs overflow-y-auto">
               <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                 <span className="font-mono font-bold text-cyan-300 text-xs flex items-center gap-1.5">
@@ -519,7 +519,7 @@ export default function HyperLocalGISPage() {
           </div>
 
           {/* Desktop Right-Floating Spatial Node Inspector & Profile (Interactive) */}
-          <div className="hidden md:flex absolute top-16 right-4 bottom-6 w-80 xl:w-96 z-20 flex-col gap-3 pointer-events-none">
+          <div className="hidden md:flex absolute top-16 right-4 bottom-6 w-80 xl:w-96 z-[600] flex-col gap-3 pointer-events-none">
             <div className="pointer-events-auto fp fp-operational rounded-2xl p-5 space-y-4 shadow-2xl text-xs overflow-y-auto">
               <div className="flex items-start justify-between border-b border-slate-800 pb-3">
                 <div>
@@ -624,110 +624,162 @@ export default function HyperLocalGISPage() {
             </div>
           </div>
 
-          {/* Mobile Bottom Responsive Sheet (Visible on small screens when triggered) */}
+          {/* Mobile GIS Bottom Sheet — Proper bottom sheet, NOT full-screen overlay */}
           {mobileSheetOpen && (
-            <div className="md:hidden absolute inset-x-2 bottom-16 top-14 z-40 fp-operational rounded-3xl p-4 overflow-y-auto space-y-3 animate-slide-up shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                <div className="flex items-center gap-1.5">
-                  <MapIcon className="w-4 h-4 text-cyan-400" />
-                  <span className="text-xs font-mono font-black text-white">GIS SPATIAL WORKSPACE</span>
-                </div>
-                <button
-                  onClick={() => setMobileSheetOpen(false)}
-                  className="text-xs font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded-lg"
-                >
-                  ✕ Close
-                </button>
-              </div>
-
-              {/* Mobile Tabs */}
-              <div className="grid grid-cols-5 gap-1 font-mono text-[9px]">
-                {(['INSPECTOR', 'LAYERS', 'PROFILE', 'ISOCHRONES', 'MORPHOMETRY'] as const).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setMobileSheetTab(tab)}
-                    className={`py-1.5 rounded-lg font-bold transition truncate text-center ${
-                      mobileSheetTab === tab ? 'btn-glow-cyan text-white' : 'fp text-slate-400'
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {/* Mobile Tab Contents */}
-              {mobileSheetTab === 'INSPECTOR' && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-bold text-white text-sm">{selectedNode?.name}</h4>
-                      <span className="text-[11px] text-slate-400 font-mono">{selectedNode?.elevation}</span>
-                    </div>
-                    <RiskBadge level={selectedNode?.risk || 'HIGH'} />
+            <div
+              className="md:hidden fixed inset-x-0 bottom-16 z-[650] animate-slide-up"
+              style={{ maxHeight: '48vh' }}
+            >
+              <div className="h-full bg-[#060e1c]/96 backdrop-blur-2xl border-t-2 border-cyan-500/50 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,168,232,0.25)] flex flex-col overflow-hidden">
+                {/* Header: Tab Switcher + Close */}
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-800/60 shrink-0">
+                  <div className="flex items-center gap-1.5">
+                    <MapIcon className="w-4 h-4 text-cyan-400" />
+                    <span className="text-xs font-mono font-black text-white">GIS WORKSPACE</span>
                   </div>
-                  <p className="text-slate-300 text-xs">{selectedNode?.desc}</p>
-                  <Link
-                    href="/safety"
-                    className="w-full py-2.5 btn-primary text-white rounded-xl font-bold font-mono text-xs flex items-center justify-center gap-2"
+                  <button
+                    onClick={() => setMobileSheetOpen(false)}
+                    className="text-[11px] font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700 active:scale-95"
                   >
-                    <Compass className="w-4 h-4 text-cyan-300" />
-                    <span>OPEN CITIZEN GUIDANCE HUD</span>
-                  </Link>
+                    ✕ Hide
+                  </button>
                 </div>
-              )}
 
-              {mobileSheetTab === 'LAYERS' && (
-                <div className="space-y-2">
-                  {(['DEM', 'SURGE', 'RIVER', 'SENSORS', 'SHELTERS', 'SLOPE'] as GisLayerKey[]).map((k) => (
+                {/* Mobile Tab Bar */}
+                <div className="flex gap-1 px-3 py-2 shrink-0 overflow-x-auto no-scrollbar">
+                  {(['INSPECTOR', 'LAYERS', 'PROFILE', 'ISOCHRONES', 'MORPHOMETRY'] as const).map((tab) => (
                     <button
-                      key={k}
-                      onClick={() => toggleLayer(k)}
-                      className={`w-full flex items-center justify-between p-2.5 rounded-xl font-mono text-xs ${
-                        layers[k] ? 'bg-slate-900 text-white border border-slate-700' : 'opacity-40 text-slate-500'
+                      key={tab}
+                      onClick={() => setMobileSheetTab(tab)}
+                      className={`px-3 py-1.5 rounded-lg font-mono font-bold text-[10px] whitespace-nowrap transition active:scale-95 ${
+                        mobileSheetTab === tab ? 'btn-glow-cyan text-white' : 'fp text-slate-400'
                       }`}
                     >
-                      <span>Layer: {k}</span>
-                      <span className="font-bold text-cyan-300">{layers[k] ? 'ENABLED' : 'DISABLED'}</span>
+                      {tab}
                     </button>
                   ))}
                 </div>
-              )}
 
-              {mobileSheetTab === 'PROFILE' && (
-                <div className="space-y-2">
-                  <div className="text-[11px] font-mono text-purple-300 font-bold">CROSS-SECTION (Ridge to Valley)</div>
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <svg viewBox="0 0 280 100" className="w-full h-20">
-                      <path d="M 10,20 Q 80,45 150,75 T 270,95" fill="none" stroke="#a78bfa" strokeWidth="2.5" />
-                      <line x1="120" y1="82" x2="270" y2="82" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3,3" />
-                      <circle cx="200" cy="85" r="4.5" fill="#f97316" />
-                      <circle cx="90" cy="48" r="4.5" fill="#10b981" />
-                    </svg>
-                  </div>
-                </div>
-              )}
+                {/* Mobile Tab Contents (Scrollable) */}
+                <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
+                  {mobileSheetTab === 'INSPECTOR' && (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-bold text-white text-sm">{selectedNode?.name}</h4>
+                          <span className="text-[11px] text-slate-400 font-mono">{selectedNode?.elevation}</span>
+                        </div>
+                        <RiskBadge level={selectedNode?.risk || 'HIGH'} />
+                      </div>
+                      <p className="text-slate-300 text-xs leading-relaxed">{selectedNode?.desc}</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                        <div className="fp p-2.5 rounded-xl">
+                          <div className="text-slate-400 text-[10px]">Rainfall (3h)</div>
+                          <div className="font-bold text-cyan-300 mt-0.5">48.0 mm</div>
+                        </div>
+                        <div className="fp p-2.5 rounded-xl">
+                          <div className="text-slate-400 text-[10px]">River Rise Rate</div>
+                          <div className="font-bold text-blue-400 mt-0.5">+0.40 m/h</div>
+                        </div>
+                      </div>
+                      <Link
+                        href="/safety"
+                        className="w-full py-2.5 btn-primary text-white rounded-xl font-bold font-mono text-xs flex items-center justify-center gap-2"
+                      >
+                        <Compass className="w-4 h-4 text-cyan-300" />
+                        <span>OPEN CITIZEN GUIDANCE HUD</span>
+                      </Link>
+                    </div>
+                  )}
 
-              {mobileSheetTab === 'ISOCHRONES' && (
-                <div className="space-y-2 text-xs font-mono">
-                  <div className="text-emerald-400 font-bold">EVACUATION ISOCHRONES</div>
-                  <div className="fp p-2.5 rounded-xl space-y-1">
-                    <div className="flex justify-between text-slate-300"><span>10 min buffer:</span><span className="text-emerald-400 font-bold">500m (Community Shelter)</span></div>
-                    <div className="flex justify-between text-slate-300"><span>20 min buffer:</span><span className="text-cyan-300 font-bold">1.2km (High Ridge Spur)</span></div>
-                    <div className="flex justify-between text-slate-300"><span>30 min buffer:</span><span className="text-purple-300 font-bold">2.0km (Panchayat Bhavan)</span></div>
-                  </div>
-                </div>
-              )}
+                  {mobileSheetTab === 'LAYERS' && (
+                    <div className="space-y-2">
+                      <div className="gis-panel-header">ACTIVE GIS LAYERS</div>
+                      {[
+                        { key: 'DEM' as GisLayerKey, label: 'Digital Elevation Model (SRTM 30m)', color: 'bg-indigo-500', source: 'USGS' },
+                        { key: 'SURGE' as GisLayerKey, label: 'Modeled Flood Inundation (100-yr)', color: 'bg-orange-500', source: 'HEC-RAS' },
+                        { key: 'RIVER' as GisLayerKey, label: 'Strahler Stream Vector Network', color: 'bg-cyan-400', source: 'NRSC' },
+                        { key: 'SENSORS' as GisLayerKey, label: 'IoT Gauges & Settlements (25 live)', color: 'bg-blue-500', source: 'CWC' },
+                        { key: 'SHELTERS' as GisLayerKey, label: 'Shelter Isochrones (10-30 min)', color: 'bg-emerald-400', source: 'NDMA' },
+                        { key: 'SLOPE' as GisLayerKey, label: 'Slope Steepness Heatmap', color: 'bg-rose-500', source: 'ALOS 12.5m' },
+                      ].map((item) => (
+                        <button
+                          key={item.key}
+                          onClick={() => toggleLayer(item.key)}
+                          className={`w-full flex items-center justify-between p-3 rounded-xl font-mono text-[11px] transition active:scale-[0.98] ${
+                            layers[item.key]
+                              ? 'bg-slate-900/90 text-slate-200 border border-slate-700/80'
+                              : 'opacity-40 text-slate-500 fp'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${item.color}`} />
+                            <span className="truncate">{item.label}</span>
+                          </div>
+                          <div className="flex flex-col items-end shrink-0 gap-0.5 ml-2">
+                            <span className={`font-bold text-[10px] ${layers[item.key] ? 'text-cyan-300' : 'text-slate-600'}`}>
+                              {layers[item.key] ? 'ON' : 'OFF'}
+                            </span>
+                            <span className="text-[9px] text-slate-500">{item.source}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
-              {mobileSheetTab === 'MORPHOMETRY' && (
-                <div className="grid grid-cols-2 gap-2 font-mono text-xs">
-                  <div className="fp p-2 rounded-lg">Catchment: <strong>85.4 km²</strong></div>
-                  <div className="fp p-2 rounded-lg">Density: <strong>2.4 km/km²</strong></div>
-                  <div className="fp p-2 rounded-lg">Time to Peak: <strong>42 min</strong></div>
-                  <div className="fp p-2 rounded-lg">Mean Slope: <strong>28.4°</strong></div>
+                  {mobileSheetTab === 'PROFILE' && (
+                    <div className="space-y-2">
+                      <div className="text-[11px] font-mono text-purple-300 font-bold uppercase">Cross-Section (Ridge to Valley)</div>
+                      <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <svg viewBox="0 0 280 100" className="w-full h-20">
+                          <path d="M 10,20 Q 80,45 150,75 T 270,95" fill="none" stroke="#a78bfa" strokeWidth="2.5" />
+                          <line x1="120" y1="82" x2="270" y2="82" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3,3" />
+                          <circle cx="200" cy="85" r="4.5" fill="#f97316" />
+                          <circle cx="90" cy="48" r="4.5" fill="#10b981" />
+                          <text x="200" y="103" textAnchor="middle" fill="#f97316" fontSize="8" fontFamily="monospace">Village 1,180m</text>
+                          <text x="90" y="40" textAnchor="middle" fill="#10b981" fontSize="8" fontFamily="monospace">Shelter 1,300m (+120m)</text>
+                          <text x="200" y="76" fill="#38bdf8" fontSize="7" fontFamily="monospace">Surge: 3.80m</text>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+
+                  {mobileSheetTab === 'ISOCHRONES' && (
+                    <div className="space-y-2 text-xs font-mono">
+                      <div className="text-emerald-400 font-bold uppercase text-[11px]">Evacuation Isochrones</div>
+                      <div className="fp p-3 rounded-xl space-y-2">
+                        <div className="flex justify-between text-slate-300"><span>10 min buffer:</span><span className="text-emerald-400 font-bold">500m (Community Shelter)</span></div>
+                        <div className="flex justify-between text-slate-300"><span>20 min buffer:</span><span className="text-cyan-300 font-bold">1.2km (High Ridge Spur)</span></div>
+                        <div className="flex justify-between text-slate-300"><span>30 min buffer:</span><span className="text-purple-300 font-bold">2.0km (Panchayat Bhavan)</span></div>
+                      </div>
+                    </div>
+                  )}
+
+                  {mobileSheetTab === 'MORPHOMETRY' && (
+                    <div className="grid grid-cols-2 gap-2 font-mono text-xs">
+                      <div className="fp p-2.5 rounded-xl">
+                        <div className="text-slate-400 text-[10px]">Catchment Area</div>
+                        <div className="font-bold text-cyan-300 mt-0.5">85.4 km²</div>
+                      </div>
+                      <div className="fp p-2.5 rounded-xl">
+                        <div className="text-slate-400 text-[10px]">Drainage Density</div>
+                        <div className="font-bold text-blue-300 mt-0.5">2.4 km/km²</div>
+                      </div>
+                      <div className="fp p-2.5 rounded-xl">
+                        <div className="text-slate-400 text-[10px]">Time to Peak</div>
+                        <div className="font-bold text-amber-300 mt-0.5">42 min</div>
+                      </div>
+                      <div className="fp p-2.5 rounded-xl">
+                        <div className="text-slate-400 text-[10px]">Mean Slope</div>
+                        <div className="font-bold text-rose-300 mt-0.5">28.4°</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           )}
+
         </main>
       </div>
     </div>

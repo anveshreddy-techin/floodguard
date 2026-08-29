@@ -523,3 +523,229 @@ html, body {
   will-change: transform, opacity;
 }
 
+/* ============================================================
+   FLOODGUARD Z-INDEX HIERARCHY (Critical for Map Visibility)
+   Map is PRIMARY — panels must float OVER, never obstruct base
+   ============================================================
+   900 ← Header (fixed top)
+   850 ← Notifications / Alerts / Toasts
+   800 ← Modals / Dialogs / Drawers
+   750 ← Tooltips / Popovers / Copilot
+   700 ← Desktop right panel (intelligence hub)
+   650 ← Mobile bottom sheet
+   600 ← Map overlays (labels, legend, timeline)
+   500 ← Map animations (markers, halos, pulses)
+   400 ← Map SVG base layer
+   300 ← Map canvas background
+   200 ← Desktop sidebar
+   100 ← Mobile bottom nav bar
+     1 ← Body / env layer
+   ============================================================ */
+
+/* Enforce sidebar behind map overlays */
+.sidebar-desktop {
+  z-index: 200;
+}
+
+/* Desktop right panel: above map, below modals */
+.intelligence-panel-desktop {
+  z-index: 700;
+}
+
+/* Mobile bottom sheet: above nav, below modals */
+.mobile-bottom-sheet {
+  z-index: 650;
+}
+
+/* Map animation canvas: always visible */
+.map-canvas-layer {
+  z-index: 400;
+  position: relative;
+}
+
+/* Map labels: smart positioning, semi-transparent */
+.map-label {
+  position: absolute;
+  background: rgba(10, 14, 30, 0.92);
+  backdrop-filter: blur(4px);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: monospace;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 500;
+  border: 1px solid rgba(0, 168, 232, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.2s ease;
+}
+.map-label.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.map-label.map-label--below { transform: translateX(-50%) translateY(6px); }
+.map-label.map-label--above { transform: translateX(-50%) translateY(-100%) translateY(-6px); }
+.map-label.map-label--left  { transform: translateX(-100%) translateX(-8px) translateY(-50%); }
+.map-label.map-label--right { transform: translateX(8px) translateY(-50%); }
+
+/* ============================================================
+   MOBILE BOTTOM SHEET ARCHITECTURE
+   ============================================================ */
+@keyframes sheetSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes sheetSlideDown {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+
+.bottom-sheet-enter {
+  animation: sheetSlideUp 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.bottom-sheet-exit {
+  animation: sheetSlideDown 0.28s cubic-bezier(0.4, 0, 0.6, 1) both;
+}
+
+/* Drag handle visual affordance */
+.drag-handle-pill {
+  width: 40px;
+  height: 4px;
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 4px;
+  margin: 0 auto;
+}
+.drag-handle-pill:hover {
+  background: rgba(0, 168, 232, 0.6);
+}
+
+/* ============================================================
+   RESPONSIVE LAYOUT RULES
+   ============================================================ */
+
+/* Mobile (<576px): Full map + bottom sheet */
+@media (max-width: 575px) {
+  .intelligence-panel-desktop { display: none !important; }
+
+  /* Map fills available space between header & bottom nav */
+  .map-hero-mobile {
+    height: calc(100vh - 60px - 64px); /* minus header & nav */
+    width: 100%;
+    position: relative;
+  }
+
+  /* Bottom sheet collapses, only pill visible by default */
+  .mobile-bottom-sheet-collapsed {
+    transform: translateY(calc(100% - 48px));
+  }
+}
+
+/* Tablet Portrait (576px–767px): Map + compact sheet */
+@media (min-width: 576px) and (max-width: 767px) {
+  .intelligence-panel-desktop { display: none !important; }
+  .map-hero-mobile {
+    height: calc(100vh - 60px - 64px);
+  }
+}
+
+/* Tablet Landscape + Small Desktop (768px–1023px): 3-col grid */
+@media (min-width: 768px) {
+  .mobile-bottom-sheet { display: none !important; }
+  .mobile-nav-bar { display: none !important; }
+}
+
+/* Desktop (≥1024px): Full 3-column with collapsible sidebar */
+@media (min-width: 1024px) {
+  .sidebar-desktop {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sidebar-desktop.collapsed-rail {
+    width: 64px !important;
+  }
+  .intelligence-panel-desktop {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ============================================================
+   GIS INFO PANEL STYLES
+   ============================================================ */
+.gis-layer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-size: 11px;
+  font-family: monospace;
+}
+.gis-layer-row:hover {
+  background: rgba(0, 168, 232, 0.08);
+}
+.gis-layer-row.active {
+  background: rgba(0, 168, 232, 0.06);
+  border-left: 2px solid #00A8E8;
+}
+.gis-layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.gis-panel-header {
+  font-size: 10px;
+  font-family: monospace;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #00A8E8;
+  padding: 8px 12px 4px;
+  border-bottom: 1px solid rgba(0, 168, 232, 0.15);
+}
+
+/* ============================================================
+   PANEL FLOAT ANIMATION (Desktop Intelligence Hub)
+   ============================================================ */
+@keyframes panelFadeSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.intelligence-panel-enter {
+  animation: panelFadeSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Minimized pill pulse badge */
+@keyframes pillBreath {
+  0%, 100% { box-shadow: 0 0 12px rgba(230, 126, 34, 0.3); }
+  50%       { box-shadow: 0 0 24px rgba(231, 76, 60, 0.6); }
+}
+.intelligence-pill-minimized {
+  animation: pillBreath 2.5s infinite ease-in-out;
+}
+
+/* ============================================================
+   MOBILE TOUCH OPTIMIZATIONS
+   ============================================================ */
+/* Ensure minimum 44px tap targets on mobile */
+@media (max-width: 767px) {
+  button, a, [role="button"] {
+    min-height: 40px;
+    min-width: 40px;
+  }
+  /* Prevent zooming on input focus on iOS */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Overscroll bounce prevention for map containers */
+.map-scroll-lock {
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+}
+

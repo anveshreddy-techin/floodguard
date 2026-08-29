@@ -103,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
 
   return (
     <aside
-      className={`hidden md:flex border-r border-slate-800/60 bg-slate-950/80 backdrop-blur-xl flex-col justify-between transition-all duration-300 select-none z-30 ${
+      className={`hidden md:flex border-r border-slate-800/60 bg-slate-950/80 backdrop-blur-xl flex-col justify-between transition-all duration-300 select-none z-[200] ${
         collapsed ? 'w-16' : 'w-64 xl:w-72'
       }`}
       style={{ boxShadow: '2px 0 20px rgba(0,0,0,0.4)' }}
