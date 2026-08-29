@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bot, 
   Send, 
@@ -19,7 +19,13 @@ import {
   TrendingUp,
   Cpu,
   Layers,
-  FileCheck
+  FileCheck,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX,
+  AudioWaveform as Waveform,
+  RefreshCw
 } from 'lucide-react';
 import { UncertaintyBadge } from './Badges';
 
@@ -35,21 +41,143 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
     {
       sender: 'copilot',
       content: {
-        summary: "Greetings Commander. I am the FloodGuard Grounded AI Disaster Intelligence Assistant. I am trained on the entire physical science corpus, real-time sensor telemetry, SIH26192 guidelines, and historical Himalayan disaster archives. How can I assist your operations today?",
+        summary: "Greetings Commander. I am the FloodGuard Grounded AI Disaster Intelligence Voice Assistant. You can speak to me or type inquiries about physical hydrology, IoT sensor health, evacuation routes, and SIH26192 alignment. How can I assist?",
         observed_facts: [
-          "Complete knowledge base online: Hydrology, IoT Mesh, Evacuation Vectors, Historical Hindcasts, SIH26192 Alignment.",
+          "Complete voice communication online: Speech-to-Text recognition & Natural Text-to-Speech synthesis active.",
           "Zero hallucination policy: All inferences are grounded in physical equations and verified government sources."
         ],
         potential_operator_actions: [
-          "Ask about active risk in Sunderbans Nagar",
-          "Inquire about sensor mesh health and offline fallbacks",
-          "Request candidate evacuation routes and shelter safety",
-          "Explore historical disaster comparisons (2013 Kedarnath vs 2021 Chamoli)"
+          "Tap the Microphone button and speak naturally",
+          "Tap the Speaker icon on any response to hear vocalized directives",
+          "Toggle Auto-Voice mode for continuous hands-free dialogue"
         ]
       },
     },
   ]);
   const [loading, setLoading] = useState(false);
+
+  // Voice Communication States
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
+  const [autoSpeak, setAutoSpeak] = useState(true);
+  const [speechError, setSpeechError] = useState<string | null>(null);
+  
+  const recognitionRef = useRef<any>(null);
+
+  // Stop voice synthesis on unmount or drawer close
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [isOpen]);
+
+  // Voice Input (Speech-to-Text)
+  const toggleListening = () => {
+    if (typeof window === 'undefined') return;
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setSpeechError('Speech Recognition is not supported by your current browser. Please type query.');
+      setTimeout(() => setSpeechError(null), 4000);
+      return;
+    }
+
+    if (isListening) {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setIsListening(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-IN';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setSpeechError(null);
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = Array.from(event.results)
+          .map((result: any) => result[0].transcript)
+          .join('');
+        setQuery(transcript);
+      };
+
+      recognition.onerror = (event: any) => {
+        setIsListening(false);
+        if (event.error !== 'no-speech') {
+          setSpeechError(`Voice input error: ${event.error}`);
+          setTimeout(() => setSpeechError(null), 4000);
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err: any) {
+      setIsListening(false);
+      setSpeechError(`Microphone access error: ${err.message}`);
+      setTimeout(() => setSpeechError(null), 4000);
+    }
+  };
+
+  // Text-to-Speech Synthesis
+  const speakText = (text: string, index?: number) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    // If already speaking this message, stop
+    if (isSpeaking && speakingIndex === index) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setSpeakingIndex(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    // Clean text for speech
+    const cleanText = text.replace(/[#*•_]/g, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.lang = 'en-IN';
+
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      if (index !== undefined) setSpeakingIndex(index);
+    };
+
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setSpeakingIndex(null);
+    };
+
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      setSpeakingIndex(null);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setSpeakingIndex(null);
+    }
+  };
 
   // Preset question categories covering the ENTIRE knowledge base
   const knowledgeCategories = [
@@ -117,13 +245,15 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       const data = await res.json();
       if (data && data.response) {
         setMessages((prev) => [...prev, { sender: 'copilot', content: data.response }]);
+        if (autoSpeak && data.response.summary) {
+          speakText(data.response.summary);
+        }
         return;
       }
     } catch (e) {
-      // Fallback to grounded disaster intelligence knowledge engine
+      // Grounded offline fallback engine
     }
 
-    // Comprehensive Grounded Knowledge Engine
     const q = text.toLowerCase();
     let response: any = {
       summary: "FloodGuard AI composite intelligence analysis grounded in physical hydrology and multi-sensor telemetry.",
@@ -281,6 +411,11 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       },
     ]);
     setLoading(false);
+
+    // Auto-Voice Response if enabled
+    if (autoSpeak && response.summary) {
+      speakText(response.summary);
+    }
   };
 
   if (!isOpen) return null;
@@ -295,23 +430,50 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
           </div>
           <div>
             <h3 className="font-mono text-sm font-black text-white flex items-center gap-1.5">
-              <span>FLOODGUARD GROUNDED AI COPILOT</span>
+              <span>FLOODGUARD AI VOICE COPILOT</span>
             </h3>
             <div className="text-[10px] font-mono text-cyan-400 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-              <span>ENTIRE KNOWLEDGE BASE ACTIVE • ZERO HALLUCINATION</span>
+              <span>VOICE DIALOGUE & KNOWLEDGE ENGINE ACTIVE</span>
             </div>
           </div>
         </div>
 
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition active:scale-95 border border-slate-800"
-          title="Close AI Assistant"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Auto-Voice Toggle */}
+          <button
+            onClick={() => {
+              setAutoSpeak(!autoSpeak);
+              if (isSpeaking) stopSpeaking();
+            }}
+            className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 border transition active:scale-95 ${
+              autoSpeak
+                ? 'bg-cyan-950/80 border-cyan-500/50 text-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.3)]'
+                : 'bg-slate-900 border-slate-800 text-slate-500'
+            }`}
+            title={autoSpeak ? 'Auto-Voice Enabled: AI will speak responses' : 'Auto-Voice Muted'}
+          >
+            {autoSpeak ? <Volume2 className="w-3 h-3 text-cyan-400" /> : <VolumeX className="w-3 h-3 text-slate-500" />}
+            <span className="hidden xs:inline">{autoSpeak ? 'VOICE ON' : 'MUTED'}</span>
+          </button>
+
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition active:scale-95 border border-slate-800"
+            title="Close AI Assistant"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       </div>
+
+      {/* Speech Error Banner */}
+      {speechError && (
+        <div className="bg-amber-950/90 border-b border-amber-800/80 px-4 py-2 text-xs font-mono text-amber-200 flex items-center gap-2 animate-slide-up">
+          <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span>{speechError}</span>
+        </div>
+      )}
 
       {/* Preset Category Switcher Pills */}
       <div className="px-3 py-2 border-b border-slate-800/80 bg-slate-950/40 flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0">
@@ -335,21 +497,45 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
         {messages.map((m, i) => (
           <div key={i} className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}>
             {m.sender === 'user' ? (
-              <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-mono p-3 rounded-2xl max-w-[85%] shadow-lg border border-cyan-400/30 text-xs">
-                {m.content}
+              <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-mono p-3 rounded-2xl max-w-[85%] shadow-lg border border-cyan-400/30 text-xs flex items-center gap-2">
+                <span>{m.content}</span>
               </div>
             ) : (
               <div className="fp fp-operational p-4 sm:p-5 rounded-3xl max-w-[95%] space-y-3.5 shadow-2xl border border-cyan-500/30">
-                {/* Summary */}
+                {/* Summary Header + Speaker Button */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase flex items-center gap-1">
                       <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
                       INTELLIGENCE SUMMARY
                     </span>
-                    {m.content.uncertainty_assessment && (
-                      <UncertaintyBadge level={m.content.uncertainty_assessment.uncertainty_level} />
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {m.content.uncertainty_assessment && (
+                        <UncertaintyBadge level={m.content.uncertainty_assessment.uncertainty_level} />
+                      )}
+                      {/* Text-to-Speech Button */}
+                      <button
+                        onClick={() => speakText(m.content.summary, i)}
+                        className={`p-1.5 rounded-lg border transition active:scale-95 flex items-center gap-1 text-[10px] font-mono ${
+                          isSpeaking && speakingIndex === i
+                            ? 'bg-cyan-950 border-cyan-400 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
+                            : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-cyan-300'
+                        }`}
+                        title="Vocalize this response"
+                      >
+                        {isSpeaking && speakingIndex === i ? (
+                          <>
+                            <VolumeX className="w-3 h-3 text-cyan-400 animate-pulse" />
+                            <span className="text-cyan-400 font-bold">STOP</span>
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 className="w-3 h-3" />
+                            <span>LISTEN</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                   <p className="text-white text-xs leading-relaxed font-sans">{m.content.summary}</p>
                 </div>
@@ -417,7 +603,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
         {loading && (
           <div className="fp p-4 rounded-2xl flex items-center gap-3 text-xs font-mono text-cyan-300 animate-pulse">
             <Bot className="w-4 h-4 animate-spin text-cyan-400" />
-            <span>Consulting physics heuristics and multi-sensor mesh...</span>
+            <span>Consulting physical equations and multi-sensor telemetry...</span>
           </div>
         )}
       </div>
@@ -440,16 +626,32 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
         </div>
       </div>
 
-      {/* Input Bar */}
+      {/* Input Bar with Microphone Voice Trigger */}
       <div className="p-3.5 border-t border-slate-800 bg-slate-950 flex items-center gap-2 shrink-0">
+        {/* Voice Input Button */}
+        <button
+          onClick={toggleListening}
+          className={`p-2.5 rounded-xl transition active:scale-95 border shadow-lg flex items-center justify-center ${
+            isListening
+              ? 'bg-rose-600 border-rose-400 text-white animate-pulse shadow-[0_0_20px_rgba(225,29,72,0.6)]'
+              : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-cyan-300 hover:border-cyan-500/50'
+          }`}
+          title={isListening ? 'Listening... (Click to stop)' : 'Click to Speak via Microphone'}
+        >
+          {isListening ? <Mic className="w-4 h-4 text-white animate-bounce" /> : <Mic className="w-4 h-4" />}
+        </button>
+
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend(query)}
-          placeholder="Ask AI Copilot about any risk, sensor, route, or SIH requirement..."
-          className="flex-1 bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 font-mono focus:border-cyan-400 focus:outline-none transition"
+          placeholder={isListening ? 'Listening to your voice...' : 'Speak or type any question...'}
+          className={`flex-1 bg-slate-900 border rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 font-mono focus:outline-none transition ${
+            isListening ? 'border-rose-500 ring-2 ring-rose-500/30' : 'border-slate-700/80 focus:border-cyan-400'
+          }`}
         />
+
         <button
           onClick={() => handleSend(query)}
           disabled={!query.trim() || loading}
