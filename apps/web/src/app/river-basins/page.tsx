@@ -16,14 +16,14 @@ export default function RiverBasinsNationalPage() {
   }, [setPage, setMode, setRiskState]);
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden select-none bg-[#020714]">
+    <div className="flex flex-col min-h-screen select-none bg-[#020714]">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="map" />
         
-        <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-hidden min-h-0 bg-[#030712]">
-          <NationalRiverRiskMap className="h-full" />
+        <main className="flex-1 p-2 sm:p-4 md:p-6 pb-28 md:pb-6 overflow-y-auto bg-[#030712]">
+          <NationalRiverRiskMap />
         </main>
       </div>
     </div>

@@ -269,8 +269,8 @@ export default function HyperLocalGISPage() {
 
           {/* Conditional View Render Overlay for National River Map */}
           {activeMapView === 'NATIONAL_RIVERS' && (
-            <div className="absolute inset-0 pt-14 p-2 sm:p-4 overflow-hidden min-h-0 bg-slate-950 z-20">
-              <NationalRiverRiskMap className="h-full" />
+            <div className="absolute inset-0 pt-14 p-1 sm:p-4 overflow-y-auto pb-28 md:pb-4 min-h-0 bg-slate-950 z-20">
+              <NationalRiverRiskMap />
             </div>
           )}
 
