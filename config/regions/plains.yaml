@@ -1,0 +1,18 @@
+region_id: "INDO_GANGETIC_PLAINS"
+name: "Indo-Gangetic & Terai Plains"
+states: ["Uttar Pradesh", "Bihar", "Haryana", "Punjab", "Rajasthan", "West Bengal"]
+active_hazards:
+  - "river_flood"
+  - "embankment_breach"
+  - "reservoir_release"
+  - "floodplain_inundation"
+  - "drainage_congestion"
+primary_model: "baseline_igp_v1"
+authorities:
+  - "Bihar BSDMA"
+  - "UP Relief Commissioner"
+  - "Ganga Flood Control Commission"
+critical_thresholds:
+  rainfall_3h_mm: 50.0
+  soil_saturation_pct: 70.0
+  river_rise_m_h: 0.3

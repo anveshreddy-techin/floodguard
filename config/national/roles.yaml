@@ -1,0 +1,105 @@
+roles:
+  CITIZEN:
+    level: 1
+    display_name: "Citizen / Resident"
+    description: "Location-centric safe evacuation guidance, risk advisory, and community flood reporting."
+    permissions:
+      - view_local_risk
+      - view_candidate_routes
+      - view_nearby_shelters
+      - submit_community_report
+      - request_emergency_help
+    forbidden:
+      - modify_thresholds
+      - view_victim_pii
+      - issue_official_alerts
+
+  VILLAGE_OPERATOR:
+    level: 2
+    display_name: "Village / Panchayat Operator"
+    description: "Gram Panchayat level hazard monitoring, manual gauge entry, and local response activation."
+    permissions:
+      - view_village_risk
+      - submit_manual_observation
+      - report_channel_blockage
+      - acknowledge_local_alert
+      - assign_village_tasks
+
+  FIELD_RESPONDER:
+    level: 3
+    display_name: "Field Responder (SDRF / NDRF)"
+    description: "Field SAR execution, bridge/road condition check-ins, victim location updates."
+    permissions:
+      - view_responder_tasks
+      - update_road_bridge_status
+      - submit_field_evidence
+      - create_rescue_dispatch
+      - view_shelter_capacity
+
+  DISTRICT_OPERATOR:
+    level: 4
+    display_name: "District EOC Operator"
+    description: "District Disaster Management Authority (DDMA) command, task assignment, and local CAP alert drafting."
+    permissions:
+      - view_district_dashboard
+      - assign_response_teams
+      - approve_internal_warnings
+      - draft_cap_alerts
+      - export_sitreps
+
+  STATE_OPERATOR:
+    level: 5
+    display_name: "State SEOC Commander"
+    description: "State Disaster Management Authority (SDMA) inter-district coordination and state alert approvals."
+    permissions:
+      - view_state_dashboard
+      - coordinate_inter_district_resources
+      - approve_state_alert_workflows
+      - inspect_state_source_health
+
+  NATIONAL_OPERATOR:
+    level: 6
+    display_name: "National NDMA Commander"
+    description: "National Executive Committee / NDMA command, pan-India river basin overview, cross-border monitoring."
+    permissions:
+      - view_national_dashboard
+      - monitor_interstate_basins
+      - view_cross_border_intelligence
+      - coordinate_national_ndrf_deployments
+
+  ANALYST:
+    level: 7
+    display_name: "Hydrological / GIS Analyst"
+    description: "Feature snapshot building, model comparison, ML drift inspection, and historical hindcast calibration."
+    permissions:
+      - upload_custom_datasets
+      - run_model_inference
+      - inspect_drift_provenance
+      - evaluate_false_negatives
+
+  RESEARCHER:
+    level: 8
+    display_name: "Academic / Disaster Researcher"
+    description: "Historical case study replay, algorithm benchmarking, and offline simulation runs."
+    permissions:
+      - replay_historical_events
+      - train_research_models
+      - export_benchmarks
+
+  ADMIN:
+    level: 9
+    display_name: "System Administrator"
+    description: "Master governance, RBAC management, API key boundaries, and immutable audit logs."
+    permissions:
+      - manage_users_roles
+      - configure_operating_modes
+      - inspect_master_audit_ledger
+      - manage_provider_boundaries
+
+  VIEWER:
+    level: 0
+    display_name: "Public Viewer / Demo"
+    description: "Read-only access to public advisories and safe route candidates."
+    permissions:
+      - view_public_map
+      - view_general_advisories

@@ -1,0 +1,28 @@
+alert_policy:
+  lifecycle_stages:
+    - DRAFT
+    - ACTIVE
+    - ACKNOWLEDGED
+    - ESCALATED
+    - RESOLVED
+    - ARCHIVED
+
+  thresholds:
+    WATCH:
+      color: "YELLOW"
+      min_risk_score: 40.0
+      action: "Advisory monitoring active"
+    WARNING:
+      color: "ORANGE"
+      min_risk_score: 65.0
+      action: "Pre-position SDRF rescue teams and prepare shelters"
+    DANGER:
+      color: "RED"
+      min_risk_score: 80.0
+      action: "Immediate community evacuation to designated shelters"
+
+  cap_profile:
+    standard: "ITU-T X.1303 / OASIS CAP v1.2"
+    scope: "Public"
+    status: "Actual"
+    msg_type: "Alert"

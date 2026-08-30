@@ -1,0 +1,27 @@
+modes:
+  DEMO:
+    display_name: "DEMO MODE"
+    data_mode_label: "DEMO / SYNTHETIC"
+    description: "Deterministic simulation, repeatable historical replay, synthetic IoT telemetry. Safe for demonstrations."
+    allows_public_broadcast: false
+    requires_live_credentials: false
+    sensor_behavior: "DETERMINISTIC_SIMULATOR"
+    persistence: "TRANSIENT_SESSION"
+
+  REAL_PILOT:
+    display_name: "REAL/PILOT MODE"
+    data_mode_label: "REAL / PILOT OPERATIONAL"
+    description: "Configured telemetry feeds, authenticated IoT packets, verified CSV uploads, and operator workflows."
+    allows_public_broadcast: false # Controlled by SEOC authorization gateway
+    requires_live_credentials: true
+    sensor_behavior: "AUTHENTICATED_GATEWAY"
+    persistence: "PERSISTENT_POSTGRES_LEDGER"
+
+internal_states:
+  - LIVE_DATA
+  - HISTORICAL_DATA
+  - UPLOAD_DATA
+  - SIMULATION_DATA
+  - DEGRADED
+  - UNAVAILABLE
+  - STALE

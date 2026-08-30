@@ -1,0 +1,18 @@
+region_id: "URBAN_METRO"
+name: "Urban Metropolitan Flood Zones"
+states: ["Maharashtra (Mumbai)", "Karnataka (Bengaluru)", "Tamil Nadu (Chennai)", "Telangana (Hyderabad)", "Delhi NCR"]
+active_hazards:
+  - "urban_waterlogging"
+  - "underpass_flooding"
+  - "drainage_failure"
+  - "extreme_cloudburst"
+  - "traffic_disruption"
+primary_model: "baseline_urban_v1"
+authorities:
+  - "Brihanmumbai Municipal Corporation (BMC)"
+  - "BBMP Bengaluru"
+  - "Greater Chennai Corporation (GCC)"
+  - "GHMC Hyderabad"
+critical_thresholds:
+  rainfall_1h_mm: 40.0
+  drainage_saturation_pct: 90.0

@@ -1,0 +1,17 @@
+region_id: "COASTAL_CYCLONE"
+name: "Coastal & Cyclone Surge Zones"
+states: ["Odisha", "Andhra Pradesh", "Tamil Nadu", "West Bengal", "Puducherry"]
+active_hazards:
+  - "cyclone_rainfall"
+  - "storm_surge"
+  - "river_coastal_interaction"
+  - "saline_flooding"
+  - "coastal_evacuation"
+primary_model: "baseline_coastal_v1"
+authorities:
+  - "Odisha OSDMA"
+  - "AP APSDMA"
+  - "INCOIS Hyderabad"
+critical_thresholds:
+  rainfall_3h_mm: 75.0
+  surge_height_m: 2.0

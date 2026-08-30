@@ -1,0 +1,27 @@
+data_quality:
+  physical_limits:
+    rainfall_rate_mm_h:
+      min: 0.0
+      max: 500.0
+    river_stage_m:
+      min: 0.0
+      max: 100.0
+    soil_saturation_pct:
+      min: 0.0
+      max: 100.0
+    vibration_rms_g:
+      min: 0.0
+      max: 10.0
+
+  freshness_windows_seconds:
+    realtime_iot: 900       # 15 min
+    aws_weather: 1800       # 30 min
+    river_gauge: 3600       # 1 hour
+    satellite_precip: 10800 # 3 hours
+    sar_inundation: 432000  # 5 days
+
+  quality_flags:
+    - VALID
+    - ACCEPTED_WITH_WARNING
+    - QUARANTINED
+    - REJECTED

@@ -1,0 +1,17 @@
+region_id: "PENINSULAR_CENTRAL"
+name: "Peninsular & Central River Basins"
+states: ["Madhya Pradesh", "Chhattisgarh", "Telangana", "Andhra Pradesh", "Odisha", "Maharashtra"]
+active_hazards:
+  - "riverine_flood"
+  - "dam_induced_flood"
+  - "flash_flood"
+  - "ephemeral_surge"
+primary_model: "baseline_central_v1"
+authorities:
+  - "Godavari River Management Board"
+  - "Krishna River Management Board"
+  - "Narmada Control Authority"
+critical_thresholds:
+  rainfall_3h_mm: 55.0
+  soil_saturation_pct: 72.0
+  river_rise_m_h: 0.4

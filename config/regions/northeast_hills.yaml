@@ -1,0 +1,19 @@
+region_id: "NORTHEAST_HILLS"
+name: "North-East Hills & Brahmaputra"
+states: ["Assam", "Sikkim", "Meghalaya", "Arunachal Pradesh", "Nagaland", "Manipur", "Mizoram", "Tripura"]
+active_hazards:
+  - "intense_rainfall"
+  - "flash_flood"
+  - "landslide"
+  - "river_flooding"
+  - "road_blockage"
+  - "transboundary_surge"
+primary_model: "baseline_northeast_v1"
+authorities:
+  - "Assam ASDMA"
+  - "Brahmaputra Board"
+  - "Sikkim SSDMA"
+critical_thresholds:
+  rainfall_3h_mm: 80.0
+  soil_saturation_pct: 80.0
+  river_rise_m_h: 0.8

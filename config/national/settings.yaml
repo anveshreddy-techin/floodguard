@@ -1,0 +1,35 @@
+platform:
+  name: "FLOODGUARD AI"
+  subtitle: "India-Wide Adaptive Multi-Hazard Flood Intelligence, Early Warning, Emergency Response, and Recovery Platform"
+  version: "2.0.0"
+  problem_id: "SIH26192"
+  theme: "Theme 4: Disaster Management"
+  primary_authority: "Ministry of Home Affairs / NDMA"
+  deployment_model: "National Edge Cloud with Localized SEOC Nodes"
+  default_language: "en"
+  supported_languages:
+    - en
+    - hi
+    - te
+    - bn
+    - as
+    - gu
+    - kn
+    - ml
+    - mr
+    - or
+    - pa
+    - ta
+    - ne
+
+modes:
+  default_mode: "DEMO"
+  available_modes:
+    - DEMO
+    - REAL_PILOT
+
+governance:
+  pilot_mode: true
+  public_sirens_enabled: false
+  cap_xml_version: "1.2"
+  data_preservation_days: 3650 # 10 years forensic audit

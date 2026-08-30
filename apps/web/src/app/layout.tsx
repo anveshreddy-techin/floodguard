@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LocationProvider } from "@/context/LocationContext";
 import { EnvironmentProvider } from "@/context/EnvironmentContext";
+import { AdaptiveProvider } from "@/context/AdaptiveContext";
 import { EnvironmentLayer } from "@/components/ui/EnvironmentLayer";
 import { MobileNavigationWrapper } from "@/components/ui/MobileNavigationWrapper";
 
@@ -36,18 +37,20 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className="antialiased min-h-screen overflow-x-hidden">
         <EnvironmentProvider>
-          <LocationProvider>
-            {/* 8-Layer living environment — always behind content */}
-            <EnvironmentLayer />
-            
-            {/* Application content — floats over environment */}
-            <div className="env-content min-h-screen flex flex-col pb-16 md:pb-0">
-              {children}
-            </div>
+          <AdaptiveProvider>
+            <LocationProvider>
+              {/* 8-Layer living environment — always behind content */}
+              <EnvironmentLayer />
+              
+              {/* Application content — floats over environment */}
+              <div className="env-content min-h-screen flex flex-col pb-16 md:pb-0">
+                {children}
+              </div>
 
-            {/* Mobile Navigation HUD (Bottom Bar & Slide Drawer) */}
-            <MobileNavigationWrapper />
-          </LocationProvider>
+              {/* Mobile Navigation HUD (Bottom Bar & Slide Drawer) */}
+              <MobileNavigationWrapper />
+            </LocationProvider>
+          </AdaptiveProvider>
         </EnvironmentProvider>
       </body>
     </html>

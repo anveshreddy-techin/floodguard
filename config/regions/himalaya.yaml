@@ -1,0 +1,22 @@
+region_id: "HIMALAYAN_NORTH"
+name: "Northern Himalayan Region"
+states: ["Uttarakhand", "Himachal Pradesh", "Jammu & Kashmir", "Ladakh"]
+active_hazards:
+  - "flash_flood"
+  - "landslide"
+  - "debris_flow"
+  - "avalanche"
+  - "glof_screening"
+  - "river_blockage"
+  - "snowmelt"
+  - "hydropower_exposure"
+primary_model: "baseline_himalayan_v1"
+authorities:
+  - "Uttarakhand SDMA"
+  - "Himachal SDMA"
+  - "CWC Himalayan Regional Office"
+  - "ITBP & BRO"
+critical_thresholds:
+  rainfall_3h_mm: 65.0
+  soil_saturation_pct: 75.0
+  river_rise_m_h: 0.5

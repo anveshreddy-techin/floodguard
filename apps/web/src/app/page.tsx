@@ -11,13 +11,16 @@ import { MobileBottomSheet } from '@/components/ui/MobileBottomSheet';
 import { DesktopIntelligencePanel } from '@/components/ui/DesktopIntelligencePanel';
 import { useLocation } from '@/context/LocationContext';
 import { useEnvironment } from '@/context/EnvironmentContext';
-import { Bot, Layers, ChevronRight, Activity, ChevronUp, ChevronDown, ShieldAlert } from 'lucide-react';
+import { useAdaptive } from '@/context/AdaptiveContext';
+import { Bot, Layers, ChevronRight, Activity, ChevronUp, ChevronDown, ShieldAlert, MapPin, PhoneCall, AlertTriangle, Compass } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function CommandCenterPage() {
   const router = useRouter();
   const { selectedLocation, setSelectedLocation } = useLocation();
   const { setPage, setMode, setRiskState, setRainfallMm, setRiverStage } = useEnvironment();
+  const { isCitizen, t } = useAdaptive();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState('NOW');
@@ -73,6 +76,48 @@ export default function CommandCenterPage() {
             <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-300 animate-pulse" />
             <span>COPILOT</span>
           </button>
+
+          {/* ── Citizen Role Floating Guidance HUD (When role is CITIZEN) ── */}
+          {isCitizen && (
+            <div className="absolute top-16 left-3 right-3 sm:right-auto sm:w-80 z-[700] bg-slate-950/95 border border-cyan-500/40 rounded-2xl p-4 shadow-2xl backdrop-blur-xl space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono text-cyan-300 font-bold flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-cyan-400" /> {t('what_to_do')}
+                </span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                  {selectedLocation?.riskLevel || 'HIGH'} RISK
+                </span>
+              </div>
+
+              <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                {t('action_evacuate')}. River stage is rising rapidly (+0.40m/h). Do not attempt bridge crossings.
+              </p>
+
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <Link
+                  href="/safety"
+                  className="px-3 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow-lg transition active:scale-95"
+                >
+                  <Compass className="w-3.5 h-3.5" /> SAFE ROUTE
+                </Link>
+                <button
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('open-emergency-modal'));
+                    }
+                  }}
+                  className="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow-lg transition active:scale-95 animate-pulse"
+                >
+                  <PhoneCall className="w-3.5 h-3.5" /> CALL RESCUE
+                </button>
+              </div>
+
+              <div className="pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                <span>Nearest Shelter: </span>
+                <strong className="text-white">Community High School (1.4 km)</strong>
+              </div>
+            </div>
+          )}
 
           {/* ── Desktop Dockable / Minimizable Right Panel (z-[700]) ── */}
           <DesktopIntelligencePanel

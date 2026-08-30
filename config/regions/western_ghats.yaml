@@ -1,0 +1,18 @@
+region_id: "WESTERN_GHATS"
+name: "Western Ghats & Coastal Slopes"
+states: ["Kerala", "Karnataka", "Maharashtra", "Goa"]
+active_hazards:
+  - "intense_monsoon_rain"
+  - "landslide"
+  - "debris_flow"
+  - "reservoir_release"
+  - "flash_flood"
+primary_model: "baseline_western_ghats_v1"
+authorities:
+  - "Kerala KSDMA"
+  - "Karnataka KSDMA"
+  - "Maharashtra SDMA"
+critical_thresholds:
+  rainfall_3h_mm: 70.0
+  soil_saturation_pct: 85.0
+  river_rise_m_h: 0.6
