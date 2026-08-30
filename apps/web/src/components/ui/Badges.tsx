@@ -32,15 +32,20 @@ export const SeverityBadge: React.FC<{ severity: AlertSeverity }> = ({ severity 
   );
 };
 
-export const DataModeBadge: React.FC<{ mode: DataMode }> = ({ mode }) => {
+export const DataModeBadge: React.FC<{ mode: DataMode; compact?: boolean }> = ({ mode, compact }) => {
   const isSynthetic = mode === 'DEMO' || mode === 'SIMULATION';
   return (
-    <span className={`px-2 py-0.5 text-xs font-mono rounded border ${
+    <span className={`px-2 py-0.5 text-[10px] sm:text-xs font-mono font-bold rounded-lg border shrink-0 ${
       isSynthetic 
         ? 'bg-purple-950/80 text-purple-300 border-purple-700/80' 
-        : 'bg-cyan-950 text-cyan-300 border-cyan-700'
+        : 'bg-cyan-950/90 text-cyan-300 border-cyan-700/90'
     }`}>
-      MODE: {mode}
+      {compact ? mode : (
+        <>
+          <span className="hidden sm:inline">MODE: </span>
+          <span>{mode}</span>
+        </>
+      )}
     </span>
   );
 };

@@ -153,14 +153,14 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
     <div className={`relative w-full h-full bg-[#020714] overflow-hidden select-none flex flex-col justify-between transition-opacity duration-700 ${mapLoaded ? 'opacity-100' : 'opacity-0'}`}>
       
       {/* Top Floating Map Controls with Radiant Glow */}
-      <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5 max-w-[calc(100%-120px)]">
+      <div className="absolute top-2.5 left-2.5 right-2.5 z-20 flex items-center justify-between gap-1.5 pointer-events-none">
         {/* Layer Selector */}
-        <div className="glass-panel-glow rounded-xl p-1 flex items-center gap-1 shadow-2xl border border-cyan-500/30 overflow-x-auto no-scrollbar">
+        <div className="pointer-events-auto glass-panel-glow rounded-xl p-0.5 sm:p-1 flex items-center gap-0.5 sm:gap-1 shadow-2xl border border-cyan-500/30 overflow-x-auto no-scrollbar max-w-[calc(100%-100px)] sm:max-w-none">
           {(['RISK', 'RAINFALL', 'SOIL', 'TERRAIN', 'RIVER', 'EXPOSURE'] as MapLayerType[]).map((layer) => (
             <button
               key={layer}
               onClick={() => setActiveLayer(layer)}
-              className={`px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-[11px] font-mono font-bold transition-all transform active:scale-95 whitespace-nowrap ${
+              className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-[9px] sm:text-[11px] font-mono font-bold transition-all transform active:scale-95 whitespace-nowrap shrink-0 ${
                 activeLayer === layer
                   ? 'btn-glow-cyan text-white shadow-lg'
                   : 'text-slate-400 hover:text-cyan-300 hover:bg-slate-800/80'
@@ -171,21 +171,24 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
           ))}
         </div>
 
-        {/* 100% Full Map Toggle */}
-        <button
-          onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
-          className={`fp px-2.5 py-1 rounded-xl text-[10px] md:text-xs font-mono font-bold flex items-center gap-1 shadow-xl transition active:scale-95 ${
-            fitMode === 'MEET' ? 'text-emerald-300 border-emerald-500/50 bg-emerald-950/40' : 'text-cyan-300 border-cyan-500/30'
-          }`}
-          title={fitMode === 'MEET' ? 'Currently viewing 100% Full Catchment' : 'Currently Zoomed Fill'}
-        >
-          <Maximize2 className="w-3 h-3" />
-          <span>{fitMode === 'MEET' ? '100% MAP' : 'FILL'}</span>
-        </button>
+        {/* Right Tools: 100% Full Map Toggle & Step Pill */}
+        <div className="pointer-events-auto flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
+            className={`fp px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-[9px] sm:text-xs font-mono font-bold flex items-center gap-1 shadow-xl transition active:scale-95 shrink-0 ${
+              fitMode === 'MEET' ? 'text-emerald-300 border-emerald-500/50 bg-emerald-950/60' : 'text-cyan-300 border-cyan-500/30'
+            }`}
+            title={fitMode === 'MEET' ? 'Currently viewing 100% Full Catchment' : 'Currently Zoomed Fill'}
+          >
+            <Maximize2 className="w-3 h-3" />
+            <span className="hidden xs:inline">{fitMode === 'MEET' ? '100% FULL' : 'FILL'}</span>
+            <span className="xs:hidden">{fitMode === 'MEET' ? '100%' : 'FILL'}</span>
+          </button>
 
-        <div className="hidden sm:flex glass-panel px-3 py-1 rounded-xl text-[11px] font-mono text-cyan-300 items-center gap-1.5 shadow-xl border border-cyan-500/30">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          <span className="font-bold">STEP: {simulatedTimeStep}</span>
+          <div className="hidden sm:flex glass-panel px-2.5 py-1 rounded-xl text-[10px] sm:text-[11px] font-mono text-cyan-300 items-center gap-1.5 shadow-xl border border-cyan-500/30 shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+            <span className="font-bold">STEP: {simulatedTimeStep}</span>
+          </div>
         </div>
       </div>
 
