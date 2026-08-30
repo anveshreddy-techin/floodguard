@@ -112,16 +112,121 @@ export const ROLE_DEFINITIONS: {
   },
 ];
 
+// State-Specific Dams, Hospitals & SDRF Battalions
+const STATE_INFRA_REGISTRY: Record<string, { dam: string; hospital: string; sdrf: string }> = {
+  Telangana: {
+    dam: 'Kaleshwaram Barrage & Medigadda / Srisailam · 42 Gates Regulated',
+    hospital: 'Osmania & Gandhi Hospital / Bhadrachalam Area Hospital',
+    sdrf: 'TS-SDRF 1st Battalion & 10th NDRF Vijayawada Unit',
+  },
+  Kerala: {
+    dam: 'Idukki & Mullaperiyar Dams · Blue Alert Buffer Protocol',
+    hospital: 'Wayanad District Hospital Mananthavady & Kozhikode MCH',
+    sdrf: 'Kerala Fire & Rescue SDRF & 4th NDRF Arakkonam Unit',
+  },
+  Maharashtra: {
+    dam: 'Koyna & Khadakwasla Reservoirs · 18,500 cumecs Controlled Outflow',
+    hospital: 'KEM Hospital Mumbai & Chiplun Sub-District Civil Hospital',
+    sdrf: 'Maharashtra SDRF & 5th NDRF Pune Battalion',
+  },
+  Assam: {
+    dam: 'Ranganadi & Subansiri Lower Dams · Surcharge Buffer Active',
+    hospital: 'Gauhati Medical College (GMCH) & Assam Medical College Dibrugarh',
+    sdrf: 'Assam SDRF Riverine Rescue & 1st NDRF Guwahati Battalion',
+  },
+  Uttarakhand: {
+    dam: 'Tehri Dam (THDC) · Cleared for 1,200 cumecs Controlled Spill',
+    hospital: 'District Hospital Gopeshwar & AIIMS Rishikesh Trauma Wing',
+    sdrf: 'Uttarakhand SDRF High-Altitude Team & 8th NDRF Battalion',
+  },
+  'Himachal Pradesh': {
+    dam: 'Bhakra & Pong Dams (BBMB) · 45,000 cusecs Regulated Outflow',
+    hospital: 'IGMC Shimla & Kullu Zonal Hospital',
+    sdrf: 'HP-SDRF Mountain Rescue & 14th NDRF Jaspur Battalion',
+  },
+  'Jammu & Kashmir': {
+    dam: 'Salal & Baglihar Hydel Dams (NHPC) · Spillway Calibrated',
+    hospital: 'SMHS Hospital Srinagar & GMC Jammu',
+    sdrf: 'J&K SDRF Quick Reaction & 13th NDRF Ladpura Battalion',
+  },
+  Sikkim: {
+    dam: 'Teesta-V & Chungthang Barrage · Stage Level Automated Warning',
+    hospital: 'STNM Multi-Speciality Hospital Gangtok & Mangan District Hospital',
+    sdrf: 'Sikkim SDRF Mountain Rescue & 2nd NDRF Siliguri Base',
+  },
+  Odisha: {
+    dam: 'Hirakud Dam (28 Gates Opened) · 4.5 Lakh cusecs Discharge',
+    hospital: 'SCB Medical College Cuttack & AIIMS Bhubaneswar',
+    sdrf: 'ODRAF (Odisha Disaster Rapid Action Force) & 3rd NDRF Mundali',
+  },
+  Bihar: {
+    dam: 'Kosi Barrage Birpur (56 Gates) · 3.2 Lakh cusecs Wave Routing',
+    hospital: 'PMCH Patna & Darbhanga Medical College Hospital (DMCH)',
+    sdrf: 'Bihar SDRF Inflatable Boat Fleet & 9th NDRF Bihta Battalion',
+  },
+  'West Bengal': {
+    dam: 'Durgapur Barrage & DVC Dams · Surcharge Inundation Routing',
+    hospital: 'Diamond Harbour District Hospital & SSKM Hospital Kolkata',
+    sdrf: 'West Bengal Disaster Management SDRF & 2nd NDRF Haringhata',
+  },
+  Karnataka: {
+    dam: 'KRS & Almatti Reservoirs · Regulated Downstream Discharge',
+    hospital: 'Victoria Hospital Bengaluru & Madikeri District Hospital',
+    sdrf: 'Karnataka State SDRF & 10th NDRF Regional Unit',
+  },
+  'Tamil Nadu': {
+    dam: 'Mettur Dam & Chembarambakkam Sluices · Estuary Lock Protocol',
+    hospital: 'Rajiv Gandhi Government General Hospital (RGGGH) Chennai',
+    sdrf: 'Tamil Nadu SDRF Coastal Team & 4th NDRF Arakkonam Battalion',
+  },
+  'Madhya Pradesh': {
+    dam: 'Indira Sagar & Omkareshwar (NHDC) · Sluice Discharge Protocol',
+    hospital: 'Hamidia Hospital Bhopal & Hoshangabad District Hospital',
+    sdrf: 'MP-SDRF Riverine Unit & 11th NDRF Varanasi Base',
+  },
+};
+
 export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className = '' }) => {
-  const { role, setRole, operatingMode, language } = useAdaptive();
+  const {
+    role,
+    setRole,
+    operatingMode,
+    language,
+    hierarchy,
+    selectedLocation,
+    activeHazards,
+    regionalModel
+  } = useAdaptive();
+
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
 
   // Active Role Object
   const currentRoleObj = ROLE_DEFINITIONS.find((r) => r.id === role) || ROLE_DEFINITIONS[3];
 
+  // Location-specific variables
+  const locName = selectedLocation.name;
+  const locState = selectedLocation.state;
+  const locRegion = selectedLocation.region;
+  const locElevation = selectedLocation.elevation;
+  const locPop = selectedLocation.population.toLocaleString('en-IN');
+  const locRisk = selectedLocation.riskLevel;
+  const locScore = selectedLocation.riskScore;
+  const locRiver = selectedLocation.riverStage;
+  const locRain = selectedLocation.rainfall3h;
+  const locSoil = selectedLocation.soilMoisture;
+  const locHazard = selectedLocation.primaryHazard;
+  const locAgency = selectedLocation.authoritativeAgency;
+
+  // Infrastructure lookup with dynamic fallback
+  const infra = STATE_INFRA_REGISTRY[locState] || {
+    dam: `${locState} Principal River Barrage · Sluice Protocol Active`,
+    hospital: `${locRegion.split('(')[0]} District Civil & Trauma Hospital`,
+    sdrf: `${locState} SDRF & NDRF Quick Response Battalion`,
+  };
+
   const triggerRoleAction = (actionName: string) => {
-    setActionFeedback(`Executing: "${actionName}"... Status: SUCCESS (Audit logged under ${role})`);
-    setTimeout(() => setActionFeedback(null), 4000);
+    setActionFeedback(`Executing for [${locName} (${locState})]: "${actionName}"... Status: SUCCESS (Audit logged under ${role})`);
+    setTimeout(() => setActionFeedback(null), 4500);
   };
 
   return (
@@ -134,11 +239,11 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
               <h2 className="text-sm font-black font-mono uppercase tracking-wider text-white">
-                Role-Adaptive Mission Control Interface
+                Location-Adaptive Mission Control Interface
               </h2>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5 font-mono">
-              Tailored workspaces for 10 statutory disaster management tiers in India
+            <p className="text-xs text-cyan-300 mt-0.5 font-mono">
+              📍 Synchronized to: <strong className="text-white">{locName}</strong> ({locState} · {locRegion.split('(')[0]})
             </p>
           </div>
 
@@ -175,12 +280,12 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
 
       {/* Action Notification Toast */}
       {actionFeedback && (
-        <div className="p-3 rounded-2xl bg-emerald-950/80 border border-emerald-500 text-emerald-200 text-xs font-mono flex items-center justify-between animate-fade-in shadow-xl">
+        <div className="p-3.5 rounded-2xl bg-emerald-950/90 border border-emerald-500 text-emerald-200 text-xs font-mono flex items-center justify-between animate-fade-in shadow-xl">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{actionFeedback}</span>
           </div>
-          <span className="text-[10px] bg-emerald-900 px-2 py-0.5 rounded text-emerald-300 font-bold">VERIFIED</span>
+          <span className="text-[10px] bg-emerald-900 px-2 py-0.5 rounded text-emerald-300 font-bold shrink-0">VERIFIED</span>
         </div>
       )}
 
@@ -192,29 +297,33 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
           <div className="p-5 rounded-3xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase">CITIZEN SAFETY HUD</span>
-                <h3 className="text-lg font-black text-white">Immediate Escape & High Ground Guidance</h3>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase">
+                  {locState.toUpperCase()} CITIZEN SAFETY HUD
+                </span>
+                <h3 className="text-lg font-black text-white">{locName} · High-Ground Guidance</h3>
               </div>
-              <span className="px-3 py-1 rounded-xl bg-emerald-500 text-slate-950 font-mono text-xs font-black animate-pulse">
-                SAFE ROUTE ACTIVE
+              <span className={`px-3 py-1 rounded-xl font-mono text-xs font-black animate-pulse ${
+                locRisk === 'EXTREME' ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-slate-950'
+              }`}>
+                {locRisk} RISK ({locScore}/100)
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
-                <span className="text-[10px] text-slate-400 font-mono">RECOMMENDED DESTINATION</span>
-                <div className="text-base font-bold text-white mt-1">Community High School Shelter</div>
-                <div className="text-xs text-emerald-400 font-mono mt-0.5">+120m Elevation · 500m distance</div>
+                <span className="text-[10px] text-slate-400 font-mono">RECOMMENDED HIGH-GROUND SHELTER</span>
+                <div className="text-base font-bold text-white mt-1">{locName.split('/')[0]} Community Shelter</div>
+                <div className="text-xs text-emerald-400 font-mono mt-0.5">{locElevation} · +120m Elevation Gain</div>
               </div>
               <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
-                <span className="text-[10px] text-slate-400 font-mono">ESTIMATED EVACUATION TIME</span>
-                <div className="text-xl font-black text-cyan-300 mt-1 font-mono">8 - 12 MIN</div>
-                <div className="text-xs text-slate-400 font-mono mt-0.5">North Ridge Trail (Avoid Riverbank)</div>
+                <span className="text-[10px] text-slate-400 font-mono">PRIMARY LOCAL THREAT</span>
+                <div className="text-sm font-bold text-rose-300 mt-1">{locHazard}</div>
+                <div className="text-xs text-slate-400 font-mono mt-0.5">River: {locRiver}</div>
               </div>
               <div className="p-4 rounded-2xl bg-slate-950/80 border border-rose-900/50">
-                <span className="text-[10px] text-rose-300 font-mono">EMERGENCY ASSISTANCE</span>
-                <div className="text-sm font-bold text-white mt-1">SDRF Field Helpline: 1070</div>
-                <div className="text-xs text-rose-400 font-mono mt-0.5">National Emergency: 112</div>
+                <span className="text-[10px] text-rose-300 font-mono">{locState.toUpperCase()} DISASTER HELPLINE</span>
+                <div className="text-sm font-bold text-white mt-1">State SDRF Desk: 1070</div>
+                <div className="text-xs text-rose-400 font-mono mt-0.5">Emergency All-India: 112</div>
               </div>
             </div>
 
@@ -224,14 +333,14 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
                 className="flex-1 min-w-[200px] py-3 rounded-2xl btn-primary text-white font-mono text-xs font-black flex items-center justify-center gap-2 shadow-lg active:scale-95 transition"
               >
                 <Compass className="w-4 h-4 text-cyan-300" />
-                <span>OPEN FULL INTERACTIVE ESCAPE MAP</span>
+                <span>OPEN INTERACTIVE ESCAPE MAP FOR {locName.toUpperCase()}</span>
               </Link>
               <button
-                onClick={() => triggerRoleAction('Audio Siren Broadcast in Local Language')}
+                onClick={() => triggerRoleAction(`Broadcast Vernacular Voice Siren across ${locName}`)}
                 className="py-3 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs font-bold border border-slate-700 flex items-center gap-2 active:scale-95 transition"
               >
                 <Radio className="w-4 h-4 text-cyan-400" />
-                <span>🔊 PLAY VERNACULAR AUDIO ALERT</span>
+                <span>🔊 PLAY LOCALIZED AUDIO ALERT</span>
               </button>
             </div>
           </div>
@@ -243,22 +352,22 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">VILLAGE TARGET</span>
-              <div className="text-base font-bold text-white mt-1">Raini Village (Chamoli)</div>
-              <div className="text-[10px] text-lime-400">Pop: 1,420 · 284 Households</div>
+              <span className="text-[10px] text-slate-400">ASSIGNED VILLAGE / WARD</span>
+              <div className="text-base font-bold text-white mt-1 truncate">{locName.split('/')[0]}</div>
+              <div className="text-[10px] text-lime-400">Pop: {locPop} ({locState})</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">RIVER STAFF GAUGE</span>
-              <div className="text-xl font-black text-rose-400 mt-1">3.80 m</div>
-              <div className="text-[10px] text-rose-300">+0.40m in last 1 hour (RISING)</div>
+              <span className="text-[10px] text-slate-400">LOCAL RIVER / DRAINAGE STAGE</span>
+              <div className="text-xl font-black text-rose-400 mt-1">{locRiver}</div>
+              <div className="text-[10px] text-rose-300">Rainfall: {locRain} in 3h</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">VILLAGE SHELTER CAPACITY</span>
-              <div className="text-xl font-black text-emerald-400 mt-1">120 / 250</div>
-              <div className="text-[10px] text-slate-400">Panchayat Bhavan (48% Full)</div>
+              <span className="text-[10px] text-slate-400">RELIEF SHELTER MUSTER</span>
+              <div className="text-xl font-black text-emerald-400 mt-1">180 / 450</div>
+              <div className="text-[10px] text-slate-400">Panchayat Bhavan Hall (40% Full)</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">PA SYSTEM SIRENS</span>
+              <span className="text-[10px] text-slate-400">LOCAL PA SYSTEM SIRENS</span>
               <div className="text-base font-bold text-cyan-300 mt-1">4 / 4 ONLINE</div>
               <div className="text-[10px] text-slate-400">Solar + Battery Backup OK</div>
             </div>
@@ -267,26 +376,26 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-lime-500/30 space-y-4">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <Building className="w-4 h-4 text-lime-400" />
-              Village Operator Operational Actions
+              Village / Ward Operator Operational Actions ({locState})
             </h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
-                onClick={() => triggerRoleAction('Trigger All 4 Village PA Speakers with High Surge Siren')}
+                onClick={() => triggerRoleAction(`Trigger Village PA Warning Siren for ${locName}`)}
                 className="p-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-black flex items-center justify-center gap-2 shadow-lg active:scale-95 transition"
               >
                 <Radio className="w-4 h-4 animate-pulse" />
                 TRIGGER PA SIREN (AUDIO ALERT)
               </button>
               <button
-                onClick={() => triggerRoleAction('Log Physical River Staff Gauge Reading (3.85m)')}
+                onClick={() => triggerRoleAction(`Log Physical Staff Gauge Reading for ${locName}`)}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <RefreshCw className="w-4 h-4" />
                 LOG MANUAL GAUGE STICK
               </button>
               <button
-                onClick={() => triggerRoleAction('Open Panchayat Bhavan Primary Shelter Muster')}
+                onClick={() => triggerRoleAction(`Open Primary Shelter Muster at ${locName.split('/')[0]}`)}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <CheckCircle2 className="w-4 h-4" />
@@ -302,39 +411,39 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">ASSIGNED BATTALION</span>
-              <div className="text-base font-bold text-white mt-1">NDRF 8th Battalion</div>
-              <div className="text-[10px] text-rose-400">Team Alpha (35 Rescuers)</div>
+              <span className="text-[10px] text-slate-400">ASSIGNED RESPONSE BATTALION</span>
+              <div className="text-base font-bold text-white mt-1">{infra.sdrf.split('&')[0]}</div>
+              <div className="text-[10px] text-rose-400">{locState} Rapid Action Unit</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">INFLATABLE BOATS</span>
-              <div className="text-xl font-black text-cyan-300 mt-1">6 DEPLOYED</div>
-              <div className="text-[10px] text-slate-400">Oars + Outboard Motors OK</div>
+              <span className="text-[10px] text-slate-400">INFLATABLE WATER RESCUE BOATS</span>
+              <div className="text-xl font-black text-cyan-300 mt-1">8 DEPLOYED</div>
+              <div className="text-[10px] text-slate-400">High-power outboard motors ready</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">TACTICAL SEARCH GRIDS</span>
-              <div className="text-xl font-black text-amber-400 mt-1">Sector 2 &amp; 3</div>
-              <div className="text-[10px] text-amber-300">Active Mudflow Perimeter</div>
+              <div className="text-xl font-black text-amber-400 mt-1">Sector 1 &amp; 2</div>
+              <div className="text-[10px] text-amber-300">{locRegion.split('(')[0]} Inundation Zone</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">RESCUE HELPLINE DISPATCH</span>
-              <div className="text-xl font-black text-rose-400 mt-1">3 PENDING</div>
-              <div className="text-[10px] text-slate-400">Helicopter winch requested</div>
+              <div className="text-xl font-black text-rose-400 mt-1">3 ACTIVE</div>
+              <div className="text-[10px] text-slate-400">Local emergency priority queue</div>
             </div>
           </div>
 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-rose-500/30 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-rose-400" />
-              Tactical Field Responder Actions
+              Tactical Field Responder Actions ({locState} Sector)
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
-                onClick={() => triggerRoleAction('Dispatch NDRF Team Bravo to Inundated Culvert KM 0.6')}
+                onClick={() => triggerRoleAction(`Dispatch Rescue Boat Squad to ${locName.split('/')[0]}`)}
                 className="p-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Zap className="w-4 h-4" />
-                DISPATCH BOAT TEAM BRAVO
+                DISPATCH BOAT TEAM ALPHA
               </button>
               <Link
                 href="/incidents"
@@ -360,23 +469,23 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">DISTRICT EOC</span>
-              <div className="text-base font-bold text-white mt-1">Chamoli DEOC (Joshimath)</div>
-              <div className="text-[10px] text-cyan-400">7 Sub-Divisions · 18 Blocks</div>
+              <span className="text-[10px] text-slate-400">DISTRICT EOC DESK</span>
+              <div className="text-base font-bold text-white mt-1 truncate">{locRegion.split('(')[0]} DEOC</div>
+              <div className="text-[10px] text-cyan-400">{locAgency}</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">EVACUATION CENTERS</span>
-              <div className="text-xl font-black text-emerald-400 mt-1">14 ACTIVE</div>
-              <div className="text-[10px] text-slate-400">Total Sheltered: 3,450 / 8,000</div>
+              <div className="text-xl font-black text-emerald-400 mt-1">16 ACTIVE</div>
+              <div className="text-[10px] text-slate-400">Total Sheltered: 4,120 / 9,500</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">BLOCKS AT CRITICAL RISK</span>
-              <div className="text-xl font-black text-rose-400 mt-1">3 BLOCKS</div>
-              <div className="text-[10px] text-rose-300">Joshimath, Ghat, Dasholi</div>
+              <span className="text-[10px] text-slate-400">DISTRICT THREAT LEVEL</span>
+              <div className="text-xl font-black text-rose-400 mt-1">{locRisk} ({locScore}/100)</div>
+              <div className="text-[10px] text-rose-300">{locHazard}</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">COMMON ALERT PROTOCOL</span>
-              <div className="text-base font-bold text-amber-300 mt-1">CAP GATEWAY READY</div>
+              <span className="text-[10px] text-slate-400">COMMON ALERT PROTOCOL (CAP)</span>
+              <div className="text-base font-bold text-amber-300 mt-1">CAP GATEWAY ACTIVE</div>
               <div className="text-[10px] text-slate-400">SMS + Cell Broadcast enabled</div>
             </div>
           </div>
@@ -384,18 +493,18 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-cyan-500/30 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <Activity className="w-4 h-4 text-cyan-400" />
-              District EOC Commander Actions
+              District EOC Commander Actions ({locRegion.split('(')[0]}, {locState})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
-                onClick={() => triggerRoleAction('Transmit District-Wide CAP Cell Broadcast Warning')}
+                onClick={() => triggerRoleAction(`Transmit CAP Cell Broadcast SMS across ${locRegion.split('(')[0]}`)}
                 className="p-3 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-mono text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Radio className="w-4 h-4" />
                 BROADCAST CAP DISTRICT SMS
               </button>
               <button
-                onClick={() => triggerRoleAction('Re-allocate 4 SDRF Teams from Gairsain to Tapovan')}
+                onClick={() => triggerRoleAction(`Re-allocate 4 SDRF Teams across ${locRegion.split('(')[0]}`)}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Zap className="w-4 h-4 text-amber-400" />
@@ -418,53 +527,53 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">STATE EOC TIER</span>
-              <div className="text-base font-bold text-white mt-1">Uttarakhand USDMA SEOC</div>
-              <div className="text-[10px] text-indigo-400">Dehradun State Operations Room</div>
+              <span className="text-[10px] text-slate-400">STATE EOC COMMAND</span>
+              <div className="text-base font-bold text-white mt-1">{locState} SDMA SEOC</div>
+              <div className="text-[10px] text-indigo-400">State Disaster Operations Room</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">DAM SPILLWAY CLEARANCE</span>
-              <div className="text-base font-bold text-amber-400 mt-1">TEHRI DAM (THDC)</div>
-              <div className="text-[10px] text-slate-400">Cleared for 1,200 cumecs release</div>
+              <div className="text-base font-bold text-amber-400 mt-1 truncate">{infra.dam.split('·')[0]}</div>
+              <div className="text-[10px] text-slate-400">{infra.dam.split('·')[1] || 'Sluice Outflow Protocol'}</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">STATE DISASTER RELIEF FUND</span>
-              <div className="text-xl font-black text-emerald-400 mt-1">₹45.0 Cr</div>
-              <div className="text-[10px] text-slate-400">Emergency Corpus Active</div>
+              <span className="text-[10px] text-slate-400">STATE RELIEF FUND (SDRF)</span>
+              <div className="text-xl font-black text-emerald-400 mt-1">₹50.0 Cr</div>
+              <div className="text-[10px] text-slate-400">Emergency Allocation Released</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">AIR FORCE HELI-LIFT</span>
-              <div className="text-base font-bold text-cyan-300 mt-1">2 MI-17 ON STANDBY</div>
-              <div className="text-[10px] text-slate-400">Jolly Grant Air Base</div>
+              <div className="text-base font-bold text-cyan-300 mt-1">2 MI-17 HELIS READY</div>
+              <div className="text-[10px] text-slate-400">{locState} Air Base Staging</div>
             </div>
           </div>
 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-indigo-500/30 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <Globe className="w-4 h-4 text-indigo-400" />
-              State SEOC Executive Authorization
+              State SEOC Executive Authorization ({locState})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
-                onClick={() => triggerRoleAction('Authorize Controlled Dam Spillway Discharge at Tehri')}
+                onClick={() => triggerRoleAction(`Authorize Controlled Spillway Release for ${infra.dam.split('·')[0]}`)}
                 className="p-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Droplets className="w-4 h-4" />
                 APPROVE DAM SPILLWAY RELEASE
               </button>
               <button
-                onClick={() => triggerRoleAction('Generate Executive SitRep for Chief Secretary & Cabinet')}
+                onClick={() => triggerRoleAction(`Generate ${locState} Executive SitRep for Chief Secretary & Cabinet`)}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Download className="w-4 h-4 text-cyan-400" />
-                EXPORT STATE SITREP PDF
+                EXPORT {locState.toUpperCase()} SITREP PDF
               </button>
               <Link
-                href="/state/uk"
+                href={`/state/${locState.toLowerCase().slice(0, 2)}`}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-indigo-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Building className="w-4 h-4" />
-                STATE SEOC DASHBOARD
+                {locState.toUpperCase()} STATE DASHBOARD
               </Link>
             </div>
           </div>
@@ -476,23 +585,23 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">DISTRICT HOSPITALS</span>
-              <div className="text-base font-bold text-white mt-1">District Hospital Gopeshwar</div>
-              <div className="text-[10px] text-pink-400">85 ICU Beds · 12 Ventilators</div>
+              <span className="text-[10px] text-slate-400">DESIGNATED DISTRICT HOSPITAL</span>
+              <div className="text-base font-bold text-white mt-1 truncate">{infra.hospital.split('/')[0]}</div>
+              <div className="text-[10px] text-pink-400">120 ICU Beds · 24 Ventilators</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">MOBILE MEDICAL UNITS</span>
-              <div className="text-xl font-black text-cyan-300 mt-1">4 DISPATCHED</div>
-              <div className="text-[10px] text-slate-400">Tapovan, Raini, Joshimath</div>
+              <div className="text-xl font-black text-cyan-300 mt-1">6 DISPATCHED</div>
+              <div className="text-[10px] text-slate-400">{locRegion.split('(')[0]} Sector</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">ANTI-VENOM &amp; CHLORINE</span>
-              <div className="text-xl font-black text-emerald-400 mt-1">2,400 KITS</div>
-              <div className="text-[10px] text-emerald-300">Water Disinfection Stock OK</div>
+              <span className="text-[10px] text-slate-400">CHLORINE &amp; ANTI-VENOM</span>
+              <div className="text-xl font-black text-emerald-400 mt-1">3,500 KITS</div>
+              <div className="text-[10px] text-emerald-300">Water Disinfection Buffer OK</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">EPIDEMIC SURVEILLANCE</span>
-              <div className="text-base font-bold text-amber-300 mt-1">IDSP WATCH ACTIVE</div>
+              <div className="text-base font-bold text-amber-300 mt-1">{locState} IDSP WATCH</div>
               <div className="text-[10px] text-slate-400">Zero Cholera outbreaks reported</div>
             </div>
           </div>
@@ -500,25 +609,25 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-pink-500/30 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <Stethoscope className="w-4 h-4 text-pink-400" />
-              Medical Command &amp; Casualty Triage Actions
+              Medical Command &amp; Casualty Triage Actions ({locState})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
-                onClick={() => triggerRoleAction('Deploy 2 Mobile Health Units with Trauma Kits to Sector 1')}
+                onClick={() => triggerRoleAction(`Deploy 2 Mobile Health Units to ${locName.split('/')[0]}`)}
                 className="p-3 rounded-2xl bg-pink-600 hover:bg-pink-500 text-white font-mono text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <HeartPulse className="w-4 h-4" />
                 DISPATCH MOBILE HEALTH UNITS
               </button>
               <button
-                onClick={() => triggerRoleAction('Dispatch 10,000 Water Purification Chlorine Tablets to Shelters')}
+                onClick={() => triggerRoleAction(`Distribute 15,000 Chlorine Tablets across ${locRegion.split('(')[0]}`)}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Droplets className="w-4 h-4" />
                 DISTRIBUTE CHLORINE TABLETS
               </button>
               <button
-                onClick={() => triggerRoleAction('Update IDSP Water-Borne Disease Early Warning Registry')}
+                onClick={() => triggerRoleAction(`Update ${locState} IDSP Water-Borne Disease Early Warning Registry`)}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <CheckCircle2 className="w-4 h-4" />
@@ -536,7 +645,7 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">NATIONAL NEOC TIER</span>
               <div className="text-base font-bold text-white mt-1">NDMA New Delhi (MHA)</div>
-              <div className="text-[10px] text-amber-400">Pan-India Multi-Hazard Desk</div>
+              <div className="text-[10px] text-amber-400">{selectedLocation.zone} Desk</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">NDRF BATTALIONS ACTIVE</span>
@@ -544,21 +653,21 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
               <div className="text-[10px] text-slate-400">12,000 Trained Responders</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">TRANSBOUNDARY BASINS</span>
-              <div className="text-xl font-black text-rose-400 mt-1">4 MONITORED</div>
-              <div className="text-[10px] text-rose-300">Kosi, Gandak, Brahmaputra, Teesta</div>
+              <span className="text-[10px] text-slate-400">MONITORED BASINS</span>
+              <div className="text-xl font-black text-rose-400 mt-1">9 BASINS</div>
+              <div className="text-[10px] text-rose-300">{locState} Priority: {locRisk}</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">NATIONAL THREAT LEVEL</span>
-              <div className="text-base font-bold text-rose-400 mt-1">ELEVATED RED</div>
-              <div className="text-[10px] text-slate-400">Monsoon Surge Convergence</div>
+              <div className="text-base font-bold text-rose-400 mt-1">{locRisk} SURGE</div>
+              <div className="text-[10px] text-slate-400">Monsoon Hydrological Desk</div>
             </div>
           </div>
 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-amber-500/30 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <Zap className="w-4 h-4 text-amber-400" />
-              National Commander Strategic Directives
+              National Commander Strategic Directives (Focus: {locState})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <Link
@@ -573,10 +682,10 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Globe className="w-4 h-4" />
-                CROSS-BORDER NEPAL/BHUTAN
+                CROSS-BORDER MONITORING
               </Link>
               <button
-                onClick={() => triggerRoleAction('Mobilize 2 Reserve Battalions from Bhatinda to Assam/Uttarakhand')}
+                onClick={() => triggerRoleAction(`Mobilize 2 Reserve NDRF Battalions to ${locState}`)}
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <ShieldAlert className="w-4 h-4 text-rose-400" />
@@ -592,31 +701,33 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">ACTIVE ML ENSEMBLE</span>
-              <div className="text-base font-bold text-white mt-1">HydraGradient-v9.4</div>
-              <div className="text-[10px] text-purple-400">LightGBM + LSTM Hydrodynamic</div>
+              <span className="text-[10px] text-slate-400">ACTIVE REGIONAL MODEL</span>
+              <div className="text-base font-bold text-white mt-1 truncate">{regionalModel.split(' (')[0]}</div>
+              <div className="text-[10px] text-purple-400">{locState} Zone Engine</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">TOP SHAP FEATURE</span>
-              <div className="text-base font-bold text-cyan-300 mt-1">Antecedent Moisture (35%)</div>
-              <div className="text-[10px] text-slate-400">3h Rain: 30% · Slope: 20%</div>
+              <span className="text-[10px] text-slate-400">3-HOUR PRECIPITATION</span>
+              <div className="text-base font-bold text-cyan-300 mt-1">{locRain}</div>
+              <div className="text-[10px] text-slate-400">Soil Moisture: {locSoil}</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">SAR SATELLITE PASS</span>
               <div className="text-base font-bold text-emerald-400 mt-1">Sentinel-1A (12m)</div>
-              <div className="text-[10px] text-slate-400">VV/VH Dual Polarimetric</div>
+              <div className="text-[10px] text-slate-400">{locRegion.split('(')[0]} Grid</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">RADAR QPE CALIBRATION</span>
-              <div className="text-base font-bold text-white mt-1">r² = 0.912</div>
-              <div className="text-[10px] text-cyan-400">Bias Corrected via AWS gauges</div>
+              <span className="text-[10px] text-slate-400">GIS COORDINATES</span>
+              <div className="text-base font-bold text-white mt-1">
+                {selectedLocation.lat.toFixed(4)}°N, {selectedLocation.lon.toFixed(4)}°E
+              </div>
+              <div className="text-[10px] text-cyan-400">{locElevation}</div>
             </div>
           </div>
 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-purple-500/30 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <Brain className="w-4 h-4 text-purple-400" />
-              GIS &amp; Machine Learning Analysis Tools
+              GIS &amp; Machine Learning Analysis Tools ({locName})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <Link
@@ -650,14 +761,14 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">BENCHMARKED EVENTS</span>
-              <div className="text-base font-bold text-white mt-1">5 Major Historicals</div>
-              <div className="text-[10px] text-blue-400">Kedarnath, Chamoli, Teesta</div>
+              <span className="text-[10px] text-slate-400">DISASTER APPLICATION</span>
+              <div className="text-base font-bold text-white mt-1 truncate">{selectedLocation.application}</div>
+              <div className="text-[10px] text-blue-400">{locState} Hydrology</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">HINDCAST LEAD TIME</span>
-              <div className="text-xl font-black text-cyan-300 mt-1">+48 MIN</div>
-              <div className="text-[10px] text-slate-400">Prior to Chamoli bridge breach</div>
+              <span className="text-[10px] text-slate-400">EARLY WARNING LEAD TIME</span>
+              <div className="text-xl font-black text-cyan-300 mt-1">+{selectedLocation.leadTimeMinutes} MIN</div>
+              <div className="text-[10px] text-slate-400">Forecast Lead Window</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">PROVENANCE LEDGER</span>
@@ -666,15 +777,15 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">STRESS LAB SCENARIOS</span>
-              <div className="text-base font-bold text-amber-300 mt-1">150 mm/h Cloudburst</div>
-              <div className="text-[10px] text-slate-400">Synthetic GLOF wave generator</div>
+              <div className="text-base font-bold text-amber-300 mt-1">150 mm/h Surge</div>
+              <div className="text-[10px] text-slate-400">{locHazard.split(' ')[0]} Simulator</div>
             </div>
           </div>
 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-blue-500/30 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <Database className="w-4 h-4 text-blue-400" />
-              Scientific Research &amp; Forensic Backtesting
+              Scientific Research &amp; Forensic Backtesting ({locName})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <Link
@@ -708,9 +819,9 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-mono">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[10px] text-slate-400">IOT HARDWARE NODES</span>
+              <span className="text-[10px] text-slate-400">HARDWARE TELEMETRY NODES</span>
               <div className="text-base font-bold text-white mt-1">24 / 25 ONLINE</div>
-              <div className="text-[10px] text-cyan-400">LoRaWAN + GSM Gateways</div>
+              <div className="text-[10px] text-cyan-400">{locRegion.split('(')[0]} LoRaWAN Gateways</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">DATA PROVIDER BOUNDARIES</span>
@@ -720,7 +831,7 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">RBAC GOVERNANCE</span>
               <div className="text-base font-bold text-emerald-400 mt-1">10 ROLES ENFORCED</div>
-              <div className="text-[10px] text-slate-400">PII Masking &amp; Token Audit</div>
+              <div className="text-[10px] text-slate-400">Active Tier: {role}</div>
             </div>
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
               <span className="text-[10px] text-slate-400">SYSTEM LATENCY</span>
@@ -732,7 +843,7 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
           <div className="p-5 rounded-3xl bg-slate-900/70 border border-slate-700 space-y-3">
             <h4 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-cyan-400" />
-              System Administration &amp; Governance
+              System Administration &amp; Governance ({locState})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <Link

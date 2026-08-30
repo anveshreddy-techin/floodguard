@@ -8,7 +8,7 @@ import {
   Radio, UploadCloud, FileText, Compass, BarChart3, Award, 
   PlayCircle, HelpCircle, HeartPulse, ShieldCheck, Globe, 
   PhoneCall, Sparkles, ArrowRight, Download, UserCheck, RefreshCw,
-  Server, Brain, Zap, Users, Bot
+  Server, Brain, Zap, Users, Bot, MapPin
 } from 'lucide-react';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
 import { useAdaptive, UserRole, OperatingMode } from '@/context/AdaptiveContext';
@@ -222,11 +222,39 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
             </select>
           </div>
 
+          {/* State / UT Selector */}
+          <div>
+            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-cyan-400" />
+              <span>STATE / UT SECTOR:</span>
+            </div>
+            <select
+              value={hierarchy.state}
+              onChange={(e) => {
+                setStateFilter(e.target.value);
+                const matched = LOCATIONS.find(
+                  (l) => l.state.toLowerCase() === e.target.value.toLowerCase() ||
+                         e.target.value.toLowerCase().includes(l.state.toLowerCase())
+                );
+                if (matched) {
+                  selectLocationById(matched.id);
+                }
+              }}
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 font-bold focus:outline-none focus:border-cyan-400"
+            >
+              {INDIAN_STATES.map((st) => (
+                <option key={st.id} value={st.name} className="bg-slate-950 text-slate-200">
+                  {st.name} ({st.rivers[0]} Basin)
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Location Sector Switcher */}
           <div>
             <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
               <Map className="w-3 h-3 text-cyan-400" />
-              <span>TARGET REGION / SECTOR:</span>
+              <span>MONITORED ZONE / CORRIDOR:</span>
             </div>
             <select
               value={selectedLocation.id}

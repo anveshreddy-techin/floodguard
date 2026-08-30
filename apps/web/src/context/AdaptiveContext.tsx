@@ -48,6 +48,7 @@ export interface AdaptiveContextType {
   hierarchy: LocationHierarchy;
   setHierarchy: React.Dispatch<React.SetStateAction<LocationHierarchy>>;
   setStateFilter: (stateName: string) => void;
+  setLocationFilter: (locationId: string) => void;
   setDistrictFilter: (districtName: string) => void;
   setBasinFilter: (basinName: string) => void;
   setWatershedFilter: (wsName: string) => void;
@@ -85,14 +86,28 @@ export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [hierarchy, setHierarchy] = useState<LocationHierarchy>(defaultHierarchy);
   const [dataMode, setDataMode] = useState<InternalDataMode>('SIMULATION_DATA');
 
-  // Find nearest matching location dossier
+  // Find nearest matching location dossier with strict state-first fallback
   const selectedLocation = useMemo(() => {
-    const found = LOCATIONS.find(
+    // 1. Exact match by state AND district/region/name
+    let found = LOCATIONS.find(
       (l) =>
         l.state.toLowerCase() === hierarchy.state.toLowerCase() &&
         (l.region.toLowerCase().includes(hierarchy.district.toLowerCase()) ||
-         l.name.toLowerCase().includes(hierarchy.village.toLowerCase()))
+         l.name.toLowerCase().includes(hierarchy.village.toLowerCase()) ||
+         hierarchy.district.toLowerCase().includes(l.region.toLowerCase().split(' ')[0]))
     );
+
+    // 2. Match by state alone if district is generic
+    if (!found) {
+      found = LOCATIONS.find(
+        (l) =>
+          l.state.toLowerCase() === hierarchy.state.toLowerCase() ||
+          l.state.toLowerCase().includes(hierarchy.state.toLowerCase()) ||
+          hierarchy.state.toLowerCase().includes(l.state.toLowerCase())
+      );
+    }
+
+    // 3. Fallback to LOCATIONS[0] only if completely unmatched
     return found || LOCATIONS[0];
   }, [hierarchy]);
 
@@ -109,15 +124,15 @@ export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         activeHazards: ['Brahmaputra Riverine Flood', 'Transboundary Surge', 'Siltation', 'Monsoon Cloudburst', 'Hill Cut-Slope Slip'],
         regionalModel: 'baseline_northeast_v1 (High-Precipitation Watershed Routing)',
       };
-    } else if (s.includes('kerala') || s.includes('karnataka') || s.includes('maharashtra') && hierarchy.district.includes('Chiplun')) {
+    } else if (s.includes('kerala') || s.includes('karnataka') || (s.includes('maharashtra') && hierarchy.district.includes('Chiplun'))) {
       return {
         activeHazards: ['Western Ghats Orographic Rain', 'Laterite Hillslope Slip', 'Reservoir Spill', 'Flash Flood'],
         regionalModel: 'baseline_western_ghats_v1 (Steep Catchment Saturated Runoff)',
       };
-    } else if (s.includes('mumbai') || s.includes('bengaluru') || s.includes('chennai') || s.includes('hyderabad')) {
+    } else if (s.includes('telangana') || s.includes('hyderabad') || s.includes('mumbai') || s.includes('bengaluru') || s.includes('chennai')) {
       return {
-        activeHazards: ['Urban Stormwater Inundation', 'Drainage Surcharge', 'Underpass Submergence', 'Tidal Backwater'],
-        regionalModel: 'baseline_urban_v1 (Impervious Surface Inundation)',
+        activeHazards: ['Urban Stormwater Inundation', 'Reservoir Spill & Gate Discharge', 'Drainage Surcharge', 'Low-Lying River Overflow'],
+        regionalModel: 'baseline_urban_v1 (Impervious Surface & Reservoir Surcharge Routing)',
       };
     } else if (s.includes('odisha') || s.includes('andhra') || s.includes('tamil')) {
       return {
@@ -137,14 +152,33 @@ export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const matchedState = INDIAN_STATES.find(
       (s) => s.name.toLowerCase() === stateName.toLowerCase() || s.id === stateName.toLowerCase()
     );
+    const matchedLoc = LOCATIONS.find(
+      (l) =>
+        l.state.toLowerCase() === stateName.toLowerCase() ||
+        (matchedState && l.state.toLowerCase() === matchedState.name.toLowerCase())
+    );
     setHierarchy((prev) => ({
       ...prev,
       state: matchedState ? matchedState.name : stateName,
-      district: matchedState?.capital || 'District Central',
-      basin: matchedState?.rivers[0] ? `${matchedState.rivers[0]} Basin` : 'Mainstem Basin',
-      watershed: 'Watershed-Primary',
-      village: 'All Village Clusters',
+      district: matchedLoc ? (matchedLoc.region.split(' (')[0] || matchedLoc.name.split(' / ')[0]) : (matchedState?.capital || 'District Central'),
+      basin: matchedLoc ? `${matchedLoc.name.split(' / ')[0]} Basin` : (matchedState?.rivers[0] ? `${matchedState.rivers[0]} Basin` : 'Mainstem Basin'),
+      watershed: matchedLoc ? `Watershed-${matchedLoc.id.toUpperCase()}` : 'Watershed-Primary',
+      village: matchedLoc ? matchedLoc.name : 'All Village Clusters',
     }));
+  };
+
+  const setLocationFilter = (locationId: string) => {
+    const found = LOCATIONS.find((l) => l.id === locationId);
+    if (found) {
+      setHierarchy({
+        country: 'India',
+        state: found.state,
+        district: found.region.split(' (')[0] || found.region,
+        basin: found.name.split(' / ')[0] + ' Basin',
+        watershed: `Watershed-${found.id.toUpperCase()}`,
+        village: found.name,
+      });
+    }
   };
 
   const setDistrictFilter = (districtName: string) => {
@@ -200,6 +234,7 @@ export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         hierarchy,
         setHierarchy,
         setStateFilter,
+        setLocationFilter,
         setDistrictFilter,
         setBasinFilter,
         setWatershedFilter,

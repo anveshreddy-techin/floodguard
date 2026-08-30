@@ -113,7 +113,7 @@ export const Header: React.FC<{
               </button>
             </div>
 
-            {/* Desktop State Quick Filter */}
+            {/* Desktop State & Monitored Location Quick Filter */}
             <div className="hidden xl:flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-xl text-xs font-mono text-slate-200 shrink-0">
               <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
               <select
@@ -123,9 +123,16 @@ export const Header: React.FC<{
                     resetToNational();
                   } else {
                     setStateFilter(e.target.value);
+                    const matched = LOCATIONS.find(
+                      (l) => l.state.toLowerCase() === e.target.value.toLowerCase() ||
+                             e.target.value.toLowerCase().includes(l.state.toLowerCase())
+                    );
+                    if (matched) {
+                      selectLocationById(matched.id);
+                    }
                   }
                 }}
-                className="bg-transparent text-xs text-cyan-300 font-bold focus:outline-none cursor-pointer max-w-[120px] truncate"
+                className="bg-transparent text-xs text-cyan-300 font-bold focus:outline-none cursor-pointer max-w-[130px] truncate"
               >
                 <option value="ALL" className="bg-slate-950 text-slate-400">🇮🇳 All States</option>
                 {INDIAN_STATES.map((st) => (
