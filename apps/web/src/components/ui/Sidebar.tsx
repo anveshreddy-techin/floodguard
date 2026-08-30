@@ -64,6 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       phaseColor: 'text-rose-400',
       items: [
         { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, shortcut: 'M', badge: 'LIVE' },
+        { id: 'role-workspace', label: 'Role Workspaces', href: '/role-workspace', icon: Users, badge: '10 ROLES' },
         { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, shortcut: 'S', badge: 'HUD' },
         { id: 'incidents', label: 'Incident Command', href: '/incidents', icon: FileText },
       ],

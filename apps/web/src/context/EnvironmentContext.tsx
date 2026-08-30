@@ -8,7 +8,7 @@ export type PageId =
   | 'hindcast' | 'replay' | 'ledger' | 'audit' | 'incidents'
   | 'sensors' | 'events' | 'benchmark' | 'challenge' | 'system'
   | 'upload' | 'map' | 'village' | 'flight-recorder'
-  | 'predict-save-prove' | 'login' | 'default';
+  | 'predict-save-prove' | 'login' | 'role-workspace' | 'default';
 
 export type RiskState = 'UNKNOWN' | 'LOW' | 'MODERATE' | 'HIGH' | 'EXTREME';
 

@@ -12,7 +12,7 @@ import { DesktopIntelligencePanel } from '@/components/ui/DesktopIntelligencePan
 import { useLocation } from '@/context/LocationContext';
 import { useEnvironment } from '@/context/EnvironmentContext';
 import { useAdaptive } from '@/context/AdaptiveContext';
-import { Bot, Layers, ChevronRight, Activity, ChevronUp, ChevronDown, ShieldAlert, MapPin, PhoneCall, AlertTriangle, Compass } from 'lucide-react';
+import { Bot, Layers, ChevronRight, Activity, ChevronUp, ChevronDown, ShieldAlert, MapPin, PhoneCall, AlertTriangle, Compass, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -38,6 +38,7 @@ export default function CommandCenterPage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === 'w' || e.key === 'W') router.push('/role-workspace');
       if (e.key === 's' || e.key === 'S') router.push('/safety');
       if (e.key === 'm' || e.key === 'M') router.push('/map');
       if (e.key === 'h' || e.key === 'H') router.push('/hindcast');
@@ -67,6 +68,19 @@ export default function CommandCenterPage() {
             selectedLocationId={selectedLocation?.id}
             simulatedTimeStep={currentStep}
           />
+
+          {/* ── Floating Role Workspaces Trigger Button (Top Left, z-[750]) ── */}
+          <Link
+            href="/role-workspace"
+            className="absolute top-3 left-3 z-[750] fp fp-operational px-3 py-1.5 sm:px-3.5 sm:py-2 text-cyan-300 hover:text-white rounded-xl text-xs font-black font-mono flex items-center gap-1.5 shadow-2xl active:scale-95 transition border border-cyan-500/40"
+            title="Open Role-Adaptive Mission Workspace for 10 Statutory Roles (Hotkey: W)"
+          >
+            <Users className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden xs:inline">ROLES</span>
+            <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-950 text-cyan-400 font-bold border border-cyan-800">
+              10
+            </span>
+          </Link>
 
           {/* ── Floating Copilot Trigger Button (Top Right, z-[750]) ── */}
           <button
@@ -142,6 +156,8 @@ export default function CommandCenterPage() {
           {/* ── Desktop Floating Hotkey Hint (bottom-left over map, z-[600]) ── */}
           <div className="hidden md:flex absolute bottom-20 left-4 z-[600] fp rounded-xl px-3 py-2 text-[10px] font-mono text-slate-400 items-center gap-2">
             <span className="text-cyan-400 font-bold">HOTKEYS:</span>
+            <span className="bg-slate-900/80 px-1.5 py-0.5 rounded text-cyan-300 border border-slate-700">W</span>
+            <span>Roles</span>
             <span className="bg-slate-900/80 px-1.5 py-0.5 rounded text-cyan-300 border border-slate-700">M</span>
             <span>Map</span>
             <span className="bg-slate-900/80 px-1.5 py-0.5 rounded text-cyan-300 border border-slate-700">S</span>

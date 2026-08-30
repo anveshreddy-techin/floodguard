@@ -13,6 +13,7 @@ export type UserRole =
   | 'FIELD_RESPONDER'
   | 'DISTRICT_OPERATOR'
   | 'STATE_OPERATOR'
+  | 'MEDICAL_OFFICER'
   | 'NATIONAL_OPERATOR'
   | 'ANALYST'
   | 'RESEARCHER'
@@ -61,6 +62,7 @@ export interface AdaptiveContextType {
   isCitizen: boolean;
   isOperator: boolean;
   isResponder: boolean;
+  isMedicalOfficer: boolean;
   isAnalyst: boolean;
   isAdmin: boolean;
 }
@@ -209,9 +211,10 @@ export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         breadcrumb,
         t,
         selectedLocation,
-        isCitizen: role === 'CITIZEN',
+        isCitizen: role === 'CITIZEN' || role === 'VIEWER',
         isOperator: ['VILLAGE_OPERATOR', 'DISTRICT_OPERATOR', 'STATE_OPERATOR', 'NATIONAL_OPERATOR'].includes(role),
         isResponder: role === 'FIELD_RESPONDER',
+        isMedicalOfficer: role === 'MEDICAL_OFFICER',
         isAnalyst: ['ANALYST', 'RESEARCHER'].includes(role),
         isAdmin: role === 'ADMIN',
       }}
