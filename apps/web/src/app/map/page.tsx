@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
 import { useEnvironment } from '@/context/EnvironmentContext';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
+import { useAdaptive } from '@/context/AdaptiveContext';
 import {
   Map as MapIcon,
   Layers,
@@ -38,7 +39,9 @@ export type GisLayerKey = 'DEM' | 'RIVER' | 'SURGE' | 'SENSORS' | 'SHELTERS' | '
 
 export default function HyperLocalGISPage() {
   const { setPage, setMode, setRiskState, setRainfallMm, setRiverStage } = useEnvironment();
-  const { selectedLocation, setSelectedLocation, selectLocationById } = useLocation();
+  const { selectedLocation: adaptiveLocation, hierarchy, setLocationFilter, setStateFilter } = useAdaptive();
+  const { selectedLocation: ctxLocation, setSelectedLocation, selectLocationById } = useLocation();
+  const selectedLocation = adaptiveLocation || ctxLocation || LOCATIONS[0];
 
   const [activeMapView, setActiveMapView] = useState<'HYPER_LOCAL' | 'NATIONAL_RIVERS'>('HYPER_LOCAL');
   const [activeTool, setActiveTool] = useState<GisToolMode>('EXPLORE');
@@ -53,20 +56,91 @@ export default function HyperLocalGISPage() {
 
   const [flowThreshold, setFlowThreshold] = useState<number>(35); // km² accumulation
   const [hoveredCoord, setHoveredCoord] = useState<{ x: number; y: number; lat: string; lon: string; ele: string; slope: string } | null>(null);
-  const [selectedNode, setSelectedNode] = useState<any>({
-    id: 'demo-village-003',
-    name: 'Sunderbans Nagar (Exposure Target)',
-    type: 'VILLAGE',
-    x: 480,
-    y: 280,
-    status: 'HIGH_RISK',
-    value: 'Risk: 68.5/100',
-    elevation: '1,180 m ASL',
-    risk: 'HIGH',
-    population: 3400,
-    slope: '28° steep colluvial fan',
-    desc: 'Alluvial fan settlement at river channel confluence. Primary exposure zone.',
-  });
+
+  // Dynamically compute 3D Catchment nodes for the chosen location
+  const mapNodes = useMemo(() => {
+    const loc = selectedLocation;
+    const baseEle = parseInt(loc.elevation.replace(/[^0-9]/g, '')) || 500;
+
+    return [
+      {
+        id: `demo-aws-${loc.id}`,
+        name: `${loc.name.split('/')[0].trim()} AWS Station`,
+        type: 'SENSOR',
+        x: 180,
+        y: 90,
+        status: 'ONLINE',
+        value: `${loc.rainfall3h} / 3h`,
+        elevation: `${Math.round(baseEle * 1.35)} m ASL`,
+        slope: '34° ridge slope',
+        risk: loc.riskLevel,
+        desc: `Orographic precipitation collection station in upper ${loc.region.split('(')[0].trim()} catchment.`,
+      },
+      {
+        id: `demo-headwater-${loc.id}`,
+        name: `${loc.region.split('(')[0].trim()} (Headwaters Catchment)`,
+        type: 'HISTORICAL_NODE',
+        x: 320,
+        y: 60,
+        status: 'MONITORED',
+        value: loc.primaryHazard.split('&')[0].trim(),
+        elevation: `${Math.round(baseEle * 1.8)} m ASL`,
+        slope: '41° upper basin slope',
+        risk: loc.riskLevel,
+        desc: `Upstream drainage basin & runoff accumulation zone for ${loc.state}.`,
+      },
+      {
+        id: loc.id,
+        name: `${loc.name} (Exposure Target)`,
+        type: 'VILLAGE',
+        x: 480,
+        y: 280,
+        status: `${loc.riskLevel}_RISK`,
+        value: `Risk: ${loc.riskScore}/100`,
+        elevation: loc.elevation,
+        slope: '28° colluvial slope',
+        risk: loc.riskLevel,
+        population: loc.population,
+        desc: `Primary human settlement and infrastructure corridor in ${loc.region}. Authoritative: ${loc.authoritativeAgency}.`,
+      },
+      {
+        id: `demo-shelter-${loc.id}`,
+        name: `${loc.name.split('/')[0].trim()} Community Shelter (+120m)`,
+        type: 'SHELTER',
+        x: 610,
+        y: 210,
+        status: 'READY',
+        value: 'Elevation +120m',
+        elevation: `${Math.round(baseEle + 120)} m ASL`,
+        slope: '14° stable spur',
+        risk: 'LOW',
+        capacity: 450,
+        desc: `Designated elevated assembly point on high ground in ${loc.state}.`,
+      },
+      {
+        id: `demo-gauge-${loc.id}`,
+        name: `${loc.name.split('/')[1] ? loc.name.split('/')[1].trim() : loc.name} Radar Gauge`,
+        type: 'GAUGE',
+        x: 360,
+        y: 220,
+        status: 'ONLINE',
+        value: loc.riverStage,
+        elevation: `${Math.round(baseEle * 1.05)} m ASL`,
+        slope: '22° river channel',
+        risk: loc.riskLevel,
+        desc: `Real-time hydrodynamic river/drainage stage monitoring station for ${loc.state}.`,
+      },
+    ];
+  }, [selectedLocation]);
+
+  const [selectedNode, setSelectedNode] = useState<any>(mapNodes[2]);
+
+  // Update selectedNode whenever location/mapNodes change
+  useEffect(() => {
+    if (mapNodes && mapNodes.length > 2) {
+      setSelectedNode(mapNodes[2]);
+    }
+  }, [mapNodes]);
 
   const [mobileSheetTab, setMobileSheetTab] = useState<'INSPECTOR' | 'LAYERS' | 'PROFILE' | 'ISOCHRONES' | 'MORPHOMETRY'>('INSPECTOR');
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
@@ -92,83 +166,16 @@ export default function HyperLocalGISPage() {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const mapNodes = [
-    {
-      id: 'demo-aws-001',
-      name: 'Ridge AWS Station (1,450m)',
-      type: 'SENSOR',
-      x: 180,
-      y: 90,
-      status: 'ONLINE',
-      value: '48.0 mm / 3h',
-      elevation: '1,450 m ASL',
-      slope: '34° ridge slope',
-      risk: 'HIGH',
-      desc: 'Orographic precipitation collection point in upper gorge.',
-    },
-    {
-      id: 'demo-village-001',
-      name: 'Kedarnath Base (3,583m)',
-      type: 'HISTORICAL_NODE',
-      x: 320,
-      y: 60,
-      status: 'MONITORED',
-      value: 'Chorabari Catchment',
-      elevation: '3,583 m ASL',
-      slope: '41° glacial cirque',
-      risk: 'HIGH',
-      desc: 'Glacial cirque and moraine impoundment zone.',
-    },
-    {
-      id: 'demo-village-003',
-      name: 'Sunderbans Nagar (Exposure Target)',
-      type: 'VILLAGE',
-      x: 480,
-      y: 280,
-      status: 'HIGH_RISK',
-      value: 'Risk: 68.5/100',
-      elevation: '1,180 m ASL',
-      slope: '28° colluvial fan',
-      risk: 'HIGH',
-      population: 3400,
-      desc: 'Alluvial fan settlement at river channel confluence. Primary exposure zone.',
-    },
-    {
-      id: 'demo-shelter-001',
-      name: 'Community High School (Candidate Shelter)',
-      type: 'SHELTER',
-      x: 610,
-      y: 210,
-      status: 'READY',
-      value: 'Elevation +120m',
-      elevation: '1,300 m ASL',
-      slope: '14° stable spur',
-      risk: 'LOW',
-      capacity: 450,
-      desc: 'Designated elevated assembly point on north ridge.',
-    },
-    {
-      id: 'demo-gauge-001',
-      name: 'Radar Water Level Gauge #1',
-      type: 'GAUGE',
-      x: 360,
-      y: 220,
-      status: 'ONLINE',
-      value: '3.80m (+0.40m/h)',
-      elevation: '1,240 m ASL',
-      slope: '22° gorge channel',
-      risk: 'HIGH',
-      desc: 'Mid-catchment river stage monitoring station.',
-    },
-  ];
-
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 800;
     const y = ((e.clientY - rect.top) / rect.height) * 500;
-    const lat = (30.5050 + (250 - y) * 0.0004).toFixed(4);
-    const lon = (79.1550 + (x - 400) * 0.0005).toFixed(4);
-    const ele = Math.round(1100 + (500 - y) * 4.8);
+    const baseLat = selectedLocation.lat;
+    const baseLon = selectedLocation.lon;
+    const baseEle = parseInt(selectedLocation.elevation.replace(/[^0-9]/g, '')) || 500;
+    const lat = (baseLat + (250 - y) * 0.0004).toFixed(4);
+    const lon = (baseLon + (x - 400) * 0.0005).toFixed(4);
+    const ele = Math.round(baseEle * 0.8 + (500 - y) * (baseEle * 0.003));
     const slope = Math.round(18 + Math.sin(x * 0.02) * 12);
     setHoveredCoord({ x, y, lat: `${lat}° N`, lon: `${lon}° E`, ele: `${ele} m`, slope: `${slope}°` });
   };
@@ -545,8 +552,13 @@ export default function HyperLocalGISPage() {
                 <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">FOCUS BASIN:</div>
                 <select
                   value={selectedLocation.id}
-                  onChange={(e) => selectLocationById(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-200 font-mono focus:border-cyan-400 focus:outline-none"
+                  onChange={(e) => {
+                    selectLocationById(e.target.value);
+                    setLocationFilter(e.target.value);
+                    const loc = LOCATIONS.find(l => l.id === e.target.value);
+                    if (loc) setStateFilter(loc.state);
+                  }}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-cyan-300 font-mono font-bold focus:border-cyan-400 focus:outline-none cursor-pointer"
                 >
                   {LOCATIONS.map((l) => (
                     <option key={l.id} value={l.id} className="bg-slate-900 text-slate-200">
@@ -564,14 +576,14 @@ export default function HyperLocalGISPage() {
               <div className="flex items-start justify-between border-b border-slate-800 pb-3">
                 <div>
                   <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
-                    SPATIAL DOSSIER
+                    SPATIAL DOSSIER · {selectedLocation.state.toUpperCase()}
                   </span>
                   <h3 className="text-base font-black text-white mt-0.5">{selectedNode?.name}</h3>
                   <div className="text-[11px] text-slate-400 font-mono mt-0.5">
                     {selectedNode?.elevation} • {selectedNode?.slope}
                   </div>
                 </div>
-                <RiskBadge level={selectedNode?.risk || 'HIGH'} />
+                <RiskBadge level={selectedNode?.risk || selectedLocation.riskLevel || 'HIGH'} />
               </div>
 
               {/* Dynamic Tool Content based on activeTool */}
@@ -590,9 +602,9 @@ export default function HyperLocalGISPage() {
                       <circle cx="200" cy="85" r="4.5" fill="#f97316" />
                       {/* Shelter Pin */}
                       <circle cx="90" cy="48" r="4.5" fill="#10b981" />
-                      <text x="200" y="103" textAnchor="middle" fill="#f97316" fontSize="8" fontFamily="monospace">Village 1,180m</text>
-                      <text x="90" y="40" textAnchor="middle" fill="#10b981" fontSize="8" fontFamily="monospace">Shelter 1,300m (+120m)</text>
-                      <text x="200" y="78" fill="#38bdf8" fontSize="8" fontFamily="monospace">Surge Stage: 3.80m</text>
+                      <text x="200" y="103" textAnchor="middle" fill="#f97316" fontSize="8" fontFamily="monospace">{selectedLocation.name.split('/')[0]} ({selectedLocation.elevation})</text>
+                      <text x="90" y="40" textAnchor="middle" fill="#10b981" fontSize="8" fontFamily="monospace">Shelter (+120m)</text>
+                      <text x="200" y="78" fill="#38bdf8" fontSize="8" fontFamily="monospace">Stage: {selectedLocation.riverStage.split(' ')[0]}</text>
                     </svg>
                   </div>
                 </div>
@@ -627,11 +639,11 @@ export default function HyperLocalGISPage() {
                   <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                     <div className="fp p-2.5 rounded-xl">
                       <div className="text-slate-400 text-[10px]">Rainfall (3h)</div>
-                      <div className="font-bold text-cyan-300 mt-0.5">48.0 mm</div>
+                      <div className="font-bold text-cyan-300 mt-0.5">{selectedLocation.rainfall3h}</div>
                     </div>
                     <div className="fp p-2.5 rounded-xl">
-                      <div className="text-slate-400 text-[10px]">River Surge Rate</div>
-                      <div className="font-bold text-blue-400 mt-0.5">+0.40 m/h</div>
+                      <div className="text-slate-400 text-[10px]">River / Water Stage</div>
+                      <div className="font-bold text-blue-400 mt-0.5">{selectedLocation.riverStage}</div>
                     </div>
                   </div>
                 </div>
@@ -715,11 +727,11 @@ export default function HyperLocalGISPage() {
                       <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                         <div className="fp p-2.5 rounded-xl">
                           <div className="text-slate-400 text-[10px]">Rainfall (3h)</div>
-                          <div className="font-bold text-cyan-300 mt-0.5">48.0 mm</div>
+                          <div className="font-bold text-cyan-300 mt-0.5">{selectedLocation.rainfall3h}</div>
                         </div>
                         <div className="fp p-2.5 rounded-xl">
-                          <div className="text-slate-400 text-[10px]">River Rise Rate</div>
-                          <div className="font-bold text-blue-400 mt-0.5">+0.40 m/h</div>
+                          <div className="text-slate-400 text-[10px]">River / Water Stage</div>
+                          <div className="font-bold text-blue-400 mt-0.5">{selectedLocation.riverStage}</div>
                         </div>
                       </div>
                       <Link
