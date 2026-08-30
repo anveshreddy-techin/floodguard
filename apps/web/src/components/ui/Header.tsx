@@ -192,21 +192,15 @@ export const Header: React.FC<{
               </select>
             </div>
 
-            {/* Mobile 1-Tap Language Pill */}
+            {/* Mobile State Picker Badge with Full State Name */}
             <button
-              onClick={toggleNextLanguage}
-              className="sm:hidden flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 active:scale-95 transition shrink-0"
-              title="Tap to switch language"
+              onClick={() => setMobileDrawerOpen(true)}
+              className="sm:hidden flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 px-2.5 py-1 rounded-xl text-xs font-mono text-cyan-300 font-bold active:scale-95 transition shadow-sm shrink-0"
+              title="Tap to change state or location"
             >
-              <Globe className="w-3 h-3 text-cyan-400" />
-              <span className="font-bold">{language.toUpperCase()}</span>
+              <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span className="font-bold">{hierarchy.state}</span>
             </button>
-
-            {/* Mobile State Picker Badge */}
-            <div className="sm:hidden flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-1 rounded-lg text-[10px] font-mono text-cyan-300 shrink-0">
-              <MapPin className="w-3 h-3 text-cyan-400 shrink-0" />
-              <span className="font-bold truncate max-w-[80px]">{hierarchy.state}</span>
-            </div>
 
             {/* Search (Ctrl+K) - Desktop */}
             <button
