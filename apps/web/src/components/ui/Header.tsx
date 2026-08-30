@@ -50,19 +50,56 @@ export const Header: React.FC<{
             <span>THEME 4: DISASTER MANAGEMENT</span>
           </div>
 
-          {/* Region Dropdown (Tablet & Desktop) */}
+          {/* Pan-India Basin & Region Dropdown (Tablet & Desktop) */}
           <div className="hidden md:flex items-center gap-1.5 fp px-2.5 py-1 rounded-xl text-xs font-mono text-slate-200 shrink-0">
             <Globe className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
             <select
               value={selectedLocation.id}
               onChange={(e) => selectLocationById(e.target.value)}
-              className="bg-transparent text-xs text-slate-200 focus:outline-none cursor-pointer font-bold"
+              className="bg-transparent text-xs text-slate-200 focus:outline-none cursor-pointer font-bold max-w-[200px] lg:max-w-[240px] truncate"
             >
-              {LOCATIONS.map((loc) => (
-                <option key={loc.id} value={loc.id} className="bg-slate-900 text-slate-200">
-                  {loc.name} ({loc.region})
-                </option>
-              ))}
+              <optgroup label="🏔️ NORTHERN HIMALAYA" className="bg-slate-900 text-cyan-300 font-bold">
+                {LOCATIONS.filter(l => l.zone === 'HIMALAYAN_NORTH').map(loc => (
+                  <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
+                    {loc.name} ({loc.state})
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="🌊 NORTH-EAST & BRAHMAPUTRA" className="bg-slate-900 text-cyan-300 font-bold">
+                {LOCATIONS.filter(l => l.zone === 'NORTHEAST_BRAHMAPUTRA').map(loc => (
+                  <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
+                    {loc.name} ({loc.state})
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="⛰️ WESTERN GHATS & COASTAL" className="bg-slate-900 text-cyan-300 font-bold">
+                {LOCATIONS.filter(l => l.zone === 'WESTERN_GHATS_COASTAL').map(loc => (
+                  <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
+                    {loc.name} ({loc.state})
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="🏙️ URBAN METROPOLITAN" className="bg-slate-900 text-cyan-300 font-bold">
+                {LOCATIONS.filter(l => l.zone === 'URBAN_METRO').map(loc => (
+                  <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
+                    {loc.name} ({loc.state})
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="🏞️ PENINSULAR & CENTRAL BASINS" className="bg-slate-900 text-cyan-300 font-bold">
+                {LOCATIONS.filter(l => l.zone === 'PENINSULAR_CENTRAL').map(loc => (
+                  <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
+                    {loc.name} ({loc.state})
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="🌾 EASTERN GANGETIC & DELTA" className="bg-slate-900 text-cyan-300 font-bold">
+                {LOCATIONS.filter(l => l.zone === 'EASTERN_DELTA').map(loc => (
+                  <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
+                    {loc.name} ({loc.state})
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
         </div>

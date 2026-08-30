@@ -188,6 +188,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
   // Preset question categories covering the ENTIRE knowledge base
   const knowledgeCategories = [
     { id: 'TOP', label: '🔥 Top Queries' },
+    { id: 'PAN_INDIA', label: '🇮🇳 Pan-India Basins' },
     { id: 'RISK', label: '📊 Risk & Physics' },
     { id: 'SAFETY', label: '🏃 Safety & Routes' },
     { id: 'SENSORS', label: '📡 Sensors & IoT' },
@@ -199,8 +200,16 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
     TOP: [
       "Why is composite risk HIGH (68.5/100) in Sunderbans Nagar?",
       "What candidate evacuation routes are available?",
-      "Which sensors are currently degraded or offline?",
+      "How does FloodGuard scale across all major river basins in India?",
       "How does FloodGuard align with official SIH26192 problem statement?",
+    ],
+    PAN_INDIA: [
+      "How does FloodGuard model Western Ghats landslide cascades in Wayanad and Chiplun?",
+      "Explain the GLOF early warning system for Sikkim Teesta Basin and South Lhonak lake",
+      "How does the model handle urban flash floods in Mumbai (Mithi) and Bengaluru?",
+      "Explain reservoir spill wave coordination for Mahanadi (Hirakud) and Godavari",
+      "How does the system predict Kosi river transboundary floods in Bihar?",
+      "What are the 6 national disaster application disciplines supported across India?",
     ],
     RISK: [
       "What are the 4 heuristics used to calculate composite flood risk?",
@@ -270,8 +279,30 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       authoritative_sources: ["FloodGuard Telemetry Mesh", "IMD AWS Network", "CWC Hydrology"]
     };
 
+    // 0. PAN-INDIA MULTI-BASIN & MULTI-APPLICATION QUERIES
+    if (q.includes('india') || q.includes('pan-india') || q.includes('basin') || q.includes('wayanad') || q.includes('chiplun') || q.includes('teesta') || q.includes('glof') || q.includes('mumbai') || q.includes('mithi') || q.includes('bengaluru') || q.includes('kosi') || q.includes('mahanadi') || q.includes('godavari') || q.includes('application') || q.includes('discipline')) {
+      response = {
+        summary: "FloodGuard AI operates as a Unified Pan-India Multi-Hazard Disaster Intelligence Platform covering 6 National Zones and 6 Core Disaster Disciplines spanning from the High Himalayas to the Western Ghats and coastal deltas.",
+        observed_facts: [
+          "Zone 1 (Northern Himalaya): Cloudbursts & GLOF (Chamoli, Kedarnath, Kullu Valley, Jhelum Basin)",
+          "Zone 2 (North-East & Brahmaputra): High-Velocity Surges & GLOF (Guwahati, Teesta South Lhonak, Cherrapunji, Siang)",
+          "Zone 3 (Western Ghats & Coastal): Torrential Landslide Cascades (Wayanad Chooralmala, Chiplun Vashishti, Kodagu)",
+          "Zone 4 (Urban Metropolitan): Stormwater Drainage Backpressure (Mumbai Mithi, Bengaluru Cascade Lakes, Chennai Adyar)",
+          "Zone 5 (Peninsular & Central): Reservoir Wave Routing (Mahanadi Hirakud 28-Gates, Godavari Bhadrachalam, Narmada)",
+          "Zone 6 (Eastern Delta): Transboundary Embankment & Coastal Surge (Kosi Bihar, Sundarbans Tidal Delta)"
+        ],
+        model_interpretation: "The platform dynamically adapts its underlying physics kernel: In steep terrain (Himalayas/Ghats), it prioritizes DEM slope runoff and geophone tripwires; in urban centers, it couples rainfall intensity with stormwater drainage backflow; in deltaic basins, it integrates CWC reservoir rule curves and tidal lock cycles.",
+        potential_operator_actions: [
+          "Switch active basin using top Region Selector dropdown (24 national sectors)",
+          "Inspect domain dossier under /village/[id]",
+          "Run multi-scenario simulations across all 6 disaster application types"
+        ],
+        uncertainty_assessment: { uncertainty_level: "PAN_INDIA_CALIBRATED", note: "Coupled with IMD, CWC, NRSC Bhuvan, and NDMA feeds" },
+        authoritative_sources: ["IMD National Doppler Radar Grid", "CWC River Basin Network", "NRSC/ISRO Bhuvan", "INCOIS Coastal Portal"]
+      };
+    }
     // 1. RISK & SCORE QUERIES
-    if (q.includes('risk') || q.includes('why') || q.includes('score') || q.includes('68.5') || q.includes('sunderbans') || q.includes('high')) {
+    else if (q.includes('risk') || q.includes('why') || q.includes('score') || q.includes('68.5') || q.includes('sunderbans') || q.includes('high')) {
       response = {
         summary: "Composite flash flood risk in Sunderbans Nagar is 68.5/100 (HIGH). Risk is driven by intense rainfall (48mm in 3h) on steep 28° slopes with 82% soil moisture pre-saturation, causing river stage to surge at +0.40m/h.",
         observed_facts: [
