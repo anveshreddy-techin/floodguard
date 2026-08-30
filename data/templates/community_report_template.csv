@@ -1,0 +1,3 @@
+report_id,observed_at,state,district,location_name,latitude,longitude,report_type,severity,description,has_photo,is_anonymous,verification_status,corroborating_sensor_id,operator_notes
+CR-2026-001,2026-08-30T09:45:00Z,Uttarakhand,Chamoli,Gopeshwar Gully,30.485,79.692,RISING_RIVER,HIGH,Gully water has surged beyond culvert crossing. Carrying debris.,false,true,UNVERIFIED,,
+CR-2026-002,2026-08-30T10:15:00Z,Uttarakhand,Chamoli,NH-7 KM-14,30.420,79.651,BLOCKED_ROAD,MEDIUM,Mud accumulation blocking NH-7 at KM-14.,true,false,CORROBORATED,GEO-CHM-001,Confirmed by NDRF route survey team

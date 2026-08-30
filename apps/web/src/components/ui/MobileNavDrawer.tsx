@@ -8,7 +8,7 @@ import {
   Radio, UploadCloud, FileText, Compass, BarChart3, Award, 
   PlayCircle, HelpCircle, HeartPulse, ShieldCheck, Globe, 
   PhoneCall, Sparkles, ArrowRight, Download, UserCheck, RefreshCw,
-  Server, Brain, Zap, Users, Bot, MapPin
+  Server, Brain, Zap, Users, Bot, MapPin, CloudRain
 } from 'lucide-react';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
 import { useAdaptive, UserRole, OperatingMode } from '@/context/AdaptiveContext';
@@ -77,6 +77,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
       items: [
         { id: 'map', label: 'Hyper-Local GIS', href: '/map', icon: Map },
         { id: 'cascade', label: 'Upstream Cascade', href: '/cascade', icon: Layers },
+        { id: 'weather', label: 'Weather Intelligence', href: '/weather', icon: CloudRain, badge: 'IMD+NWP' },
         { id: 'village', label: 'Village Dossier', href: '/village/demo-village-003', icon: Map },
         { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle, badge: 'WHAT-IF' },
         { id: 'sensors', label: 'IoT & Telemetry', href: '/sensors', icon: Activity },

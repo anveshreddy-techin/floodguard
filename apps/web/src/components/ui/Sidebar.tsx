@@ -30,7 +30,8 @@ import {
   RefreshCw,
   Server,
   Users,
-  Waves
+  Waves,
+  CloudRain
 } from 'lucide-react';
 
 interface NavItem {
@@ -75,6 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       phaseColor: 'text-cyan-400',
       items: [
         { id: 'map', label: 'Hyper-Local GIS', href: '/map', icon: Map },
+        { id: 'weather', label: 'Weather Intelligence', href: '/weather', icon: CloudRain, badge: 'IMD+NWP' },
         { id: 'river-basins', label: 'National River Map', href: '/river-basins', icon: Waves, badge: 'PAN-INDIA' },
         { id: 'cascade', label: 'Upstream Cascade', href: '/cascade', icon: Layers },
         { id: 'village', label: 'Village Dossier', href: '/village/demo-village-003', icon: Map },

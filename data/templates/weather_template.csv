@@ -1,0 +1,4 @@
+timestamp,station_id,latitude,longitude,state,district,temperature_c,humidity_percent,pressure_hpa,wind_speed_kmh,wind_direction_deg,cloud_cover_percent,visibility_km,condition_label,data_source,data_mode
+2026-08-30T10:00:00Z,AWS-CHM-001,30.485,79.692,Uttarakhand,Chamoli,22.5,85.0,1008.4,12.5,200,90,6.5,HEAVY_RAIN,IMD_AWS,UPLOAD
+2026-08-30T10:30:00Z,AWS-CHM-001,30.485,79.692,Uttarakhand,Chamoli,21.8,89.0,1007.2,16.0,220,95,4.2,VERY_HEAVY_RAIN,IMD_AWS,UPLOAD
+2026-08-30T11:00:00Z,AWS-CHM-001,30.485,79.692,Uttarakhand,Chamoli,21.1,92.0,1006.5,18.5,215,100,3.0,THUNDERSTORM,IMD_AWS,UPLOAD

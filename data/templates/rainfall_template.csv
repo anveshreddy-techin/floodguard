@@ -1,4 +1,4 @@
-timestamp,latitude,longitude,station_id,station_name,district,state,basin,rainfall_mm,duration_minutes,intensity_mm_per_hr,source,data_mode,quality_status,notes
-2026-08-28T06:00:00Z,25.2702,91.7323,AWS-MG-001,Cherrapunji AWS,East Khasi Hills,Meghalaya,Brahmaputra,124.0,180,41.3,IMD_AWS,UPLOAD,VALID,Extreme orographic cloudburst recorded
-2026-08-28T06:00:00Z,30.7346,79.0669,AWS-UK-002,Kedarnath Base AWS,Rudraprayag,Uttarakhand,Alaknanda,64.5,180,21.5,IMD_AWS,UPLOAD,VALID,Intense high-altitude convective downpour
-2026-08-28T06:00:00Z,11.5540,76.1340,AWS-KL-003,Meppadi Ghat AWS,Wayanad,Kerala,Chaliyar,88.0,180,29.3,KSDMA_SENSOR,UPLOAD,VALID,Pre-saturated hillslope precipitation
+timestamp,station_id,latitude,longitude,state,district,rainfall_mm,duration_minutes,rainfall_intensity_mmh,accumulation_24h_mm,intensity_class,data_source,data_mode
+2026-08-30T10:00:00Z,RG-CHM-001,30.485,79.692,Uttarakhand,Chamoli,16.0,60,16.0,82.0,HEAVY_RAIN,IOT_RAIN_GAUGE,UPLOAD
+2026-08-30T11:00:00Z,RG-CHM-001,30.485,79.692,Uttarakhand,Chamoli,22.5,60,22.5,104.5,VERY_HEAVY_RAIN,IOT_RAIN_GAUGE,UPLOAD
+2026-08-30T12:00:00Z,RG-CHM-001,30.485,79.692,Uttarakhand,Chamoli,8.0,60,8.0,112.5,HEAVY_RAIN,IOT_RAIN_GAUGE,UPLOAD
