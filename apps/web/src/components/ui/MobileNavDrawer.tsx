@@ -226,14 +226,18 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
             <span>DOWNLOAD ANDROID APK (v1.0.4)</span>
           </button>
 
-          <Link
-            href="/safety"
-            onClick={onClose}
-            className="btn-danger w-full py-2 rounded-xl text-xs font-mono font-bold text-white flex items-center justify-center gap-2 shadow-lg"
+          <button
+            onClick={() => {
+              onClose();
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-emergency-modal'));
+              }
+            }}
+            className="btn-danger w-full py-2.5 rounded-xl text-xs font-mono font-black text-white flex items-center justify-center gap-2 shadow-2xl active:scale-95 transition animate-pulse"
           >
-            <PhoneCall className="w-3.5 h-3.5 animate-bounce" />
-            <span>EMERGENCY ESCAPE HUD</span>
-          </Link>
+            <PhoneCall className="w-4 h-4 animate-bounce" />
+            <span>🚨 SOS RESCUE DISPATCH & CALL (1078)</span>
+          </button>
 
           <div className="flex items-center justify-between text-[9px] font-mono text-slate-500 px-1 pt-1">
             <span>v1.0.4 • Android & Web HUD</span>

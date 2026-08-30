@@ -388,11 +388,16 @@ export default function MySafetyPage() {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => { setRescueRequested(true); alert('Rescue request dispatched to local Emergency Operations Center (EOC).'); }}
-                className="btn-danger px-5 py-3 text-white rounded-xl text-xs font-black font-mono tracking-wider transition flex items-center gap-2 shadow-2xl active:scale-95"
+                onClick={() => {
+                  setRescueRequested(true);
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('open-emergency-modal'));
+                  }
+                }}
+                className="btn-danger px-5 py-3 text-white rounded-xl text-xs font-black font-mono tracking-wider transition flex items-center gap-2 shadow-2xl active:scale-95 animate-pulse"
               >
                 <PhoneCall className="w-4 h-4 animate-bounce" />
-                <span>{rescueRequested ? 'HELP DISPATCHED' : 'I NEED HELP'}</span>
+                <span>🚨 DISPATCH RESCUE & CALL HELPLINE</span>
               </button>
             </div>
           </div>

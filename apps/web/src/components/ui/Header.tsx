@@ -7,7 +7,7 @@ import { DataMode } from '@/types';
 import { CommandPalette } from './CommandPalette';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
-import { Search, Globe, Menu, Bot, Download, UserCheck } from 'lucide-react';
+import { Search, Globe, Menu, Bot, Download, UserCheck, ShieldAlert } from 'lucide-react';
 
 export const Header: React.FC<{
   dataMode?: DataMode;
@@ -79,8 +79,23 @@ export const Header: React.FC<{
           </span>
         </button>
 
-        {/* Right: AI Copilot, APK, Mode Badge, Live System Pill, & Login Button */}
+        {/* Right: SOS Rescue, AI Copilot, APK, Mode Badge, Live System Pill, & Login Button */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Emergency SOS Rescue Calling Button */}
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-emergency-modal'));
+              }
+            }}
+            className="px-2 sm:px-2.5 py-1 rounded-xl text-[11px] sm:text-xs font-mono font-black bg-rose-600 hover:bg-rose-500 text-white flex items-center gap-1 shadow-[0_0_15px_rgba(225,29,72,0.6)] active:scale-95 transition shrink-0 animate-pulse"
+            title="Open Emergency Rescue & Helpline Dispatch (Hotkey: E)"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden xs:inline">SOS RESCUE</span>
+            <span className="xs:hidden">SOS</span>
+          </button>
+
           {/* AI Copilot Button (Responsive) */}
           <button
             onClick={() => {
@@ -91,9 +106,9 @@ export const Header: React.FC<{
             className="px-2 sm:px-2.5 py-1 rounded-xl text-[11px] sm:text-xs font-mono font-bold bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 flex items-center gap-1.5 shadow-[0_0_12px_rgba(6,182,212,0.3)] active:scale-95 transition shrink-0"
             title="Open Grounded AI Disaster Intelligence Assistant (Hotkey: A)"
           >
-            <Bot className="w-3.5 h-3.5 text-cyan-400 animate-pulse shrink-0" />
-            <span className="hidden xs:inline">AI COPILOT</span>
-            <span className="xs:hidden">AI</span>
+            <Bot className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <span className="hidden sm:inline">AI COPILOT</span>
+            <span className="sm:hidden">AI</span>
           </button>
 
           {/* APK Download Button */}
