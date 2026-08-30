@@ -121,17 +121,17 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex md:hidden animate-fade-in select-none">
-      {/* Backdrop overlay */}
+    <div className="fixed inset-0 z-[9999] flex md:hidden select-none">
+      {/* 100% Solid Dark Backdrop overlay with zero bleed */}
       <div 
         onClick={onClose} 
-        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-black/90 backdrop-blur-sm transition-opacity"
       />
 
-      {/* Slide-out drawer sheet */}
-      <div className="relative w-full max-w-sm bg-slate-950/98 border-r border-slate-800 flex flex-col h-full z-10 animate-slide-right shadow-2xl safe-top safe-bottom">
-        {/* Drawer Header */}
-        <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
+      {/* 100% Solid Opaque Slide-out Drawer Sheet */}
+      <div className="relative w-full max-w-sm bg-[#030712] border-r border-slate-800 flex flex-col h-full z-[10000] animate-slide-right shadow-[0_0_50px_rgba(0,0,0,0.95)] safe-top safe-bottom">
+        {/* Drawer Header (Solid Opaque) */}
+        <div className="p-4 border-b border-slate-800 bg-[#030712] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-cyan-400 animate-ping" />
             <div>
@@ -146,14 +146,15 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white active:scale-95 transition"
+            className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white active:scale-95 transition"
+            aria-label="Close Navigation Menu"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Global Mode + Role + Language Controls Grid */}
-        <div className="p-3 border-b border-slate-800/60 bg-slate-900/50 space-y-2.5">
+        {/* Global Mode + Role + Language Controls Grid (Solid Opaque) */}
+        <div className="p-3 border-b border-slate-800 bg-[#080f24] space-y-2.5">
           
           {/* Operating Mode Selector */}
           <div>
@@ -184,7 +185,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
             </div>
           </div>
 
-          {/* User Role Selector */}
+          {/* Role Selector */}
           <div>
             <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
               <UserCheck className="w-3 h-3 text-indigo-400" />
@@ -193,7 +194,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
             <select
               value={role}
               onChange={(e) => setRole(e.target.value as UserRole)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-indigo-200 font-bold focus:outline-none focus:border-indigo-400"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-indigo-200 font-bold focus:outline-none focus:border-cyan-400"
             >
               {ROLES_LIST.map((r) => (
                 <option key={r.id} value={r.id} className="bg-slate-950 text-slate-200">
@@ -212,7 +213,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
             >
               {LANGUAGES.map((l) => (
                 <option key={l.code} value={l.code} className="bg-slate-950 text-slate-200">
@@ -240,7 +241,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                   selectLocationById(matched.id);
                 }
               }}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 font-bold focus:outline-none focus:border-cyan-400"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 font-bold focus:outline-none focus:border-cyan-400"
             >
               {INDIAN_STATES.map((st) => (
                 <option key={st.id} value={st.name} className="bg-slate-950 text-slate-200">
@@ -264,7 +265,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 if (loc) setStateFilter(loc.state);
                 onClose();
               }}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
             >
               {LOCATIONS.map((loc) => (
                 <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
@@ -276,8 +277,8 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
         </div>
 
-        {/* Navigation Sections Scroll Area */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-4">
+        {/* Navigation Sections Scroll Area (100% Solid Opaque Background) */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-4 bg-[#030712]">
           {navSections.map((sec) => (
             <div key={sec.title} className="space-y-1">
               <div className={`text-[9px] font-mono font-bold px-2 tracking-wider ${sec.phaseColor}`}>
@@ -295,7 +296,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                       className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition font-medium active:scale-98 ${
                         isActive
                           ? 'bg-cyan-500/15 text-cyan-300 font-bold border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.2)]'
-                          : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-900 border border-transparent'
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
@@ -316,8 +317,8 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           ))}
         </div>
 
-        {/* Drawer Bottom Actions: SOS Emergency & AI Assistant */}
-        <div className="p-3 border-t border-slate-800/80 bg-slate-950 flex gap-2">
+        {/* Drawer Bottom Actions: SOS Emergency & AI Assistant (Solid Opaque) */}
+        <div className="p-3 border-t border-slate-800 bg-[#030712] flex gap-2">
           <button
             onClick={() => {
               onClose();
