@@ -31,6 +31,7 @@ import {
   Globe
 } from 'lucide-react';
 import { RiskBadge, DataModeBadge } from '@/components/ui/Badges';
+import { NationalRiverRiskMap } from '@/components/ui/NationalRiverRiskMap';
 
 export type GisToolMode = 'EXPLORE' | 'PROFILE' | 'ISOCHRONES' | 'MORPHOMETRY';
 export type GisLayerKey = 'DEM' | 'RIVER' | 'SURGE' | 'SENSORS' | 'SHELTERS' | 'SLOPE';
@@ -39,6 +40,7 @@ export default function HyperLocalGISPage() {
   const { setPage, setMode, setRiskState, setRainfallMm, setRiverStage } = useEnvironment();
   const { selectedLocation, setSelectedLocation, selectLocationById } = useLocation();
 
+  const [activeMapView, setActiveMapView] = useState<'HYPER_LOCAL' | 'NATIONAL_RIVERS'>('HYPER_LOCAL');
   const [activeTool, setActiveTool] = useState<GisToolMode>('EXPLORE');
   const [layers, setLayers] = useState<Record<GisLayerKey, boolean>>({
     DEM: true,
@@ -160,7 +162,7 @@ export default function HyperLocalGISPage() {
     },
   ];
 
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 800;
     const y = ((e.clientY - rect.top) / rect.height) * 500;
@@ -174,55 +176,60 @@ export default function HyperLocalGISPage() {
   const [fitMode, setFitMode] = useState<'MEET' | 'COVER'>('MEET');
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden select-none bg-[#030712]">
+    <div className="flex flex-col h-screen overflow-hidden select-none bg-slate-950">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
 
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="map" />
 
-        <main className="flex-1 relative flex flex-col min-h-0 overflow-hidden bg-[#020617]">
+        <main className="flex-1 relative flex flex-col min-h-0 overflow-hidden bg-slate-950">
           {/* Top Floating Spatial GIS Command Bar (Clean, Single-Row Responsive Layout) */}
           <div className="absolute top-2.5 left-2.5 right-2.5 z-30 flex items-center justify-between gap-2 pointer-events-none">
-            {/* Desktop: Full Title + Tool Switcher */}
-            <div className="pointer-events-auto hidden md:flex items-center gap-2">
-              <div className="glass-panel-glow px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-2xl border border-cyan-500/30">
-                <MapIcon className="w-4 h-4 text-cyan-400 animate-pulse" />
-                <span className="text-xs font-mono font-black text-white uppercase tracking-wider">
-                  HYPER-LOCAL GIS
-                </span>
-                <span className="text-[10px] font-mono bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800 font-bold">
-                  SRTM 30m / ALOS 12.5m
-                </span>
-              </div>
-
-              {/* Desktop Tool Mode Switcher */}
-              <div className="glass-panel rounded-xl p-1 flex items-center gap-1 shadow-xl">
-                {(['EXPLORE', 'PROFILE', 'ISOCHRONES', 'MORPHOMETRY'] as GisToolMode[]).map((tool) => (
-                  <button
-                    key={tool}
-                    onClick={() => {
-                      setActiveTool(tool);
-                      setMobileSheetTab(tool === 'EXPLORE' ? 'INSPECTOR' : tool);
-                    }}
-                    className={`px-3 py-1 rounded-lg text-[11px] font-mono font-bold transition-all transform active:scale-95 ${
-                      activeTool === tool
-                        ? 'btn-glow-cyan text-white shadow-lg'
-                        : 'text-slate-400 hover:text-cyan-300 hover:bg-slate-800/80'
-                    }`}
-                  >
-                    {tool}
-                  </button>
-                ))}
-              </div>
+            {/* View Switcher: 3D Local GIS vs National River Map */}
+            <div className="pointer-events-auto flex items-center gap-1.5 glass-panel p-1 rounded-xl shadow-2xl border border-cyan-500/30">
+              <button
+                onClick={() => setActiveMapView('HYPER_LOCAL')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1 ${
+                  activeMapView === 'HYPER_LOCAL' ? 'bg-cyan-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Mountain className="w-3.5 h-3.5" />
+                <span>3D CATCHMENT</span>
+              </button>
+              <button
+                onClick={() => setActiveMapView('NATIONAL_RIVERS')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1 ${
+                  activeMapView === 'NATIONAL_RIVERS' ? 'bg-cyan-500 text-slate-950 shadow' : 'text-cyan-300 hover:text-cyan-100'
+                }`}
+              >
+                <Waves className="w-3.5 h-3.5 animate-pulse" />
+                <span>🇮🇳 NATIONAL RIVERS</span>
+              </button>
             </div>
 
-            {/* Mobile: Compact Single-Row Header */}
-            <div className="pointer-events-auto md:hidden flex items-center gap-1.5">
-              <div className="fp fp-operational px-2.5 py-1 rounded-xl flex items-center gap-1.5 shadow-lg">
-                <MapIcon className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="text-[11px] font-mono font-black text-white">GIS 30m</span>
+            {/* Desktop: Tool Switcher (When in HYPER_LOCAL view) */}
+            {activeMapView === 'HYPER_LOCAL' && (
+              <div className="pointer-events-auto hidden md:flex items-center gap-2">
+                <div className="glass-panel rounded-xl p-1 flex items-center gap-1 shadow-xl">
+                  {(['EXPLORE', 'PROFILE', 'ISOCHRONES', 'MORPHOMETRY'] as GisToolMode[]).map((tool) => (
+                    <button
+                      key={tool}
+                      onClick={() => {
+                        setActiveTool(tool);
+                        setMobileSheetTab(tool === 'EXPLORE' ? 'INSPECTOR' : tool);
+                      }}
+                      className={`px-3 py-1 rounded-lg text-[11px] font-mono font-bold transition-all transform active:scale-95 ${
+                        activeTool === tool
+                          ? 'btn-glow-cyan text-white shadow-lg'
+                          : 'text-slate-400 hover:text-cyan-300 hover:bg-slate-800/80'
+                      }`}
+                    >
+                      {tool}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Right: Viewport Mode Toggle & Info Triggers */}
             <div className="pointer-events-auto flex items-center gap-1.5">
@@ -233,31 +240,42 @@ export default function HyperLocalGISPage() {
               </div>
 
               {/* 100% Full Map vs Zoom Focus Toggle */}
-              <button
-                onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
-                className={`fp px-2.5 py-1 md:px-3 md:py-1.5 rounded-xl text-[10px] md:text-xs font-mono font-bold flex items-center gap-1.5 shadow-xl transition active:scale-95 ${
-                  fitMode === 'MEET' ? 'text-emerald-300 border-emerald-500/50 bg-emerald-950/40' : 'text-cyan-300 border-cyan-500/30'
-                }`}
-                title={fitMode === 'MEET' ? 'Currently viewing 100% Full Catchment' : 'Currently Zoomed Fill'}
-              >
-                <Maximize2 className="w-3 h-3" />
-                <span>{fitMode === 'MEET' ? '100% FULL MAP' : 'ZOOM FILL'}</span>
-              </button>
+              {activeMapView === 'HYPER_LOCAL' && (
+                <button
+                  onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
+                  className={`fp px-2.5 py-1 md:px-3 md:py-1.5 rounded-xl text-[10px] md:text-xs font-mono font-bold flex items-center gap-1.5 shadow-xl transition active:scale-95 ${
+                    fitMode === 'MEET' ? 'text-emerald-300 border-emerald-500/50 bg-emerald-950/40' : 'text-cyan-300 border-cyan-500/30'
+                  }`}
+                  title={fitMode === 'MEET' ? 'Currently viewing 100% Full Catchment' : 'Currently Zoomed Fill'}
+                >
+                  <Maximize2 className="w-3 h-3" />
+                  <span>{fitMode === 'MEET' ? '100% FULL MAP' : 'ZOOM FILL'}</span>
+                </button>
+              )}
 
               {/* Mobile Drawer Trigger Button */}
-              <button
-                onClick={() => setMobileSheetOpen(!mobileSheetOpen)}
-                className="md:hidden fp fp-operational px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold text-cyan-300 flex items-center gap-1 shadow-xl active:scale-95"
-              >
-                <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                <span>GIS INFO</span>
-                {mobileSheetOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
-              </button>
+              {activeMapView === 'HYPER_LOCAL' && (
+                <button
+                  onClick={() => setMobileSheetOpen(!mobileSheetOpen)}
+                  className="md:hidden fp fp-operational px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold text-cyan-300 flex items-center gap-1 shadow-xl active:scale-95"
+                >
+                  <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>GIS INFO</span>
+                  {mobileSheetOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+                </button>
+              )}
             </div>
           </div>
 
+          {/* Conditional View Render Overlay for National River Map */}
+          {activeMapView === 'NATIONAL_RIVERS' && (
+            <div className="absolute inset-0 pt-14 p-2 sm:p-4 overflow-hidden min-h-0 bg-slate-950 z-20">
+              <NationalRiverRiskMap className="h-full" />
+            </div>
+          )}
+
           {/* Master Full-Bleed Spatial Vector GIS Canvas */}
-          <div className="flex-1 relative w-full h-full bg-[#020617] overflow-hidden flex items-center justify-center p-0">
+          <div className="flex-1 relative w-full h-full bg-slate-950 overflow-hidden flex items-center justify-center p-0">
             <svg
               viewBox="0 0 800 500"
               className="w-full h-full cursor-crosshair"
@@ -801,7 +819,6 @@ export default function HyperLocalGISPage() {
               </div>
             </div>
           )}
-
         </main>
       </div>
     </div>

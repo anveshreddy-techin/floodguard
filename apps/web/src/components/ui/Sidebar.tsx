@@ -29,8 +29,8 @@ import {
   Brain,
   RefreshCw,
   Server,
-  Users
-
+  Users,
+  Waves
 } from 'lucide-react';
 
 interface NavItem {
@@ -74,6 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       phaseColor: 'text-cyan-400',
       items: [
         { id: 'map', label: 'Hyper-Local GIS', href: '/map', icon: Map },
+        { id: 'river-basins', label: 'National River Map', href: '/river-basins', icon: Waves, badge: 'PAN-INDIA' },
         { id: 'cascade', label: 'Upstream Cascade', href: '/cascade', icon: Layers },
         { id: 'village', label: 'Village Dossier', href: '/village/demo-village-003', icon: Map },
         { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle, badge: 'WHAT-IF' },
