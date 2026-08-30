@@ -4,30 +4,16 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  X, 
-  ShieldAlert, 
-  Map, 
-  Layers, 
-  History, 
-  Activity, 
-  Database, 
-  Radio, 
-  UploadCloud, 
-  FileText, 
-  Compass, 
-  BarChart3, 
-  Award, 
-  PlayCircle, 
-  HelpCircle, 
-  HeartPulse, 
-  ShieldCheck, 
-  Globe, 
-  PhoneCall,
-  Sparkles,
-  ArrowRight,
-  Download
+  X, ShieldAlert, Map, Layers, History, Activity, Database, 
+  Radio, UploadCloud, FileText, Compass, BarChart3, Award, 
+  PlayCircle, HelpCircle, HeartPulse, ShieldCheck, Globe, 
+  PhoneCall, Sparkles, ArrowRight, Download, UserCheck, RefreshCw,
+  Server, Brain, Zap, Users, Bot
 } from 'lucide-react';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
+import { useAdaptive, UserRole, OperatingMode } from '@/context/AdaptiveContext';
+import { LANGUAGES, SupportedLanguage } from '@/data/i18n';
+import { INDIAN_STATES } from '@/data/states';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -37,6 +23,16 @@ interface MobileNavDrawerProps {
 export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
   const { selectedLocation, selectLocationById } = useLocation();
+  const {
+    operatingMode,
+    setOperatingMode,
+    role,
+    setRole,
+    language,
+    setLanguage,
+    hierarchy,
+    setStateFilter,
+  } = useAdaptive();
 
   // Prevent background body scroll when drawer is open
   useEffect(() => {
@@ -51,6 +47,19 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const ROLES_LIST: { id: UserRole; label: string; iconBadge: string }[] = [
+    { id: 'CITIZEN', label: 'Citizen / Resident', iconBadge: '🏠' },
+    { id: 'VILLAGE_OPERATOR', label: 'Village Operator', iconBadge: '🌾' },
+    { id: 'FIELD_RESPONDER', label: 'Field Responder', iconBadge: '🚒' },
+    { id: 'DISTRICT_OPERATOR', label: 'District EOC Operator', iconBadge: '🏢' },
+    { id: 'STATE_OPERATOR', label: 'State SEOC Commander', iconBadge: '🏛️' },
+    { id: 'NATIONAL_OPERATOR', label: 'National NDMA Commander', iconBadge: '🇮🇳' },
+    { id: 'ANALYST', label: 'GIS / ML Analyst', iconBadge: '📊' },
+    { id: 'RESEARCHER', label: 'Researcher', iconBadge: '🔬' },
+    { id: 'ADMIN', label: 'System Administrator', iconBadge: '⚙️' },
+    { id: 'VIEWER', label: 'Public Viewer', iconBadge: '👁️' },
+  ];
 
   const navSections = [
     {
@@ -89,6 +98,19 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
       ],
     },
     {
+      title: 'INDIA-WIDE • NATIONAL INTELLIGENCE',
+      phaseColor: 'text-green-400',
+      items: [
+        { id: 'data-sources', label: 'Data Sources', href: '/data-sources', icon: Server },
+        { id: 'ingestion', label: 'Ingestion Jobs', href: '/ingestion', icon: RefreshCw },
+        { id: 'model-monitoring', label: 'ML Models', href: '/model-monitoring', icon: Brain },
+        { id: 'recovery', label: 'Recovery', href: '/recovery', icon: Zap },
+        { id: 'cross-border', label: 'Cross-Border Basins', href: '/cross-border', icon: Globe },
+        { id: 'missing-persons', label: 'Missing Persons', href: '/missing-persons', icon: Users, badge: 'PROTECTED' },
+        { id: 'admin', label: 'Admin Governance', href: '/admin', icon: ShieldCheck },
+      ],
+    },
+    {
       title: 'SPECIAL • EVALUATION ARENA',
       phaseColor: 'text-amber-400',
       items: [
@@ -107,7 +129,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
       />
 
       {/* Slide-out drawer sheet */}
-      <div className="relative w-full max-w-sm bg-slate-950/95 border-r border-slate-800 flex flex-col h-full z-10 animate-slide-right shadow-2xl safe-top safe-bottom">
+      <div className="relative w-full max-w-sm bg-slate-950/98 border-r border-slate-800 flex flex-col h-full z-10 animate-slide-right shadow-2xl safe-top safe-bottom">
         {/* Drawer Header */}
         <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -117,7 +139,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 FLOODGUARD <span className="text-cyan-400 font-mono font-normal">AI</span>
               </div>
               <div className="text-[9px] font-mono text-rose-400 font-bold">
-                SIH26192 • THEME 4 DISASTER MGMT
+                SIH26192 • NATIONAL PLATFORM
               </div>
             </div>
           </div>
@@ -130,26 +152,100 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           </button>
         </div>
 
-        {/* Global Region Switcher */}
-        <div className="p-3 border-b border-slate-800/60 bg-slate-900/40">
-          <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-            <Globe className="w-3 h-3 text-cyan-400" />
-            <span>OPERATIONAL SECTOR:</span>
+        {/* Global Mode + Role + Language Controls Grid */}
+        <div className="p-3 border-b border-slate-800/60 bg-slate-900/50 space-y-2.5">
+          
+          {/* Operating Mode Selector */}
+          <div>
+            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+              OPERATING MODE:
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              <button
+                onClick={() => setOperatingMode('DEMO')}
+                className={`py-1.5 px-2 rounded-xl text-xs font-mono font-bold border transition ${
+                  operatingMode === 'DEMO'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+                    : 'bg-slate-900 text-slate-400 border-slate-800'
+                }`}
+              >
+                DEMO MODE
+              </button>
+              <button
+                onClick={() => setOperatingMode('REAL_PILOT')}
+                className={`py-1.5 px-2 rounded-xl text-xs font-mono font-bold border transition ${
+                  operatingMode === 'REAL_PILOT'
+                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
+                    : 'bg-slate-900 text-slate-400 border-slate-800'
+                }`}
+              >
+                REAL/PILOT
+              </button>
+            </div>
           </div>
-          <select
-            value={selectedLocation.id}
-            onChange={(e) => {
-              selectLocationById(e.target.value);
-              onClose();
-            }}
-            className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
-          >
-            {LOCATIONS.map((loc) => (
-              <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
-                {loc.name} ({loc.region})
-              </option>
-            ))}
-          </select>
+
+          {/* User Role Selector */}
+          <div>
+            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
+              <UserCheck className="w-3 h-3 text-indigo-400" />
+              <span>ACTIVE USER ROLE:</span>
+            </div>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value as UserRole)}
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-indigo-200 font-bold focus:outline-none focus:border-indigo-400"
+            >
+              {ROLES_LIST.map((r) => (
+                <option key={r.id} value={r.id} className="bg-slate-950 text-slate-200">
+                  {r.iconBadge} {r.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Language Selector */}
+          <div>
+            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
+              <Globe className="w-3 h-3 text-cyan-400" />
+              <span>LANGUAGE (भाषा):</span>
+            </div>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code} className="bg-slate-950 text-slate-200">
+                  {l.native} ({l.label})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Location Sector Switcher */}
+          <div>
+            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
+              <Map className="w-3 h-3 text-cyan-400" />
+              <span>TARGET REGION / SECTOR:</span>
+            </div>
+            <select
+              value={selectedLocation.id}
+              onChange={(e) => {
+                selectLocationById(e.target.value);
+                const loc = LOCATIONS.find(l => l.id === e.target.value);
+                if (loc) setStateFilter(loc.state);
+                onClose();
+              }}
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
+            >
+              {LOCATIONS.map((loc) => (
+                <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
+                  {loc.name} ({loc.region})
+                </option>
+              ))}
+            </select>
+          </div>
+
         </div>
 
         {/* Navigation Sections Scroll Area */}
@@ -180,13 +276,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                       </div>
 
                       {item.badge && (
-                        <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold ${
-                          item.badge === 'LIVE'
-                            ? 'bg-rose-950 text-rose-300 border border-rose-800'
-                            : item.badge === 'HUD'
-                            ? 'bg-cyan-950 text-cyan-300 border border-cyan-800'
-                            : 'bg-slate-900 text-slate-300 border border-slate-700'
-                        }`}>
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold">
                           {item.badge}
                         </span>
                       )}
@@ -198,34 +288,8 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           ))}
         </div>
 
-        {/* Drawer Footer with AI Assistant, APK Download & Emergency Call */}
-        <div className="p-3 border-t border-slate-800/80 bg-slate-950/90 space-y-2">
-          <button
-            onClick={() => {
-              onClose();
-              if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('open-copilot'));
-              }
-            }}
-            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:brightness-110 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)] active:scale-95 transition"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>OPEN GROUNDED AI COPILOT</span>
-          </button>
-
-          <button
-            onClick={() => {
-              onClose();
-              if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('open-apk-modal'));
-              }
-            }}
-            className="w-full py-2 rounded-xl bg-slate-900 border border-emerald-500/50 hover:bg-slate-800 text-emerald-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>DOWNLOAD ANDROID APK (v1.0.4)</span>
-          </button>
-
+        {/* Drawer Bottom Actions: SOS Emergency & AI Assistant */}
+        <div className="p-3 border-t border-slate-800/80 bg-slate-950 flex gap-2">
           <button
             onClick={() => {
               onClose();
@@ -233,16 +297,24 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 window.dispatchEvent(new CustomEvent('open-emergency-modal'));
               }
             }}
-            className="btn-danger w-full py-2.5 rounded-xl text-xs font-mono font-black text-white flex items-center justify-center gap-2 shadow-2xl active:scale-95 transition animate-pulse"
+            className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-black flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition"
           >
             <PhoneCall className="w-4 h-4 animate-bounce" />
-            <span>🚨 SOS RESCUE DISPATCH & CALL (1078)</span>
+            <span>SOS RESCUE</span>
           </button>
 
-          <div className="flex items-center justify-between text-[9px] font-mono text-slate-500 px-1 pt-1">
-            <span>v1.0.4 • Android & Web HUD</span>
-            <span className="text-emerald-400 font-bold">100% Cryptographic Audit</span>
-          </div>
+          <button
+            onClick={() => {
+              onClose();
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-copilot'));
+              }
+            }}
+            className="flex-1 py-2.5 rounded-xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition"
+          >
+            <Bot className="w-4 h-4 text-cyan-400" />
+            <span>AI COPILOT</span>
+          </button>
         </div>
       </div>
     </div>
