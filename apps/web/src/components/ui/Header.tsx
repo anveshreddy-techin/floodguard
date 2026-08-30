@@ -202,41 +202,47 @@ export const Header: React.FC<{
               <span className="font-bold">{language.toUpperCase()}</span>
             </button>
 
-            {/* Search (Ctrl+K) */}
+            {/* Mobile State Picker Badge */}
+            <div className="sm:hidden flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-1 rounded-lg text-[10px] font-mono text-cyan-300 shrink-0">
+              <MapPin className="w-3 h-3 text-cyan-400 shrink-0" />
+              <span className="font-bold truncate max-w-[80px]">{hierarchy.state}</span>
+            </div>
+
+            {/* Search (Ctrl+K) - Desktop */}
             <button
               onClick={() => setCommandPaletteOpen(true)}
-              className="p-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition shrink-0 active:scale-95"
+              className="hidden sm:flex p-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition shrink-0 active:scale-95"
               title="Search commands and locations (Ctrl+K)"
             >
               <Search className="w-3.5 h-3.5" />
             </button>
 
-            {/* AI Copilot Button */}
+            {/* AI Copilot Button - Desktop */}
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new CustomEvent('open-copilot'));
                 }
               }}
-              className="px-2 sm:px-2.5 py-1 rounded-xl text-[11px] sm:text-xs font-mono font-bold bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 flex items-center gap-1 shadow-[0_0_12px_rgba(6,182,212,0.3)] active:scale-95 transition shrink-0"
+              className="hidden sm:flex px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 items-center gap-1 shadow-[0_0_12px_rgba(6,182,212,0.3)] active:scale-95 transition shrink-0"
               title="Open Grounded AI Disaster Copilot (Hotkey: A)"
             >
               <Bot className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span className="hidden sm:inline">COPILOT</span>
+              <span>COPILOT</span>
             </button>
 
-            {/* SOS Emergency Rescue Button */}
+            {/* SOS Emergency Rescue Button - Desktop */}
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new CustomEvent('open-emergency-modal'));
                 }
               }}
-              className="px-2 sm:px-2.5 py-1 rounded-xl text-[11px] sm:text-xs font-mono font-black bg-rose-600 hover:bg-rose-500 text-white flex items-center gap-1 shadow-[0_0_15px_rgba(225,29,72,0.6)] active:scale-95 transition shrink-0 animate-pulse"
+              className="hidden sm:flex px-2.5 py-1 rounded-xl text-xs font-mono font-black bg-rose-600 hover:bg-rose-500 text-white items-center gap-1 shadow-[0_0_15px_rgba(225,29,72,0.6)] active:scale-95 transition shrink-0 animate-pulse"
               title="Open Emergency Rescue & Helpline Dispatch (Hotkey: E)"
             >
               <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
-              <span className="hidden xs:inline">SOS</span>
+              <span>SOS</span>
             </button>
           </div>
         </div>

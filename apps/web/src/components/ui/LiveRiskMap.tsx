@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Layers, 
   MapPin, 
@@ -24,6 +24,8 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import { RiskBadge, UncertaintyBadge } from './Badges';
+import { useAdaptive } from '@/context/AdaptiveContext';
+import { useLocation, LOCATIONS } from '@/context/LocationContext';
 
 export type MapLayerType = 'RISK' | 'RAINFALL' | 'SOIL' | 'TERRAIN' | 'RIVER' | 'EXPOSURE';
 
@@ -56,6 +58,10 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
   simulatedTimeStep = 'NOW',
   isEmergencyMode = false,
 }) => {
+  const { selectedLocation: adaptiveLocation, hierarchy } = useAdaptive();
+  const { selectedLocation: ctxLocation } = useLocation();
+  const loc = adaptiveLocation || ctxLocation || LOCATIONS[0];
+
   const [activeLayer, setActiveLayer] = useState<MapLayerType>('RISK');
   const [legendOpen, setLegendOpen] = useState<boolean>(true);
   const [hoveredNode, setHoveredNode] = useState<any>(null);
@@ -72,80 +78,85 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  const mapNodes = [
-    {
-      id: 'demo-aws-001',
-      name: 'Ridge AWS Station (1,450m)',
-      type: 'SENSOR',
-      x: 180,
-      y: 90,
-      status: 'ONLINE',
-      value: '48.0 mm / 3h',
-      riskScore: 75.0,
-      riskLevel: 'HIGH',
-      color: SPEC_COLORS.risk.caution,
-      trend: '↑ +16mm/h',
-      desc: 'Orographic precipitation collection point in upper gorge.',
-    },
-    {
-      id: 'demo-village-001',
-      name: 'Kedarnath Base (3,583m)',
-      type: 'HISTORICAL_NODE',
-      x: 320,
-      y: 60,
-      status: 'MONITORED',
-      value: 'Chorabari Catchment',
-      riskScore: 62.0,
-      riskLevel: 'HIGH',
-      color: SPEC_COLORS.risk.caution,
-      trend: 'Stable Inundation',
-      desc: 'Glacial cirque and moraine impoundment zone.',
-    },
-    {
-      id: 'demo-village-003',
-      name: 'Sunderbans Nagar (Exposure Target)',
-      type: 'VILLAGE',
-      x: 480,
-      y: 280,
-      status: 'HIGH_RISK',
-      value: 'Risk: 68.5/100',
-      riskScore: 68.5,
-      riskLevel: 'HIGH',
-      color: SPEC_COLORS.risk.caution,
-      trend: '↑ +14.2 pts/h (Rising)',
-      population: 3400,
-      desc: 'Alluvial fan settlement at river channel confluence. Primary exposure zone.',
-    },
-    {
-      id: 'demo-shelter-001',
-      name: 'Community High School (Candidate Shelter)',
-      type: 'SHELTER',
-      x: 610,
-      y: 210,
-      status: 'READY',
-      value: 'Elevation +120m',
-      riskScore: 12.0,
-      riskLevel: 'LOW',
-      color: SPEC_COLORS.risk.safe,
-      trend: 'SAFE ZONE',
-      capacity: 450,
-      desc: 'Designated elevated assembly point on north ridge.',
-    },
-    {
-      id: 'demo-gauge-001',
-      name: 'Radar Water Level Gauge #1',
-      type: 'GAUGE',
-      x: 360,
-      y: 220,
-      status: 'ONLINE',
-      value: '3.80m (+0.40m/h)',
-      riskScore: 78.0,
-      riskLevel: 'EXTREME',
-      color: SPEC_COLORS.risk.danger,
-      trend: '↑ SURGE (+0.40m/h)',
-      desc: 'Mid-catchment river stage monitoring station.',
-    },
-  ];
+  const mapNodes = useMemo(() => {
+    const isSafe = loc.riskScore < 40;
+    const baseEle = parseInt(loc.elevation.replace(/[^0-9]/g, '')) || 500;
+
+    return [
+      {
+        id: `demo-aws-${loc.id}`,
+        name: `${loc.name.split('/')[0].trim()} AWS Station`,
+        type: 'SENSOR',
+        x: 180,
+        y: 90,
+        status: 'ONLINE',
+        value: `${loc.rainfall3h} / 3h`,
+        riskScore: Math.min(95, Math.round(loc.riskScore * 1.1)),
+        riskLevel: loc.riskLevel,
+        color: SPEC_COLORS.risk.caution,
+        trend: '↑ Active Telemetry',
+        desc: `Orographic precipitation collection point in upper ${loc.region.split('(')[0].trim()} watershed.`,
+      },
+      {
+        id: `demo-village-001`,
+        name: `${loc.region.split('(')[0].trim()} Catchment`,
+        type: 'HISTORICAL_NODE',
+        x: 320,
+        y: 60,
+        status: 'MONITORED',
+        value: loc.primaryHazard.split('&')[0].trim(),
+        riskScore: Math.round(loc.riskScore * 0.9),
+        riskLevel: loc.riskLevel,
+        color: SPEC_COLORS.risk.caution,
+        trend: 'Drainage Basin',
+        desc: `Upstream drainage basin & runoff accumulation zone for ${loc.state}.`,
+      },
+      {
+        id: loc.id,
+        name: `${loc.name} (Exposure Target)`,
+        type: 'VILLAGE',
+        x: 480,
+        y: 280,
+        status: `${loc.riskLevel}_RISK`,
+        value: `Risk: ${loc.riskScore}/100`,
+        riskScore: loc.riskScore,
+        riskLevel: loc.riskLevel,
+        color: isSafe ? SPEC_COLORS.risk.safe : SPEC_COLORS.risk.caution,
+        trend: isSafe ? 'Normal / Dry Terrain' : '↑ Rising Inundation',
+        population: loc.population,
+        desc: `Primary human settlement and infrastructure corridor in ${loc.region}.`,
+      },
+      {
+        id: `demo-shelter-${loc.id}`,
+        name: `${loc.name.split('/')[0].trim()} Community Shelter (+120m)`,
+        type: 'SHELTER',
+        x: 610,
+        y: 210,
+        status: 'READY',
+        value: 'Elevation +120m',
+        riskScore: 12.0,
+        riskLevel: 'LOW',
+        color: SPEC_COLORS.risk.safe,
+        trend: 'SAFE ZONE',
+        capacity: 450,
+        desc: `Designated elevated assembly point on high ground in ${loc.state}.`,
+      },
+      {
+        id: `demo-gauge-${loc.id}`,
+        name: `${loc.name.split('/')[1] || loc.name} Radar Gauge`,
+        type: 'GAUGE',
+        x: 360,
+        y: 220,
+        status: 'ONLINE',
+        value: loc.riverStage,
+        riskScore: Math.min(98, Math.round(loc.riskScore * 1.15)),
+        riskLevel: loc.riskLevel,
+        color: isSafe ? SPEC_COLORS.risk.safe : SPEC_COLORS.risk.danger,
+        trend: isSafe ? 'Normal Water Level' : '↑ RISING',
+        desc: `Real-time river/drainage hydrodynamic stage monitoring station for ${loc.state}.`,
+      },
+    ];
+  }, [loc]);
 
   const [fitMode, setFitMode] = useState<'MEET' | 'COVER'>('MEET');
 

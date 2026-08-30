@@ -69,25 +69,25 @@ export default function CommandCenterPage() {
             simulatedTimeStep={currentStep}
           />
 
-          {/* ── Floating Role Workspaces Trigger Button (Top Left, z-[750]) ── */}
+          {/* ── Desktop Floating Role Workspaces Trigger Button (Desktop Only) ── */}
           <Link
             href="/role-workspace"
-            className="absolute top-3 left-3 z-[750] fp fp-operational px-3 py-1.5 sm:px-3.5 sm:py-2 text-cyan-300 hover:text-white rounded-xl text-xs font-black font-mono flex items-center gap-1.5 shadow-2xl active:scale-95 transition border border-cyan-500/40"
+            className="hidden md:flex absolute top-3 left-3 z-[750] fp fp-operational px-3.5 py-2 text-cyan-300 hover:text-white rounded-xl text-xs font-black font-mono items-center gap-1.5 shadow-2xl active:scale-95 transition border border-cyan-500/40"
             title="Open Role-Adaptive Mission Workspace for 10 Statutory Roles (Hotkey: W)"
           >
             <Users className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden xs:inline">ROLES</span>
+            <span>ROLES</span>
             <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-950 text-cyan-400 font-bold border border-cyan-800">
               10
             </span>
           </Link>
 
-          {/* ── Floating Copilot Trigger Button (Top Right, z-[750]) ── */}
+          {/* ── Desktop Floating Copilot Trigger Button (Desktop Only) ── */}
           <button
             onClick={() => setCopilotOpen(true)}
-            className="absolute top-3 right-3 z-[750] btn-primary px-3 py-1.5 sm:px-4 sm:py-2 text-white rounded-xl text-xs font-black font-mono flex items-center gap-1.5 sm:gap-2 shadow-2xl active:scale-95 transition"
+            className="hidden md:flex absolute top-3 right-3 z-[750] btn-primary px-4 py-2 text-white rounded-xl text-xs font-black font-mono items-center gap-2 shadow-2xl active:scale-95 transition"
           >
-            <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-300 animate-pulse" />
+            <Bot className="w-4 h-4 text-cyan-300 animate-pulse" />
             <span>COPILOT</span>
           </button>
 
