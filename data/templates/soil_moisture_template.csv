@@ -1,0 +1,4 @@
+timestamp,latitude,longitude,location_id,depth_cm,volumetric_moisture_pct,saturation_pct,antecedent_3day_rainfall_mm,soil_type,state,district,source,data_mode,quality_status
+2026-08-28T06:00:00Z,30.5050,79.1550,LOC-UK-001,30,42.5,82.0,68.0,Colluvial Loam,Uttarakhand,Chamoli,TDR_PROBE,UPLOAD,VALID
+2026-08-28T06:00:00Z,11.5540,76.1340,LOC-KL-002,50,48.0,96.0,142.0,Lateritic Clay,Kerala,Wayanad,TDR_PROBE,UPLOAD,VALID
+2026-08-28T06:00:00Z,19.0760,72.8777,LOC-MH-003,15,38.0,98.0,95.0,Impervious Silt,Maharashtra,Mumbai Metro,SOIL_SENSOR,UPLOAD,VALID

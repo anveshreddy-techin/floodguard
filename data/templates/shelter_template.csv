@@ -1,0 +1,4 @@
+shelter_id,name,latitude,longitude,state,district,village,capacity,current_occupancy,accessibility,water_supply,medical_support,last_verified,status,data_mode
+SH-UK-001,Community High School Shelter,30.5090,79.1620,Uttarakhand,Chamoli,Sunderbans Nagar,450,45,ALL_WEATHER_ROAD,BOREWELL_FILTRATION,FIRST_AID_POST,2026-08-28T00:00:00Z,READY,UPLOAD
+SH-KL-002,Meppadi Panchayat Relief Hall,11.5580,76.1390,Kerala,Wayanad,Meppadi,600,0,PAVED_HIGHWAY,MUNICIPAL_PIPED,FULL_PARAMEDIC,2026-08-28T00:00:00Z,READY,UPLOAD
+SH-AS-003,Guwahati Elevated Multi-Purpose Shelter,26.1500,91.7450,Assam,Kamrup Metro,Guwahati,1200,0,ELEVATED_CAUSEWAY,RO_TREATED,DISASTER_HOSPITAL,2026-08-28T00:00:00Z,READY,UPLOAD

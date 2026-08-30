@@ -24,7 +24,13 @@ import {
   ShieldCheck,
   Zap,
   Flame,
-  LifeBuoy
+  LifeBuoy,
+  Globe,
+  Brain,
+  RefreshCw,
+  Server,
+  Users
+
 } from 'lucide-react';
 
 interface NavItem {
@@ -45,10 +51,10 @@ interface NavSection {
 }
 
 interface SidebarProps {
-  activeTab: string;
+  activeTab?: string;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   const navSections: NavSection[] = [
@@ -99,6 +105,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
         { id: 'challenge', label: 'Judge Challenge Mode', href: '/challenge', icon: HelpCircle, badge: 'ARENA' },
       ],
     },
+    {
+      title: 'INDIA-WIDE • NATIONAL INTELLIGENCE',
+      phaseDesc: 'Provider Registry, Pipeline & Analytics',
+      phaseColor: 'text-green-400',
+      items: [
+        { id: 'data-sources', label: 'Data Sources', href: '/data-sources', icon: Server },
+        { id: 'ingestion', label: 'Ingestion Jobs', href: '/ingestion', icon: RefreshCw },
+        { id: 'model-monitoring', label: 'ML Models', href: '/model-monitoring', icon: Brain },
+        { id: 'recovery', label: 'Recovery', href: '/recovery', icon: Zap },
+        { id: 'cross-border', label: 'Cross-Border Basins', href: '/cross-border', icon: Globe },
+        { id: 'missing-persons', label: 'Missing Persons', href: '/missing-persons', icon: Users, badge: 'PROTECTED' },
+      ],
+    },
+
   ];
 
   return (

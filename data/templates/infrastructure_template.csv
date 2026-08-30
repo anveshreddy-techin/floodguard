@@ -1,0 +1,4 @@
+asset_id,asset_type,name,latitude,longitude,state,district,status,last_inspection,elevation_m,flood_exposure_level,data_mode,notes
+ASSET-UK-01,bridge,Raini Suspension Bridge KM 0.6,30.4890,79.6880,Uttarakhand,Chamoli,OPERATIONAL,2026-08-20T00:00:00Z,1980,HIGH,UPLOAD,Vulnerable to high-velocity debris impacts
+ASSET-UK-02,hydropower,Tapovan Vishnugad Barrage Headworks,30.4950,79.6800,Uttarakhand,Chamoli,OPERATIONAL,2026-08-22T00:00:00Z,1820,EXTREME,UPLOAD,Tunnel intake monitoring active
+ASSET-KL-03,road,Chooralmala Mountain Link Road,11.5510,76.1310,Kerala,Wayanad,OPERATIONAL,2026-08-25T00:00:00Z,840,HIGH,UPLOAD,Colluvial cut-slope stability check required

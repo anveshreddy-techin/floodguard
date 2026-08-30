@@ -1,13 +1,36 @@
-# Deployment & Operations Runbook
+# FloodGuard AI — Deployment & Operations Guide
 
-## Docker Compose Stack
-- **Database:** `postgis/postgis:15-3.4` on port `5432`.
-- **API Backend:** Python 3.11 / FastAPI on port `8000`.
-- **Web Frontend:** Next.js 14 Standalone on port `3000`.
-
-## Commands
+## 1. Quick Local Setup
 ```bash
-docker compose up -d    # Start all services
-python3 -m src.db.seed  # Seed demo database
-python3 scripts/healthcheck.py # Run automated verification
+# Clone and setup repository
+git clone https://github.com/anveshreddy-techin/floodguard.git
+cd floodguard
+
+# Setup environment
+cp .env.example .env
+
+# Run full automated test suite
+make test
+
+# Launch local services with Docker Compose (PostGIS + FastAPI + Next.js)
+make docker-up
+
+# Run development mode directly
+make run
 ```
+
+## 2. Production Static Frontend Build
+```bash
+# Build Next.js static export
+cd apps/web
+npm install
+npm run build
+
+# Deploy to CDN / Surge
+npx surge --project out --domain floodguard-ai.surge.sh
+```
+
+## 3. SIH Finals Demo Credentials
+- **Admin**: `admin@floodguard.demo` / `FloodGuard2026!`
+- **Operator**: `operator@floodguard.demo` / `Operator2026!`
+- **Viewer**: `viewer@floodguard.demo` / `Viewer2026!`

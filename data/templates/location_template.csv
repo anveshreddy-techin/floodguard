@@ -1,0 +1,4 @@
+location_id,name,type,latitude,longitude,state,district,basin,elevation_m,population,data_mode
+LOC-IN-001,Raini Village,village,30.4850,79.6920,Uttarakhand,Chamoli,Alaknanda,2040,1850,UPLOAD
+LOC-IN-002,Meppadi Valley,village,11.5540,76.1340,Kerala,Wayanad,Chaliyar,890,8600,UPLOAD
+LOC-IN-003,Kurla Mithi Basin,ward,19.0760,72.8777,Maharashtra,Mumbai Metro,Mithi,8,125000,UPLOAD

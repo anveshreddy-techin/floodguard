@@ -1,0 +1,63 @@
+{
+  "type": "FeatureCollection",
+  "name": "Chamoli_Villages_Demo",
+  "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [79.6920, 30.4850] },
+      "properties": {
+        "id": "loc-uk-raini",
+        "name": "Raini Village",
+        "district": "Chamoli",
+        "state": "Uttarakhand",
+        "population": 1850,
+        "elevation_m": 2040,
+        "risk_level": "HIGH",
+        "data_mode": "DEMO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [79.6800, 30.4950] },
+      "properties": {
+        "id": "loc-uk-tapovan",
+        "name": "Tapovan Settlement",
+        "district": "Chamoli",
+        "state": "Uttarakhand",
+        "population": 2200,
+        "elevation_m": 1820,
+        "risk_level": "EXTREME",
+        "data_mode": "DEMO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [79.5645, 30.5566] },
+      "properties": {
+        "id": "loc-uk-joshimath",
+        "name": "Joshimath Town",
+        "district": "Chamoli",
+        "state": "Uttarakhand",
+        "population": 16700,
+        "elevation_m": 1890,
+        "risk_level": "MODERATE",
+        "data_mode": "DEMO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [79.1550, 30.5050] },
+      "properties": {
+        "id": "demo-village-003",
+        "name": "Sunderbans Nagar",
+        "district": "Chamoli",
+        "state": "Uttarakhand",
+        "population": 3400,
+        "elevation_m": 1240,
+        "risk_level": "HIGH",
+        "data_mode": "DEMO"
+      }
+    }
+  ]
+}

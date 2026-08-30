@@ -1,0 +1,9 @@
+timestamp,device_id,device_type,latitude,longitude,state,district,basin,variable,value,unit,battery_pct,signal_quality,source,data_mode,quality_status
+2026-08-28T06:00:00Z,AWS-001,rain_gauge,30.5050,79.1550,Uttarakhand,Chamoli,Alaknanda,rainfall_rate,16.0,mm/h,95,-65,LORA_GATEWAY_01,SIMULATION,VALID
+2026-08-28T06:00:00Z,RADAR-001,river_radar,30.4950,79.6800,Uttarakhand,Chamoli,Alaknanda,river_stage,3.80,m,89,-72,LORA_GATEWAY_01,SIMULATION,VALID
+2026-08-28T06:00:00Z,SOIL-002,soil_probe,30.5010,79.1580,Uttarakhand,Chamoli,Alaknanda,soil_moisture,82.0,pct,78,-104,LORA_GATEWAY_01,SIMULATION,VALID
+2026-08-28T06:00:00Z,GEO-001,geophone,30.4850,79.6920,Uttarakhand,Chamoli,Alaknanda,vibration_rms,0.038,g,92,-68,LORA_GATEWAY_01,SIMULATION,VALID
+2026-08-28T06:15:00Z,AWS-001,rain_gauge,30.5050,79.1550,Uttarakhand,Chamoli,Alaknanda,rainfall_rate,18.5,mm/h,95,-66,LORA_GATEWAY_01,SIMULATION,VALID
+2026-08-28T06:15:00Z,RADAR-001,river_radar,30.4950,79.6800,Uttarakhand,Chamoli,Alaknanda,river_stage,4.10,m,89,-71,LORA_GATEWAY_01,SIMULATION,VALID
+2026-08-28T06:15:00Z,SOIL-002,soil_probe,30.5010,79.1580,Uttarakhand,Chamoli,Alaknanda,soil_moisture,84.5,pct,77,-106,LORA_GATEWAY_01,SIMULATION,VALID
+2026-08-28T06:15:00Z,GEO-001,geophone,30.4850,79.6920,Uttarakhand,Chamoli,Alaknanda,vibration_rms,0.045,g,91,-69,LORA_GATEWAY_01,SIMULATION,VALID

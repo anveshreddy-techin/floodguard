@@ -1,0 +1,17 @@
+timestamp,latitude,longitude,station_id,station_name,district,state,basin,rainfall_mm,duration_minutes,intensity_mm_per_hr,source,data_mode,quality_status,notes
+2021-02-06T00:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Pre-event baseline observation
+2021-02-06T03:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Clear skies
+2021-02-06T06:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.5,60,0.5,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Trace precipitation
+2021-02-06T09:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,1.2,60,1.2,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Light snow flurries
+2021-02-06T12:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,2.0,60,2.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Light mountain drizzle
+2021-02-06T15:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,1.5,60,1.5,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Intermittent flurries
+2021-02-06T18:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.8,60,0.8,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Overcast conditions
+2021-02-06T21:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Night freeze
+2021-02-07T00:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Dry morning
+2021-02-07T03:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Zero rainfall trigger confirmed
+2021-02-07T06:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Ronti avalanche mass detached (04:30 UTC)
+2021-02-07T09:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Clear weather during surge wave
+2021-02-07T12:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Aftermath observation
+2021-02-07T15:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Dry
+2021-02-07T18:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Dry
+2021-02-07T21:00:00Z,30.5566,79.5645,AWS-JOSHI-01,Joshimath AWS,Chamoli,Uttarakhand,Alaknanda,0.0,60,0.0,IMD_DEMO_ARCHIVE,HISTORICAL,VALID,Dry
