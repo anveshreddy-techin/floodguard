@@ -35,8 +35,8 @@ export const GlobalAiAssistant: React.FC = () => {
 
   return (
     <>
-      {/* Floating Global Action Dock: SOS Rescue + AI Copilot (Mobile/Tablet Only — Desktop has Header Buttons) */}
-      <div className="md:hidden fixed bottom-20 right-3 sm:right-4 z-[750] select-none pointer-events-auto flex items-center gap-2">
+      {/* Floating Global Action Dock: SOS Rescue + AI Copilot (Accessible across EVERY page) */}
+      <div className="fixed bottom-20 right-3 sm:right-4 md:bottom-6 md:right-6 z-[750] select-none pointer-events-auto flex items-center gap-2">
         {/* Floating Emergency SOS Dispatch Trigger */}
         <button
           onClick={() => {
