@@ -63,7 +63,8 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
   const loc = adaptiveLocation || ctxLocation || LOCATIONS[0];
 
   const [activeLayer, setActiveLayer] = useState<MapLayerType>('RISK');
-  const [legendOpen, setLegendOpen] = useState<boolean>(true);
+  const [legendOpen, setLegendOpen] = useState<boolean>(false);
+  const [legendModalOpen, setLegendModalOpen] = useState<boolean>(false);
   const [hoveredNode, setHoveredNode] = useState<any>(null);
   const [particleOffset, setParticleOffset] = useState<number>(0);
   const [layerOpacity, setLayerOpacity] = useState<number>(85); // 0-100% layer transparency control
@@ -184,6 +185,15 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
 
         {/* Right Tools: 100% Full Map Toggle & Step Pill */}
         <div className="pointer-events-auto flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setLegendModalOpen(true)}
+            className="fp px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-[9px] sm:text-xs font-mono font-bold flex items-center gap-1 text-cyan-300 border-cyan-500/30 shadow-xl transition active:scale-95 shrink-0 hover:text-white"
+            title="View GIS Map Legend & Overlays"
+          >
+            <Layers className="w-3 h-3 text-cyan-400" />
+            <span>LEGEND</span>
+          </button>
+
           <button
             onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
             className={`fp px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-[9px] sm:text-xs font-mono font-bold flex items-center gap-1 shadow-xl transition active:scale-95 shrink-0 ${
@@ -520,8 +530,8 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         )}
       </div>
 
-      {/* Enhanced Legend with Spec Colors & Transparency Slider */}
-      <div className="absolute bottom-4 left-4 z-20">
+      {/* Enhanced Legend with Spec Colors & Transparency Slider (Desktop Only) */}
+      <div className="hidden md:block absolute bottom-4 left-4 z-20">
         <div 
           className="rounded-2xl shadow-2xl overflow-hidden text-xs transition-all duration-300"
           style={{
@@ -596,10 +606,93 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         </div>
       </div>
 
-      {/* Floating Coordinates & CRS Pill */}
-      <div className="absolute bottom-4 right-4 z-20 glass-panel px-3.5 py-1.5 rounded-xl text-[11px] font-mono text-cyan-300 shadow-xl border border-cyan-500/20">
+      {/* Floating Coordinates & CRS Pill (Desktop Only) */}
+      <div className="hidden md:flex absolute bottom-4 right-4 z-20 glass-panel px-3.5 py-1.5 rounded-xl text-[11px] font-mono text-cyan-300 shadow-xl border border-cyan-500/20">
         30.5050° N, 79.1550° E • WGS84 • EPSG:32644 (UTM Zone 44N)
       </div>
+
+      {/* Mobile / Fullscreen Dismissible GIS Legend Modal */}
+      {legendModalOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in select-none">
+          <div 
+            className="w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden text-xs border border-cyan-500/40 animate-slide-up"
+            style={{
+              background: '#030712',
+              boxShadow: '0 0 40px rgba(0, 168, 232, 0.35)'
+            }}
+          >
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
+              <span className="font-mono font-bold text-cyan-300 text-xs flex items-center gap-2">
+                <Layers className="w-4 h-4 text-cyan-400" />
+                GIS MAP OVERLAY & LEGEND
+              </span>
+              <button
+                onClick={() => setLegendModalOpen(false)}
+                className="w-7 h-7 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-4 space-y-3 font-mono text-xs max-h-[75vh] overflow-y-auto">
+              {/* Layer Transparency Control Slider */}
+              <div className="space-y-1 pb-2 border-b border-slate-800">
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-slate-400">Layer Opacity:</span>
+                  <span className="text-cyan-300 font-bold">{layerOpacity}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="20"
+                  max="100"
+                  value={layerOpacity}
+                  onChange={(e) => setLayerOpacity(Number(e.target.value))}
+                  className="w-full accent-cyan-400 h-1.5 bg-slate-900 rounded-lg cursor-pointer"
+                />
+              </div>
+
+              {/* Color-Coded Legend Items */}
+              <div className="space-y-2.5 text-[11px]">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(231,76,60,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.danger }} />
+                  <span className="text-slate-200">Danger Risk (&gt;75/100)</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(230,126,34,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.caution }} />
+                  <span className="text-slate-200">Caution Risk (50-75/100)</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(243,156,18,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.alert }} />
+                  <span className="text-slate-200">Alert Threshold (25-50/100)</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(46,204,113,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.safe }} />
+                  <span className="text-slate-200">Safe Assembly Area (&lt;25/100)</span>
+                </div>
+                <div className="flex items-center gap-2.5 pt-1.5 border-t border-slate-800/80">
+                  <span className="w-4 h-1.5 shadow-[0_0_8px_rgba(0,168,232,0.8)] shrink-0 rounded" style={{ backgroundColor: SPEC_COLORS.water.channel }} />
+                  <span className="text-slate-200">Active River Surge Channel</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-1 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.safe }} />
+                  <span className="text-slate-200">Candidate Escape Route</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-1 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.danger }} />
+                  <span className="text-slate-200">Blocked Riverbed Path</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setLegendModalOpen(false)}
+                className="w-full mt-2 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs font-bold transition active:scale-95"
+              >
+                CLOSE LEGEND
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
