@@ -57,14 +57,14 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
 
   return (
     <div 
-      className={`hidden md:flex absolute top-4 right-4 bottom-20 z-[700] flex-col transition-all duration-300 pointer-events-none ${
-        isDocked ? 'w-80 xl:w-[340px]' : 'w-96'
+      className={`hidden md:flex absolute top-3 right-3 max-h-[calc(100vh-135px)] z-[700] flex-col transition-all duration-300 pointer-events-none ${
+        isDocked ? 'w-80 xl:w-[330px]' : 'w-96'
       }`}
     >
       <div 
-        className="pointer-events-auto w-full h-full bg-[#0a1124]/90 backdrop-blur-xl border border-cyan-500/30 rounded-3xl p-4 flex flex-col shadow-2xl space-y-3 overflow-hidden"
+        className="pointer-events-auto w-full h-full max-h-[calc(100vh-135px)] bg-[#0a1124]/92 backdrop-blur-2xl border border-cyan-500/30 rounded-3xl p-3.5 flex flex-col shadow-2xl space-y-2.5 overflow-hidden"
         style={{
-          boxShadow: '0 10px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)'
+          boxShadow: '0 10px 40px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.08)'
         }}
       >
         {/* Panel Header with Controls */}
