@@ -218,8 +218,19 @@ export default function LoginPage() {
       {/* ── 3. CENTER HERO: BOLD PRISMA-STYLE WORDMARK & CINEMATIC DOCK ── */}
       <main className="relative z-20 px-6 sm:px-12 lg:px-16 my-auto flex flex-col items-start justify-center max-w-5xl space-y-6">
         
+        {/* Keyframes for entrance animations */}
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(40px); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+          }
+          .animate-entrance-1 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; opacity: 0; }
+          .animate-entrance-2 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; opacity: 0; }
+          .animate-entrance-3 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards; opacity: 0; }
+        `}} />
+
         {/* Subtle Category Bracket */}
-        <div className="flex items-center gap-2 text-xs font-mono text-rose-400 font-bold tracking-widest uppercase animate-fade-in">
+        <div className="flex items-center gap-2 text-xs font-mono text-rose-400 font-bold tracking-widest uppercase animate-entrance-1">
           <span className="w-6 h-[2px] bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,1)]" />
           <span>HYPER-LOCAL FLASH FLOOD INUNDATION & RESCUE INTELLIGENCE</span>
         </div>
@@ -227,7 +238,7 @@ export default function LoginPage() {
         {/* Hero Title (Bold & Dramatic like Prisma screenshot) */}
         <div className="space-y-2">
           <h1 
-            className="text-5xl sm:text-7xl lg:text-8xl font-black font-sans tracking-tight text-white leading-none drop-shadow-[0_12px_45px_rgba(0,0,0,0.9)]"
+            className="text-5xl sm:text-7xl lg:text-8xl font-black font-sans tracking-tight text-white leading-none drop-shadow-[0_12px_45px_rgba(0,0,0,0.9)] animate-entrance-2"
             style={{
               letterSpacing: '-0.04em',
             }}
@@ -235,7 +246,7 @@ export default function LoginPage() {
             FloodGuard <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-300 bg-clip-text text-transparent">AI</span>
           </h1>
           
-          <p className="text-sm sm:text-lg text-slate-200/90 font-sans max-w-2xl leading-relaxed drop-shadow-md">
+          <p className="text-sm sm:text-lg text-slate-200/90 font-sans max-w-2xl leading-relaxed drop-shadow-md animate-entrance-3">
             Physics-guided spatial intelligence, automated hydrological cascade detection, and zero-hindsight life-saving evacuation routing across 28 Indian states.
           </p>
         </div>
