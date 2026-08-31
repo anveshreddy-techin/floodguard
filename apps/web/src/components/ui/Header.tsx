@@ -229,32 +229,33 @@ export const Header: React.FC<{
               <span className="hidden xs:inline">DONATE</span>
             </button>
 
-            {/* AI Copilot Button - Desktop */}
+            {/* AI Copilot Button - Top Header (Hotkey: A) */}
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new CustomEvent('open-copilot'));
                 }
               }}
-              className="hidden sm:flex px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 items-center gap-1 shadow-[0_0_12px_rgba(6,182,212,0.3)] active:scale-95 transition shrink-0"
+              className="flex px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.35)] active:scale-95 transition shrink-0"
               title="Open Grounded AI Disaster Copilot (Hotkey: A)"
             >
               <Bot className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span>COPILOT</span>
+              <span className="hidden xs:inline">COPILOT</span>
             </button>
 
-            {/* SOS Emergency Rescue Button - Desktop */}
+            {/* SOS Emergency Rescue & Call Button - Top Header (Hotkey: E) */}
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new CustomEvent('open-emergency-modal'));
                 }
               }}
-              className="hidden sm:flex px-2.5 py-1 rounded-xl text-xs font-mono font-black bg-rose-600 hover:bg-rose-500 text-white items-center gap-1 shadow-[0_0_15px_rgba(225,29,72,0.6)] active:scale-95 transition shrink-0 animate-pulse"
-              title="Open Emergency Rescue & Helpline Dispatch (Hotkey: E)"
+              className="flex px-2.5 py-1 rounded-xl text-xs font-mono font-black bg-rose-600 hover:bg-rose-500 text-white items-center gap-1.5 shadow-[0_0_18px_rgba(225,29,72,0.6)] active:scale-95 transition shrink-0 animate-pulse"
+              title="Immediate Emergency Rescue & Disaster Helpline Dispatch (Hotkey: E)"
             >
-              <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
-              <span>SOS</span>
+              <PhoneCall className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden xs:inline">SOS CALL</span>
+              <span className="xs:hidden">SOS</span>
             </button>
           </div>
         </div>

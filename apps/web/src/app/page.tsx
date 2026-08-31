@@ -82,18 +82,9 @@ export default function CommandCenterPage() {
             </span>
           </Link>
 
-          {/* ── Desktop Floating Copilot Trigger Button (Desktop Only) ── */}
-          <button
-            onClick={() => setCopilotOpen(true)}
-            className="hidden md:flex absolute top-3 right-3 z-[750] btn-primary px-4 py-2 text-white rounded-xl text-xs font-black font-mono items-center gap-2 shadow-2xl active:scale-95 transition"
-          >
-            <Bot className="w-4 h-4 text-cyan-300 animate-pulse" />
-            <span>COPILOT</span>
-          </button>
-
           {/* ── Citizen Role Floating Guidance HUD (When role is CITIZEN) ── */}
           {isCitizen && (
-            <div className="absolute top-16 left-3 right-3 sm:right-auto sm:w-80 z-[700] bg-slate-950/95 border border-cyan-500/40 rounded-2xl p-4 shadow-2xl backdrop-blur-xl space-y-3">
+            <div className="absolute top-16 left-3 right-3 sm:right-auto sm:w-80 z-[450] bg-slate-950/95 border border-cyan-500/40 rounded-2xl p-4 shadow-2xl backdrop-blur-xl space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-cyan-300 font-bold flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-cyan-400" /> {t('what_to_do')}
