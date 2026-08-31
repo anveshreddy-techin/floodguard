@@ -31,7 +31,8 @@ import {
   Server,
   Users,
   Waves,
-  CloudRain
+  CloudRain,
+  Heart
 } from 'lucide-react';
 
 interface NavItem {
@@ -66,6 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       items: [
         { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, shortcut: 'M', badge: 'LIVE' },
         { id: 'role-workspace', label: 'Role Workspaces', href: '/role-workspace', icon: Users, badge: '10 ROLES' },
+        { id: 'donate', label: 'Disaster Relief Funds', href: '/donate', icon: Heart, badge: '80G EXEMPT' },
         { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, shortcut: 'S', badge: 'HUD' },
         { id: 'incidents', label: 'Incident Command', href: '/incidents', icon: FileText },
       ],

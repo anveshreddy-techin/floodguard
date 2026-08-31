@@ -11,8 +11,9 @@ import { LANGUAGES, SupportedLanguage } from '@/data/i18n';
 import {
   Search, Globe, Menu, Bot, UserCheck, ShieldAlert,
   MapPin, Radio, PhoneCall, Compass, AlertTriangle,
-  ChevronRight, Sparkles
+  ChevronRight, Sparkles, Heart
 } from 'lucide-react';
+import { DonateModal } from '@/components/ui/donate/DonateModal';
 
 export const Header: React.FC<{
   dataMode?: string;
@@ -21,6 +22,7 @@ export const Header: React.FC<{
 }> = ({ dataMode = 'DEMO', systemStatus = 'OPERATIONAL', onOpenCopilot }) => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [donateModalOpen, setDonateModalOpen] = useState(false);
   
   const { selectedLocation, selectLocationById } = useLocation();
   const {
@@ -61,6 +63,12 @@ export const Header: React.FC<{
     const nextIndex = (currentIndex + 1) % LANGUAGES.length;
     setLanguage(LANGUAGES[nextIndex].code);
   };
+
+  React.useEffect(() => {
+    const handleOpenDonate = () => setDonateModalOpen(true);
+    window.addEventListener('open-donate-modal', handleOpenDonate);
+    return () => window.removeEventListener('open-donate-modal', handleOpenDonate);
+  }, []);
 
   return (
     <>
@@ -211,6 +219,16 @@ export const Header: React.FC<{
               <Search className="w-3.5 h-3.5" />
             </button>
 
+            {/* Disaster Relief Donation Button */}
+            <button
+              onClick={() => setDonateModalOpen(true)}
+              className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-rose-950/80 hover:bg-rose-900 border border-rose-500/70 text-rose-300 flex items-center gap-1 shadow-[0_0_12px_rgba(244,63,94,0.3)] active:scale-95 transition shrink-0"
+              title="Donate to Disaster Relief Funds (80G Tax Exempt)"
+            >
+              <Heart className="w-3.5 h-3.5 fill-rose-500/50 text-rose-400 animate-pulse" />
+              <span className="hidden xs:inline">DONATE</span>
+            </button>
+
             {/* AI Copilot Button - Desktop */}
             <button
               onClick={() => {
@@ -323,6 +341,12 @@ export const Header: React.FC<{
       <MobileNavDrawer
         isOpen={mobileDrawerOpen}
         onClose={() => setMobileDrawerOpen(false)}
+      />
+
+      {/* Global Disaster Relief Donation Modal */}
+      <DonateModal
+        isOpen={donateModalOpen}
+        onClose={() => setDonateModalOpen(false)}
       />
     </>
   );
