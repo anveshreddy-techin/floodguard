@@ -64,7 +64,6 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
 
   const [activeLayer, setActiveLayer] = useState<MapLayerType>('RISK');
   const [legendOpen, setLegendOpen] = useState<boolean>(false);
-  const [legendModalOpen, setLegendModalOpen] = useState<boolean>(false);
   const [hoveredNode, setHoveredNode] = useState<any>(null);
   const [particleOffset, setParticleOffset] = useState<number>(0);
   const [layerOpacity, setLayerOpacity] = useState<number>(85); // 0-100% layer transparency control
@@ -185,15 +184,6 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
 
         {/* Right Tools: 100% Full Map Toggle & Step Pill */}
         <div className="pointer-events-auto flex items-center gap-1.5 shrink-0">
-          <button
-            onClick={() => setLegendModalOpen(true)}
-            className="fp px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-[9px] sm:text-xs font-mono font-bold flex items-center gap-1 text-cyan-300 border-cyan-500/30 shadow-xl transition active:scale-95 shrink-0 hover:text-white"
-            title="View GIS Map Legend & Overlays"
-          >
-            <Layers className="w-3 h-3 text-cyan-400" />
-            <span>LEGEND</span>
-          </button>
-
           <button
             onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
             className={`fp px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-[9px] sm:text-xs font-mono font-bold flex items-center gap-1 shadow-xl transition active:scale-95 shrink-0 ${
@@ -530,114 +520,51 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         )}
       </div>
 
-      {/* Enhanced Legend with Spec Colors & Transparency Slider (Desktop Only) */}
-      <div className="hidden md:block absolute bottom-4 left-4 z-20">
-        <div 
-          className="rounded-2xl shadow-2xl overflow-hidden text-xs transition-all duration-300"
-          style={{
-            background: 'rgba(10, 18, 36, 0.88)',
-            backdropFilter: 'blur(16px)',
-            border: '2px solid #00A8E8',
-            boxShadow: '0 0 20px rgba(0, 168, 232, 0.25)'
-          }}
-        >
-          <div
-            onClick={() => setLegendOpen(!legendOpen)}
-            className="px-4 py-2.5 border-b border-cyan-500/20 flex items-center justify-between gap-3 cursor-pointer hover:bg-slate-800/60 transition"
+      {/* ── Sleek Unobtrusive Collapsible GIS Legend & Opacity (100% Clear Vision on Mobile) ── */}
+      <div className="absolute bottom-20 left-3 sm:bottom-4 sm:left-4 z-30 pointer-events-auto">
+        {!legendOpen ? (
+          <button
+            onClick={() => setLegendOpen(true)}
+            className="px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-mono font-bold text-cyan-300 bg-slate-950/85 hover:bg-slate-900 border border-cyan-500/30 hover:border-cyan-400/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] backdrop-blur-xl flex items-center gap-1.5 transition active:scale-95 group"
+            title="Show GIS Map Legend & Layer Opacity"
           >
-            <span className="font-mono font-bold text-cyan-300 text-xs flex items-center gap-2">
-              <Layers className="w-4 h-4 text-cyan-400 animate-pulse" />
-              GIS MAP OVERLAY & LEGEND
+            <Layers className="w-3.5 h-3.5 text-cyan-400 group-hover:animate-pulse shrink-0" />
+            <span>LEGEND & OPACITY</span>
+            <span className="px-1.5 py-0.2 rounded bg-cyan-950 text-[9px] text-cyan-400 border border-cyan-800/80">
+              {layerOpacity}%
             </span>
-            {legendOpen ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronUp className="w-4 h-4 text-slate-400" />}
-          </div>
-
-          {legendOpen && (
-            <div className="p-4 space-y-3 font-mono text-xs">
-              {/* Layer Transparency Control Slider */}
-              <div className="space-y-1 pb-2 border-b border-slate-800">
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400">Layer Opacity:</span>
-                  <span className="text-cyan-300 font-bold">{layerOpacity}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="20"
-                  max="100"
-                  value={layerOpacity}
-                  onChange={(e) => setLayerOpacity(Number(e.target.value))}
-                  className="w-full accent-cyan-400 h-1.5 bg-slate-900 rounded-lg cursor-pointer"
-                />
-              </div>
-
-              {/* Color-Coded Legend Items */}
-              <div className="space-y-2 text-[11px]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(231,76,60,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.danger }} />
-                  <span className="text-slate-200">Danger Risk (&gt;75/100)</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(230,126,34,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.caution }} />
-                  <span className="text-slate-200">Caution Risk (50-75/100)</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(243,156,18,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.alert }} />
-                  <span className="text-slate-200">Alert Threshold (25-50/100)</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(46,204,113,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.safe }} />
-                  <span className="text-slate-200">Safe Assembly Area (&lt;25/100)</span>
-                </div>
-                <div className="flex items-center gap-2.5 pt-1 border-t border-slate-800/80">
-                  <span className="w-4 h-1.5 shadow-[0_0_8px_rgba(0,168,232,0.8)] shrink-0 rounded" style={{ backgroundColor: SPEC_COLORS.water.channel }} />
-                  <span className="text-slate-200">Active River Surge Channel</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-4 h-1 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.safe }} />
-                  <span className="text-slate-200">Candidate Escape Route</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-4 h-1 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.danger }} />
-                  <span className="text-slate-200">Blocked Riverbed Path</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Floating Coordinates & CRS Pill (Desktop Only) */}
-      <div className="hidden md:flex absolute bottom-4 right-4 z-20 glass-panel px-3.5 py-1.5 rounded-xl text-[11px] font-mono text-cyan-300 shadow-xl border border-cyan-500/20">
-        30.5050° N, 79.1550° E • WGS84 • EPSG:32644 (UTM Zone 44N)
-      </div>
-
-      {/* Mobile / Fullscreen Dismissible GIS Legend Modal */}
-      {legendModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in select-none">
+            <ChevronUp className="w-3.5 h-3.5 text-slate-400 group-hover:text-white" />
+          </button>
+        ) : (
           <div 
-            className="w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden text-xs border border-cyan-500/40 animate-slide-up"
+            className="rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8)] overflow-hidden text-xs transition-all duration-300 w-[260px] sm:w-[280px] max-w-[calc(100vw-24px)] animate-slide-up"
             style={{
-              background: '#030712',
-              boxShadow: '0 0 40px rgba(0, 168, 232, 0.35)'
+              background: 'rgba(3, 7, 18, 0.92)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(6, 182, 212, 0.4)',
             }}
           >
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
-              <span className="font-mono font-bold text-cyan-300 text-xs flex items-center gap-2">
-                <Layers className="w-4 h-4 text-cyan-400" />
+            <div
+              onClick={() => setLegendOpen(false)}
+              className="px-3 py-2 border-b border-slate-800 flex items-center justify-between gap-2 cursor-pointer hover:bg-slate-900/80 transition"
+            >
+              <span className="font-mono font-bold text-cyan-300 text-[10px] sm:text-[11px] flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-cyan-400" />
                 GIS MAP OVERLAY & LEGEND
               </span>
-              <button
-                onClick={() => setLegendModalOpen(false)}
-                className="w-7 h-7 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white"
+              <button 
+                onClick={(e) => { e.stopPropagation(); setLegendOpen(false); }}
+                className="w-5 h-5 rounded-md bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition"
+                title="Collapse Legend"
               >
-                ✕
+                <ChevronDown className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="p-4 space-y-3 font-mono text-xs max-h-[75vh] overflow-y-auto">
+            <div className="p-3 space-y-2.5 font-mono text-[10px] sm:text-[11px]">
               {/* Layer Transparency Control Slider */}
-              <div className="space-y-1 pb-2 border-b border-slate-800">
-                <div className="flex justify-between text-[11px]">
+              <div className="space-y-1 pb-2 border-b border-slate-800/80">
+                <div className="flex justify-between text-[10px]">
                   <span className="text-slate-400">Layer Opacity:</span>
                   <span className="text-cyan-300 font-bold">{layerOpacity}%</span>
                 </div>
@@ -647,52 +574,46 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
                   max="100"
                   value={layerOpacity}
                   onChange={(e) => setLayerOpacity(Number(e.target.value))}
-                  className="w-full accent-cyan-400 h-1.5 bg-slate-900 rounded-lg cursor-pointer"
+                  className="w-full accent-cyan-400 h-1 bg-slate-900 rounded-lg cursor-pointer"
                 />
               </div>
 
-              {/* Color-Coded Legend Items */}
-              <div className="space-y-2.5 text-[11px]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(231,76,60,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.danger }} />
+              {/* Compact Color-Coded Legend Items */}
+              <div className="grid grid-cols-1 gap-1 text-[10px]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(231,76,60,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.danger }} />
                   <span className="text-slate-200">Danger Risk (&gt;75/100)</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(230,126,34,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.caution }} />
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(230,126,34,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.caution }} />
                   <span className="text-slate-200">Caution Risk (50-75/100)</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(243,156,18,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.alert }} />
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(243,156,18,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.alert }} />
                   <span className="text-slate-200">Alert Threshold (25-50/100)</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3.5 h-3.5 rounded-full shadow-[0_0_8px_rgba(46,204,113,0.8)] shrink-0" style={{ backgroundColor: SPEC_COLORS.risk.safe }} />
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(46,204,113,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.safe }} />
                   <span className="text-slate-200">Safe Assembly Area (&lt;25/100)</span>
                 </div>
-                <div className="flex items-center gap-2.5 pt-1.5 border-t border-slate-800/80">
-                  <span className="w-4 h-1.5 shadow-[0_0_8px_rgba(0,168,232,0.8)] shrink-0 rounded" style={{ backgroundColor: SPEC_COLORS.water.channel }} />
-                  <span className="text-slate-200">Active River Surge Channel</span>
+                <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+                  <span className="w-3.5 h-1 rounded shrink-0" style={{ backgroundColor: SPEC_COLORS.water.channel }} />
+                  <span className="text-slate-300">Active River Surge Channel</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-4 h-1 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.safe }} />
-                  <span className="text-slate-200">Candidate Escape Route</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-4 h-1 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.danger }} />
-                  <span className="text-slate-200">Blocked Riverbed Path</span>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-0.5 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.safe }} />
+                  <span className="text-slate-300">Candidate Escape Route</span>
                 </div>
               </div>
-
-              <button
-                onClick={() => setLegendModalOpen(false)}
-                className="w-full mt-2 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs font-bold transition active:scale-95"
-              >
-                CLOSE LEGEND
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* Floating Coordinates & CRS Pill (Desktop Only to Avoid Mobile Clutter) */}
+      <div className="hidden md:block absolute bottom-4 right-4 z-20 glass-panel px-3 py-1 rounded-xl text-[10px] font-mono text-cyan-300/80 shadow-xl border border-cyan-500/20">
+        30.5050° N, 79.1550° E • WGS84 • EPSG:32644 (UTM Zone 44N)
+      </div>
     </div>
   );
 };
