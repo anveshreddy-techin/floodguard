@@ -26,9 +26,10 @@ import {
   Zap,
   Globe,
   Sliders,
-  Maximize2
+  Maximize2,
+  AlertTriangle
 } from 'lucide-react';
-import { AnimatedRiverScene } from '@/components/ui/login/AnimatedRiverScene';
+import { AnimatedRiverScene, FloodStage } from '@/components/ui/login/AnimatedRiverScene';
 
 type SceneType = 'HIMALAYAN_MIST' | 'BRAHMAPUTRA_SURGE' | 'RADAR_CYBER';
 
@@ -45,6 +46,7 @@ export default function LoginPage() {
   
   // Interactive Atmosphere & Visual Controls
   const [activeScene, setActiveScene] = useState<SceneType>('HIMALAYAN_MIST');
+  const [floodStage, setFloodStage] = useState<FloodStage>('FLASH_FLOOD_EXTREME');
   const [isPlaying, setIsPlaying] = useState(true);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -67,7 +69,7 @@ export default function LoginPage() {
     setMousePos({ x, y });
   };
 
-  // Ambient sound synthesizer using native Web Audio API (rain + mountain river torrent)
+  // Ambient sound synthesizer using native Web Audio API (surging river torrent & flood resonance)
   const toggleAudio = () => {
     if (audioPlaying) {
       if (audioContextRef.current) {
@@ -81,7 +83,7 @@ export default function LoginPage() {
           const ctx = new AudioContextClass();
           audioContextRef.current = ctx;
 
-          // Generate filtered pink noise for realistic rain & river stream
+          // Generate filtered pink noise for realistic flood torrent surge
           const bufferSize = ctx.sampleRate * 2;
           const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
           const output = noiseBuffer.getChannelData(0);
@@ -95,7 +97,7 @@ export default function LoginPage() {
             b3 = 0.86650 * b3 + white * 0.3104856;
             b4 = 0.55000 * b4 + white * 0.5329522;
             b5 = -0.7616 * b5 - white * 0.0168980;
-            output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.04;
+            output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.05;
             b6 = white * 0.115926;
           }
 
@@ -105,10 +107,10 @@ export default function LoginPage() {
 
           const filter = ctx.createBiquadFilter();
           filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(750, ctx.currentTime);
+          filter.frequency.setValueAtTime(650, ctx.currentTime);
 
           const gain = ctx.createGain();
-          gain.gain.setValueAtTime(0.25, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
           gainNodeRef.current = gain;
 
           whiteNoise.connect(filter);
@@ -147,9 +149,10 @@ export default function LoginPage() {
       onMouseMove={handleMouseMove}
       className="relative min-h-screen w-full overflow-hidden bg-[#020714] text-white select-none flex flex-col justify-between"
     >
-      {/* ── 1. REAL-TIME 60FPS ANIMATED LIVING RIVER & MIST CANVASES ── */}
+      {/* ── 1. REAL-TIME 60FPS ANIMATED FLASH FLOOD SURGE & INUNDATION CANVASES ── */}
       <AnimatedRiverScene
         sceneType={activeScene}
+        floodStage={floodStage}
         mousePos={mousePos}
         isPlaying={isPlaying}
       />
@@ -159,51 +162,64 @@ export default function LoginPage() {
       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#020714]/80 to-transparent pointer-events-none" />
 
       {/* ── 2. TOP NAV BAR: BRAND & LIVE TELEMETRY CHIP ── */}
-      <header className="relative z-20 px-4 sm:px-8 lg:px-12 py-5 flex items-center justify-between">
+      <header className="relative z-20 px-4 sm:px-8 lg:px-12 py-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping shadow-[0_0_15px_rgba(6,182,212,1)] shrink-0" />
+          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 animate-ping shadow-[0_0_15px_rgba(244,63,94,1)] shrink-0" />
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs font-black tracking-widest text-cyan-300 uppercase">
               FLOODGUARD • SPATIAL INTELLIGENCE
             </span>
-            <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-800/80 text-[10px] font-mono text-cyan-300 font-bold">
-              SIH26192 PROTOTYPE
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-rose-950/80 border border-rose-800/80 text-[10px] font-mono text-rose-300 font-bold">
+              FLASH FLOOD SIMULATION ACTIVE
             </span>
           </div>
         </div>
 
-        {/* Scene Selector & Motion Control Pill */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/80 border border-slate-800/80 backdrop-blur-xl text-xs font-mono shadow-2xl">
+        {/* Flood Surge Stage & Motion Control Pill */}
+        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/85 border border-slate-800/80 backdrop-blur-xl text-xs font-mono shadow-2xl">
+          {/* Flood Stage Selector */}
           <button
-            onClick={() => setActiveScene('HIMALAYAN_MIST')}
-            className={`px-2.5 sm:px-3 py-1 rounded-xl transition ${
-              activeScene === 'HIMALAYAN_MIST' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shadow-sm' : 'text-slate-400 hover:text-white'
+            onClick={() => setFloodStage('FLASH_FLOOD_EXTREME')}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl transition flex items-center gap-1 ${
+              floodStage === 'FLASH_FLOOD_EXTREME'
+                ? 'bg-rose-600/30 text-rose-300 border border-rose-500/50 font-bold shadow-sm'
+                : 'text-slate-400 hover:text-white'
             }`}
+            title="Extreme Inundation Surge (Stage 6.8m)"
           >
-            🏔️ Alpine River
+            <AlertTriangle className="w-3 h-3 text-rose-400 animate-pulse" />
+            <span>Extreme Flood</span>
           </button>
+
           <button
-            onClick={() => setActiveScene('BRAHMAPUTRA_SURGE')}
+            onClick={() => setFloodStage('WARNING_SURGE')}
             className={`px-2.5 sm:px-3 py-1 rounded-xl transition ${
-              activeScene === 'BRAHMAPUTRA_SURGE' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm' : 'text-slate-400 hover:text-white'
+              floodStage === 'WARNING_SURGE'
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm'
+                : 'text-slate-400 hover:text-white'
             }`}
+            title="Warning Stage Surge (Stage 4.2m)"
           >
-            🌊 River Surge
+            ⚠️ Warning Surge
           </button>
+
           <button
-            onClick={() => setActiveScene('RADAR_CYBER')}
-            className={`hidden md:block px-3 py-1 rounded-xl transition ${
-              activeScene === 'RADAR_CYBER' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold shadow-sm' : 'text-slate-400 hover:text-white'
+            onClick={() => setFloodStage('MODERATE_FLOW')}
+            className={`hidden sm:block px-2.5 sm:px-3 py-1 rounded-xl transition ${
+              floodStage === 'MODERATE_FLOW'
+                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
+                : 'text-slate-400 hover:text-white'
             }`}
+            title="Normal Hydrological Flow (Stage 2.4m)"
           >
-            ⚡ Doppler Radar
+            🌊 Normal Flow
           </button>
 
           {/* Animation Motion Play/Pause */}
           <button
             onClick={() => setIsPlaying(!isPlaying)}
             className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 transition"
-            title={isPlaying ? 'Pause River Motion' : 'Resume River Motion'}
+            title={isPlaying ? 'Pause Flood Surge' : 'Resume Flood Surge'}
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 text-cyan-400" />}
           </button>
@@ -214,9 +230,9 @@ export default function LoginPage() {
       <main className="relative z-20 px-6 sm:px-12 lg:px-16 my-auto flex flex-col items-start justify-center max-w-5xl space-y-6">
         
         {/* Subtle Category Bracket */}
-        <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 font-bold tracking-widest uppercase animate-fade-in">
-          <span className="w-6 h-[2px] bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,1)]" />
-          <span>HYPER-LOCAL RIVER TORRENT & CASCADE WARNING SYSTEM</span>
+        <div className="flex items-center gap-2 text-xs font-mono text-rose-400 font-bold tracking-widest uppercase animate-fade-in">
+          <span className="w-6 h-[2px] bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,1)]" />
+          <span>HYPER-LOCAL FLASH FLOOD INUNDATION & RESCUE INTELLIGENCE</span>
         </div>
 
         {/* Hero Title (Bold & Dramatic like Prisma screenshot) */}
@@ -258,18 +274,18 @@ export default function LoginPage() {
             <span>Officer Authentication</span>
           </button>
 
-          {/* Audio Ambient Toggle (Rain & Mountain Wind) */}
+          {/* Audio Ambient Toggle (Flood Torrent Surge Audio) */}
           <button
             onClick={toggleAudio}
             className={`p-3.5 rounded-full border transition active:scale-95 flex items-center gap-2 text-xs font-mono backdrop-blur-xl ${
               audioPlaying
-                ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.4)]'
+                ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
                 : 'bg-slate-950/85 text-slate-400 border-slate-800 hover:text-white'
             }`}
-            title="Toggle Ambient Mountain River & Rain Soundscape"
+            title="Toggle Ambient Flood Torrent & River Soundscape"
           >
-            {audioPlaying ? <Volume2 className="w-4 h-4 text-cyan-400 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
-            <span className="hidden sm:inline">{audioPlaying ? 'River Audio: ON' : 'Audio Soundscape'}</span>
+            {audioPlaying ? <Volume2 className="w-4 h-4 text-rose-400 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+            <span className="hidden sm:inline">{audioPlaying ? 'Flood Torrent: ON' : 'Audio Soundscape'}</span>
           </button>
         </div>
 
@@ -300,9 +316,9 @@ export default function LoginPage() {
       {/* ── 5. BOTTOM FLOATING STATUS BAR & CREDENTIALS STRIP ── */}
       <footer className="relative z-20 px-6 sm:px-12 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-900/80 bg-slate-950/70 backdrop-blur-xl text-xs font-mono text-slate-400">
         <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5 text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            LIVE TELEMETRY: ALAKNANDA & CHAMOLI BASIN
+          <span className="flex items-center gap-1.5 text-rose-400">
+            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+            FLASH FLOOD SURGE INUNDATION: 6.8m (EXTREME PRE-CONDITION)
           </span>
           <span className="hidden md:inline text-slate-600">•</span>
           <span className="hidden md:inline text-slate-300">Composite Risk: 68.5 (HIGH) • Antecedent Rain: 48mm</span>
