@@ -7,14 +7,12 @@ export type FloodStage = 'MODERATE_FLOW' | 'WARNING_SURGE' | 'FLASH_FLOOD_EXTREM
 interface AnimatedRiverSceneProps {
   sceneType: 'HIMALAYAN_MIST' | 'BRAHMAPUTRA_SURGE' | 'RADAR_CYBER';
   floodStage?: FloodStage;
-  mousePos: { x: number; y: number };
   isPlaying?: boolean;
 }
 
 export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
   sceneType,
   floodStage = 'FLASH_FLOOD_EXTREME',
-  mousePos,
   isPlaying = true,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -128,8 +126,8 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.fillRect(0, 0, width, height);
 
       // ── B. ATMOSPHERIC STORM LIGHTING & GOD RAYS ──
-      const sunX = width * 0.5 + mousePos.x * 0.7;
-      const sunY = height * 0.12 + mousePos.y * 0.4;
+      const sunX = width * 0.5;
+      const sunY = height * 0.12;
       const stormGrad = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, width * 0.55);
       stormGrad.addColorStop(0, isExtreme ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255, 245, 220, 0.22)');
       stormGrad.addColorStop(0.4, isExtreme ? 'rgba(6, 182, 212, 0.12)' : 'rgba(56, 189, 248, 0.08)');
@@ -423,7 +421,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [sceneType, floodStage, mousePos, isPlaying]);
+  }, [sceneType, floodStage, isPlaying]);
 
   return (
     <canvas

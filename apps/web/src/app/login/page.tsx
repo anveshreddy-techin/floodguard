@@ -50,7 +50,6 @@ export default function LoginPage() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Web Audio Rain/Wind Synth Ref
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -60,14 +59,6 @@ export default function LoginPage() {
     setPage('login');
     setMode('DEMO');
   }, [setPage, setMode]);
-
-  // Track mouse for subtle parallax movement
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { innerWidth, innerHeight } = window;
-    const x = (e.clientX / innerWidth - 0.5) * 20;
-    const y = (e.clientY / innerHeight - 0.5) * 20;
-    setMousePos({ x, y });
-  };
 
   // Ambient sound synthesizer using native Web Audio API (surging river torrent & flood resonance)
   const toggleAudio = () => {
@@ -146,14 +137,12 @@ export default function LoginPage() {
 
   return (
     <div 
-      onMouseMove={handleMouseMove}
       className="relative min-h-screen w-full overflow-hidden bg-[#020714] text-white select-none flex flex-col justify-between"
     >
       {/* ── 1. REAL-TIME 60FPS ANIMATED FLASH FLOOD SURGE & INUNDATION CANVASES ── */}
       <AnimatedRiverScene
         sceneType={activeScene}
         floodStage={floodStage}
-        mousePos={mousePos}
         isPlaying={isPlaying}
       />
 
