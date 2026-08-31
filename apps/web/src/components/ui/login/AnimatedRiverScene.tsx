@@ -345,63 +345,67 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.restore();
 
       // ── G. REALISTIC RAINDROPS & SPLASH RIPPLES (Falling over Floodwaters) ──
-      ctx.save();
-      const rainAngle = 0.22; // ~12.5 degree slant
-      const cosAngle = Math.cos(rainAngle);
-      const sinAngle = Math.sin(rainAngle);
+      const isMobile = width < 768; // Detect mobile screens
 
-      raindrops.forEach((drop) => {
-        if (isPlaying) {
-          drop.x += sinAngle * drop.speed;
-          drop.y += cosAngle * drop.speed;
+      if (!isMobile) {
+        ctx.save();
+        const rainAngle = 0.22; // ~12.5 degree slant
+        const cosAngle = Math.cos(rainAngle);
+        const sinAngle = Math.sin(rainAngle);
 
-          // When drop hits surging floodwater or lower valley, generate water splash ripple
-          if (drop.y > height * 0.6 && Math.random() < 0.05) {
-            splashes.push({
-              x: drop.x,
-              y: drop.y,
-              radius: 1,
-              maxRadius: 8 + Math.random() * 12,
-              opacity: 0.6,
-            });
+        raindrops.forEach((drop) => {
+          if (isPlaying) {
+            drop.x += sinAngle * drop.speed;
+            drop.y += cosAngle * drop.speed;
+
+            // When drop hits surging floodwater or lower valley, generate water splash ripple
+            if (drop.y > height * 0.6 && Math.random() < 0.05) {
+              splashes.push({
+                x: drop.x,
+                y: drop.y,
+                radius: 1,
+                maxRadius: 8 + Math.random() * 12,
+                opacity: 0.6,
+              });
+            }
+
+            // Reset raindrop at top when leaving screen
+            if (drop.y > height + 50 || drop.x > width + 100) {
+              drop.y = -drop.length - Math.random() * 80;
+              drop.x = Math.random() * (width + 250) - 100;
+            }
           }
 
-          // Reset raindrop at top when leaving screen
-          if (drop.y > height + 50 || drop.x > width + 100) {
-            drop.y = -drop.length - Math.random() * 80;
-            drop.x = Math.random() * (width + 250) - 100;
-          }
-        }
-
-        // Draw raindrop streak
-        ctx.beginPath();
-        ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x + sinAngle * drop.length, drop.y + cosAngle * drop.length);
-        ctx.strokeStyle = `rgba(186, 230, 253, ${drop.opacity})`;
-        ctx.lineWidth = drop.width;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-      });
-
-      // Draw water ripple splashes
-      for (let i = splashes.length - 1; i >= 0; i--) {
-        const s = splashes[i];
-        if (isPlaying) {
-          s.radius += 0.7;
-          s.opacity -= 0.035;
-        }
-
-        if (s.opacity <= 0 || s.radius >= s.maxRadius) {
-          splashes.splice(i, 1);
-        } else {
+          // Draw raindrop streak
           ctx.beginPath();
-          ctx.ellipse(s.x, s.y, s.radius, s.radius * 0.35, 0, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(224, 242, 254, ${s.opacity})`;
-          ctx.lineWidth = 1;
+          ctx.moveTo(drop.x, drop.y);
+          ctx.lineTo(drop.x + sinAngle * drop.length, drop.y + cosAngle * drop.length);
+          ctx.strokeStyle = `rgba(186, 230, 253, ${drop.opacity})`;
+          ctx.lineWidth = drop.width;
+          ctx.lineCap = 'round';
           ctx.stroke();
+        });
+
+        // Draw water ripple splashes
+        for (let i = splashes.length - 1; i >= 0; i--) {
+          const s = splashes[i];
+          if (isPlaying) {
+            s.radius += 0.7;
+            s.opacity -= 0.035;
+          }
+
+          if (s.opacity <= 0 || s.radius >= s.maxRadius) {
+            splashes.splice(i, 1);
+          } else {
+            ctx.beginPath();
+            ctx.ellipse(s.x, s.y, s.radius, s.radius * 0.35, 0, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(224, 242, 254, ${s.opacity})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
         }
+        ctx.restore();
       }
-      ctx.restore();
 
       // ── H. DEEP VIGNETTE CONTRAST ──
       const vignette = ctx.createRadialGradient(width * 0.5, height * 0.5, width * 0.35, width * 0.5, height * 0.5, width * 0.8);
