@@ -36,20 +36,53 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
     };
     window.addEventListener('resize', handleResize);
 
-    // Flood surge physics particles: rapid water foam crests, debris, turbulence vortices
+    // ── 1. RAINDROP & SPLASH SYSTEM ──
+    interface Raindrop {
+      x: number;
+      y: number;
+      length: number;
+      speed: number;
+      opacity: number;
+      width: number;
+    }
+
+    interface Splash {
+      x: number;
+      y: number;
+      radius: number;
+      maxRadius: number;
+      opacity: number;
+    }
+
+    const raindrops: Raindrop[] = [];
+    const splashes: Splash[] = [];
+    const rainCount = floodStage === 'FLASH_FLOOD_EXTREME' ? 160 : floodStage === 'WARNING_SURGE' ? 110 : 70;
+
+    for (let i = 0; i < rainCount; i++) {
+      raindrops.push({
+        x: Math.random() * (width + 250) - 100,
+        y: Math.random() * height,
+        length: 20 + Math.random() * 32,
+        speed: 16 + Math.random() * 16,
+        opacity: 0.3 + Math.random() * 0.45,
+        width: 1 + Math.random() * 1.2,
+      });
+    }
+
+    // ── 2. FLOOD SURGE PARTICLES (Whitewater Foam, Spray & Vortices) ──
     interface SurgeParticle {
       t: number; // position along flood channel (0 to 1)
       offset: number; // lateral offset (-1 to 1)
       speed: number;
       size: number;
       alpha: number;
-      type: 'FOAM' | 'SPRAY' | 'DEBRIS' | 'VORTEX';
+      type: 'FOAM' | 'SPRAY' | 'VORTEX';
     }
 
     const surgeParticles: SurgeParticle[] = [];
-    const particleCount = floodStage === 'FLASH_FLOOD_EXTREME' ? 120 : floodStage === 'WARNING_SURGE' ? 70 : 40;
+    const surgeParticleCount = floodStage === 'FLASH_FLOOD_EXTREME' ? 120 : floodStage === 'WARNING_SURGE' ? 70 : 40;
 
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; i < surgeParticleCount; i++) {
       surgeParticles.push({
         t: Math.random(),
         offset: (Math.random() - 0.5) * 1.8,
@@ -73,10 +106,9 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       const surgeMultiplier = isExtreme ? 2.2 : isWarning ? 1.5 : 1.0;
       const surgeSpeed = isExtreme ? 5.5 : isWarning ? 3.8 : 2.5;
 
-      // ── 1. DRAMATIC ATMOSPHERIC FLOOD SKY GRADIENT ──
+      // ── A. ATMOSPHERIC STORM SKY GRADIENT ──
       let skyGrad = ctx.createLinearGradient(0, 0, 0, height);
       if (isExtreme) {
-        // Severe convective storm atmosphere with hazard tint
         skyGrad.addColorStop(0, '#040b17');
         skyGrad.addColorStop(0.3, '#0c1f38');
         skyGrad.addColorStop(0.6, '#132e4f');
@@ -95,7 +127,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // ── 2. ATMOSPHERIC STORM LIGHTING & GOD RAYS ──
+      // ── B. ATMOSPHERIC STORM LIGHTING & GOD RAYS ──
       const sunX = width * 0.5 + mousePos.x * 0.7;
       const sunY = height * 0.12 + mousePos.y * 0.4;
       const stormGrad = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, width * 0.55);
@@ -105,7 +137,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.fillStyle = stormGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // ── 3. DISTANT MOUNTAIN RIDGES ──
+      // ── C. DISTANT MOUNTAIN RIDGES ──
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height * 0.52);
@@ -126,7 +158,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.fill();
       ctx.restore();
 
-      // ── 4. MID-GROUND CATCHMENT SLOPES ──
+      // ── D. MID-GROUND CATCHMENT SLOPES ──
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height * 0.62);
@@ -147,7 +179,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.fill();
       ctx.restore();
 
-      // ── 5. FOREGROUND CANYON GORGE WALLS ──
+      // ── E. FOREGROUND CANYON GORGE WALLS ──
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height * 0.68);
@@ -166,8 +198,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.fill();
       ctx.restore();
 
-      // ── 6. DYNAMIC FLOOD SURGE & INUNDATION TORRENT ──
-      // Define main flood surge channel (expands widely during extreme flood)
+      // ── F. DYNAMIC FLOOD SURGE & INUNDATION TORRENT ──
       const getFloodCenter = (tVal: number) => {
         const startX = width * 0.75;
         const startY = height * 0.48;
@@ -182,7 +213,6 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
         const x = u * u * u * startX + 3 * u * u * tVal * cp1X + 3 * u * tVal * tVal * cp2X + tVal * tVal * tVal * endX;
         const y = u * u * u * startY + 3 * u * u * tVal * cp1Y + 3 * u * tVal * tVal * cp2Y + tVal * tVal * tVal * endY;
         
-        // Channel expands significantly in flood stage
         const baseWidth = (20 + tVal * tVal * 160) * surgeMultiplier;
         return { x, y, baseWidth };
       };
@@ -192,12 +222,10 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       const leftBank: { x: number; y: number }[] = [];
       const rightBank: { x: number; y: number }[] = [];
 
-      // Calculate surging hydrodynamic flood boundaries
       for (let i = 0; i <= floodSteps; i++) {
         const progress = i / floodSteps;
         const { x, y, baseWidth } = getFloodCenter(progress);
 
-        // Turbulent flood wave surge undulations
         const surgeWave = Math.sin(progress * 16 - time * surgeSpeed) * (progress * 8 * surgeMultiplier);
         const chopWave = Math.cos(progress * 28 + time * surgeSpeed * 1.4) * (progress * 4);
 
@@ -205,7 +233,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
         rightBank.push({ x: x + baseWidth * 0.5 + surgeWave - chopWave, y });
       }
 
-      // ── A. FLOOD INUNDATION OVERFLOW ZONE (Expanding Hazard Perimeter) ──
+      // Flood Inundation Overflow Area
       if (isExtreme || isWarning) {
         ctx.beginPath();
         ctx.moveTo(leftBank[0].x - 30, leftBank[0].y);
@@ -217,14 +245,12 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
         }
         ctx.closePath();
 
-        // Pulsing flood inundation zone
         const inunGrad = ctx.createLinearGradient(0, height * 0.5, 0, height);
         inunGrad.addColorStop(0, isExtreme ? 'rgba(225, 29, 72, 0.15)' : 'rgba(245, 158, 11, 0.15)');
         inunGrad.addColorStop(1, isExtreme ? 'rgba(225, 29, 72, 0.35)' : 'rgba(245, 158, 11, 0.25)');
         ctx.fillStyle = inunGrad;
         ctx.fill();
 
-        // Pulsing Hazard Inundation Contour Line
         ctx.strokeStyle = isExtreme ? 'rgba(244, 63, 94, 0.6)' : 'rgba(245, 158, 11, 0.6)';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([8, 6]);
@@ -232,7 +258,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
         ctx.setLineDash([]);
       }
 
-      // ── B. MAIN FLOOD TORRENT BODY ──
+      // Main Flood Body
       ctx.beginPath();
       ctx.moveTo(leftBank[0].x, leftBank[0].y);
       for (let i = 1; i < leftBank.length; i++) {
@@ -245,7 +271,6 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
 
       const floodGrad = ctx.createLinearGradient(width * 0.75, height * 0.48, width * 0.25, height);
       if (isExtreme) {
-        // Deep rapid flood torrent (muddy turquoise-amber surge)
         floodGrad.addColorStop(0, '#0284c7');
         floodGrad.addColorStop(0.35, '#0ea5e9');
         floodGrad.addColorStop(0.7, '#0284c7');
@@ -262,12 +287,11 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.fillStyle = floodGrad;
       ctx.fill();
 
-      // ── C. SURGING WHITE-WATER FLOOD CRESTS & WAVE FRONTS ──
+      // Surging White-Water Wavefronts
       for (let i = 2; i < floodSteps - 1; i += 2) {
         const progress = i / floodSteps;
         const { x, y, baseWidth } = getFloodCenter(progress);
         
-        // Wave front rushing forward
         const waveX = x + Math.sin(progress * 24 - time * (surgeSpeed + 1)) * (baseWidth * 0.35);
         const waveWidth = baseWidth * (0.4 + Math.sin(progress * 14 + time * surgeSpeed) * 0.3);
         const waveHeight = Math.max(2.5, progress * 6 * surgeMultiplier);
@@ -275,13 +299,12 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
         ctx.beginPath();
         ctx.ellipse(waveX, y, waveWidth * 0.5, waveHeight, 0, 0, Math.PI * 2);
         
-        // Intense white-water foam crest
         const foamAlpha = isExtreme ? 0.7 + Math.sin(progress * 12 - time * 4) * 0.3 : 0.5;
         ctx.fillStyle = `rgba(255, 255, 255, ${foamAlpha})`;
         ctx.fill();
       }
 
-      // ── D. ACTIVE FLOOD SURGE PARTICLES (Rapid foam, spray & vortices) ──
+      // Flood Surge Particles
       surgeParticles.forEach((p) => {
         if (isPlaying) {
           p.t = (p.t + p.speed * surgeMultiplier) % 1;
@@ -297,13 +320,11 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
           ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * 0.85})`;
           ctx.fill();
         } else if (p.type === 'SPRAY') {
-          // Dynamic water spray leaping above the wave
           const sprayY = y - Math.sin(p.t * 20 + time * 6) * (10 * surgeMultiplier);
           ctx.arc(particleX, sprayY, particleSize * 0.7, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(224, 242, 254, ${p.alpha * 0.9})`;
           ctx.fill();
         } else {
-          // Eddy vortex ring
           ctx.ellipse(particleX, y, particleSize * 1.5, particleSize * 0.6, time + p.t * 10, 0, Math.PI * 2);
           ctx.strokeStyle = `rgba(255, 255, 255, ${p.alpha * 0.6})`;
           ctx.lineWidth = 1;
@@ -311,7 +332,7 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
         }
       });
 
-      // ── E. FLOOD HAZARD WATER LEVEL METER (Floating Telemetry on River) ──
+      // Flood Hazard Water Level Meter
       const meterPoint = getFloodCenter(0.42);
       ctx.beginPath();
       ctx.arc(meterPoint.x, meterPoint.y, 4, 0, Math.PI * 2);
@@ -321,12 +342,70 @@ export const AnimatedRiverScene: React.FC<AnimatedRiverSceneProps> = ({
       ctx.font = 'bold 9px monospace';
       ctx.fillStyle = isExtreme ? '#fda4af' : isWarning ? '#fde68a' : '#7dd3fc';
       ctx.textAlign = 'center';
-      const stageText = isExtreme ? 'STAGE: 6.8m (FLASH FLOOD)' : isWarning ? 'STAGE: 4.2m (WARNING)' : 'STAGE: 2.4m (NORMAL)';
+      const stageText = isExtreme ? 'STAGE: 6.8m (FLASH FLOOD SURGE)' : isWarning ? 'STAGE: 4.2m (WARNING)' : 'STAGE: 2.4m (NORMAL)';
       ctx.fillText(stageText, meterPoint.x, meterPoint.y - 10);
-
       ctx.restore();
 
-      // ── 7. DEEP VIGNETTE CONTRAST ──
+      // ── G. REALISTIC RAINDROPS & SPLASH RIPPLES (Falling over Floodwaters) ──
+      ctx.save();
+      const rainAngle = 0.22; // ~12.5 degree slant
+      const cosAngle = Math.cos(rainAngle);
+      const sinAngle = Math.sin(rainAngle);
+
+      raindrops.forEach((drop) => {
+        if (isPlaying) {
+          drop.x += sinAngle * drop.speed;
+          drop.y += cosAngle * drop.speed;
+
+          // When drop hits surging floodwater or lower valley, generate water splash ripple
+          if (drop.y > height * 0.6 && Math.random() < 0.05) {
+            splashes.push({
+              x: drop.x,
+              y: drop.y,
+              radius: 1,
+              maxRadius: 8 + Math.random() * 12,
+              opacity: 0.6,
+            });
+          }
+
+          // Reset raindrop at top when leaving screen
+          if (drop.y > height + 50 || drop.x > width + 100) {
+            drop.y = -drop.length - Math.random() * 80;
+            drop.x = Math.random() * (width + 250) - 100;
+          }
+        }
+
+        // Draw raindrop streak
+        ctx.beginPath();
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(drop.x + sinAngle * drop.length, drop.y + cosAngle * drop.length);
+        ctx.strokeStyle = `rgba(186, 230, 253, ${drop.opacity})`;
+        ctx.lineWidth = drop.width;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      });
+
+      // Draw water ripple splashes
+      for (let i = splashes.length - 1; i >= 0; i--) {
+        const s = splashes[i];
+        if (isPlaying) {
+          s.radius += 0.7;
+          s.opacity -= 0.035;
+        }
+
+        if (s.opacity <= 0 || s.radius >= s.maxRadius) {
+          splashes.splice(i, 1);
+        } else {
+          ctx.beginPath();
+          ctx.ellipse(s.x, s.y, s.radius, s.radius * 0.35, 0, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(224, 242, 254, ${s.opacity})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+
+      // ── H. DEEP VIGNETTE CONTRAST ──
       const vignette = ctx.createRadialGradient(width * 0.5, height * 0.5, width * 0.35, width * 0.5, height * 0.5, width * 0.8);
       vignette.addColorStop(0, 'rgba(2, 7, 20, 0)');
       vignette.addColorStop(1, 'rgba(2, 7, 20, 0.7)');
