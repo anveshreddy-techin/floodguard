@@ -73,17 +73,17 @@ export const Header: React.FC<{
   return (
     <>
       <header 
-        className="border-b border-slate-800/80 bg-slate-950/95 backdrop-blur-xl sticky top-0 z-40 select-none safe-top shrink-0"
-        style={{ boxShadow: '0 2px 20px rgba(0,0,0,0.6)' }}
+        className="border-b border-cyan-500/20 bg-[#070f24]/95 backdrop-blur-2xl sticky top-0 z-40 select-none safe-top shrink-0"
+        style={{ boxShadow: '0 4px 25px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(56,189,248,0.1)' }}
       >
         {/* Row 1: Primary Navigation Bar (56px) */}
-        <div className="h-14 px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-2 max-w-full overflow-hidden">
+        <div className="h-14 px-2 sm:px-4 lg:px-6 flex items-center justify-between gap-2 max-w-full overflow-hidden relative">
           
-          {/* Left: Hamburger (mobile) + Brand Wordmark */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
+          {/* Left: Hamburger (mobile) + Brand Wordmark + Mode */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 min-w-0">
             <button
               onClick={() => setMobileDrawerOpen(true)}
-              className="md:hidden w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 active:scale-95 transition shrink-0"
+              className="md:hidden w-8 h-8 rounded-xl bg-slate-900/90 border border-cyan-500/30 flex items-center justify-center text-cyan-400 active:scale-95 transition shrink-0 shadow-sm"
               aria-label="Open Navigation Menu"
               title="Open Navigation Menu"
             >
@@ -91,14 +91,14 @@ export const Header: React.FC<{
             </button>
 
             <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group shrink-0">
-              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-cyan-400 animate-ping shadow-[0_0_10px_rgba(6,182,212,1)] shrink-0" />
-              <div className="text-xs sm:text-sm font-black tracking-wider bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent group-hover:brightness-125 transition truncate">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-cyan-400 animate-ping shadow-[0_0_12px_rgba(6,182,212,1)] shrink-0" />
+              <div className="text-xs sm:text-sm font-black tracking-wider bg-gradient-to-r from-cyan-300 via-sky-200 to-indigo-200 bg-clip-text text-transparent group-hover:brightness-125 transition truncate">
                 FLOODGUARD <span className="text-slate-100 font-mono font-normal">AI</span>
               </div>
             </Link>
 
             {/* Desktop Mode Toggle (Large Screens) */}
-            <div className="hidden lg:flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-xl p-0.5 shrink-0 ml-2">
+            <div className="hidden lg:flex items-center gap-1 bg-slate-900/90 border border-slate-800 rounded-xl p-0.5 shrink-0 ml-1">
               <button
                 onClick={() => setOperatingMode('DEMO')}
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition ${
@@ -107,7 +107,7 @@ export const Header: React.FC<{
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                DEMO MODE
+                DEMO
               </button>
               <button
                 onClick={() => setOperatingMode('REAL_PILOT')}
@@ -117,59 +117,63 @@ export const Header: React.FC<{
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                REAL/PILOT
+                PILOT
               </button>
             </div>
+          </div>
 
-            {/* Desktop State & Monitored Location Quick Filter */}
-            <div className="hidden xl:flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-xl text-xs font-mono text-slate-200 shrink-0">
-              <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <select
-                value={hierarchy.state}
-                onChange={(e) => {
-                  if (e.target.value === 'ALL') {
-                    resetToNational();
-                  } else {
-                    setStateFilter(e.target.value);
-                    const matched = LOCATIONS.find(
-                      (l) => l.state.toLowerCase() === e.target.value.toLowerCase() ||
-                             e.target.value.toLowerCase().includes(l.state.toLowerCase())
-                    );
-                    if (matched) {
-                      selectLocationById(matched.id);
-                    }
-                  }
-                }}
-                className="bg-transparent text-xs text-cyan-300 font-bold focus:outline-none cursor-pointer max-w-[130px] truncate"
-              >
-                <option value="ALL" className="bg-slate-950 text-slate-400">🇮🇳 All States</option>
-                {INDIAN_STATES.map((st) => (
-                  <option key={st.id} value={st.name} className="bg-slate-950 text-slate-200">
-                    {st.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* ── CENTER HERO: FOCUSED, ELEVATED SOS EMERGENCY RESCUE BUTTON ── */}
+          <div className="flex items-center justify-center shrink-0">
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-emergency-modal'));
+                }
+              }}
+              className="relative group flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full font-mono font-black text-xs sm:text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 transition-all transform shadow-[0_0_24px_rgba(239,68,68,0.75)] hover:shadow-[0_0_32px_rgba(239,68,68,0.9)] ring-2 ring-rose-400/60 ring-offset-1 ring-offset-slate-950 animate-pulse shrink-0"
+              title="Immediate Emergency Rescue & Disaster Helpline Dispatch (Hotkey: E)"
+            >
+              <span className="relative flex h-2.5 w-2.5 sm:h-3 sm:w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-90" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 bg-white" />
+              </span>
+              <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white animate-bounce shrink-0" />
+              <span className="tracking-wide">SOS CALL</span>
+              <span className="hidden sm:inline-block px-1.5 py-0.2 text-[10px] bg-red-950/80 rounded-md text-red-200 border border-red-400/40 font-mono">
+                112
+              </span>
+            </button>
           </div>
 
           {/* Right: Controls & Actions (Cleanly separated) */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             
-            {/* Mobile Mode Switcher Pill */}
+            {/* Disaster Relief Donation Button */}
             <button
-              onClick={() => setOperatingMode(operatingMode === 'DEMO' ? 'REAL_PILOT' : 'DEMO')}
-              className={`lg:hidden px-2 py-1 rounded-lg text-[10px] font-mono font-bold border shrink-0 transition active:scale-95 ${
-                operatingMode === 'DEMO'
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                  : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
-              }`}
-              title="Tap to switch mode (DEMO / REAL_PILOT)"
+              onClick={() => setDonateModalOpen(true)}
+              className="hidden xs:flex px-2 sm:px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-rose-950/80 hover:bg-rose-900 border border-rose-500/70 text-rose-300 items-center gap-1 shadow-[0_0_12px_rgba(244,63,94,0.3)] active:scale-95 transition shrink-0"
+              title="Donate to Disaster Relief Funds (80G Tax Exempt)"
             >
-              {operatingMode === 'DEMO' ? 'DEMO' : 'PILOT'}
+              <Heart className="w-3.5 h-3.5 fill-rose-500/50 text-rose-400 animate-pulse" />
+              <span className="hidden sm:inline">DONATE</span>
+            </button>
+
+            {/* AI Copilot Button - Top Header (Hotkey: A) */}
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-copilot'));
+                }
+              }}
+              className="flex px-2 sm:px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 items-center gap-1 shadow-[0_0_15px_rgba(6,182,212,0.35)] active:scale-95 transition shrink-0"
+              title="Open Grounded AI Disaster Copilot (Hotkey: A)"
+            >
+              <Bot className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span className="hidden sm:inline">COPILOT</span>
             </button>
 
             {/* Desktop Role Selector Dropdown */}
-            <div className="hidden md:flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-1 rounded-xl text-xs font-mono shrink-0">
+            <div className="hidden md:flex items-center gap-1 bg-slate-900/90 border border-slate-800 px-2 py-1 rounded-xl text-xs font-mono shrink-0">
               <UserCheck className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
               <select
                 value={role}
@@ -185,7 +189,7 @@ export const Header: React.FC<{
             </div>
 
             {/* Language Switcher (Desktop: Dropdown | Mobile: Clean 1-Tap Pill) */}
-            <div className="hidden sm:flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-1 rounded-xl text-xs font-mono shrink-0">
+            <div className="hidden sm:flex items-center gap-1 bg-slate-900/90 border border-slate-800 px-2 py-1 rounded-xl text-xs font-mono shrink-0">
               <Globe className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
               <select
                 value={language}
@@ -203,11 +207,11 @@ export const Header: React.FC<{
             {/* Mobile State Picker Badge with Full State Name */}
             <button
               onClick={() => setMobileDrawerOpen(true)}
-              className="sm:hidden flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 px-2.5 py-1 rounded-xl text-xs font-mono text-cyan-300 font-bold active:scale-95 transition shadow-sm shrink-0"
+              className="sm:hidden flex items-center gap-1 bg-slate-900 border border-cyan-500/40 px-2 py-1 rounded-xl text-xs font-mono text-cyan-300 font-bold active:scale-95 transition shadow-sm shrink-0"
               title="Tap to change state or location"
             >
               <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span className="font-bold">{hierarchy.state}</span>
+              <span className="font-bold max-w-[70px] truncate">{hierarchy.state}</span>
             </button>
 
             {/* Search (Ctrl+K) - Desktop */}
@@ -217,45 +221,6 @@ export const Header: React.FC<{
               title="Search commands and locations (Ctrl+K)"
             >
               <Search className="w-3.5 h-3.5" />
-            </button>
-
-            {/* Disaster Relief Donation Button */}
-            <button
-              onClick={() => setDonateModalOpen(true)}
-              className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-rose-950/80 hover:bg-rose-900 border border-rose-500/70 text-rose-300 flex items-center gap-1 shadow-[0_0_12px_rgba(244,63,94,0.3)] active:scale-95 transition shrink-0"
-              title="Donate to Disaster Relief Funds (80G Tax Exempt)"
-            >
-              <Heart className="w-3.5 h-3.5 fill-rose-500/50 text-rose-400 animate-pulse" />
-              <span className="hidden xs:inline">DONATE</span>
-            </button>
-
-            {/* AI Copilot Button - Top Header (Hotkey: A) */}
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.dispatchEvent(new CustomEvent('open-copilot'));
-                }
-              }}
-              className="flex px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.35)] active:scale-95 transition shrink-0"
-              title="Open Grounded AI Disaster Copilot (Hotkey: A)"
-            >
-              <Bot className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span className="hidden xs:inline">COPILOT</span>
-            </button>
-
-            {/* SOS Emergency Rescue & Call Button - Top Header (Hotkey: E) */}
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.dispatchEvent(new CustomEvent('open-emergency-modal'));
-                }
-              }}
-              className="flex px-2.5 py-1 rounded-xl text-xs font-mono font-black bg-rose-600 hover:bg-rose-500 text-white items-center gap-1.5 shadow-[0_0_18px_rgba(225,29,72,0.6)] active:scale-95 transition shrink-0 animate-pulse"
-              title="Immediate Emergency Rescue & Disaster Helpline Dispatch (Hotkey: E)"
-            >
-              <PhoneCall className="w-3.5 h-3.5 shrink-0" />
-              <span className="hidden xs:inline">SOS CALL</span>
-              <span className="xs:hidden">SOS</span>
             </button>
           </div>
         </div>

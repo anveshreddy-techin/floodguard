@@ -9,6 +9,8 @@ import {
   Activity, 
   Lock, 
   User, 
+  Mail,
+  Phone,
   ArrowRight, 
   Sparkles, 
   Volume2, 
@@ -40,6 +42,8 @@ export default function LoginPage() {
 
   const [selectedRole, setSelectedRole] = useState<UserRole>('DISTRICT_OPERATOR');
   const [username, setUsername] = useState('sih_commander_2026');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('••••••••••••');
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authSuccess, setAuthSuccess] = useState(false);
@@ -119,20 +123,21 @@ export default function LoginPage() {
   };
 
   const handleFastTrack = (roleName: UserRole) => {
-    setRole(roleName);
-    setIsAuthenticating(true);
-    setTimeout(() => {
-      setIsAuthenticating(false);
-      setAuthSuccess(true);
-      setTimeout(() => {
-        router.push('/');
-      }, 500);
-    }, 600);
+    setSelectedRole(roleName);
+    setShowLoginModal(true);
   };
 
   const handleFormLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    handleFastTrack(selectedRole);
+    setIsAuthenticating(true);
+    setTimeout(() => {
+      setIsAuthenticating(false);
+      setAuthSuccess(true);
+      setRole(selectedRole);
+      setTimeout(() => {
+        router.push('/');
+      }, 500);
+    }, 600);
   };
 
   return (
@@ -385,6 +390,36 @@ export default function LoginPage() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono text-white focus:outline-none focus:border-cyan-400"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-mono text-slate-400 font-bold uppercase">Registered Email</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-cyan-400 absolute left-3 top-3" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="officer@gov.in"
+                    className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono text-white focus:outline-none focus:border-cyan-400 placeholder:text-slate-600"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-mono text-slate-400 font-bold uppercase">Secure Phone Number</label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-cyan-400 absolute left-3 top-3" />
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+91 9876543210"
+                    className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono text-white focus:outline-none focus:border-cyan-400 placeholder:text-slate-600"
                     required
                   />
                 </div>

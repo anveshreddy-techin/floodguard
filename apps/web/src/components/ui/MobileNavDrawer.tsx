@@ -130,12 +130,12 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
         className="fixed inset-0 bg-black/90 backdrop-blur-sm transition-opacity"
       />
 
-      {/* 100% Solid Opaque Slide-out Drawer Sheet */}
-      <div className="relative w-full max-w-sm bg-[#030712] border-r border-slate-800 flex flex-col h-full z-[10000] animate-slide-right shadow-[0_0_50px_rgba(0,0,0,0.95)] safe-top safe-bottom">
-        {/* Drawer Header (Solid Opaque) */}
-        <div className="p-4 border-b border-slate-800 bg-[#030712] flex items-center justify-between">
+      {/* Modern Aero Slide-out Drawer Sheet */}
+      <div className="relative w-full max-w-sm bg-gradient-to-b from-[#0c1836] via-[#081229] to-[#040a18] border-r border-cyan-500/30 flex flex-col h-full z-[10000] animate-slide-right shadow-[0_0_60px_rgba(6,182,212,0.25)] safe-top safe-bottom">
+        {/* Drawer Header */}
+        <div className="p-4 border-b border-cyan-500/20 bg-[#0c1836]/90 backdrop-blur-xl flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-cyan-400 animate-ping" />
+            <div className="w-3 h-3 rounded-full bg-cyan-400 animate-ping shadow-[0_0_10px_rgba(6,182,212,1)]" />
             <div>
               <div className="text-sm font-black text-white font-sans tracking-wide">
                 FLOODGUARD <span className="text-cyan-400 font-mono font-normal">AI</span>
@@ -148,15 +148,15 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white active:scale-95 transition"
+            className="w-8 h-8 rounded-xl bg-slate-900/90 border border-cyan-500/30 flex items-center justify-center text-cyan-300 hover:text-white active:scale-95 transition shadow-sm"
             aria-label="Close Navigation Menu"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Global Mode + Role + Language Controls Grid (Solid Opaque) */}
-        <div className="p-3 border-b border-slate-800 bg-[#080f24] space-y-2.5">
+        {/* Global Mode + Role + Language Controls Grid */}
+        <div className="p-3 border-b border-cyan-500/20 bg-[#09142d]/80 space-y-2.5">
           
           {/* Operating Mode Selector */}
           <div>
@@ -279,8 +279,8 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
         </div>
 
-        {/* Navigation Sections Scroll Area (100% Solid Opaque Background) */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-4 bg-[#030712]">
+        {/* Navigation Sections Scroll Area */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-4 bg-transparent">
           {navSections.map((sec) => (
             <div key={sec.title} className="space-y-1">
               <div className={`text-[9px] font-mono font-bold px-2 tracking-wider ${sec.phaseColor}`}>
@@ -297,17 +297,17 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                       onClick={onClose}
                       className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition font-medium active:scale-98 ${
                         isActive
-                          ? 'bg-cyan-500/15 text-cyan-300 font-bold border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.2)]'
-                          : 'text-slate-400 hover:text-white hover:bg-slate-900 border border-transparent'
+                          ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+                          : 'text-slate-300 hover:text-white hover:bg-slate-900/60 border border-transparent'
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
+                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-cyan-400' : 'text-slate-400'}`} />
                         <span>{item.label}</span>
                       </div>
 
                       {item.badge && (
-                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold">
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-900/90 border border-cyan-500/30 text-cyan-300 font-bold shadow-sm">
                           {item.badge}
                         </span>
                       )}
@@ -319,8 +319,8 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           ))}
         </div>
 
-        {/* Drawer Bottom Actions: SOS Emergency & AI Assistant (Solid Opaque) */}
-        <div className="p-3 border-t border-slate-800 bg-[#030712] flex gap-2">
+        {/* Drawer Bottom Actions: SOS Emergency & AI Assistant */}
+        <div className="p-3 border-t border-cyan-500/20 bg-[#070f24]/95 backdrop-blur-xl flex gap-2">
           <button
             onClick={() => {
               onClose();
@@ -328,7 +328,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 window.dispatchEvent(new CustomEvent('open-emergency-modal'));
               }
             }}
-            className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-black flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition"
+            className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-mono text-xs font-black flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(239,68,68,0.5)] active:scale-95 transition animate-pulse"
           >
             <PhoneCall className="w-4 h-4 animate-bounce" />
             <span>SOS RESCUE</span>
@@ -341,7 +341,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 window.dispatchEvent(new CustomEvent('open-copilot'));
               }
             }}
-            className="flex-1 py-2.5 rounded-xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition"
+            className="flex-1 py-2.5 rounded-xl bg-cyan-950/90 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.3)] active:scale-95 transition"
           >
             <Bot className="w-4 h-4 text-cyan-400" />
             <span>AI COPILOT</span>

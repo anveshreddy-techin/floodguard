@@ -56,14 +56,14 @@
 body {
   color: #f1f5f9;
   background:
-    /* Specular ridge highlight top-center */
-    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(56, 189, 248, 0.07) 0%, transparent 70%),
-    /* Deep atmospheric haze center-right */
-    radial-gradient(ellipse 60% 80% at 75% 50%, rgba(30, 58, 138, 0.15) 0%, transparent 60%),
-    /* Cold void bottom left */
-    radial-gradient(ellipse 50% 50% at 10% 90%, rgba(6, 78, 112, 0.1) 0%, transparent 60%),
-    /* Absolute base void */
-    linear-gradient(170deg, #04091a 0%, #020810 50%, #010409 100%);
+    /* Specular luminous sapphire ridge highlight top-center */
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(14, 165, 233, 0.15) 0%, transparent 70%),
+    /* Deep atmospheric sapphire haze center-right */
+    radial-gradient(ellipse 70% 80% at 75% 45%, rgba(30, 58, 138, 0.25) 0%, transparent 65%),
+    /* Luminous indigo bloom bottom-left */
+    radial-gradient(ellipse 60% 60% at 15% 85%, rgba(37, 99, 235, 0.18) 0%, transparent 65%),
+    /* Rich midnight sapphire base gradient */
+    linear-gradient(175deg, #09132c 0%, #060e22 45%, #040918 100%);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
