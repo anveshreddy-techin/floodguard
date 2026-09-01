@@ -462,8 +462,8 @@ export default function WeatherIntelligencePage() {
           {/* 2. Multi-Hazard Meteorological Alert Recommendations */}
           <WeatherAlertCard alerts={alertsData} />
 
-          {/* 3. 24-Hour Hourly Hydrograph & Cumulative Rainfall */}
-          <HourlyForecastChart hours={hourlyData} />
+          {/* 3. Multi-Resolution Precipitation Hydrograph & Ensemble Forecast (Hours / Days / Weeks) */}
+          <HourlyForecastChart hours={hourlyData} days={dailyData} />
 
           {/* 4. 7-Day Synoptic Outlook & Precipitation Totals */}
           <DailyForecastCard days={dailyData} />
