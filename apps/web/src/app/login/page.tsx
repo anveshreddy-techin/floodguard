@@ -45,6 +45,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('••••••••••••');
+  const [emailError, setEmailError] = useState('');
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authSuccess, setAuthSuccess] = useState(false);
   
@@ -54,6 +55,23 @@ export default function LoginPage() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // Email validation helper (@gmail.com or standard domain format)
+  const validateEmail = (val: string): boolean => {
+    const trimmed = val.trim();
+    if (!trimmed) {
+      setEmailError('Email address is required.');
+      return false;
+    }
+    // Check standard email rules (must contain user, @, domain, .tld like name@gmail.com)
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(trimmed)) {
+      setEmailError('Please enter a valid email address (e.g. officer@gmail.com).');
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
 
   // Web Audio Rain/Wind Synth Ref
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -129,6 +147,9 @@ export default function LoginPage() {
 
   const handleFormLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateEmail(email)) {
+      return;
+    }
     setIsAuthenticating(true);
     setTimeout(() => {
       setIsAuthenticating(false);
@@ -212,23 +233,35 @@ export default function LoginPage() {
                 </select>
               </div>
 
-              {/* Email / Username */}
+              {/* Email Address (@gmail.com or standard domain) */}
               <div className="space-y-1">
-                <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">Email or Mobile Number</label>
+                <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+                  Email Address (@gmail.com)
+                </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-cyan-400 absolute left-3 top-3" />
                   <input
-                    type="text"
-                    value={email || username}
+                    type="email"
+                    value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      setUsername(e.target.value);
+                      if (emailError) setEmailError('');
                     }}
-                    placeholder="officer@gov.in or 9876543210"
-                    className="w-full pl-9 pr-3 py-2.5 bg-[#050d20] border border-slate-700 rounded-xl text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
+                    onBlur={(e) => {
+                      if (e.target.value) validateEmail(e.target.value);
+                    }}
+                    placeholder="user@gmail.com"
+                    className={`w-full pl-9 pr-3 py-2.5 bg-[#050d20] border ${
+                      emailError ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-700'
+                    } rounded-xl text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400`}
                     required
                   />
                 </div>
+                {emailError && (
+                  <p className="text-[10px] font-mono text-rose-400 flex items-center gap-1 mt-1">
+                    <span>⚠️</span> {emailError}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -564,18 +597,33 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-mono text-slate-400 font-bold uppercase">Registered Email</label>
+                <label className="text-[10px] font-mono text-slate-400 font-bold uppercase">
+                  Registered Email (@gmail.com)
+                </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-cyan-400 absolute left-3 top-3" />
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="officer@gov.in"
-                    className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono text-white focus:outline-none focus:border-cyan-400 placeholder:text-slate-600"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) setEmailError('');
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value) validateEmail(e.target.value);
+                    }}
+                    placeholder="officer@gmail.com"
+                    className={`w-full pl-9 pr-3 py-2 bg-slate-950 border ${
+                      emailError ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-800'
+                    } rounded-xl text-xs font-mono text-white focus:outline-none focus:border-cyan-400 placeholder:text-slate-600`}
                     required
                   />
                 </div>
+                {emailError && (
+                  <p className="text-[10px] font-mono text-rose-400 flex items-center gap-1 mt-1">
+                    <span>⚠️</span> {emailError}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-1">
