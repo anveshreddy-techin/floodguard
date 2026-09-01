@@ -140,11 +140,24 @@ export default function LoginPage() {
     }, 600);
   };
 
+  const handleQuickMobileLogin = (roleName: UserRole) => {
+    setSelectedRole(roleName);
+    setRole(roleName);
+    setIsAuthenticating(true);
+    setTimeout(() => {
+      setIsAuthenticating(false);
+      setAuthSuccess(true);
+      setTimeout(() => {
+        router.push('/');
+      }, 400);
+    }, 400);
+  };
+
   return (
     <div 
       className="relative min-h-screen w-full overflow-hidden bg-[#020714] text-white select-none flex flex-col justify-between"
     >
-      {/* ── 1. REAL-TIME 60FPS ANIMATED FLASH FLOOD SURGE & INUNDATION CANVASES ── */}
+      {/* ── 1. REAL-TIME ANIMATED RIVER & FLOOD CANVAS (Subtle on mobile, full on desktop) ── */}
       <AnimatedRiverScene
         sceneType={activeScene}
         floodStage={floodStage}
@@ -155,188 +168,343 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-gradient-to-t from-[#020714] via-transparent to-transparent pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#020714]/80 to-transparent pointer-events-none" />
 
-      {/* ── 2. TOP NAV BAR: BRAND & LIVE TELEMETRY CHIP ── */}
-      <header className="relative z-20 px-4 sm:px-8 lg:px-12 py-5 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 animate-ping shadow-[0_0_15px_rgba(244,63,94,1)] shrink-0" />
+      {/* ════════════════════════════════════════════════════════════════════
+          MOBILE VIEW: SIMPLE, CLEAN, STANDARD WEBSITE LOGIN EXPERIENCE
+          ════════════════════════════════════════════════════════════════════ */}
+      <div className="md:hidden flex flex-col min-h-screen justify-between p-4 sm:p-6 z-20 relative overflow-y-auto">
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between py-2 border-b border-cyan-500/20">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-black tracking-widest text-cyan-300 uppercase">
-              FLOODGUARD • SPATIAL INTELLIGENCE
-            </span>
-            <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-rose-950/80 border border-rose-800/80 text-[10px] font-mono text-rose-300 font-bold">
-              FLASH FLOOD SIMULATION ACTIVE
-            </span>
+            <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping shadow-[0_0_10px_rgba(6,182,212,1)]" />
+            <div className="text-sm font-black tracking-wider text-white font-sans">
+              FLOODGUARD <span className="text-cyan-400 font-mono font-normal">AI</span>
+            </div>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/90 border border-cyan-500/40 text-cyan-300 font-bold">
+            SIH26192
+          </span>
+        </div>
+
+        {/* Mobile Standard Login Form Card */}
+        <div className="my-auto py-5">
+          <div className="bg-[#09142d]/95 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_10px_35px_rgba(0,0,0,0.85)] backdrop-blur-2xl space-y-4">
+            <div className="text-center space-y-1">
+              <h2 className="text-xl font-black text-white tracking-tight font-sans">Sign in to FloodGuard</h2>
+              <p className="text-xs text-slate-300">National Disaster & Flash Flood Intelligence Portal</p>
+            </div>
+
+            <form onSubmit={handleFormLogin} className="space-y-3">
+              {/* Role Selection */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">Select Role</label>
+                <select
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value as UserRole)}
+                  className="w-full bg-[#050d20] border border-cyan-500/40 rounded-xl px-3 py-2.5 text-xs font-mono text-cyan-300 font-bold focus:outline-none focus:border-cyan-400 cursor-pointer"
+                >
+                  <option value="CITIZEN">🏠 Resident / Citizen</option>
+                  <option value="DISTRICT_OPERATOR">🏢 District EOC Operator</option>
+                  <option value="NATIONAL_OPERATOR">🇮🇳 National NDMA Commander</option>
+                  <option value="FIELD_RESPONDER">🚒 Field Responder / SDRF</option>
+                  <option value="ANALYST">📊 GIS / Data Analyst</option>
+                  <option value="VILLAGE_OPERATOR">🌾 Village Level Operator</option>
+                  <option value="STATE_OPERATOR">🏛️ State SEOC Commander</option>
+                </select>
+              </div>
+
+              {/* Email / Username */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">Email or Mobile Number</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-cyan-400 absolute left-3 top-3" />
+                  <input
+                    type="text"
+                    value={email || username}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setUsername(e.target.value);
+                    }}
+                    placeholder="officer@gov.in or 9876543210"
+                    className="w-full pl-9 pr-3 py-2.5 bg-[#050d20] border border-slate-700 rounded-xl text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">Password</label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-cyan-400 absolute left-3 top-3" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password"
+                    className="w-full pl-9 pr-3 py-2.5 bg-[#050d20] border border-slate-700 rounded-xl text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Primary Submit Button */}
+              <button
+                type="submit"
+                disabled={isAuthenticating || authSuccess}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-mono font-bold text-xs shadow-lg active:scale-95 transition flex items-center justify-center gap-2 mt-2"
+              >
+                {isAuthenticating ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>AUTHENTICATING...</span>
+                  </>
+                ) : authSuccess ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 text-white" />
+                    <span>SUCCESS! ENTERING...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>SIGN IN TO COMMAND</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Quick 1-Tap Role Bypass */}
+            <div className="pt-3 border-t border-cyan-500/20 space-y-2">
+              <div className="text-[10px] font-mono text-slate-400 text-center font-bold uppercase">
+                Or Quick 1-Tap Demo Access:
+              </div>
+              <div className="grid grid-cols-2 gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleQuickMobileLogin('CITIZEN')}
+                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                >
+                  <span>🏠</span>
+                  <span className="truncate">Resident</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickMobileLogin('DISTRICT_OPERATOR')}
+                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                >
+                  <span>🏢</span>
+                  <span className="truncate">District EOC</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickMobileLogin('NATIONAL_OPERATOR')}
+                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                >
+                  <span>🇮🇳</span>
+                  <span className="truncate">NDMA</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickMobileLogin('FIELD_RESPONDER')}
+                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                >
+                  <span>🚒</span>
+                  <span className="truncate">SDRF Rescue</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Flood Surge Stage & Motion Control Pill */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/85 border border-slate-800/80 backdrop-blur-xl text-xs font-mono shadow-2xl">
-          {/* Flood Stage Selector */}
-          <button
-            onClick={() => setFloodStage('FLASH_FLOOD_EXTREME')}
-            className={`px-2.5 sm:px-3 py-1 rounded-xl transition flex items-center gap-1 ${
-              floodStage === 'FLASH_FLOOD_EXTREME'
-                ? 'bg-rose-600/30 text-rose-300 border border-rose-500/50 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-white'
-            }`}
-            title="Extreme Inundation Surge (Stage 6.8m)"
-          >
-            <AlertTriangle className="w-3 h-3 text-rose-400 animate-pulse" />
-            <span>Extreme Flood</span>
-          </button>
-
-          <button
-            onClick={() => setFloodStage('WARNING_SURGE')}
-            className={`px-2.5 sm:px-3 py-1 rounded-xl transition ${
-              floodStage === 'WARNING_SURGE'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-white'
-            }`}
-            title="Warning Stage Surge (Stage 4.2m)"
-          >
-            ⚠️ Warning Surge
-          </button>
-
-          <button
-            onClick={() => setFloodStage('MODERATE_FLOW')}
-            className={`hidden sm:block px-2.5 sm:px-3 py-1 rounded-xl transition ${
-              floodStage === 'MODERATE_FLOW'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-white'
-            }`}
-            title="Normal Hydrological Flow (Stage 2.4m)"
-          >
-            🌊 Normal Flow
-          </button>
-
-          {/* Animation Motion Play/Pause */}
-          <button
-            onClick={() => setIsPlaying(!isPlaying)}
-            className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 transition"
-            title={isPlaying ? 'Pause Flood Surge' : 'Resume Flood Surge'}
-          >
-            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 text-cyan-400" />}
-          </button>
+        {/* Mobile Footer */}
+        <div className="py-2 text-center text-[10px] font-mono text-slate-400 flex items-center justify-center gap-2 border-t border-cyan-500/20">
+          <span>🔒 Gov Auth Protected</span>
+          <span>•</span>
+          <span>Emergency Helpline: 112</span>
         </div>
-      </header>
+      </div>
 
-      {/* ── 3. CENTER HERO: BOLD PRISMA-STYLE WORDMARK & CINEMATIC DOCK ── */}
-      <main className="relative z-20 px-6 sm:px-12 lg:px-16 my-auto flex flex-col items-start justify-center max-w-5xl space-y-6">
+      {/* ════════════════════════════════════════════════════════════════════
+          DESKTOP VIEW: CINEMATIC DOCK & PRISMA-STYLE OPERATIONAL EXPERIENCE
+          ════════════════════════════════════════════════════════════════════ */}
+      <div className="hidden md:flex flex-col min-h-screen justify-between">
         
-        {/* Keyframes for entrance animations */}
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(40px); filter: blur(8px); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-          }
-          .animate-entrance-1 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; opacity: 0; }
-          .animate-entrance-2 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; opacity: 0; }
-          .animate-entrance-3 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards; opacity: 0; }
-        `}} />
-
-        {/* Subtle Category Bracket */}
-        <div className="flex items-center gap-2 text-xs font-mono text-rose-400 font-bold tracking-widest uppercase animate-entrance-1">
-          <span className="w-6 h-[2px] bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,1)]" />
-          <span>HYPER-LOCAL FLASH FLOOD INUNDATION & RESCUE INTELLIGENCE</span>
-        </div>
-
-        {/* Hero Title (Bold & Dramatic like Prisma screenshot) */}
-        <div className="space-y-2">
-          <h1 
-            className="text-5xl sm:text-7xl lg:text-8xl font-black font-sans tracking-tight text-white leading-none drop-shadow-[0_12px_45px_rgba(0,0,0,0.9)] animate-entrance-2"
-            style={{
-              letterSpacing: '-0.04em',
-            }}
-          >
-            FloodGuard <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-300 bg-clip-text text-transparent">AI</span>
-          </h1>
-          
-          <p className="text-sm sm:text-lg text-slate-200/90 font-sans max-w-2xl leading-relaxed drop-shadow-md animate-entrance-3">
-            Physics-guided spatial intelligence, automated hydrological cascade detection, and zero-hindsight life-saving evacuation routing across 28 Indian states.
-          </p>
-        </div>
-
-        {/* ── 4. PRIMARY FAST-TRACK ACTION & STATS DOCK ── */}
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          
-          {/* Main Launch Pill Button (Screenshot Style) */}
-          <button
-            onClick={() => handleFastTrack('DISTRICT_OPERATOR')}
-            className="px-6 py-3.5 rounded-full bg-white hover:bg-slate-100 text-slate-950 font-sans font-black text-sm flex items-center gap-3 shadow-[0_0_40px_rgba(255,255,255,0.45)] active:scale-95 transition-all transform hover:translate-x-1"
-          >
-            <span>Launch Command Center</span>
-            <div className="w-7 h-7 rounded-full bg-slate-950 text-white flex items-center justify-center">
-              <ArrowRight className="w-4 h-4" />
+        {/* ── TOP NAV BAR: BRAND & LIVE TELEMETRY CHIP ── */}
+        <header className="relative z-20 px-8 lg:px-12 py-5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-3.5 h-3.5 rounded-full bg-rose-500 animate-ping shadow-[0_0_15px_rgba(244,63,94,1)] shrink-0" />
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs font-black tracking-widest text-cyan-300 uppercase">
+                FLOODGUARD • SPATIAL INTELLIGENCE
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-rose-950/80 border border-rose-800/80 text-[10px] font-mono text-rose-300 font-bold">
+                FLASH FLOOD SIMULATION ACTIVE
+              </span>
             </div>
-          </button>
+          </div>
 
-          {/* Secure Officer Sign-In Trigger Button */}
-          <button
-            onClick={() => setShowLoginModal(true)}
-            className="px-5 py-3.5 rounded-full bg-slate-950/85 hover:bg-slate-900 border border-slate-700/80 text-white font-mono text-xs font-bold flex items-center gap-2 backdrop-blur-xl shadow-xl active:scale-95 transition"
-          >
-            <Lock className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Officer Authentication</span>
-          </button>
-
-          {/* Audio Ambient Toggle (Flood Torrent Surge Audio) */}
-          <button
-            onClick={toggleAudio}
-            className={`p-3.5 rounded-full border transition active:scale-95 flex items-center gap-2 text-xs font-mono backdrop-blur-xl ${
-              audioPlaying
-                ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
-                : 'bg-slate-950/85 text-slate-400 border-slate-800 hover:text-white'
-            }`}
-            title="Toggle Ambient Flood Torrent & River Soundscape"
-          >
-            {audioPlaying ? <Volume2 className="w-4 h-4 text-rose-400 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
-            <span className="hidden sm:inline">{audioPlaying ? 'Flood Torrent: ON' : 'Audio Soundscape'}</span>
-          </button>
-        </div>
-
-        {/* Fast-Track Role Pills (Instant 1-Click Access) */}
-        <div className="pt-4 flex flex-wrap items-center gap-2">
-          <span className="text-[11px] font-mono text-slate-400 font-bold uppercase tracking-wider mr-1">
-            EXPLORE STATUTORY ROLES:
-          </span>
-          {[
-            { id: 'NATIONAL_OPERATOR' as UserRole, label: '🇮🇳 NDMA Commander' },
-            { id: 'DISTRICT_OPERATOR' as UserRole, label: '🏢 District EOC' },
-            { id: 'FIELD_RESPONDER' as UserRole, label: '🚒 SDRF / Rescue' },
-            { id: 'ANALYST' as UserRole, label: '📊 GIS Analyst' },
-            { id: 'CITIZEN' as UserRole, label: '🏠 Resident Safety' },
-          ].map((r) => (
+          {/* Flood Surge Stage & Motion Control Pill */}
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/85 border border-slate-800/80 backdrop-blur-xl text-xs font-mono shadow-2xl">
             <button
-              key={r.id}
-              onClick={() => handleFastTrack(r.id)}
-              className="px-3 py-1.5 rounded-xl bg-slate-950/75 hover:bg-cyan-950/90 border border-slate-800 hover:border-cyan-500/60 text-slate-300 hover:text-cyan-300 text-xs font-mono font-bold backdrop-blur-md transition active:scale-95 shadow-md"
+              onClick={() => setFloodStage('FLASH_FLOOD_EXTREME')}
+              className={`px-3 py-1 rounded-xl transition flex items-center gap-1 ${
+                floodStage === 'FLASH_FLOOD_EXTREME'
+                  ? 'bg-rose-600/30 text-rose-300 border border-rose-500/50 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title="Extreme Inundation Surge (Stage 6.8m)"
             >
-              {r.label}
+              <AlertTriangle className="w-3 h-3 text-rose-400 animate-pulse" />
+              <span>Extreme Flood</span>
             </button>
-          ))}
-        </div>
 
-      </main>
+            <button
+              onClick={() => setFloodStage('WARNING_SURGE')}
+              className={`px-3 py-1 rounded-xl transition ${
+                floodStage === 'WARNING_SURGE'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title="Warning Stage Surge (Stage 4.2m)"
+            >
+              ⚠️ Warning Surge
+            </button>
 
-      {/* ── 5. BOTTOM FLOATING STATUS BAR & CREDENTIALS STRIP ── */}
-      <footer className="relative z-20 px-6 sm:px-12 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-900/80 bg-slate-950/70 backdrop-blur-xl text-xs font-mono text-slate-400">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5 text-rose-400">
-            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-            FLASH FLOOD SURGE INUNDATION: 6.8m (EXTREME PRE-CONDITION)
-          </span>
-          <span className="hidden md:inline text-slate-600">•</span>
-          <span className="hidden md:inline text-slate-300">Composite Risk: 68.5 (HIGH) • Antecedent Rain: 48mm</span>
-        </div>
+            <button
+              onClick={() => setFloodStage('MODERATE_FLOW')}
+              className={`px-3 py-1 rounded-xl transition ${
+                floodStage === 'MODERATE_FLOW'
+                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title="Normal Hydrological Flow (Stage 2.4m)"
+            >
+              🌊 Normal Flow
+            </button>
 
-        <div className="flex items-center gap-4 text-[11px]">
-          <span className="text-cyan-400 font-bold">SIH26192 Prototype</span>
-          <span>•</span>
-          <span>100% Truthful Provider Boundaries</span>
-          <span>•</span>
-          <span className="text-slate-300">Zero Fabricated Live Data</span>
-        </div>
-      </footer>
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 transition"
+              title={isPlaying ? 'Pause Flood Surge' : 'Resume Flood Surge'}
+            >
+              {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 text-cyan-400" />}
+            </button>
+          </div>
+        </header>
+
+        {/* ── CENTER HERO: BOLD PRISMA-STYLE WORDMARK & CINEMATIC DOCK ── */}
+        <main className="relative z-20 px-8 lg:px-16 my-auto flex flex-col items-start justify-center max-w-5xl space-y-6">
+          
+          {/* Keyframes for entrance animations */}
+          <style dangerouslySetInnerHTML={{__html: `
+            @keyframes slideUpFade {
+              0% { opacity: 0; transform: translateY(40px); filter: blur(8px); }
+              100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+            }
+            .animate-entrance-1 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; opacity: 0; }
+            .animate-entrance-2 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; opacity: 0; }
+            .animate-entrance-3 { animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards; opacity: 0; }
+          `}} />
+
+          {/* Subtle Category Bracket */}
+          <div className="flex items-center gap-2 text-xs font-mono text-rose-400 font-bold tracking-widest uppercase animate-entrance-1">
+            <span className="w-6 h-[2px] bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,1)]" />
+            <span>HYPER-LOCAL FLASH FLOOD INUNDATION & RESCUE INTELLIGENCE</span>
+          </div>
+
+          {/* Hero Title */}
+          <div className="space-y-2">
+            <h1 
+              className="text-6xl lg:text-8xl font-black font-sans tracking-tight text-white leading-none drop-shadow-[0_12px_45px_rgba(0,0,0,0.9)] animate-entrance-2"
+              style={{
+                letterSpacing: '-0.04em',
+              }}
+            >
+              FloodGuard <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-300 bg-clip-text text-transparent">AI</span>
+            </h1>
+            
+            <p className="text-base lg:text-lg text-slate-200/90 font-sans max-w-2xl leading-relaxed drop-shadow-md animate-entrance-3">
+              Physics-guided spatial intelligence, automated hydrological cascade detection, and zero-hindsight life-saving evacuation routing across 28 Indian states.
+            </p>
+          </div>
+
+          {/* Primary Action & Controls Dock */}
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              onClick={() => handleFastTrack('DISTRICT_OPERATOR')}
+              className="px-6 py-3.5 rounded-full bg-white hover:bg-slate-100 text-slate-950 font-sans font-black text-sm flex items-center gap-3 shadow-[0_0_40px_rgba(255,255,255,0.45)] active:scale-95 transition-all transform hover:translate-x-1"
+            >
+              <span>Launch Command Center</span>
+              <div className="w-7 h-7 rounded-full bg-slate-950 text-white flex items-center justify-center">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </button>
+
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="px-5 py-3.5 rounded-full bg-slate-950/85 hover:bg-slate-900 border border-slate-700/80 text-white font-mono text-xs font-bold flex items-center gap-2 backdrop-blur-xl shadow-xl active:scale-95 transition"
+            >
+              <Lock className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Officer Authentication</span>
+            </button>
+
+            <button
+              onClick={toggleAudio}
+              className={`p-3.5 rounded-full border transition active:scale-95 flex items-center gap-2 text-xs font-mono backdrop-blur-xl ${
+                audioPlaying
+                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
+                  : 'bg-slate-950/85 text-slate-400 border-slate-800 hover:text-white'
+              }`}
+              title="Toggle Ambient Flood Torrent & River Soundscape"
+            >
+              {audioPlaying ? <Volume2 className="w-4 h-4 text-rose-400 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+              <span>{audioPlaying ? 'Flood Torrent: ON' : 'Audio Soundscape'}</span>
+            </button>
+          </div>
+
+          {/* Fast-Track Role Pills */}
+          <div className="pt-4 flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-mono text-slate-400 font-bold uppercase tracking-wider mr-1">
+              EXPLORE STATUTORY ROLES:
+            </span>
+            {[
+              { id: 'NATIONAL_OPERATOR' as UserRole, label: '🇮🇳 NDMA Commander' },
+              { id: 'DISTRICT_OPERATOR' as UserRole, label: '🏢 District EOC' },
+              { id: 'FIELD_RESPONDER' as UserRole, label: '🚒 SDRF / Rescue' },
+              { id: 'ANALYST' as UserRole, label: '📊 GIS Analyst' },
+              { id: 'CITIZEN' as UserRole, label: '🏠 Resident Safety' },
+            ].map((r) => (
+              <button
+                key={r.id}
+                onClick={() => handleFastTrack(r.id)}
+                className="px-3 py-1.5 rounded-xl bg-slate-950/75 hover:bg-cyan-950/90 border border-slate-800 hover:border-cyan-500/60 text-slate-300 hover:text-cyan-300 text-xs font-mono font-bold backdrop-blur-md transition active:scale-95 shadow-md"
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+
+        </main>
+
+        {/* ── BOTTOM STATUS BAR & CREDENTIALS STRIP ── */}
+        <footer className="relative z-20 px-8 lg:px-12 py-5 flex items-center justify-between gap-3 border-t border-slate-900/80 bg-slate-950/70 backdrop-blur-xl text-xs font-mono text-slate-400">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-rose-400">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+              FLASH FLOOD SURGE INUNDATION: 6.8m (EXTREME PRE-CONDITION)
+            </span>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-300">Composite Risk: 68.5 (HIGH) • Antecedent Rain: 48mm</span>
+          </div>
+
+          <div className="flex items-center gap-4 text-[11px]">
+            <span className="text-cyan-400 font-bold">SIH26192 Prototype</span>
+            <span>•</span>
+            <span>100% Truthful Provider Boundaries</span>
+            <span>•</span>
+            <span className="text-slate-300">Zero Fabricated Live Data</span>
+          </div>
+        </footer>
+      </div>
 
       {/* ── 6. FLOATING MODAL: OFFICER LOGIN & ROLE SELECTION ── */}
       {showLoginModal && (
