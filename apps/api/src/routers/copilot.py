@@ -151,8 +151,21 @@ def _build_structured_answer(
         lines.append(f"**Current Hazard Assessment**: {r_level} ({r_score}/100) | **Model**: {m_ver} ({m_type}, Status: {m_stat})")
         lines.append("")
 
+    # 0. Greetings & Identity Queries
+    if any(q_lower == g or q_lower.startswith(g + " ") or q_lower.endswith(" " + g) for g in ["hello", "hi", "hey", "namaste", "greetings", "good morning", "good afternoon", "good evening", "who are you", "what can you do", "help"]):
+        lines.append("### Greetings from FloodGuard AI Voice Copilot 👋")
+        lines.append("Hello! I am your FloodGuard AI Copilot — an autonomous decision-support system designed for Indian hilly and flood-prone river basins.")
+        lines.append("I can provide instant, verified answers regarding:")
+        lines.append("• **Real-Time Risk & Telemetry**: Rainfall intensity, soil moisture saturation, and river stage rate of rise.")
+        lines.append("• **4-Tier ML Models**: Tier A Baseline, Tier B Logistic, Tier C Random Forest (CSI: 0.9903), and Tier D Anomaly Screener.")
+        lines.append("• **Physical Hydrology Equations**: Manning's open-channel formula, Rational Method, SCS-CN runoff, and TWI.")
+        lines.append("• **Historical Disasters**: Kedarnath 2013, Chamoli 2021, Sikkim 2023 GLOF, and Wayanad 2024.")
+        lines.append("• **Life Safety & Evacuation**: Safe ridge routes, shelter navigation, and 112 emergency escalation.")
+        lines.append("\nHow may I assist your disaster management operations today?")
+        return "\n".join(lines)
+
     # 1. Historical Disaster Inquiries
-    if any(h in q_lower for h in ["chamoli", "kedarnath", "sikkim", "lhonak", "wayanad", "melamchi", "mumbai 2005", "chennai 2015", "history", "historical"]):
+    elif any(h in q_lower for h in ["chamoli", "kedarnath", "sikkim", "lhonak", "wayanad", "melamchi", "mumbai 2005", "chennai 2015", "history", "historical"]):
         lines.append("### Authoritative Historical Event Reconstruction")
         matched_chunks = [c for c in chunks if any(k in c.title.lower() or k in c.content.lower() for k in ["chamoli", "kedarnath", "sikkim", "wayanad", "melamchi", "historical"])]
         if matched_chunks:
