@@ -598,43 +598,43 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
   return (
     <div className="fixed inset-y-0 right-0 z-[850] w-full sm:w-[480px] lg:w-[540px] bg-[#060c1e]/95 backdrop-blur-2xl border-l-2 border-cyan-500/40 shadow-[-10px_0_40px_rgba(0,0,0,0.8)] flex flex-col text-slate-100 select-none animate-slide-right">
       {/* Header */}
-      <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-cyan-950/80 border border-cyan-500/50 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-            <Bot className="w-5 h-5 animate-pulse" />
+      <div className="p-3.5 sm:p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/90 shrink-0 gap-2">
+        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-cyan-950/80 border border-cyan-500/50 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.4)] shrink-0">
+            <Bot className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
           </div>
-          <div>
-            <h3 className="font-mono text-sm font-black text-white flex items-center gap-1.5">
+          <div className="min-w-0">
+            <h3 className="font-mono text-xs sm:text-sm font-black text-white flex items-center gap-1.5 truncate">
               <span>FLOODGUARD AI VOICE COPILOT</span>
             </h3>
-            <div className="text-[10px] font-mono text-cyan-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-              <span>VOICE DIALOGUE & KNOWLEDGE ENGINE ACTIVE</span>
+            <div className="text-[9px] sm:text-[10px] font-mono text-cyan-400 flex items-center gap-1 truncate">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+              <span className="truncate">VOICE DIALOGUE & KNOWLEDGE ENGINE ACTIVE</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 shrink-0">
           {/* Auto-Voice Toggle */}
           <button
             onClick={() => {
               setAutoSpeak(!autoSpeak);
               if (isSpeaking) stopSpeaking();
             }}
-            className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 border transition active:scale-95 ${
+            className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1 border transition active:scale-95 ${
               autoSpeak
                 ? 'bg-cyan-950/80 border-cyan-500/50 text-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.3)]'
                 : 'bg-slate-900 border-slate-800 text-slate-500'
             }`}
             title={autoSpeak ? 'Auto-Voice Enabled: AI will speak responses' : 'Auto-Voice Muted'}
           >
-            {autoSpeak ? <Volume2 className="w-3 h-3 text-cyan-400" /> : <VolumeX className="w-3 h-3 text-slate-500" />}
-            <span className="hidden xs:inline">{autoSpeak ? 'VOICE ON' : 'MUTED'}</span>
+            {autoSpeak ? <Volume2 className="w-3.5 h-3.5 text-cyan-400" /> : <VolumeX className="w-3.5 h-3.5 text-slate-500" />}
+            <span className="hidden xs:inline sm:inline">{autoSpeak ? 'VOICE ON' : 'MUTED'}</span>
           </button>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition active:scale-95 border border-slate-800"
+            className="p-1.5 sm:p-2 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition active:scale-95 border border-slate-800"
             title="Close AI Assistant"
           >
             <X className="w-4 h-4" />
@@ -644,22 +644,22 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
 
       {/* Speech Error Banner */}
       {speechError && (
-        <div className="bg-amber-950/90 border-b border-amber-800/80 px-4 py-2 text-xs font-mono text-amber-200 flex items-center gap-2 animate-slide-up">
+        <div className="bg-amber-950/90 border-b border-amber-800/80 px-4 py-2 text-xs font-mono text-amber-200 flex items-center gap-2 animate-slide-up shrink-0">
           <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
           <span>{speechError}</span>
         </div>
       )}
 
-      {/* Preset Category Switcher Pills */}
-      <div className="px-3 py-2 border-b border-slate-800/80 bg-slate-950/40 flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0">
+      {/* Preset Category Switcher Pills — shrink-0 ensures pills never compress and overlap on mobile */}
+      <div className="px-3 py-2.5 border-b border-slate-800/80 bg-slate-950/70 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 touch-pan-x">
         {knowledgeCategories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold whitespace-nowrap transition active:scale-95 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap shrink-0 transition active:scale-95 flex items-center gap-1.5 ${
               activeCategory === cat.id
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.2)]'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent'
+                ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-500/60 shadow-[0_0_12px_rgba(6,182,212,0.25)]'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-slate-800/80 bg-slate-900/40'
             }`}
           >
             {cat.label}
@@ -821,12 +821,13 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
         <span className="text-[10px] font-mono text-slate-400 uppercase font-bold tracking-wider block">
           SUGGESTED GROUNDED INQUIRIES ({activeCategory})
         </span>
-        <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 touch-pan-x">
           {presetQueries[activeCategory]?.map((pq, idx) => (
             <button
               key={idx}
               onClick={() => handleSend(pq)}
-              className="text-[10px] font-mono bg-slate-900/90 hover:bg-slate-800 hover:text-cyan-300 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-800 whitespace-nowrap transition active:scale-95 text-left shrink-0"
+              className="text-xs font-mono bg-slate-900/90 hover:bg-slate-800 hover:text-cyan-300 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-800 whitespace-nowrap transition active:scale-95 text-left shrink-0 max-w-[300px] truncate"
+              title={pq}
             >
               {pq}
             </button>
@@ -835,11 +836,11 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       </div>
 
       {/* Input Bar with Microphone Voice Trigger */}
-      <div className="p-3.5 border-t border-slate-800 bg-slate-950 flex items-center gap-2 shrink-0">
+      <div className="p-3 sm:p-3.5 pb-6 sm:pb-3.5 border-t border-slate-800 bg-slate-950 flex items-center gap-2 shrink-0">
         {/* Voice Input Button */}
         <button
           onClick={toggleListening}
-          className={`p-2.5 rounded-xl transition active:scale-95 border shadow-lg flex items-center justify-center ${
+          className={`p-2.5 sm:p-3 rounded-xl transition active:scale-95 border shadow-lg flex items-center justify-center shrink-0 ${
             isListening
               ? 'bg-rose-600 border-rose-400 text-white animate-pulse shadow-[0_0_20px_rgba(225,29,72,0.6)]'
               : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-cyan-300 hover:border-cyan-500/50'
@@ -855,7 +856,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend(query)}
           placeholder={isListening ? 'Listening to your voice...' : 'Speak or type any question...'}
-          className={`flex-1 bg-slate-900 border rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 font-mono focus:outline-none transition ${
+          className={`flex-1 min-w-0 bg-slate-900 border rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 font-mono focus:outline-none transition ${
             isListening ? 'border-rose-500 ring-2 ring-rose-500/30' : 'border-slate-700/80 focus:border-cyan-400'
           }`}
         />
@@ -863,7 +864,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
         <button
           onClick={() => handleSend(query)}
           disabled={!query.trim() || loading}
-          className="btn-primary p-2.5 rounded-xl text-white disabled:opacity-40 transition active:scale-95 shadow-lg"
+          className="btn-primary p-2.5 sm:p-3 rounded-xl text-white disabled:opacity-40 transition active:scale-95 shadow-lg shrink-0"
           title="Send query"
         >
           <Send className="w-4 h-4" />
