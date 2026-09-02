@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { CommandPalette } from './CommandPalette';
 import { MobileNavDrawer } from './MobileNavDrawer';
+import { MobileConfigDrawer } from './MobileConfigDrawer';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
 import { useAdaptive, UserRole, OperatingMode } from '@/context/AdaptiveContext';
 import { INDIAN_STATES } from '@/data/states';
@@ -22,6 +23,7 @@ export const Header: React.FC<{
 }> = ({ dataMode = 'DEMO', systemStatus = 'OPERATIONAL', onOpenCopilot }) => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [mobileConfigOpen, setMobileConfigOpen] = useState(false);
   const [donateModalOpen, setDonateModalOpen] = useState(false);
   
   const { selectedLocation, selectLocationById } = useLocation();
@@ -235,7 +237,7 @@ export const Header: React.FC<{
             /* Citizen Context Strip */
             <div className="flex items-center gap-2 shrink-0">
               <button
-                onClick={() => setMobileDrawerOpen(true)}
+                onClick={() => setMobileConfigOpen(true)}
                 className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold hover:bg-cyan-900 active:scale-95 transition shrink-0"
                 title="Tap to change location"
               >
@@ -269,9 +271,9 @@ export const Header: React.FC<{
             <div className="flex items-center gap-2 shrink-0">
               {/* Interactive Location Badge */}
               <button
-                onClick={() => setMobileDrawerOpen(true)}
+                onClick={() => setMobileConfigOpen(true)}
                 className="text-cyan-300 font-bold shrink-0 flex items-center gap-1 bg-cyan-950/70 hover:bg-cyan-900/80 border border-cyan-500/40 px-2 py-0.5 rounded-lg active:scale-95 transition"
-                title="Tap to change region or river basin"
+                title="Tap to change region, state, role, or river basin"
               >
                 <MapPin className="w-3 h-3 text-cyan-400" />
                 <span className="sm:hidden">{hierarchy.district ? `${hierarchy.state} • ${hierarchy.district}` : hierarchy.state}</span>
@@ -319,10 +321,16 @@ export const Header: React.FC<{
         onClose={() => setCommandPaletteOpen(false)}
       />
 
-      {/* Global Mobile Navigation Drawer */}
+      {/* Top-Left Menu: Disaster Navigation Portal Drawer (Zero Red Box Options) */}
       <MobileNavDrawer
         isOpen={mobileDrawerOpen}
         onClose={() => setMobileDrawerOpen(false)}
+      />
+
+      {/* Sector, Role, Language & Mode Configuration Drawer (Red Box Options Only) */}
+      <MobileConfigDrawer
+        isOpen={mobileConfigOpen}
+        onClose={() => setMobileConfigOpen(false)}
       />
 
       {/* Global Disaster Relief Donation Modal */}

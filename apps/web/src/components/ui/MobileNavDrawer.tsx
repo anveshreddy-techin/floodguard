@@ -10,10 +10,6 @@ import {
   PhoneCall, Sparkles, ArrowRight, Download, UserCheck, RefreshCw,
   Server, Brain, Zap, Users, Bot, MapPin, CloudRain, Heart
 } from 'lucide-react';
-import { useLocation, LOCATIONS } from '@/context/LocationContext';
-import { useAdaptive, UserRole, OperatingMode } from '@/context/AdaptiveContext';
-import { LANGUAGES, SupportedLanguage } from '@/data/i18n';
-import { INDIAN_STATES } from '@/data/states';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -22,17 +18,6 @@ interface MobileNavDrawerProps {
 
 export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
-  const { selectedLocation, selectLocationById } = useLocation();
-  const {
-    operatingMode,
-    setOperatingMode,
-    role,
-    setRole,
-    language,
-    setLanguage,
-    hierarchy,
-    setStateFilter,
-  } = useAdaptive();
 
   // Prevent background body scroll when drawer is open
   useEffect(() => {
@@ -47,19 +32,6 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
   }, [isOpen]);
 
   if (!isOpen) return null;
-
-  const ROLES_LIST: { id: UserRole; label: string; iconBadge: string }[] = [
-    { id: 'CITIZEN', label: 'Citizen / Resident', iconBadge: '🏠' },
-    { id: 'VILLAGE_OPERATOR', label: 'Village Operator', iconBadge: '🌾' },
-    { id: 'FIELD_RESPONDER', label: 'Field Responder', iconBadge: '🚒' },
-    { id: 'DISTRICT_OPERATOR', label: 'District EOC Operator', iconBadge: '🏢' },
-    { id: 'STATE_OPERATOR', label: 'State SEOC Commander', iconBadge: '🏛️' },
-    { id: 'NATIONAL_OPERATOR', label: 'National NDMA Commander', iconBadge: '🇮🇳' },
-    { id: 'ANALYST', label: 'GIS / ML Analyst', iconBadge: '📊' },
-    { id: 'RESEARCHER', label: 'Researcher', iconBadge: '🔬' },
-    { id: 'ADMIN', label: 'System Administrator', iconBadge: '⚙️' },
-    { id: 'VIEWER', label: 'Public Viewer', iconBadge: '👁️' },
-  ];
 
   const navSections = [
     {
@@ -79,7 +51,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
         { id: 'map', label: 'Hyper-Local GIS', href: '/map', icon: Map },
         { id: 'cascade', label: 'Upstream Cascade', href: '/cascade', icon: Layers },
         { id: 'weather', label: 'Weather Intelligence', href: '/weather', icon: CloudRain, badge: 'IMD+NWP' },
-        { id: 'village', label: 'Village Dossier', href: '/village/demo-village-003', icon: Map },
+        { id: 'village', label: 'Village Dossier', href: '/village/loc-uk-chamoli', icon: Map },
         { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle, badge: 'WHAT-IF' },
         { id: 'sensors', label: 'IoT & Telemetry', href: '/sensors', icon: Activity },
         { id: 'upload', label: 'Data Ingestion', href: '/upload', icon: UploadCloud },
@@ -132,6 +104,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
       {/* Modern Aero Slide-out Drawer Sheet */}
       <div className="relative w-full max-w-sm bg-gradient-to-b from-[#0c1836] via-[#081229] to-[#040a18] border-r border-cyan-500/30 flex flex-col h-full z-[10000] animate-slide-right shadow-[0_0_60px_rgba(6,182,212,0.25)] safe-top safe-bottom">
+        
         {/* Drawer Header */}
         <div className="p-4 border-b border-cyan-500/20 bg-[#0c1836]/90 backdrop-blur-xl flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -141,7 +114,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 FLOODGUARD <span className="text-cyan-400 font-mono font-normal">AI</span>
               </div>
               <div className="text-[9px] font-mono text-rose-400 font-bold">
-                SIH26192 • NATIONAL PLATFORM
+                SIH26192 • DISASTER PORTAL
               </div>
             </div>
           </div>
@@ -155,132 +128,8 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           </button>
         </div>
 
-        {/* Global Mode + Role + Language Controls Grid */}
-        <div className="p-3 border-b border-cyan-500/20 bg-[#09142d]/80 space-y-2.5">
-          
-          {/* Operating Mode Selector */}
-          <div>
-            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
-              OPERATING MODE:
-            </div>
-            <div className="grid grid-cols-2 gap-1.5">
-              <button
-                onClick={() => setOperatingMode('DEMO')}
-                className={`py-1.5 px-2 rounded-xl text-xs font-mono font-bold border transition ${
-                  operatingMode === 'DEMO'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
-                    : 'bg-slate-900 text-slate-400 border-slate-800'
-                }`}
-              >
-                DEMO MODE
-              </button>
-              <button
-                onClick={() => setOperatingMode('REAL_PILOT')}
-                className={`py-1.5 px-2 rounded-xl text-xs font-mono font-bold border transition ${
-                  operatingMode === 'REAL_PILOT'
-                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
-                    : 'bg-slate-900 text-slate-400 border-slate-800'
-                }`}
-              >
-                REAL/PILOT
-              </button>
-            </div>
-          </div>
-
-          {/* Role Selector */}
-          <div>
-            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
-              <UserCheck className="w-3 h-3 text-indigo-400" />
-              <span>ACTIVE USER ROLE:</span>
-            </div>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value as UserRole)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-indigo-200 font-bold focus:outline-none focus:border-cyan-400"
-            >
-              {ROLES_LIST.map((r) => (
-                <option key={r.id} value={r.id} className="bg-slate-950 text-slate-200">
-                  {r.iconBadge} {r.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Language Selector */}
-          <div>
-            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
-              <Globe className="w-3 h-3 text-cyan-400" />
-              <span>LANGUAGE (भाषा):</span>
-            </div>
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
-            >
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code} className="bg-slate-950 text-slate-200">
-                  {l.native} ({l.label})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* State / UT Selector */}
-          <div>
-            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-cyan-400" />
-              <span>STATE / UT SECTOR:</span>
-            </div>
-            <select
-              value={hierarchy.state}
-              onChange={(e) => {
-                setStateFilter(e.target.value);
-                const matched = LOCATIONS.find(
-                  (l) => l.state.toLowerCase() === e.target.value.toLowerCase() ||
-                         e.target.value.toLowerCase().includes(l.state.toLowerCase())
-                );
-                if (matched) {
-                  selectLocationById(matched.id);
-                }
-              }}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 font-bold focus:outline-none focus:border-cyan-400"
-            >
-              {INDIAN_STATES.map((st) => (
-                <option key={st.id} value={st.name} className="bg-slate-950 text-slate-200">
-                  {st.name} ({st.rivers[0]} Basin)
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Location Sector Switcher */}
-          <div>
-            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase mb-1 flex items-center gap-1">
-              <Map className="w-3 h-3 text-cyan-400" />
-              <span>MONITORED ZONE / CORRIDOR:</span>
-            </div>
-            <select
-              value={selectedLocation.id}
-              onChange={(e) => {
-                selectLocationById(e.target.value);
-                const loc = LOCATIONS.find(l => l.id === e.target.value);
-                if (loc) setStateFilter(loc.state);
-                onClose();
-              }}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 font-bold focus:outline-none focus:border-cyan-400"
-            >
-              {LOCATIONS.map((loc) => (
-                <option key={loc.id} value={loc.id} className="bg-slate-950 text-slate-200">
-                  {loc.name} ({loc.region})
-                </option>
-              ))}
-            </select>
-          </div>
-
-        </div>
-
         {/* Navigation Sections Scroll Area */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-4 bg-transparent">
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-4 bg-transparent">
           {navSections.map((sec) => (
             <div key={sec.title} className="space-y-1">
               <div className={`text-[9px] font-mono font-bold px-2 tracking-wider ${sec.phaseColor}`}>

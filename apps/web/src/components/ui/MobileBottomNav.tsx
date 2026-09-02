@@ -8,17 +8,17 @@ import {
   Compass, 
   PlayCircle, 
   FileText, 
-  Menu, 
+  SlidersHorizontal,
   Activity,
   Layers,
   Sparkles
 } from 'lucide-react';
 
 interface MobileBottomNavProps {
-  onOpenDrawer: () => void;
+  onOpenConfig: () => void;
 }
 
-export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenDrawer }) => {
+export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenConfig }) => {
   const pathname = usePathname();
 
   const navItems = [
@@ -103,16 +103,17 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenDrawer }
           );
         })}
 
-        {/* 5th Action: Full Disaster Menu Drawer */}
+        {/* 5th Action: Sector & Mode Configuration Drawer (Red Box Controls) */}
         <button
-          onClick={onOpenDrawer}
+          onClick={onOpenConfig}
           className="flex-1 flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-cyan-300 active:scale-90 transition"
+          title="Open Sector, Role, Language & Mode Settings"
         >
           <div className="w-5 h-5 rounded-lg bg-slate-900/90 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-sm">
-            <Menu className="w-3.5 h-3.5" />
+            <SlidersHorizontal className="w-3.5 h-3.5" />
           </div>
           <span className="text-[10px] font-mono mt-0.5 text-slate-400">
-            More
+            Sector
           </span>
         </button>
       </div>
