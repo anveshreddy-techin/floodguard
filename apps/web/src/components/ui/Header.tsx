@@ -77,10 +77,10 @@ export const Header: React.FC<{
         style={{ boxShadow: '0 4px 25px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(56,189,248,0.1)' }}
       >
         {/* Row 1: Primary Navigation Bar (56px) */}
-        <div className="h-14 px-2 sm:px-4 lg:px-6 flex items-center justify-between gap-2 max-w-full overflow-hidden relative">
+        <div className="h-14 px-2 sm:px-4 lg:px-6 flex items-center justify-between gap-1.5 sm:gap-3 max-w-full relative">
           
-          {/* Left: Hamburger (mobile) + Brand Wordmark + Mode */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 min-w-0">
+          {/* Left: Hamburger (mobile) + Brand Wordmark */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
             <button
               onClick={() => setMobileDrawerOpen(true)}
               className="md:hidden w-8 h-8 rounded-xl bg-slate-900/90 border border-cyan-500/30 flex items-center justify-center text-cyan-400 active:scale-95 transition shrink-0 shadow-sm"
@@ -122,43 +122,57 @@ export const Header: React.FC<{
             </div>
           </div>
 
-          {/* ── CENTER HERO: SOS EMERGENCY RESCUE BUTTON (Sleek/Compact on Mobile, Bold on Desktop) ── */}
-          <div className="flex items-center justify-center shrink-0">
+          {/* ── CENTER HERO: SOS EMERGENCY RESCUE BUTTON (Desktop prominent center, Mobile sleek compact) ── */}
+          <div className="hidden sm:flex items-center justify-center shrink-0">
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new CustomEvent('open-emergency-modal'));
                 }
               }}
-              className="relative group flex items-center gap-1 sm:gap-2 px-2.5 sm:px-4 md:px-5 py-1 sm:py-1.5 md:py-2 rounded-full font-mono font-bold sm:font-black text-[11px] sm:text-xs md:text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 transition-all shadow-[0_0_18px_rgba(239,68,68,0.7)] ring-1 sm:ring-2 ring-rose-400/60 ring-offset-1 ring-offset-slate-950 shrink-0"
+              className="relative group flex items-center gap-1.5 md:gap-2 px-3 sm:px-4 md:px-5 py-1.5 md:py-2 rounded-full font-mono font-bold md:font-black text-xs md:text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 transition-all shadow-[0_0_18px_rgba(239,68,68,0.7)] ring-2 ring-rose-400/60 ring-offset-1 ring-offset-slate-950 shrink-0"
               title="Immediate Emergency Rescue & Disaster Helpline Dispatch (Hotkey: E)"
             >
-              <span className="hidden sm:flex relative h-2.5 w-2.5 sm:h-3 sm:w-3">
+              <span className="relative flex h-2.5 w-2.5 sm:h-3 sm:w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-90" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 bg-white" />
               </span>
-              <PhoneCall className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-white animate-bounce shrink-0" />
-              <span className="tracking-tight sm:tracking-wide">SOS 112</span>
+              <PhoneCall className="w-3.5 h-3.5 md:w-4 md:h-4 text-white animate-bounce shrink-0" />
+              <span className="tracking-wide">SOS 112</span>
               <span className="hidden md:inline-block px-1.5 py-0.2 text-[10px] bg-red-950/80 rounded-md text-red-200 border border-red-400/40 font-mono">
                 CALL
               </span>
             </button>
           </div>
 
-          {/* Right: Controls & Actions (Cleanly separated) */}
+          {/* Right: Controls & Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             
-            {/* Disaster Relief Donation Button */}
+            {/* Mobile-Only SOS Button (Compact, Sleek Pill) */}
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-emergency-modal'));
+                }
+              }}
+              className="sm:hidden flex items-center gap-1 px-2.5 py-1 rounded-full font-mono font-bold text-[11px] text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 active:scale-95 transition-all shadow-[0_0_14px_rgba(239,68,68,0.6)] ring-1 ring-rose-400/60 shrink-0"
+              title="Immediate Emergency Rescue (112)"
+            >
+              <PhoneCall className="w-3 h-3 text-white animate-bounce shrink-0" />
+              <span>SOS 112</span>
+            </button>
+
+            {/* Disaster Relief Donation Button (Desktop / Tablet) */}
             <button
               onClick={() => setDonateModalOpen(true)}
-              className="hidden xs:flex px-2 sm:px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-rose-950/80 hover:bg-rose-900 border border-rose-500/70 text-rose-300 items-center gap-1 shadow-[0_0_12px_rgba(244,63,94,0.3)] active:scale-95 transition shrink-0"
+              className="hidden sm:flex px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-rose-950/80 hover:bg-rose-900 border border-rose-500/70 text-rose-300 items-center gap-1 shadow-[0_0_12px_rgba(244,63,94,0.3)] active:scale-95 transition shrink-0"
               title="Donate to Disaster Relief Funds (80G Tax Exempt)"
             >
               <Heart className="w-3.5 h-3.5 fill-rose-500/50 text-rose-400 animate-pulse" />
-              <span className="hidden sm:inline">DONATE</span>
+              <span className="hidden md:inline">DONATE</span>
             </button>
 
-            {/* AI Copilot Button - Top Header (Hotkey: A) */}
+            {/* AI Copilot Button */}
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
@@ -169,7 +183,7 @@ export const Header: React.FC<{
               title="Open Grounded AI Disaster Copilot (Hotkey: A)"
             >
               <Bot className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span className="hidden sm:inline">COPILOT</span>
+              <span className="hidden md:inline">COPILOT</span>
             </button>
 
             {/* Desktop Role Selector Dropdown */}
@@ -188,7 +202,7 @@ export const Header: React.FC<{
               </select>
             </div>
 
-            {/* Language Switcher (Desktop: Dropdown | Mobile: Clean 1-Tap Pill) */}
+            {/* Language Switcher (Desktop: Dropdown) */}
             <div className="hidden sm:flex items-center gap-1 bg-slate-900/90 border border-slate-800 px-2 py-1 rounded-xl text-xs font-mono shrink-0">
               <Globe className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
               <select
@@ -204,16 +218,6 @@ export const Header: React.FC<{
               </select>
             </div>
 
-            {/* Mobile State Picker Badge with Full State Name */}
-            <button
-              onClick={() => setMobileDrawerOpen(true)}
-              className="sm:hidden flex items-center gap-1 bg-slate-900 border border-cyan-500/40 px-2 py-1 rounded-xl text-xs font-mono text-cyan-300 font-bold active:scale-95 transition shadow-sm shrink-0"
-              title="Tap to change state or location"
-            >
-              <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span className="font-bold max-w-[70px] truncate">{hierarchy.state}</span>
-            </button>
-
             {/* Search (Ctrl+K) - Desktop */}
             <button
               onClick={() => setCommandPaletteOpen(true)}
@@ -225,14 +229,19 @@ export const Header: React.FC<{
           </div>
         </div>
 
-        {/* Row 2: Sub-Bar Context & Breadcrumbs (Clean horizontal scroll strip) */}
-        <div className="h-8 border-t border-slate-900 px-3 sm:px-4 flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none text-[11px] font-mono select-none">
+        {/* Row 2: Sub-Bar Context & Breadcrumbs (Sleek horizontal scroll strip) */}
+        <div className="h-8 border-t border-slate-900 bg-[#040a1a]/95 px-2.5 sm:px-4 flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar text-[11px] font-mono select-none">
           {isCitizen ? (
             /* Citizen Context Strip */
             <div className="flex items-center gap-2 shrink-0">
-              <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold shrink-0">
-                {hierarchy.district || hierarchy.state}
-              </span>
+              <button
+                onClick={() => setMobileDrawerOpen(true)}
+                className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold hover:bg-cyan-900 active:scale-95 transition shrink-0"
+                title="Tap to change location"
+              >
+                <MapPin className="w-3 h-3 text-cyan-400" />
+                <span>{hierarchy.district || hierarchy.state}</span>
+              </button>
               <span className="px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30 font-bold shrink-0">
                 Risk: {selectedLocation.riskLevel} ({selectedLocation.riskScore}/100)
               </span>
@@ -258,37 +267,44 @@ export const Header: React.FC<{
           ) : (
             /* Command & Operator Context Strip */
             <div className="flex items-center gap-2 shrink-0">
-              <span className="text-cyan-400 font-bold shrink-0 flex items-center gap-1">
-                <MapPin className="w-3 h-3" /> {breadcrumb}
-              </span>
+              {/* Interactive Location Badge */}
+              <button
+                onClick={() => setMobileDrawerOpen(true)}
+                className="text-cyan-300 font-bold shrink-0 flex items-center gap-1 bg-cyan-950/70 hover:bg-cyan-900/80 border border-cyan-500/40 px-2 py-0.5 rounded-lg active:scale-95 transition"
+                title="Tap to change region or river basin"
+              >
+                <MapPin className="w-3 h-3 text-cyan-400" />
+                <span className="sm:hidden">{hierarchy.district ? `${hierarchy.state} • ${hierarchy.district}` : hierarchy.state}</span>
+                <span className="hidden sm:inline">{breadcrumb}</span>
+              </button>
               
-              <span className="text-slate-600 shrink-0">|</span>
+              <span className="text-slate-700 shrink-0">|</span>
               
-              <span className="text-indigo-300 shrink-0 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+              <span className="text-indigo-300 shrink-0 bg-slate-900/90 px-2 py-0.5 rounded-lg border border-slate-800">
                 {regionalModel.split(' ')[0]}
               </span>
 
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-rose-950/60 text-rose-300 border border-rose-800/40 shrink-0">
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800/40 shrink-0">
                 <Radio className="w-3 h-3 animate-pulse text-rose-400" /> Upstream: ACTIVE
               </span>
 
               <Link
-                href="/alerts"
-                className="px-2 py-0.5 rounded bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-800/40 font-bold shrink-0"
+                href="/incidents"
+                className="px-2 py-0.5 rounded-lg bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-800/40 font-bold shrink-0"
               >
                 {t('active_alerts')}: 2
               </Link>
 
               <Link
                 href="/incidents"
-                className="px-2 py-0.5 rounded bg-blue-950/60 hover:bg-blue-900 text-blue-300 border border-blue-800/40 font-bold shrink-0"
+                className="px-2 py-0.5 rounded-lg bg-blue-950/60 hover:bg-blue-900 text-blue-300 border border-blue-800/40 font-bold shrink-0"
               >
                 {t('response_tasks')}: 4
               </Link>
 
               <Link
                 href="/data-sources"
-                className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-850 text-slate-400 border border-slate-800 shrink-0"
+                className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-850 text-slate-400 border border-slate-800 shrink-0"
               >
                 Sources: DEGRADED
               </Link>
