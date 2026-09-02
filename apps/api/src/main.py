@@ -61,6 +61,9 @@ app.add_middleware(
     expose_headers=["X-Trace-ID", "X-FloodGuard-Data-Mode"],
 )
 
+from .middleware.security_headers import SecurityHeadersMiddleware
+app.add_middleware(SecurityHeadersMiddleware)
+
 
 @app.middleware("http")
 async def trace_id_middleware(request: Request, call_next):
@@ -125,7 +128,7 @@ async def system_version():
 # ─── Routers ───────────────────────────────────────────────────────────────────
 
 from .routers import auth, locations, risk, alerts, incidents, iot, uploads, simulation, audit, system, hazards, shelters, copilot, hindcast, predictions, safety
-from .routers import ingestion, weather, community, donations
+from .routers import ingestion, weather, community, donations, data_sources, quality, features as features_router
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(locations.router, prefix="/api/v1/locations", tags=["Locations & GIS"])
@@ -138,6 +141,9 @@ app.include_router(copilot.router, prefix="/api/v1/copilot", tags=["Copilot"])
 app.include_router(iot.router, prefix="/api/v1/iot", tags=["IoT & Sensors"])
 app.include_router(uploads.router, prefix="/api/v1/uploads", tags=["Data Upload"])
 app.include_router(ingestion.router, tags=["Ingestion Pipeline"])
+app.include_router(data_sources.router, prefix="/api/v1/sources", tags=["Data Sources"])
+app.include_router(quality.router, prefix="/api/v1/quality", tags=["Data Quality"])
+app.include_router(features_router.router, prefix="/api/v1/features", tags=["Feature Store"])
 app.include_router(weather.router, tags=["Weather Intelligence"])
 app.include_router(community.router, tags=["Community Intelligence"])
 app.include_router(donations.router, tags=["Disaster Relief & Donations"])

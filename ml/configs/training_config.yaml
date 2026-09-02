@@ -1,0 +1,42 @@
+# FloodGuard AI — ML Training Configuration
+# Baseline parameters for model experimentation and benchmark calibration
+
+version: "1.0.0-demo"
+data_mode: "DEMO"
+limitations: "DEMO_ONLY model — research prototype calibrated on synthetic/hindcast data; not operationally validated."
+
+targets:
+  flash_flood_30min:
+    window_minutes: 30
+    positive_class_threshold: 0.50
+    label_version: "v1.0-demo"
+  river_warning_exceedance:
+    window_minutes: 60
+    positive_class_threshold: 0.50
+    label_version: "v1.0-demo"
+
+feature_version: "v1.0"
+
+baseline_weights:
+  rainfall_1h_mm: 0.30
+  soil_saturation_index: 0.25
+  river_rate_of_rise_mph: 0.20
+  slope_degrees: 0.10
+  antecedent_7d_mm: 0.15
+
+baseline_thresholds:
+  LOW: 0.25
+  MODERATE: 0.45
+  HIGH: 0.65
+  EXTREME: 0.82
+
+training:
+  test_fraction: 0.20
+  temporal_gap_days: 7.0
+  min_train_samples: 50
+  min_positive_samples: 10
+
+evaluation:
+  primary_metric: "pr_auc"
+  operational_threshold: 0.50
+  min_csi_for_pilot: 0.40

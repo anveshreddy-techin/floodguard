@@ -99,6 +99,34 @@ class RiskContributor:
     staleness_hours: float | None = None
 
 
+import joblib
+from pathlib import Path
+
+_active_ml_model: Any = None
+_active_model_version: str = "baseline_v1.0"
+_active_model_type: str = "TRANSPARENT_BASELINE"
+_active_model_limitations: str = "Tier A Rule-Based Baseline — calibrated physical weights; demo validation only."
+
+
+def load_ml_model(model_path: str | Path | None = None) -> bool:
+    """Load ML model from registry. Returns True if ML model loaded, False = use baseline."""
+    global _active_ml_model, _active_model_version, _active_model_type, _active_model_limitations
+    if not model_path or not Path(model_path).exists():
+        _active_model_type = "TRANSPARENT_BASELINE"
+        _active_ml_model = None
+        return False
+    try:
+        _active_ml_model = joblib.load(model_path)
+        _active_model_version = getattr(_active_ml_model, "version", "custom_ml_v1.0")
+        _active_model_type = getattr(_active_ml_model, "model_type", "ML_MODEL")
+        _active_model_limitations = getattr(_active_ml_model, "limitations", "Trained ML model.")
+        return True
+    except Exception:
+        _active_model_type = "TRANSPARENT_BASELINE"
+        _active_ml_model = None
+        return False
+
+
 @dataclass
 class RiskOutput:
     """Full risk assessment output with evidence and explanation"""
@@ -116,6 +144,9 @@ class RiskOutput:
     feature_snapshot: dict
     data_sources_used: list[str]
     data_freshness: str
+    model_type: str = "TRANSPARENT_BASELINE"
+    model_status: str = "FALLBACK_BASELINE"
+    uncertainty_reason: str = ""
 
 
 # ─── Component Scorers ────────────────────────────────────────────────────────
@@ -404,7 +435,7 @@ class HybridRiskEngine:
                 "No real-time IMD/CWC data in prototype mode",
                 "Terrain data from SRTM 30m — local drainage details may be missed",
             ],
-            model_version=self.MODEL_VERSION,
+            model_version=_active_model_version if _active_ml_model else self.MODEL_VERSION,
             assessed_at=now,
             feature_snapshot={
                 "rainfall": _to_dict(rainfall),
@@ -414,6 +445,9 @@ class HybridRiskEngine:
             },
             data_sources_used=data_sources,
             data_freshness="DEMO",
+            model_type=_active_model_type,
+            model_status="ML_ACTIVE" if _active_ml_model else "FALLBACK_BASELINE",
+            uncertainty_reason=f"Telemetry gaps: {len(all_gaps)} factors unverified or modeled",
         )
 
     def _build_summary(self, level: RiskLevel, top: RiskContributor | None, score: float) -> str:

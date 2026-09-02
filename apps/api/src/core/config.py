@@ -91,9 +91,26 @@ class Settings(BaseSettings):
     EMAIL_PROVIDER: str = "disabled"
     EMAIL_API_KEY: str = ""
 
-    # Copilot
+    # Copilot / RAG
     COPILOT_PROVIDER: str = "disabled"
     COPILOT_API_KEY: str = ""
+    COPILOT_LLM_PROVIDER: str = "disabled"  # "disabled"|"openai"|"ollama"|"google"
+    COPILOT_LLM_BASE_URL: str = ""
+    COPILOT_LLM_MODEL: str = ""
+    VECTOR_STORE_PATH: str = "data/vector_store"
+    KNOWLEDGE_BASE_DIR: str = "docs/copilot"
+
+    # Feature Store & Model Registry
+    FEATURE_STORE_DIR: str = "data/feature_store"
+    MODEL_REGISTRY_DIR: str = "ml/artifacts"
+
+    # Alert governance
+    ALERT_APPROVAL_REQUIRED: bool = True  # Public alerts always need approval
+    CAP_EXPORT_ENABLED: bool = True
+
+    # Data mode guards & thresholds
+    STALE_THRESHOLD_MINUTES: int = 60  # Data older than this is STALE
+    DANGER_THRESHOLD_MINUTES: int = 180  # Data older than this is UNAVAILABLE
 
     # Scheduler
     SCHEDULER_ENABLED: bool = True
@@ -101,7 +118,6 @@ class Settings(BaseSettings):
 
     # ML
     RISK_CONFIG_PATH: str = "ml/models/risk_config.json"
-    MODEL_ARTIFACTS_DIR: str = "ml/models"
 
     # Map
     MAP_PROVIDER: str = "openstreetmap"
