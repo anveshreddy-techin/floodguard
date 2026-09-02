@@ -11,7 +11,12 @@ from typing import Any
 
 import joblib
 import numpy as np
-import pandas as pd
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+    pd = None
 from sklearn.ensemble import IsolationForest
 
 
@@ -25,7 +30,7 @@ class AnomalyModel:
     limitations: str = "Tier D Unsupervised Anomaly Screener. Outputs anomaly likelihood score; does not classify disaster types."
 
     def score_samples(self, X: pd.DataFrame | np.ndarray) -> np.ndarray:
-        if isinstance(X, pd.DataFrame):
+        if HAS_PANDAS and isinstance(X, pd.DataFrame):
             X_mat = X[self.feature_names].fillna(0.0).values
         else:
             X_mat = np.nan_to_num(X)
@@ -67,7 +72,7 @@ class AnomalyTrainer:
         contamination: float = 0.05,
         version: str = "1.0.0-anomaly-demo",
     ) -> AnomalyModel:
-        if isinstance(X_normal, pd.DataFrame):
+        if HAS_PANDAS and isinstance(X_normal, pd.DataFrame):
             f_names = feature_names or list(X_normal.columns)
             X_mat = X_normal[f_names].fillna(0.0).values
         else:

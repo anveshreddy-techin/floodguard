@@ -12,7 +12,12 @@ from typing import Any
 
 import joblib
 import numpy as np
-import pandas as pd
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+    pd = None
 
 
 @dataclass

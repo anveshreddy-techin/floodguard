@@ -10,7 +10,12 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
-import pandas as pd
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+    pd = None
 from sklearn.metrics import (
     average_precision_score,
     brier_score_loss,

@@ -127,6 +127,13 @@ def load_ml_model(model_path: str | Path | None = None) -> bool:
         return False
 
 
+# Auto-load trained pilot ensemble model if present on disk
+_default_pilot_artifact = Path("ml/artifacts/tier_c_tree_ensemble.joblib")
+if _default_pilot_artifact.exists():
+    load_ml_model(_default_pilot_artifact)
+
+
+
 @dataclass
 class RiskOutput:
     """Full risk assessment output with evidence and explanation"""

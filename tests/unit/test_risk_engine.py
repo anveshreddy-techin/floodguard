@@ -65,5 +65,5 @@ def test_data_provenance_labels():
     output = engine.assess(
         rainfall=RainfallFeatures(intensity_mmph=15.0, data_mode="DEMO"),
     )
-    assert output.model_version == "rule_based_baseline_v1"
+    assert output.model_version in ("rule_based_baseline_v1", "2.0.0-tree-ensemble")
     assert "rainfall" in output.data_sources_used

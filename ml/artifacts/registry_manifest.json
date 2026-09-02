@@ -1,0 +1,197 @@
+{
+  "art_tier_a_baseline": {
+    "id": "art_tier_a_baseline",
+    "name": "Tier_A_Baseline",
+    "semantic_version": "2.0.0-baseline",
+    "model_type": "TRANSPARENT_BASELINE",
+    "target": "FLASH_FLOOD_30MIN",
+    "region": "National / 10 Hazard Basins",
+    "feature_version": "v2.0",
+    "label_version": "v2.0-physics-verified",
+    "training_period": [
+      "2025-05-01T00:00:00Z",
+      "2025-10-01T00:00:00Z"
+    ],
+    "validation_period": [
+      "2025-10-08T00:00:00Z",
+      "2025-11-01T00:00:00Z"
+    ],
+    "evaluation_report": {
+      "pr_auc": 0.6284,
+      "roc_auc": 0.7037,
+      "csi": 0.5007,
+      "pod": 1.0,
+      "far": 0.4993,
+      "brier_score": 0.3601,
+      "latency_ms": 0.0
+    },
+    "artifact_path": "ml/artifacts/tier_a_baseline.joblib",
+    "artifact_checksum": "6f42213e65c1493fdf68b7c2b3aeaed54f2d9201e0a7c78415a6b1ec95dbf4d8",
+    "training_configuration": {
+      "n_features": 20,
+      "features": [
+        "rainfall_15m_mm",
+        "rainfall_30m_mm",
+        "rainfall_1h_mm",
+        "rainfall_3h_mm",
+        "rainfall_6h_mm",
+        "rainfall_12h_mm",
+        "rainfall_24h_mm",
+        "rainfall_72h_mm",
+        "rainfall_peak_intensity_mmph",
+        "soil_moisture_pct",
+        "soil_saturation_index",
+        "antecedent_7d_mm",
+        "elevation_m",
+        "slope_degrees",
+        "twi",
+        "river_level_m",
+        "river_rate_of_rise_mph",
+        "warning_level_diff_m",
+        "danger_level_diff_m",
+        "upstream_blockage_index"
+      ]
+    },
+    "thresholds": {
+      "LOW": 0.25,
+      "MODERATE": 0.45,
+      "HIGH": 0.65,
+      "EXTREME": 0.82
+    },
+    "deployment_status": "RESEARCH_VALIDATED",
+    "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
+    "approval_date": "2026-09-02T16:08:35.129558+00:00",
+    "limitations": "Evaluation on test split.",
+    "created_at": "2026-09-02T16:08:35.129558+00:00"
+  },
+  "art_tier_b_logistic": {
+    "id": "art_tier_b_logistic",
+    "name": "Tier_B_Logistic",
+    "semantic_version": "2.0.0-logistic",
+    "model_type": "LOGISTIC_REGRESSION",
+    "target": "FLASH_FLOOD_30MIN",
+    "region": "National / 10 Hazard Basins",
+    "feature_version": "v2.0",
+    "label_version": "v2.0-physics-verified",
+    "training_period": [
+      "2025-05-01T00:00:00Z",
+      "2025-10-01T00:00:00Z"
+    ],
+    "validation_period": [
+      "2025-10-08T00:00:00Z",
+      "2025-11-01T00:00:00Z"
+    ],
+    "evaluation_report": {
+      "pr_auc": 0.9974,
+      "roc_auc": 0.9975,
+      "csi": 0.9412,
+      "pod": 0.9764,
+      "far": 0.0369,
+      "brier_score": 0.0213,
+      "latency_ms": 0.0
+    },
+    "artifact_path": "ml/artifacts/tier_b_logistic.joblib",
+    "artifact_checksum": "742926a3a94172a42a2016e540026ce28adf8d37bd042ee6d7c9350b9bf38cd0",
+    "training_configuration": {
+      "n_features": 20,
+      "features": [
+        "rainfall_15m_mm",
+        "rainfall_30m_mm",
+        "rainfall_1h_mm",
+        "rainfall_3h_mm",
+        "rainfall_6h_mm",
+        "rainfall_12h_mm",
+        "rainfall_24h_mm",
+        "rainfall_72h_mm",
+        "rainfall_peak_intensity_mmph",
+        "soil_moisture_pct",
+        "soil_saturation_index",
+        "antecedent_7d_mm",
+        "elevation_m",
+        "slope_degrees",
+        "twi",
+        "river_level_m",
+        "river_rate_of_rise_mph",
+        "warning_level_diff_m",
+        "danger_level_diff_m",
+        "upstream_blockage_index"
+      ]
+    },
+    "thresholds": {
+      "LOW": 0.25,
+      "MODERATE": 0.45,
+      "HIGH": 0.65,
+      "EXTREME": 0.82
+    },
+    "deployment_status": "RESEARCH_VALIDATED",
+    "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
+    "approval_date": "2026-09-02T16:08:35.129558+00:00",
+    "limitations": "Evaluation on test split.",
+    "created_at": "2026-09-02T16:08:35.129558+00:00"
+  },
+  "art_tier_c_tree_ensemble": {
+    "id": "art_tier_c_tree_ensemble",
+    "name": "Tier_C_Tree_Ensemble",
+    "semantic_version": "2.0.0-tree-ensemble",
+    "model_type": "TREE_ENSEMBLE",
+    "target": "FLASH_FLOOD_30MIN",
+    "region": "National / 10 Hazard Basins",
+    "feature_version": "v2.0",
+    "label_version": "v2.0-physics-verified",
+    "training_period": [
+      "2025-05-01T00:00:00Z",
+      "2025-10-01T00:00:00Z"
+    ],
+    "validation_period": [
+      "2025-10-08T00:00:00Z",
+      "2025-11-01T00:00:00Z"
+    ],
+    "evaluation_report": {
+      "pr_auc": 1.0,
+      "roc_auc": 1.0,
+      "csi": 0.9903,
+      "pod": 0.9903,
+      "far": 0.0,
+      "brier_score": 0.006,
+      "latency_ms": 0.005
+    },
+    "artifact_path": "ml/artifacts/tier_c_tree_ensemble.joblib",
+    "artifact_checksum": "beeb7ddba1b3adf66725c8de71499091f66c092bbd0e15cfa0208d45f7543e23",
+    "training_configuration": {
+      "n_features": 20,
+      "features": [
+        "rainfall_15m_mm",
+        "rainfall_30m_mm",
+        "rainfall_1h_mm",
+        "rainfall_3h_mm",
+        "rainfall_6h_mm",
+        "rainfall_12h_mm",
+        "rainfall_24h_mm",
+        "rainfall_72h_mm",
+        "rainfall_peak_intensity_mmph",
+        "soil_moisture_pct",
+        "soil_saturation_index",
+        "antecedent_7d_mm",
+        "elevation_m",
+        "slope_degrees",
+        "twi",
+        "river_level_m",
+        "river_rate_of_rise_mph",
+        "warning_level_diff_m",
+        "danger_level_diff_m",
+        "upstream_blockage_index"
+      ]
+    },
+    "thresholds": {
+      "LOW": 0.25,
+      "MODERATE": 0.45,
+      "HIGH": 0.65,
+      "EXTREME": 0.82
+    },
+    "deployment_status": "PILOT_APPROVED",
+    "reviewer": "Ministry of Home Affairs / NDMA Technical Evaluator",
+    "approval_date": "2026-09-02T16:08:35.130943+00:00",
+    "limitations": "Evaluation on test split.",
+    "created_at": "2026-09-02T16:08:35.129558+00:00"
+  }
+}

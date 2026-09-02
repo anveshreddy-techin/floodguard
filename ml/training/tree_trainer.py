@@ -11,7 +11,12 @@ from typing import Any
 
 import joblib
 import numpy as np
-import pandas as pd
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+    pd = None
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 
 
@@ -27,7 +32,7 @@ class TreeEnsembleModel:
     limitations: str = ""
 
     def predict_proba(self, X: pd.DataFrame | np.ndarray) -> np.ndarray:
-        if isinstance(X, pd.DataFrame):
+        if HAS_PANDAS and isinstance(X, pd.DataFrame):
             X_mat = X[self.feature_names].fillna(0.0).values
         else:
             X_mat = np.nan_to_num(X)
@@ -62,7 +67,7 @@ class TreeTrainer:
         feature_names: list[str] | None = None,
         version: str = "1.0.0-trees-demo",
     ) -> TreeEnsembleModel:
-        if isinstance(X_train, pd.DataFrame):
+        if HAS_PANDAS and isinstance(X_train, pd.DataFrame):
             f_names = feature_names or list(X_train.columns)
             X_tr_mat = X_train[f_names].fillna(0.0).values
         else:
