@@ -111,3 +111,28 @@ async def submit_community_report(payload: Dict[str, Any] = Body(...)):
         "report": rep,
         "message": "Field observation submitted to human verification queue.",
     }
+
+
+@router.post("/safety/route/dynamic")
+async def calculate_dynamic_evacuation_route(
+    origin_lat: float = Query(..., description="User current latitude"),
+    origin_lon: float = Query(..., description="User current longitude"),
+    dest_lat: float = Query(..., description="Target shelter latitude"),
+    dest_lon: float = Query(..., description="Target shelter longitude"),
+    hazard_lat: float = Query(30.485, description="Hazard corridor center latitude"),
+    hazard_lon: float = Query(79.692, description="Hazard corridor center longitude"),
+):
+    """
+    Dynamic A* Hazard-Aware Evacuation Route Pathfinder.
+    Computes elevation-weighted waypoints avoiding submerged corridors.
+    """
+    route = route_engine.calculate_dynamic_route(
+        origin_lat=origin_lat,
+        origin_lon=origin_lon,
+        destination_lat=dest_lat,
+        destination_lon=dest_lon,
+        hazard_center_lat=hazard_lat,
+        hazard_center_lon=hazard_lon,
+    )
+    return {"status": "success", "route": route}
+
