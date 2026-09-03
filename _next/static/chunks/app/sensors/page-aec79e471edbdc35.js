@@ -13,7 +13,7 @@
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */let a=(0,s(843).Z)("TrendingUp",[["polyline",{points:"22 7 13.5 15.5 8.5 10.5 2 17",key:"126l90"}],["polyline",{points:"16 7 22 7 22 13",key:"kwv8wd"}]])},1606:function(e,t,s){"use strict";s.r(t),s.d(t,{default:function(){return y}});var a=s(7437),r=s(2265),n=s(2437),l=s(6869),i=s(8551),o=s(644),d=s(8096),c=s(843);/**
+ */let a=(0,s(843).Z)("TrendingUp",[["polyline",{points:"22 7 13.5 15.5 8.5 10.5 2 17",key:"126l90"}],["polyline",{points:"16 7 22 7 22 13",key:"kwv8wd"}]])},1606:function(e,t,s){"use strict";s.r(t),s.d(t,{default:function(){return y}});var a=s(7437),r=s(2265),n=s(2437),l=s(6869),i=s(8551),o=s(5462),d=s(8096),c=s(843);/**
  * @license lucide-react v0.363.0 - ISC
  *
  * This source code is licensed under the ISC license.
