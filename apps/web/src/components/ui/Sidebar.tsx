@@ -118,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       items: [
         { id: 'data-sources', label: 'Data Sources', href: '/data-sources', icon: Server },
         { id: 'ingestion', label: 'Ingestion Jobs', href: '/ingestion', icon: RefreshCw },
-        { id: 'model-monitoring', label: 'ML Models', href: '/model-monitoring', icon: Brain },
+        { id: 'model-monitoring', label: 'NDRF ML Studio', href: '/model-monitoring', icon: Brain },
         { id: 'recovery', label: 'Recovery', href: '/recovery', icon: Zap },
         { id: 'cross-border', label: 'Cross-Border Basins', href: '/cross-border', icon: Globe },
         { id: 'missing-persons', label: 'Missing Persons', href: '/missing-persons', icon: Users, badge: 'PROTECTED' },

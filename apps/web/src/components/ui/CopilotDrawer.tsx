@@ -188,6 +188,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
   // Preset question categories covering the ENTIRE knowledge base
   const knowledgeCategories = [
     { id: 'TOP', label: '🔥 Top Queries' },
+    { id: 'NDRF', label: '🚨 MHA & NDRF Mandate' },
     { id: 'PAN_INDIA', label: '🇮🇳 Pan-India Basins' },
     { id: 'RISK', label: '📊 Risk & Physics' },
     { id: 'SAFETY', label: '🏃 Safety & Routes' },
@@ -203,6 +204,15 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       "How does FloodGuard scale across all major river basins in India?",
       "How does FloodGuard align with official SIH26192 problem statement?",
     ],
+    NDRF: [
+      "How does FloodGuard integrate the 5 MHA multi-source data pillars?",
+      "Explain the Infinite Slope Factor of Safety equation for slope stability.",
+      "What is the village-level actionable lead time formula for NDRF evacuation?",
+      "What are the CSI, POD, and FAR scores for the Tier C ML model?",
+      "What are the 4 NDRF alert stages and their operational directives?",
+      "What lessons from Kedarnath 2013 and Chamoli 2021 shaped this system?",
+    ],
+
     PAN_INDIA: [
       "How does FloodGuard model Western Ghats landslide cascades in Wayanad and Chiplun?",
       "Explain the GLOF early warning system for Sikkim Teesta Basin and South Lhonak lake",

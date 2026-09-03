@@ -17,18 +17,18 @@
       "2025-11-01T00:00:00Z"
     ],
     "evaluation_report": {
-      "pr_auc": 0.6284,
-      "roc_auc": 0.7037,
-      "csi": 0.5007,
+      "pr_auc": 0.8221,
+      "roc_auc": 0.8268,
+      "csi": 0.7241,
       "pod": 1.0,
-      "far": 0.4993,
-      "brier_score": 0.3601,
+      "far": 0.2759,
+      "brier_score": 0.1961,
       "latency_ms": 0.0
     },
     "artifact_path": "ml/artifacts/tier_a_baseline.joblib",
-    "artifact_checksum": "6f42213e65c1493fdf68b7c2b3aeaed54f2d9201e0a7c78415a6b1ec95dbf4d8",
+    "artifact_checksum": "28780eaa41ac40960533011e65d8c40b12747813f4663afc7d4936f59018cf80",
     "training_configuration": {
-      "n_features": 20,
+      "n_features": 25,
       "features": [
         "rainfall_15m_mm",
         "rainfall_30m_mm",
@@ -45,11 +45,16 @@
         "elevation_m",
         "slope_degrees",
         "twi",
+        "factor_of_safety_fos",
+        "landslide_susceptibility_index",
+        "historical_landslides_count",
         "river_level_m",
         "river_rate_of_rise_mph",
         "warning_level_diff_m",
         "danger_level_diff_m",
-        "upstream_blockage_index"
+        "upstream_blockage_index",
+        "geophone_debris_vibration_db",
+        "culvert_backpressure_ratio"
       ]
     },
     "thresholds": {
@@ -60,9 +65,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-02T16:08:35.129558+00:00",
+    "approval_date": "2026-09-03T10:31:23.827413+00:00",
     "limitations": "Evaluation on test split.",
-    "created_at": "2026-09-02T16:08:35.129558+00:00"
+    "created_at": "2026-09-03T10:31:23.827413+00:00"
   },
   "art_tier_b_logistic": {
     "id": "art_tier_b_logistic",
@@ -82,18 +87,18 @@
       "2025-11-01T00:00:00Z"
     ],
     "evaluation_report": {
-      "pr_auc": 0.9974,
-      "roc_auc": 0.9975,
-      "csi": 0.9412,
-      "pod": 0.9764,
-      "far": 0.0369,
-      "brier_score": 0.0213,
-      "latency_ms": 0.0
+      "pr_auc": 0.9972,
+      "roc_auc": 0.9954,
+      "csi": 0.9407,
+      "pod": 0.9481,
+      "far": 0.0083,
+      "brier_score": 0.03,
+      "latency_ms": 0.001
     },
     "artifact_path": "ml/artifacts/tier_b_logistic.joblib",
-    "artifact_checksum": "742926a3a94172a42a2016e540026ce28adf8d37bd042ee6d7c9350b9bf38cd0",
+    "artifact_checksum": "bba9efad227ac569a6f838157851b741b23a790fcfb1089074f4b05728d69cb4",
     "training_configuration": {
-      "n_features": 20,
+      "n_features": 25,
       "features": [
         "rainfall_15m_mm",
         "rainfall_30m_mm",
@@ -110,11 +115,16 @@
         "elevation_m",
         "slope_degrees",
         "twi",
+        "factor_of_safety_fos",
+        "landslide_susceptibility_index",
+        "historical_landslides_count",
         "river_level_m",
         "river_rate_of_rise_mph",
         "warning_level_diff_m",
         "danger_level_diff_m",
-        "upstream_blockage_index"
+        "upstream_blockage_index",
+        "geophone_debris_vibration_db",
+        "culvert_backpressure_ratio"
       ]
     },
     "thresholds": {
@@ -125,9 +135,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-02T16:08:35.129558+00:00",
+    "approval_date": "2026-09-03T10:31:23.827413+00:00",
     "limitations": "Evaluation on test split.",
-    "created_at": "2026-09-02T16:08:35.129558+00:00"
+    "created_at": "2026-09-03T10:31:23.827413+00:00"
   },
   "art_tier_c_tree_ensemble": {
     "id": "art_tier_c_tree_ensemble",
@@ -148,17 +158,17 @@
     ],
     "evaluation_report": {
       "pr_auc": 1.0,
-      "roc_auc": 1.0,
-      "csi": 0.9903,
-      "pod": 0.9903,
-      "far": 0.0,
-      "brier_score": 0.006,
-      "latency_ms": 0.005
+      "roc_auc": 0.9999,
+      "csi": 0.9416,
+      "pod": 1.0,
+      "far": 0.0584,
+      "brier_score": 0.0252,
+      "latency_ms": 0.009
     },
     "artifact_path": "ml/artifacts/tier_c_tree_ensemble.joblib",
-    "artifact_checksum": "beeb7ddba1b3adf66725c8de71499091f66c092bbd0e15cfa0208d45f7543e23",
+    "artifact_checksum": "f96492a40bfa4aa5db10458abdbdd507bc1545fb871bf98e7052351a97cf1a9c",
     "training_configuration": {
-      "n_features": 20,
+      "n_features": 25,
       "features": [
         "rainfall_15m_mm",
         "rainfall_30m_mm",
@@ -175,11 +185,16 @@
         "elevation_m",
         "slope_degrees",
         "twi",
+        "factor_of_safety_fos",
+        "landslide_susceptibility_index",
+        "historical_landslides_count",
         "river_level_m",
         "river_rate_of_rise_mph",
         "warning_level_diff_m",
         "danger_level_diff_m",
-        "upstream_blockage_index"
+        "upstream_blockage_index",
+        "geophone_debris_vibration_db",
+        "culvert_backpressure_ratio"
       ]
     },
     "thresholds": {
@@ -190,8 +205,8 @@
     },
     "deployment_status": "PILOT_APPROVED",
     "reviewer": "Ministry of Home Affairs / NDMA Technical Evaluator",
-    "approval_date": "2026-09-02T16:08:35.130943+00:00",
+    "approval_date": "2026-09-03T10:31:23.830644+00:00",
     "limitations": "Evaluation on test split.",
-    "created_at": "2026-09-02T16:08:35.129558+00:00"
+    "created_at": "2026-09-03T10:31:23.827413+00:00"
   }
 }

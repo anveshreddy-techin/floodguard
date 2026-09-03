@@ -10,14 +10,14 @@
 | Metric | Value | Target Guidance |
 |---|---|---|
 | **PR-AUC** | `1.0000` | > 0.70 |
-| **Critical Success Index (CSI)** | `0.9903` | > 0.40 |
-| **Probability of Detection (POD)** | `0.9903` | > 0.75 |
-| **False Alarm Ratio (FAR)** | `0.0000` | < 0.35 |
-| **Brier Score (Calibration)** | `0.0060` | < 0.15 |
+| **Critical Success Index (CSI)** | `0.9416` | > 0.40 |
+| **Probability of Detection (POD)** | `1.0000` | > 0.75 |
+| **False Alarm Ratio (FAR)** | `0.0584` | < 0.35 |
+| **Brier Score (Calibration)** | `0.0252` | < 0.15 |
 | **Inference Latency** | `0.01 ms` | < 100 ms |
 
 ## Data & Sample Sizing
-- Test Samples: `1440` (Positive: `721`, `50.07%`)
+- Test Samples: `1440` (Positive: `887`, `61.6%`)
 - Statistical Reliability: `RELIABLE`
 
 ## Limitations & Operational Warnings

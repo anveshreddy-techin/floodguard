@@ -15,19 +15,26 @@ class HydrologyDatasetGenerator:
     """Generates synthetic and hindcast-aligned multi-variable telemetry sequences."""
 
     REGIONS = {
-        "UK_CHAMOLI": {"name": "Chamoli / Rishiganga (Uttarakhand)", "elevation": 2400.0, "slope": 32.0, "twi": 7.8, "base_river": 2.1, "warn_river": 4.5, "danger_river": 6.0},
-        "UK_KEDARNATH": {"name": "Kedarnath / Mandakini (Uttarakhand)", "elevation": 3100.0, "slope": 35.0, "twi": 8.1, "base_river": 1.8, "warn_river": 4.0, "danger_river": 5.5},
-        "HP_KULLU": {"name": "Kullu Valley / Beas (Himachal Pradesh)", "elevation": 1800.0, "slope": 26.0, "twi": 8.9, "base_river": 2.5, "warn_river": 5.0, "danger_river": 6.8},
-        "SK_TEESTA": {"name": "North Sikkim / Teesta Basin (Sikkim)", "elevation": 2800.0, "slope": 30.0, "twi": 8.0, "base_river": 2.2, "warn_river": 4.8, "danger_river": 6.2},
-        "AS_CACHAR": {"name": "Barak / Cachar Valley (Assam)", "elevation": 120.0, "slope": 6.0, "twi": 12.4, "base_river": 14.5, "warn_river": 19.8, "danger_river": 21.2},
-        "KL_WAYANAD": {"name": "Chooralmala / Meppadi (Wayanad, Kerala)", "elevation": 950.0, "slope": 28.0, "twi": 9.4, "base_river": 1.9, "warn_river": 3.8, "danger_river": 5.0},
-        "MH_MAHABALESHWAR": {"name": "Koyna / Krishna Headwaters (Maharashtra)", "elevation": 1350.0, "slope": 22.0, "twi": 9.1, "base_river": 3.0, "warn_river": 6.5, "danger_river": 8.0},
-        "BR_KOSI": {"name": "Kosi Basin Downstream (Bihar)", "elevation": 65.0, "slope": 2.0, "twi": 13.8, "base_river": 45.0, "warn_river": 48.5, "danger_river": 50.0},
-        "OR_MAHANADI": {"name": "Hirakud Downstream / Mahanadi (Odisha)", "elevation": 85.0, "slope": 3.5, "twi": 11.5, "base_river": 22.0, "warn_river": 26.5, "danger_river": 28.0},
-        "JK_JHELUM": {"name": "Srinagar / Jhelum Basin (Jammu & Kashmir)", "elevation": 1580.0, "slope": 12.0, "twi": 10.8, "base_river": 4.2, "warn_river": 6.5, "danger_river": 8.2},
+        "UK_CHAMOLI": {"name": "Chamoli / Rishiganga (Uttarakhand)", "elevation": 2400.0, "slope": 32.0, "twi": 7.8, "base_river": 2.1, "warn_river": 4.5, "danger_river": 6.0, "landslide_susceptibility": 0.88, "historical_landslides": 34},
+        "UK_KEDARNATH": {"name": "Kedarnath / Mandakini (Uttarakhand)", "elevation": 3100.0, "slope": 35.0, "twi": 8.1, "base_river": 1.8, "warn_river": 4.0, "danger_river": 5.5, "landslide_susceptibility": 0.92, "historical_landslides": 42},
+        "HP_KULLU": {"name": "Kullu Valley / Beas (Himachal Pradesh)", "elevation": 1800.0, "slope": 26.0, "twi": 8.9, "base_river": 2.5, "warn_river": 5.0, "danger_river": 6.8, "landslide_susceptibility": 0.78, "historical_landslides": 28},
+        "SK_TEESTA": {"name": "North Sikkim / Teesta Basin (Sikkim)", "elevation": 2800.0, "slope": 30.0, "twi": 8.0, "base_river": 2.2, "warn_river": 4.8, "danger_river": 6.2, "landslide_susceptibility": 0.85, "historical_landslides": 31},
+        "AS_CACHAR": {"name": "Barak / Cachar Valley (Assam)", "elevation": 120.0, "slope": 6.0, "twi": 12.4, "base_river": 14.5, "warn_river": 19.8, "danger_river": 21.2, "landslide_susceptibility": 0.45, "historical_landslides": 12},
+        "KL_WAYANAD": {"name": "Chooralmala / Meppadi (Wayanad, Kerala)", "elevation": 950.0, "slope": 28.0, "twi": 9.4, "base_river": 1.9, "warn_river": 3.8, "danger_river": 5.0, "landslide_susceptibility": 0.89, "historical_landslides": 38},
+        "MH_MAHABALESHWAR": {"name": "Koyna / Krishna Headwaters (Maharashtra)", "elevation": 1350.0, "slope": 22.0, "twi": 9.1, "base_river": 3.0, "warn_river": 6.5, "danger_river": 8.0, "landslide_susceptibility": 0.65, "historical_landslides": 19},
+        "BR_KOSI": {"name": "Kosi Basin Downstream (Bihar)", "elevation": 65.0, "slope": 2.0, "twi": 13.8, "base_river": 45.0, "warn_river": 48.5, "danger_river": 50.0, "landslide_susceptibility": 0.20, "historical_landslides": 4},
+        "OR_MAHANADI": {"name": "Hirakud Downstream / Mahanadi (Odisha)", "elevation": 85.0, "slope": 3.5, "twi": 11.5, "base_river": 22.0, "warn_river": 26.5, "danger_river": 28.0, "landslide_susceptibility": 0.25, "historical_landslides": 6},
+        "JK_JHELUM": {"name": "Srinagar / Jhelum Basin (Jammu & Kashmir)", "elevation": 1580.0, "slope": 12.0, "twi": 10.8, "base_river": 4.2, "warn_river": 6.5, "danger_river": 8.2, "landslide_susceptibility": 0.60, "historical_landslides": 16},
     }
 
+    # 🇮🇳 5 Multi-Source Data Pillars matching NDRF / MHA SIH Specification:
+    # 1. Rainfall Data
+    # 2. Soil Moisture Sensors
+    # 3. Slope Stability Models (Factor of Safety + TWI)
+    # 4. Historical Landslide Inventories (GSI/NRSC)
+    # 5. Real-Time IoT Inputs (Radar + Geophone + Culvert)
     FEATURE_NAMES = [
+        # Pillar 1: Rainfall Data (Meteorological)
         "rainfall_15m_mm",
         "rainfall_30m_mm",
         "rainfall_1h_mm",
@@ -37,17 +44,26 @@ class HydrologyDatasetGenerator:
         "rainfall_24h_mm",
         "rainfall_72h_mm",
         "rainfall_peak_intensity_mmph",
+        # Pillar 2: Soil Moisture Sensors (Hydrological)
         "soil_moisture_pct",
         "soil_saturation_index",
         "antecedent_7d_mm",
+        # Pillar 3: Slope Stability Models (Geotechnical & Terrain)
         "elevation_m",
         "slope_degrees",
         "twi",
+        "factor_of_safety_fos",
+        # Pillar 4: Historical Landslide Inventories (Geological)
+        "landslide_susceptibility_index",
+        "historical_landslides_count",
+        # Pillar 5: Real-time IoT Inputs (Telemetry & Acoustic)
         "river_level_m",
         "river_rate_of_rise_mph",
         "warning_level_diff_m",
         "danger_level_diff_m",
         "upstream_blockage_index",
+        "geophone_debris_vibration_db",
+        "culvert_backpressure_ratio",
     ]
 
     def generate_dataset(
@@ -129,20 +145,42 @@ class HydrologyDatasetGenerator:
 
                 warn_diff = river_state - reg["warn_river"]
                 danger_diff = river_state - reg["danger_river"]
-
-                # Upstream debris / blockage index
                 upstream_blockage = float(np.random.uniform(0.0, 0.95)) if (is_storm and reg["slope"] > 25.0) else 0.0
 
-                # Target Ground Truth Hazard Definition
-                # Event occurs if: (Rain intensity >= 30mm/h AND soil saturation >= 0.75) OR (River exceeds danger) OR (Cloudburst on steep slope)
+                # Pillar 3: Geotechnical Slope Stability (Infinite Slope Model)
+                beta = math.radians(max(2.0, float(reg["slope"])))
+                phi = math.radians(32.0)
+                z = 2.0
+                gamma = 19.0
+                gamma_w = 9.81
+                hw = float(soil_sat_index) * z
+                effective_stress = (gamma * z - gamma_w * hw) * (math.cos(beta) ** 2)
+                shear_strength = 8.0 + effective_stress * math.tan(phi)
+                shear_stress = gamma * z * math.sin(beta) * math.cos(beta)
+                fos = float(np.clip(shear_strength / max(0.01, shear_stress), 0.25, 4.5))
+
+                # Pillar 4: Historical Landslide Inventory Data
+                landslide_susc = float(reg.get("landslide_susceptibility", 0.70))
+                hist_landslides = float(reg.get("historical_landslides", 20))
+
+                # Pillar 5: Real-time IoT Sensor Signals (Radar, Geophone Acoustic, Culvert)
+                base_vib = 22.0
+                surge_vib = min(60.0, max(0.0, river_rise * 35.0) + (upstream_blockage * 25.0))
+                geophone_db = round(base_vib + surge_vib + float(np.random.normal(0, 1.2)), 1)
+                culvert_backpressure = round(float(np.clip((river_state / reg["danger_river"]) * (1.0 + upstream_blockage * 0.4), 0.1, 2.5)), 3)
+
+                # Target Ground Truth Hazard Definition (Multi-Source Trigger)
                 is_flash_flood = int(
                     (peak_intensity >= 35.0 and soil_sat_index >= 0.70)
                     or (rain_3h >= 65.0 and reg["slope"] >= 20.0 and soil_sat_index >= 0.65)
+                    or (fos < 1.05 and soil_sat_index >= 0.80 and reg["slope"] >= 25.0)
                     or (danger_diff >= 0.0)
+                    or (geophone_db >= 68.0 and river_rise >= 0.35)
                     or (upstream_blockage >= 0.70 and rain_1h >= 25.0)
                 )
 
                 row = [
+                    # Pillar 1: Rainfall
                     round(rain_15m, 2),
                     round(rain_30m, 2),
                     round(rain_1h, 2),
@@ -152,17 +190,26 @@ class HydrologyDatasetGenerator:
                     round(rain_24h, 2),
                     round(rain_72h, 2),
                     round(peak_intensity, 2),
+                    # Pillar 2: Soil Moisture
                     round(soil_state, 2),
                     soil_sat_index,
                     round(antecedent_7d, 2),
+                    # Pillar 3: Slope Stability
                     reg["elevation"],
                     reg["slope"],
                     reg["twi"],
+                    round(fos, 3),
+                    # Pillar 4: Historical Landslide Inventory
+                    landslide_susc,
+                    hist_landslides,
+                    # Pillar 5: Real-time IoT Telemetry
                     round(river_state, 2),
                     round(river_rise, 3),
                     round(warn_diff, 2),
                     round(danger_diff, 2),
                     round(upstream_blockage, 2),
+                    geophone_db,
+                    culvert_backpressure,
                 ]
 
                 X_rows.append(row)

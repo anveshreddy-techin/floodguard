@@ -129,6 +129,7 @@ async def system_version():
 
 from .routers import auth, locations, risk, alerts, incidents, iot, uploads, simulation, audit, system, hazards, shelters, copilot, hindcast, predictions, safety
 from .routers import ingestion, weather, community, donations, data_sources, quality, features as features_router
+from .routers import ndrf_prediction
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(locations.router, prefix="/api/v1/locations", tags=["Locations & GIS"])
@@ -153,3 +154,4 @@ app.include_router(system.router, prefix="/api/v1/system", tags=["System"])
 app.include_router(hindcast.router, tags=["Historical Hindcast"])
 app.include_router(predictions.router, tags=["Prediction Memory"])
 app.include_router(safety.router, tags=["User Safety & Location Guidance"])
+app.include_router(ndrf_prediction.router, tags=["NDRF MHA Multi-Source Prediction"])
