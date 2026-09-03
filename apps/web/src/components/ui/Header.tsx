@@ -15,6 +15,7 @@ import {
   ChevronRight, Sparkles, Heart
 } from 'lucide-react';
 import { DonateModal } from '@/components/ui/donate/DonateModal';
+import { LocationSelectorModal } from '@/components/ui/LocationSelectorModal';
 
 export const Header: React.FC<{
   dataMode?: string;
@@ -25,6 +26,7 @@ export const Header: React.FC<{
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [mobileConfigOpen, setMobileConfigOpen] = useState(false);
   const [donateModalOpen, setDonateModalOpen] = useState(false);
+  const [locationModalOpen, setLocationModalOpen] = useState(false);
   
   const { selectedLocation, selectLocationById } = useLocation();
   const {
@@ -68,8 +70,13 @@ export const Header: React.FC<{
 
   React.useEffect(() => {
     const handleOpenDonate = () => setDonateModalOpen(true);
+    const handleOpenLocation = () => setLocationModalOpen(true);
     window.addEventListener('open-donate-modal', handleOpenDonate);
-    return () => window.removeEventListener('open-donate-modal', handleOpenDonate);
+    window.addEventListener('open-location-selector', handleOpenLocation);
+    return () => {
+      window.removeEventListener('open-donate-modal', handleOpenDonate);
+      window.removeEventListener('open-location-selector', handleOpenLocation);
+    };
   }, []);
 
   return (
@@ -237,12 +244,15 @@ export const Header: React.FC<{
             /* Citizen Context Strip */
             <div className="flex items-center gap-2 shrink-0">
               <button
-                onClick={() => setMobileConfigOpen(true)}
-                className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold hover:bg-cyan-900 active:scale-95 transition shrink-0"
-                title="Tap to change location"
+                onClick={() => setLocationModalOpen(true)}
+                className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold hover:bg-cyan-900 active:scale-95 transition shrink-0 shadow-sm"
+                title="Tap to change location or detect your GPS location"
               >
-                <MapPin className="w-3 h-3 text-cyan-400" />
+                <MapPin className="w-3 h-3 text-cyan-400 animate-pulse" />
                 <span>{hierarchy.district || hierarchy.state}</span>
+                <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-400/20 text-cyan-200 border border-cyan-400/40 font-mono font-bold">
+                  GPS
+                </span>
               </button>
               <span className="px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30 font-bold shrink-0">
                 Risk: {selectedLocation.riskLevel} ({selectedLocation.riskScore}/100)
@@ -271,13 +281,16 @@ export const Header: React.FC<{
             <div className="flex items-center gap-2 shrink-0">
               {/* Interactive Location Badge */}
               <button
-                onClick={() => setMobileConfigOpen(true)}
-                className="text-cyan-300 font-bold shrink-0 flex items-center gap-1 bg-cyan-950/70 hover:bg-cyan-900/80 border border-cyan-500/40 px-2 py-0.5 rounded-lg active:scale-95 transition"
-                title="Tap to change region, state, role, or river basin"
+                onClick={() => setLocationModalOpen(true)}
+                className="text-cyan-300 font-bold shrink-0 flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-400/50 px-2.5 py-0.5 rounded-lg active:scale-95 transition shadow-sm hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+                title="Tap to select any of 41 Pan-India disaster sectors or detect your GPS location"
               >
-                <MapPin className="w-3 h-3 text-cyan-400" />
+                <MapPin className="w-3 h-3 text-cyan-400 animate-pulse" />
                 <span className="sm:hidden">{hierarchy.district ? `${hierarchy.state} • ${hierarchy.district}` : hierarchy.state}</span>
                 <span className="hidden sm:inline">{breadcrumb}</span>
+                <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-cyan-400/20 text-[9px] text-cyan-200 border border-cyan-400/40 ml-1 font-mono font-bold">
+                  📍 CHANGE / GPS
+                </span>
               </button>
               
               <span className="text-slate-700 shrink-0">|</span>
@@ -337,6 +350,12 @@ export const Header: React.FC<{
       <DonateModal
         isOpen={donateModalOpen}
         onClose={() => setDonateModalOpen(false)}
+      />
+
+      {/* Pan-India Multi-Basin & GPS Location Selector Modal */}
+      <LocationSelectorModal
+        isOpen={locationModalOpen}
+        onClose={() => setLocationModalOpen(false)}
       />
     </>
   );

@@ -43,6 +43,9 @@ export default function CommandCenterPage() {
       if (e.key === 'm' || e.key === 'M') router.push('/map');
       if (e.key === 'h' || e.key === 'H') router.push('/hindcast');
       if (e.key === 'r' || e.key === 'R') router.push('/replay');
+      if (e.key === 'l' || e.key === 'L') {
+        window.dispatchEvent(new CustomEvent('open-location-selector'));
+      }
       if (e.key === 'Escape') { setDrawerOpen(false); setCopilotOpen(false); setMobileBottomSheetOpen(false); }
     };
     window.addEventListener('keydown', handleKeyDown);

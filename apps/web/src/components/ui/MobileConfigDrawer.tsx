@@ -11,7 +11,8 @@ import {
   CheckCircle2,
   Sparkles,
   ShieldCheck,
-  Radio
+  Radio,
+  Navigation
 } from 'lucide-react';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
 import { useAdaptive, UserRole, OperatingMode } from '@/context/AdaptiveContext';
@@ -222,6 +223,17 @@ export const MobileConfigDrawer: React.FC<MobileConfigDrawerProps> = ({ isOpen, 
                 </option>
               ))}
             </select>
+
+            <button
+              onClick={() => {
+                onClose();
+                window.dispatchEvent(new CustomEvent('open-location-selector'));
+              }}
+              className="w-full mt-2.5 py-2.5 px-3 rounded-xl bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-400/60 text-cyan-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition shadow-sm"
+            >
+              <Navigation className="w-3.5 h-3.5 text-cyan-400 fill-cyan-400" />
+              <span>DETECT GPS OR BROWSE ALL {LOCATIONS.length} SECTORS</span>
+            </button>
           </div>
 
         </div>
