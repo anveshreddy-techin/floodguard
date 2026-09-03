@@ -144,7 +144,6 @@ export default function HyperLocalGISPage() {
 
   const [mobileSheetTab, setMobileSheetTab] = useState<'INSPECTOR' | 'LAYERS' | 'PROFILE' | 'ISOCHRONES' | 'MORPHOMETRY'>('INSPECTOR');
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
-  const [particleOffset, setParticleOffset] = useState<number>(0);
 
   useEffect(() => {
     setPage('map');
@@ -153,14 +152,6 @@ export default function HyperLocalGISPage() {
     setRainfallMm(48);
     setRiverStage(3.8);
   }, [setPage, setMode, setRiskState, setRainfallMm, setRiverStage]);
-
-  // Vector stream pulse
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setParticleOffset((prev) => (prev + 1) % 100);
-    }, 35);
-    return () => clearInterval(interval);
-  }, []);
 
   const toggleLayer = (key: GisLayerKey) => {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -369,7 +360,7 @@ export default function HyperLocalGISPage() {
                     stroke="#00A8E8"
                     strokeWidth="3.5"
                     strokeDasharray="14 18"
-                    strokeDashoffset={-particleOffset * 2.2}
+                    className="flow-stream"
                     filter="url(#gisNeonGlow)"
                   />
 
@@ -381,7 +372,7 @@ export default function HyperLocalGISPage() {
                     stroke="#00A8E8"
                     strokeWidth="2"
                     strokeDasharray="8 14"
-                    strokeDashoffset={-particleOffset * 1.6}
+                    className="flow-stream-fast"
                   />
 
                   {/* Tributary 2 (Order 1) */}
@@ -399,7 +390,7 @@ export default function HyperLocalGISPage() {
                     stroke="#2ECC71"
                     strokeWidth="3.5"
                     strokeDasharray="8 8"
-                    strokeDashoffset={-particleOffset * 1.2}
+                    className="flow-stream-slow"
                     filter="url(#gisNeonGlow)"
                   />
                   {/* Shelter Isochrone Bands */}

@@ -25,22 +25,11 @@ export const NationalRiverRiskMap: React.FC<{
   const [selectedBasin, setSelectedBasin] = useState<RiverBasinId | 'ALL'>('ALL');
   const [minRiskFilter, setMinRiskFilter] = useState<number>(0);
   const [selectedPoint, setSelectedPoint] = useState<RiverPoint>(NATIONAL_RIVER_POINTS[0]);
-  const [particleOffset, setParticleOffset] = useState<number>(0);
   const [hoveredPoint, setHoveredPoint] = useState<RiverPoint | null>(null);
   const [viewMode, setViewMode] = useState<'MAP' | 'DIAGRAM' | 'ANALYTICS'>('MAP');
   const [flowAnimationSpeed, setFlowAnimationSpeed] = useState<'NORMAL' | 'FAST' | 'PAUSED'>('NORMAL');
   const [statsExpanded, setStatsExpanded] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
-
-  // Animated continuous river flow particles
-  useEffect(() => {
-    if (flowAnimationSpeed === 'PAUSED') return;
-    const step = flowAnimationSpeed === 'FAST' ? 2 : 1;
-    const interval = setInterval(() => {
-      setParticleOffset((prev) => (prev + step) % 200);
-    }, 40);
-    return () => clearInterval(interval);
-  }, [flowAnimationSpeed]);
 
   // Filtered river points
   const filteredPoints = useMemo(() => {
@@ -356,14 +345,14 @@ export const NationalRiverRiskMap: React.FC<{
                       strokeLinecap="round"
                     />
 
-                    {/* Animated Flow Particles */}
+                    {/* Animated Flow Particles (GPU-Accelerated) */}
                     <path
                       d={path.pathData}
                       fill="none"
                       stroke="#ffffff"
                       strokeWidth={path.strokeWidth * 0.8}
                       strokeDasharray="8 16"
-                      strokeDashoffset={-particleOffset}
+                      className={flowAnimationSpeed === 'FAST' ? 'flow-stream-fast' : 'flow-stream'}
                       strokeOpacity="0.9"
                       strokeLinecap="round"
                     />

@@ -65,17 +65,12 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
   const [activeLayer, setActiveLayer] = useState<MapLayerType>('RISK');
   const [legendOpen, setLegendOpen] = useState<boolean>(false);
   const [hoveredNode, setHoveredNode] = useState<any>(null);
-  const [particleOffset, setParticleOffset] = useState<number>(0);
   const [layerOpacity, setLayerOpacity] = useState<number>(85); // 0-100% layer transparency control
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
-  // Smooth 60fps vector stream flow loop
+  // Mount effect (no high-frequency JavaScript re-render loops)
   useEffect(() => {
     setMapLoaded(true);
-    const interval = setInterval(() => {
-      setParticleOffset((prev) => (prev + 1) % 100);
-    }, 35);
-    return () => clearInterval(interval);
   }, []);
 
   const mapNodes = useMemo(() => {
@@ -238,19 +233,19 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
               <stop offset="100%" stopColor="#0073E6" />
             </linearGradient>
 
-            {/* Neon Glow Filters */}
-            <filter id="neonWaterGlow" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="4.5" result="blur" />
+            {/* Neon Glow Filters (GPU-optimized lightweight) */}
+            <filter id="neonWaterGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
 
-            <filter id="riskHazardGlow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="6.5" result="blur" />
+            <filter id="riskHazardGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
 
-            <filter id="marker3DShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#000000" floodOpacity="0.8" />
+            <filter id="marker3DShadow" x="-10%" y="-10%" width="120%" height="120%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.6" />
             </filter>
           </defs>
 
@@ -322,14 +317,14 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
               strokeWidth="7"
               strokeLinecap="round"
             />
-            {/* Glowing Bright Cyan Flow Vector Particles */}
+            {/* Glowing Bright Cyan Flow Vector Particles (CSS Hardware-Accelerated) */}
             <path
               d="M 180,90 Q 280,140 360,220 T 480,280 T 640,420"
               fill="none"
               stroke="#00A8E8"
               strokeWidth="3.5"
               strokeDasharray="14 18"
-              strokeDashoffset={-particleOffset * 2.2}
+              className="flow-stream"
               filter="url(#neonWaterGlow)"
             />
 
@@ -346,7 +341,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
               stroke="#00A8E8"
               strokeWidth="2"
               strokeDasharray="8 14"
-              strokeDashoffset={-particleOffset * 1.6}
+              className="flow-stream-fast"
             />
 
             {/* Tributary 2 (Order 1) */}
@@ -358,7 +353,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
             />
           </g>
 
-          {/* Candidate Escape Route with Traveling Particle */}
+          {/* Candidate Escape Route with Traveling Particle (CSS Hardware-Accelerated) */}
           <g>
             <path
               d="M 480,280 Q 540,250 610,210"
@@ -366,7 +361,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
               stroke="#2ECC71"
               strokeWidth="3.5"
               strokeDasharray="8 8"
-              strokeDashoffset={-particleOffset * 1.2}
+              className="flow-stream-slow"
               filter="url(#neonWaterGlow)"
             />
             {/* Blocked Riverbed Link in Crimson Red */}

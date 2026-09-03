@@ -105,12 +105,13 @@ export const EnvironmentLayer: React.FC = () => {
 
       ctx.clearRect(0, 0, w, h);
 
-      if (prefersReduced.current) {
+      // On command-center, the full opaque vector map already fills the viewport — don't waste CPU/GPU
+      if (prefersReduced.current || page === 'command-center') {
         rafRef.current = requestAnimationFrame(render);
         return;
       }
 
-      /* ── Layer 4: Atmospheric particles ── */
+      /* ── Layer 4: Atmospheric particles (lightweight) ── */
       const ps = particlesRef.current;
       for (let i = 0; i < ps.length; i++) {
         const p = ps[i];
@@ -120,30 +121,12 @@ export const EnvironmentLayer: React.FC = () => {
         if (p.x < 0) p.x = w;
         if (p.x > w) p.x = 0;
 
-        /* draw connection lines between nearby particles */
-        for (let j = i + 1; j < ps.length; j++) {
-          const dx = ps[i].x - ps[j].x;
-          const dy = ps[i].y - ps[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(ps[i].x, ps[i].y);
-            ctx.lineTo(ps[j].x, ps[j].y);
-            ctx.strokeStyle = `rgba(56,189,248,${0.06 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.alpha;
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = p.color;
         ctx.fill();
         ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
       }
 
       /* ── Layer 5: River flow (river stage drives speed) ── */

@@ -330,6 +330,25 @@ body {
 .animate-fade-in        { animation: fade-in 0.4s ease both; }
 .animate-data-arrive    { animation: data-arrive 0.25s ease both; }
 
+/* GPU-composited Vector Stream Flow (zero JavaScript overhead, zero re-renders) */
+@keyframes flow-stream {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+.flow-stream {
+  animation: flow-stream 3s linear infinite;
+  will-change: stroke-dashoffset;
+}
+.flow-stream-fast {
+  animation: flow-stream 1.8s linear infinite;
+  will-change: stroke-dashoffset;
+}
+.flow-stream-slow {
+  animation: flow-stream 5s linear infinite;
+  will-change: stroke-dashoffset;
+}
+
 /* Shimmer button overlay */
 .btn-shimmer { position: relative; overflow: hidden; }
 .btn-shimmer::after {
