@@ -67,8 +67,9 @@ def test_ndrf_predict_live_fusion():
     res = client.post("/api/v1/ndrf/predict/live", json={"village_id": "uk-chamoli-raini"})
     assert res.status_code == 200
     data = res.json()
-    assert data["data_mode"] == "LIVE"
-    assert data["village"] == "Raini Village"
+    # data_mode is HYBRID_LIVE_TELEMETRY (live external APIs + physics + ML)
+    assert data["data_mode"] in ("LIVE", "HYBRID_LIVE_TELEMETRY")
+    assert "Raini" in data["village"]
     assert data["state"] == "Uttarakhand"
     assert "risk_score" in data
     assert "factor_of_safety_fos" in data

@@ -17,11 +17,20 @@ class DeploymentStatus(str, Enum):
     TRAINED = "TRAINED"
     VALIDATION_PENDING = "VALIDATION_PENDING"
     RESEARCH_VALIDATED = "RESEARCH_VALIDATED"
+    RESEARCH_PROTOTYPE = "RESEARCH_PROTOTYPE"
     PILOT_APPROVED = "PILOT_APPROVED"
     DEMO_ONLY = "DEMO_ONLY"
     DEPLOYED = "DEPLOYED"
     RETIRED = "RETIRED"
     FAILED = "FAILED"
+
+
+class OperationalValidationLevel(str, Enum):
+    RESEARCH_MODEL = "RESEARCH_MODEL"
+    BENCHMARKED_MODEL = "BENCHMARKED_MODEL"
+    HISTORICALLY_BACKTESTED_MODEL = "HISTORICALLY_BACKTESTED_MODEL"
+    PILOT_MODEL = "PILOT_MODEL"
+    OPERATIONALLY_VALIDATED_MODEL = "OPERATIONALLY_VALIDATED_MODEL"
 
 
 @dataclass
@@ -46,6 +55,7 @@ class ModelArtifact:
     approval_date: str | None
     limitations: str
     created_at: str
+    operational_validation_level: OperationalValidationLevel = OperationalValidationLevel.RESEARCH_MODEL
 
 
 class ModelRegistry:
@@ -64,6 +74,10 @@ class ModelRegistry:
                 data = json.loads(self._manifest_path.read_text())
                 for art_id, item in data.items():
                     item["deployment_status"] = DeploymentStatus(item["deployment_status"])
+                    if "operational_validation_level" in item:
+                        item["operational_validation_level"] = OperationalValidationLevel(item["operational_validation_level"])
+                    else:
+                        item["operational_validation_level"] = OperationalValidationLevel.RESEARCH_MODEL
                     self._artifacts[art_id] = ModelArtifact(**item)
             except Exception:
                 pass
@@ -72,8 +86,11 @@ class ModelRegistry:
         serialized = {}
         for art_id, item in self._artifacts.items():
             d = asdict(item)
-            d["deployment_status"] = item.deployment_status.value
+            d["deployment_status"] = item.deployment_status.value if hasattr(item.deployment_status, "value") else str(item.deployment_status)
+            if hasattr(item, "operational_validation_level") and hasattr(item.operational_validation_level, "value"):
+                d["operational_validation_level"] = item.operational_validation_level.value
             serialized[art_id] = d
+
         self._manifest_path.write_text(json.dumps(serialized, indent=2))
 
     def register(self, artifact: ModelArtifact) -> str:

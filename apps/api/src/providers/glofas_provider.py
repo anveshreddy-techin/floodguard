@@ -15,6 +15,10 @@ logger = get_logger(__name__)
 
 class GloFASRiverProvider:
     BASE_URL = "https://flood-api.open-meteo.com/v1/flood"
+    CACHE_TTL_SECONDS = 900  # 15 minutes
+
+    def __init__(self):
+        self._cache: dict[tuple[float, float], tuple[datetime, dict[str, Any]]] = {}
 
     async def fetch_discharge(
         self,
@@ -25,7 +29,17 @@ class GloFASRiverProvider:
         """
         Fetch river discharge data for coordinates in any Indian river basin.
         Returns m³/s discharge, mean, max, and derived rate of rise.
+        Features 15-minute TTL in-memory caching.
         """
+        cache_key = (round(latitude, 3), round(longitude, 3))
+        now = datetime.now(timezone.utc)
+        if cache_key in self._cache:
+            cached_at, cached_data = self._cache[cache_key]
+            if (now - cached_at).total_seconds() < self.CACHE_TTL_SECONDS:
+                result = dict(cached_data)
+                result["cached"] = True
+                return result
+
         params = {
             "latitude": latitude,
             "longitude": longitude,
@@ -59,7 +73,7 @@ class GloFASRiverProvider:
                     # Approximate stage response rate: 100 m3/s delta ~ 0.25m stage rise per day
                     rise_rate_m_hr = max(0.0, round(daily_delta / 24.0 * 0.05, 3))
 
-                return {
+                result = {
                     "status": "SUCCESS",
                     "source": "GloFAS_Copernicus_Flood_Service",
                     "data_mode": "LIVE",
@@ -70,11 +84,21 @@ class GloFASRiverProvider:
                     "estimated_rate_of_rise_m_hr": rise_rate_m_hr,
                     "forecast_dates": dates,
                     "forecast_values": discharges,
-                    "retrieved_at": datetime.now(timezone.utc).isoformat(),
+                    "retrieved_at": now.isoformat(),
                     "attribution": "Copernicus Emergency Management Service / GloFAS (Open-Meteo Gateway)",
+                    "cached": False,
                 }
+                self._cache[cache_key] = (now, result)
+                return result
         except Exception as e:
             logger.warning("glofas_fetch_failed", error=str(e), lat=latitude, lon=longitude)
+            if cache_key in self._cache:
+                _, cached_data = self._cache[cache_key]
+                stale_result = dict(cached_data)
+                stale_result["data_mode"] = "CACHED_STALE"
+                stale_result["warning"] = f"Live upstream failed ({e}); serving stale cached payload."
+                return stale_result
+
             return {
                 "status": "FALLBACK",
                 "source": "GloFAS_Copernicus_Flood_Service",
@@ -85,7 +109,8 @@ class GloFASRiverProvider:
                 "river_discharge_max_m3_s": 95.0,
                 "estimated_rate_of_rise_m_hr": 0.25,
                 "error": str(e),
-                "retrieved_at": datetime.now(timezone.utc).isoformat(),
+                "retrieved_at": now.isoformat(),
+                "attribution": "Copernicus GloFAS Synthetic Baseline (Offline Fallback)",
             }
 
 glofas_river_provider = GloFASRiverProvider()

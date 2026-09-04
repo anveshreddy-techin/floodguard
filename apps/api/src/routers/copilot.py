@@ -202,7 +202,7 @@ def _build_structured_answer(
         lines.append("• **Critical Success Index (CSI)**: 0.9903")
         lines.append("• **Probability of Detection (POD)**: 0.9903 | **False Alarm Ratio (FAR)**: 0.0000")
         lines.append("• **Brier Calibration Score**: 0.0060 | **Latency**: < 0.05 ms")
-        lines.append("• **Registry Status**: `PILOT_APPROVED` (`ml/artifacts/tier_c_tree_ensemble.joblib`)")
+        lines.append("• **Registry Status**: `RESEARCH_PROTOTYPE` (`ml/artifacts/tier_c_tree_ensemble.joblib`)")
 
     # 4. State & Union Territory Profiles
     elif any(st in q_lower for st in ["uttarakhand", "himachal", "sikkim", "assam", "kerala", "bihar", "odisha", "kashmir", "j&k", "jammu", "meghalaya", "arunachal", "maharashtra", "state", "territory"]):

@@ -6,7 +6,7 @@ All simulated readings carry data_mode=SIMULATION.
 import hashlib
 import hmac
 from datetime import datetime, timezone
-from typing import Annotated
+from typing import Annotated, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -140,18 +140,31 @@ async def list_devices(db: Annotated[AsyncSession, Depends(get_db)]):
     }
 
 
+@router.get("/firmware/esp32")
 @router.get("/firmware/{device_id}/arduino")
-async def get_arduino_firmware(device_id: str, secret: str = "floodguard_secret_chamoli_node_01"):
+async def get_arduino_firmware(
+    device_id: str = "ESP32-NODE-001",
+    secret: Optional[str] = None,
+    wifi_ssid: Optional[str] = None,
+    wifi_pass: Optional[str] = None,
+    server_url: Optional[str] = None,
+):
     """
-    Generate production-ready Arduino C++ firmware sketch for ESP32 microcontroller.
+    Generate clean Arduino C++ firmware sketch for ESP32 microcontroller.
     Includes hardware pin configuration, mbedTLS HMAC-SHA256 signature generation,
-    and automatic HTTP POST transmission to FloodGuard AI ingestion gateway.
+    and automatic HTTP POST transmission to FloodGuard AI / HillGuard ingestion gateway.
+    Credentials and network endpoints are parameter-driven (no hardcoded secrets).
     """
     from fastapi import Response
+
+    final_ssid = wifi_ssid or "<CONFIGURE_WIFI_SSID>"
+    final_pass = wifi_pass or "<CONFIGURE_WIFI_PASSWORD>"
+    final_url = server_url or "https://api.floodguard.gov.in/api/v1/sensors/reading"
+    final_secret = secret or "<CONFIGURE_HMAC_DEVICE_SECRET>"
     
     template = """// ============================================================================
-// FLOODGUARD AI — ESP32 HIMALAYAN TELEMETRY SENSOR NODE FIRMWARE
-// Target: ESP32-WROOM-32 / LoRaWAN Node (Solar Powered)
+// FLOODGUARD AI / HILLGUARD — ESP32 HIMALAYAN SENSOR NODE FIRMWARE
+// Target: ESP32-WROOM-32 / LoRaWAN Bridge Node (Solar Powered)
 // Device ID: __DEVICE_ID__
 // Sensor Types: Tipping Bucket Rain Gauge + TDR Soil Moisture + Ultrasonic River Gauge
 // Cryptography: Hardware-accelerated HMAC-SHA256
@@ -162,10 +175,10 @@ async def get_arduino_firmware(device_id: str, secret: str = "floodguard_secret_
 #include <time.h>
 #include "mbedtls/md.h"
 
-// Network Configuration
-const char* WIFI_SSID = "DISASTER_SDRF_WIFI";
-const char* WIFI_PASS = "SDRF_EMERGENCY_KEY";
-const char* SERVER_URL = "http://192.168.1.100:8000/api/v1/iot/readings";
+// Network Configuration (Parameter Configured)
+const char* WIFI_SSID = "__WIFI_SSID__";
+const char* WIFI_PASS = "__WIFI_PASS__";
+const char* SERVER_URL = "__SERVER_URL__";
 
 // Device Cryptographic Credentials
 const char* DEVICE_ID = "__DEVICE_ID__";
@@ -283,7 +296,51 @@ void setup() {
 
 void loop() {}
 """
-    code = template.replace("__DEVICE_ID__", device_id).replace("__SECRET__", secret)
+    code = (
+        template.replace("__DEVICE_ID__", device_id)
+        .replace("__SECRET__", final_secret)
+        .replace("__WIFI_SSID__", final_ssid)
+        .replace("__WIFI_PASS__", final_pass)
+        .replace("__SERVER_URL__", final_url)
+    )
     return Response(content=code, media_type="text/x-c++src; charset=utf-8")
+
+
+# ─── REST Sensor Ingestion Endpoints ──────────────────────────────────────────
+
+@router.post("/sensors/{sensor_id}/reading")
+async def ingest_sensor_reading(sensor_id: str, payload: dict):
+    """
+    REST Sensor Telemetry Ingestion Endpoint.
+    Accepts readings from IoT rain gauges, soil moisture probes, or MEMS inclinometers.
+    """
+    from ..iot.mqtt_client import sensor_telemetry_manager
+    stype = payload.get("sensor_type") or payload.get("type") or ("rain" if "intensity" in payload else "soil" if "vwc" in payload else "inclinometer")
+    state = sensor_telemetry_manager.record_reading(sensor_id, stype, payload, payload.get("ward_id", "uk-chamoli-raini"))
+    return {
+        "status": "ACCEPTED",
+        "sensor_id": sensor_id,
+        "sensor_type": stype,
+        "recorded_at": state.last_seen.isoformat(),
+        "health": state.status,
+        "packet_count": state.packet_count,
+    }
+
+
+@router.get("/sensors")
+async def list_sensors():
+    """List all registered telemetry sensors with live heartbeat health."""
+    from ..iot.mqtt_client import sensor_telemetry_manager
+    return {"sensors": sensor_telemetry_manager.get_all_sensors()}
+
+
+@router.get("/sensors/{sensor_id}")
+async def get_sensor_detail(sensor_id: str):
+    """Get real-time status and latest reading for a specific IoT sensor."""
+    from ..iot.mqtt_client import sensor_telemetry_manager
+    sensor = sensor_telemetry_manager.get_sensor(sensor_id)
+    if not sensor:
+        raise HTTPException(status_code=404, detail=f"Sensor '{sensor_id}' not found in registry")
+    return sensor
 
 

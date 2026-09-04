@@ -24,7 +24,10 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy import JSON, Uuid
+def UUID(as_uuid=True):
+    return Uuid()
+JSONB = JSON
 from sqlalchemy.orm import relationship
 
 from .engine import Base
@@ -487,3 +490,66 @@ class SimulationScenario(Base, TimestampMixin):
     run_at = Column(DateTime(timezone=True), nullable=True)
     seed = Column(Integer, nullable=True)
     scenario_type = Column(String(50), nullable=True)
+
+
+# ─── HillGuard Hyper-Local Ward & EWS Models ──────────────────────────────────
+
+class Ward(Base, TimestampMixin, ProvenanceMixin):
+    __tablename__ = "wards"
+
+    id = Column(String(100), primary_key=True)
+    name = Column(String(255), nullable=False)
+    state = Column(String(100), nullable=False)
+    district = Column(String(100), nullable=False)
+    block = Column(String(100), nullable=True)
+    population = Column(Integer, nullable=True, default=1000)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    slope_degrees = Column(Float, nullable=True, default=25.0)
+    critical_threshold = Column(Float, nullable=False, default=0.80)
+    warning_threshold = Column(Float, nullable=False, default=0.60)
+    watch_threshold = Column(Float, nullable=False, default=0.40)
+    meta = Column(JSONB, nullable=True, default=dict)
+
+
+class SlopeStability(Base, TimestampMixin, ProvenanceMixin):
+    __tablename__ = "slope_stability"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    ward_id = Column(String(100), nullable=False, index=True)
+    slope_angle = Column(Float, nullable=False)
+    soil_type = Column(String(100), nullable=True, default="Silty Sand")
+    cohesion_kpa = Column(Float, nullable=True, default=10.0)
+    friction_angle_deg = Column(Float, nullable=True, default=32.0)
+    factor_of_safety = Column(Float, nullable=False)
+    twi = Column(Float, nullable=True)
+    method = Column(String(50), nullable=False, default="INFINITE_SLOPE_SHALE")
+
+
+class HistoricalLandslide(Base, TimestampMixin, ProvenanceMixin):
+    __tablename__ = "historical_landslides"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    ward_id = Column(String(100), nullable=False, index=True)
+    timestamp = Column(DateTime(timezone=True), nullable=True)
+    hazard_type = Column(String(100), nullable=False, default="DEBRIS_FLOW")
+    magnitude = Column(String(50), nullable=True, default="MEDIUM")
+    trigger_cause = Column(String(200), nullable=True, default="EXTREME_RAINFALL")
+    source_agency = Column(String(100), nullable=True, default="GSI_BHUKOSH_ISRO_ATLAS")
+    fatalities = Column(Integer, nullable=True, default=0)
+    meta = Column(JSONB, nullable=True, default=dict)
+
+
+class WardPredictionRecord(Base, TimestampMixin, ProvenanceMixin):
+    __tablename__ = "model_predictions"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    ward_id = Column(String(100), nullable=False, index=True)
+    probability = Column(Float, nullable=False)
+    lead_time_minutes = Column(Integer, nullable=False, default=60)
+    confidence_interval_low = Column(Float, nullable=True)
+    confidence_interval_high = Column(Float, nullable=True)
+    severity = Column(String(30), nullable=False, default="MODERATE")
+    model_version = Column(String(100), nullable=False, default="2.0.0-hybrid-physics-ml")
+    features_json = Column(JSONB, nullable=True, default=dict)
+    provenance_matrix = Column(JSONB, nullable=True, default=dict)

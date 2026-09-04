@@ -377,13 +377,62 @@ class HybridRiskEngine:
 
         contributors.sort(key=lambda c: c.weighted_contribution, reverse=True)
 
-        composite = (
+        rule_composite = (
             rain_score * self.WEIGHTS["rainfall"]
             + soil_score * self.WEIGHTS["soil"]
             + terrain_score * self.WEIGHTS["terrain"]
             + river_score * self.WEIGHTS["river"]
         )
-        composite = round(min(100, composite), 1)
+        rule_composite = round(min(100, rule_composite), 1)
+
+        # ── ML Model Inference & Hybrid Fusion ───────────────────────────────
+        ml_prob = None
+        if _active_ml_model is not None and hasattr(_active_ml_model, "predict_proba"):
+            try:
+                import numpy as np
+                rf = rainfall or RainfallFeatures()
+                sf = soil or SoilFeatures()
+                tf = terrain or TerrainFeatures()
+                riv = river or RiverFeatures()
+
+                feat_map = {
+                    "rainfall_15m_mm": (rf.intensity_mmph or 0.0) * 0.25,
+                    "rainfall_30m_mm": (rf.intensity_mmph or 0.0) * 0.50,
+                    "rainfall_1h_mm": rf.rainfall_1h_mm or (rf.intensity_mmph or 0.0),
+                    "rainfall_3h_mm": rf.rainfall_3h_mm or ((rf.rainfall_1h_mm or 0.0) * 2.2),
+                    "rainfall_6h_mm": rf.rainfall_6h_mm or ((rf.rainfall_3h_mm or 0.0) * 1.3),
+                    "rainfall_12h_mm": (rf.rainfall_24h_mm or 0.0) * 0.65,
+                    "rainfall_24h_mm": rf.rainfall_24h_mm or 0.0,
+                    "rainfall_72h_mm": rf.rainfall_72h_mm or ((rf.rainfall_24h_mm or 0.0) * 1.5),
+                    "rainfall_peak_intensity_mmph": rf.intensity_mmph or 0.0,
+                    "soil_moisture_pct": sf.soil_moisture_pct or ((sf.saturation_index or 0.5) * 45.0),
+                    "soil_saturation_index": sf.saturation_index or 0.5,
+                    "antecedent_7d_mm": rf.antecedent_7d_mm or 100.0,
+                    "elevation_m": tf.elevation_m or 1500.0,
+                    "slope_degrees": tf.slope_degrees or 25.0,
+                    "twi": tf.twi or 8.5,
+                    "factor_of_safety_fos": 1.15,
+                    "landslide_susceptibility_index": tf.historical_susceptibility or 0.6,
+                    "historical_landslides_count": (tf.landslide_density or 1.0) * 10.0,
+                    "river_level_m": riv.level_m or 2.0,
+                    "river_rate_of_rise_mph": riv.rate_of_rise_mph or 0.0,
+                    "warning_level_diff_m": (riv.level_m or 0.0) - (riv.warning_level_m or 4.0),
+                    "danger_level_diff_m": (riv.level_m or 0.0) - (riv.danger_level_m or 5.0),
+                    "upstream_blockage_index": 0.1,
+                    "geophone_debris_vibration_db": 22.0,
+                    "culvert_backpressure_ratio": 0.4,
+                }
+                f_names = getattr(_active_ml_model, "feature_names", list(feat_map.keys()))
+                x_vec = np.array([[feat_map.get(fn, 0.0) for fn in f_names]])
+                probas = _active_ml_model.predict_proba(x_vec)
+                ml_prob = float(probas[0, 1]) if probas.shape[1] > 1 else float(probas[0, 0])
+            except Exception:
+                ml_prob = None
+
+        if ml_prob is not None:
+            composite = round(0.60 * (ml_prob * 100.0) + 0.40 * rule_composite, 1)
+        else:
+            composite = rule_composite
 
         if composite >= 75:
             risk_level = RiskLevel.EXTREME
@@ -424,7 +473,13 @@ class HybridRiskEngine:
                 for c in contributors
             ],
             "uncertainty_sources": all_gaps[:5],
-            "model_note": "Risk score computed by rule-based hybrid engine (v1). ML model is PLANNED.",
+            "model_note": (
+                f"Hybrid Physics-ML inference active ({_active_model_version}). ML trigger probability: {ml_prob:.3f}, Physics baseline: {rule_composite}."
+                if ml_prob is not None
+                else "Risk score computed by rule-based transparent physical baseline (v1)."
+            ),
+            "ml_probability": ml_prob,
+            "physics_baseline_score": rule_composite,
         }
 
         return RiskOutput(

@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 from .core.config import settings
 from .core.errors import FloodGuardError, floodguard_exception_handler, validation_exception_handler
 from .core.logging import configure_logging, get_logger
-from .db.engine import check_db_health
+from .db.engine import check_db_health, init_db
 
 configure_logging(log_level=settings.LOG_LEVEL, json_output=settings.LOG_JSON)
 logger = get_logger(__name__)
@@ -29,11 +29,12 @@ async def lifespan(app: FastAPI):
         data_mode=settings.DEFAULT_DATA_MODE.value,
         demo_mode=settings.DEMO_MODE,
     )
+    await init_db()
     db_health = await check_db_health()
     if db_health["status"] != "OPERATIONAL":
         logger.warning("database_unavailable_on_startup", detail=db_health.get("detail"))
     else:
-        logger.info("database_connected")
+        logger.info("database_connected", dialect=db_health.get("dialect"))
     yield
     logger.info("floodguard_shutting_down")
 
@@ -155,3 +156,9 @@ app.include_router(hindcast.router, tags=["Historical Hindcast"])
 app.include_router(predictions.router, tags=["Prediction Memory"])
 app.include_router(safety.router, tags=["User Safety & Location Guidance"])
 app.include_router(ndrf_prediction.router, tags=["NDRF MHA Multi-Source Prediction"])
+
+
+@app.get("/api/v1/models/generalization-benchmark", tags=["Model Generalization & Validation"])
+async def get_generalization_benchmark(force_refresh: bool = False):
+    return await ndrf_prediction.ndrf_generalization_benchmark(force_refresh=force_refresh)
+

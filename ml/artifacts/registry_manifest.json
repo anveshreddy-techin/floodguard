@@ -26,7 +26,7 @@
       "latency_ms": 0.0
     },
     "artifact_path": "ml/artifacts/tier_a_baseline.joblib",
-    "artifact_checksum": "28780eaa41ac40960533011e65d8c40b12747813f4663afc7d4936f59018cf80",
+    "artifact_checksum": "9ea60411d922c3696edf68e2f8e403632bacec020a6bc377fb87bfb1cadd9f9b",
     "training_configuration": {
       "n_features": 25,
       "features": [
@@ -65,9 +65,10 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-03T10:31:23.827413+00:00",
+    "approval_date": "2026-09-04T15:36:24.659904+00:00",
     "limitations": "Evaluation on test split.",
-    "created_at": "2026-09-03T10:31:23.827413+00:00"
+    "created_at": "2026-09-04T15:36:24.659904+00:00",
+    "operational_validation_level": "RESEARCH_MODEL"
   },
   "art_tier_b_logistic": {
     "id": "art_tier_b_logistic",
@@ -87,16 +88,16 @@
       "2025-11-01T00:00:00Z"
     ],
     "evaluation_report": {
-      "pr_auc": 0.9972,
-      "roc_auc": 0.9954,
-      "csi": 0.9407,
-      "pod": 0.9481,
-      "far": 0.0083,
-      "brier_score": 0.03,
+      "pr_auc": 0.9963,
+      "roc_auc": 0.9939,
+      "csi": 0.9183,
+      "pod": 0.9763,
+      "far": 0.0607,
+      "brier_score": 0.034,
       "latency_ms": 0.001
     },
     "artifact_path": "ml/artifacts/tier_b_logistic.joblib",
-    "artifact_checksum": "bba9efad227ac569a6f838157851b741b23a790fcfb1089074f4b05728d69cb4",
+    "artifact_checksum": "b02833d2bf7922e4f61a0a6ffb7aabd651a07d6f934cf6f23e5045c7f81aa27c",
     "training_configuration": {
       "n_features": 25,
       "features": [
@@ -135,9 +136,10 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-03T10:31:23.827413+00:00",
+    "approval_date": "2026-09-04T15:36:24.659904+00:00",
     "limitations": "Evaluation on test split.",
-    "created_at": "2026-09-03T10:31:23.827413+00:00"
+    "created_at": "2026-09-04T15:36:24.659904+00:00",
+    "operational_validation_level": "RESEARCH_MODEL"
   },
   "art_tier_c_tree_ensemble": {
     "id": "art_tier_c_tree_ensemble",
@@ -158,15 +160,15 @@
     ],
     "evaluation_report": {
       "pr_auc": 1.0,
-      "roc_auc": 0.9999,
-      "csi": 0.9416,
-      "pod": 1.0,
-      "far": 0.0584,
-      "brier_score": 0.0252,
-      "latency_ms": 0.009
+      "roc_auc": 1.0,
+      "csi": 0.9955,
+      "pod": 0.9989,
+      "far": 0.0034,
+      "brier_score": 0.024,
+      "latency_ms": 0.014
     },
     "artifact_path": "ml/artifacts/tier_c_tree_ensemble.joblib",
-    "artifact_checksum": "f96492a40bfa4aa5db10458abdbdd507bc1545fb871bf98e7052351a97cf1a9c",
+    "artifact_checksum": "7e61f9338ca14b51b3ceafd666fb8d5059cb807087695a7f63e1b5debd1b6713",
     "training_configuration": {
       "n_features": 25,
       "features": [
@@ -203,10 +205,11 @@
       "HIGH": 0.65,
       "EXTREME": 0.82
     },
-    "deployment_status": "PILOT_APPROVED",
-    "reviewer": "Ministry of Home Affairs / NDMA Technical Evaluator",
-    "approval_date": "2026-09-03T10:31:23.830644+00:00",
+    "deployment_status": "RESEARCH_PROTOTYPE",
+    "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
+    "approval_date": "2026-09-04T15:36:24.664100+00:00",
     "limitations": "Evaluation on test split.",
-    "created_at": "2026-09-03T10:31:23.827413+00:00"
+    "created_at": "2026-09-04T15:36:24.659904+00:00",
+    "operational_validation_level": "RESEARCH_MODEL"
   }
 }

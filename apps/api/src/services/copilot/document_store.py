@@ -135,7 +135,7 @@ class DocumentStore:
                     "FloodGuard AI features a 4-tier model hierarchy: Tier A (Transparent Weighted Baseline), Tier B (Calibrated Logistic Regression), "
                     "Tier C (Non-Linear Random Forest Ensemble), and Tier D (Unsupervised Isolation Forest Anomaly Screener). "
                     "Trained on 7,200 multi-basin observations across 10 disaster-prone Indian regions with strict location-holdout validation (Kedarnath & Wayanad held out). "
-                    "Tier C achieved PR-AUC 1.0000, CSI 0.9903, POD 0.9903, FAR 0.0000, and Brier Score 0.0060, and is actively promoted to PILOT_APPROVED."
+                    "Tier C achieved PR-AUC 1.0000, CSI 0.9903, POD 0.9903, FAR 0.0000, and Brier Score 0.0060, and is actively promoted to RESEARCH_PROTOTYPE."
                 ),
                 keywords=["ml model", "machine learning", "tier a", "tier b", "tier c", "tier d", "random forest", "pr-auc", "csi", "pod", "far", "brier", "training", "benchmarking"],
             ),

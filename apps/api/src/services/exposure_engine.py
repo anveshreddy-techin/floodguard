@@ -35,6 +35,9 @@ class UserExposureEngine:
         model_risk_level: str = "HIGH",
         official_alert_active: bool = False,
         simulated_hazard_expansion: float = 0.0,
+        hazard_center_lat: Optional[float] = None,
+        hazard_center_lon: Optional[float] = None,
+        hazard_radius_km: Optional[float] = None,
     ) -> UserExposure:
         if lat is None or lon is None:
             return UserExposure(
@@ -47,8 +50,13 @@ class UserExposureEngine:
                 why=["Location coordinates unavailable. Please select location on map."],
             )
 
-        dist_km = self.calculate_distance_km(lat, lon, self.HAZARD_CENTER_LAT, self.HAZARD_CENTER_LON)
-        effective_hazard_radius = self.HAZARD_RADIUS_KM + simulated_hazard_expansion
+        h_lat = hazard_center_lat if hazard_center_lat is not None else (lat if (lat != self.HAZARD_CENTER_LAT and hazard_center_lat is not None) else self.HAZARD_CENTER_LAT)
+        h_lon = hazard_center_lon if hazard_center_lon is not None else (lon if (lon != self.HAZARD_CENTER_LON and hazard_center_lon is not None) else self.HAZARD_CENTER_LON)
+        h_radius = hazard_radius_km if hazard_radius_km is not None else self.HAZARD_RADIUS_KM
+
+        dist_km = self.calculate_distance_km(lat, lon, h_lat, h_lon)
+        effective_hazard_radius = h_radius + simulated_hazard_expansion
+
 
         accuracy_ok = (accuracy_m or 100.0) <= 50.0
 

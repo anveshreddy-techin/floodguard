@@ -42,6 +42,8 @@ async def check_user_location_exposure(
     accuracy_m: Optional[float] = Query(15.0),
     sensor_failure: bool = Query(False),
     hazard_expansion: float = Query(0.0),
+    hazard_lat: Optional[float] = Query(None, description="Dynamic hazard center latitude"),
+    hazard_lon: Optional[float] = Query(None, description="Dynamic hazard center longitude"),
 ):
     exposure = exposure_engine.evaluate_exposure(
         lat=lat,
@@ -49,6 +51,8 @@ async def check_user_location_exposure(
         accuracy_m=accuracy_m,
         official_alert_active=len(ACTIVE_OFFICIAL_ALERTS) > 0,
         simulated_hazard_expansion=hazard_expansion,
+        hazard_center_lat=hazard_lat,
+        hazard_center_lon=hazard_lon,
     )
     guidance = route_engine.generate_safety_guidance(
         exposure=exposure,
@@ -61,6 +65,7 @@ async def check_user_location_exposure(
         "guidance": guidance,
         "data_mode": "DEMO" if (lat == 30.505) else "LIVE",
     }
+
 
 
 @router.get("/routes/candidate")

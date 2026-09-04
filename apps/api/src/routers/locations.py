@@ -107,3 +107,45 @@ async def get_rivers_geojson():
 async def get_villages_geojson():
     """GeoJSON endpoint for MapLibre village points and exposure circles."""
     return spatial_service.get_demo_villages_geojson()
+
+
+@router.get("/resolve")
+async def resolve_coordinates(
+    lat: float = Query(..., description="Latitude coordinate"),
+    lon: float = Query(..., description="Longitude coordinate"),
+    mode: str = Query("OPERATIONAL", description="OPERATIONAL | DEMO"),
+):
+    """
+    Global Location-Adaptive Intelligence Endpoint:
+    Resolves geographic hierarchy, DEM elevation & slope, river basin,
+    weather/hydrology data, data gaps, and prediction eligibility for ANY coordinate.
+    """
+    from ..services.global_location_service import global_location_service
+
+    profile = await global_location_service.build_location_intelligence_profile(
+        latitude=lat,
+        longitude=lon,
+        operational_mode=mode,
+    )
+    return profile
+
+
+@router.post("/profile")
+async def resolve_location_profile(body: dict):
+    """
+    POST variant for Location Intelligence Profile query:
+    Accepts latitude, longitude, and operational mode.
+    """
+    from ..services.global_location_service import global_location_service
+
+    lat = float(body.get("latitude") or body.get("lat") or 30.485)
+    lon = float(body.get("longitude") or body.get("lon") or 79.692)
+    mode = str(body.get("mode", "OPERATIONAL"))
+
+    profile = await global_location_service.build_location_intelligence_profile(
+        latitude=lat,
+        longitude=lon,
+        operational_mode=mode,
+    )
+    return profile
+

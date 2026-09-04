@@ -56,6 +56,7 @@ export default function HyperLocalGISPage() {
 
   const [flowThreshold, setFlowThreshold] = useState<number>(35); // km² accumulation
   const [hoveredCoord, setHoveredCoord] = useState<{ x: number; y: number; lat: string; lon: string; ele: string; slope: string } | null>(null);
+  const [gisLang, setGisLang] = useState<'en' | 'hi'>('en');
 
   // Dynamically compute 3D Catchment nodes for the chosen location
   const mapNodes = useMemo(() => {
@@ -236,6 +237,16 @@ export default function HyperLocalGISPage() {
                 <Crosshair className="w-3.5 h-3.5 text-cyan-400 animate-spin-slow" />
                 <span>{hoveredCoord ? `${hoveredCoord.lat}, ${hoveredCoord.lon} • ${hoveredCoord.ele} • ${hoveredCoord.slope}` : '30.5050° N, 79.1550° E • 1,180m • EPSG:32644'}</span>
               </div>
+
+              {/* Bilingual Hindi/English GIS Toggle */}
+              <button
+                onClick={() => setGisLang(gisLang === 'en' ? 'hi' : 'en')}
+                className="fp px-2.5 py-1 md:px-3 md:py-1.5 rounded-xl text-[10px] md:text-xs font-mono font-bold text-amber-300 border border-amber-500/40 hover:bg-amber-500/10 shadow-xl transition active:scale-95 flex items-center gap-1.5"
+                title={gisLang === 'en' ? 'Switch to Hindi (हिन्दी)' : 'Switch to English'}
+              >
+                <Globe className="w-3.5 h-3.5 text-amber-400" />
+                <span>{gisLang === 'en' ? 'हिन्दी' : 'ENG'}</span>
+              </button>
 
               {/* 100% Full Map vs Zoom Focus Toggle */}
               {activeMapView === 'HYPER_LOCAL' && (
@@ -485,9 +496,9 @@ export default function HyperLocalGISPage() {
           <div className="hidden md:flex absolute top-16 left-4 bottom-6 w-72 z-[600] flex-col gap-3 pointer-events-none">
             <div className="pointer-events-auto fp fp-operational rounded-2xl p-4 space-y-3 shadow-2xl text-xs overflow-y-auto">
               <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                <span className="font-mono font-bold text-cyan-300 text-xs flex items-center gap-1.5">
+                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold flex items-center gap-1.5">
                   <Layers className="w-4 h-4 text-cyan-400" />
-                  SPATIAL GIS LAYERS
+                  {gisLang === 'hi' ? 'स्थानिक जीआईएस परतें (LAYERS)' : 'SPATIAL GIS LAYERS'}
                 </span>
                 <span className="text-[10px] font-mono text-slate-400">EPSG:32644</span>
               </div>
@@ -495,12 +506,12 @@ export default function HyperLocalGISPage() {
               {/* Layer Toggles */}
               <div className="space-y-1.5">
                 {[
-                  { key: 'DEM' as GisLayerKey, label: 'Digital Elevation Model (DEM)', color: 'bg-indigo-500' },
-                  { key: 'SURGE' as GisLayerKey, label: 'Modeled Flood Inundation', color: 'bg-orange-500' },
-                  { key: 'RIVER' as GisLayerKey, label: 'Strahler Stream Vector Net', color: 'bg-cyan-400' },
-                  { key: 'SENSORS' as GisLayerKey, label: 'IoT Gauges & Settlements', color: 'bg-blue-500' },
-                  { key: 'SHELTERS' as GisLayerKey, label: 'Shelter Isochrones (10-30m)', color: 'bg-emerald-400' },
-                  { key: 'SLOPE' as GisLayerKey, label: 'Slope Steepness Heatmap', color: 'bg-rose-500' },
+                  { key: 'DEM' as GisLayerKey, label: gisLang === 'hi' ? 'डिजिटल एलिवेशन मॉडल (DEM)' : 'Digital Elevation Model (DEM)', color: 'bg-indigo-500' },
+                  { key: 'SURGE' as GisLayerKey, label: gisLang === 'hi' ? 'अतिप्रवाह सिमुलेशन (SURGE)' : 'Modeled Flood Inundation', color: 'bg-orange-500' },
+                  { key: 'RIVER' as GisLayerKey, label: gisLang === 'hi' ? 'स्ट्रालर नदी प्रवाह तंत्र' : 'Strahler Stream Vector Net', color: 'bg-cyan-400' },
+                  { key: 'SENSORS' as GisLayerKey, label: gisLang === 'hi' ? 'सेंसर व बस्तियां (IoT)' : 'IoT Gauges & Settlements', color: 'bg-blue-500' },
+                  { key: 'SHELTERS' as GisLayerKey, label: gisLang === 'hi' ? 'आश्रय स्थल समकालिक' : 'Shelter Isochrones (10-30m)', color: 'bg-emerald-400' },
+                  { key: 'SLOPE' as GisLayerKey, label: gisLang === 'hi' ? 'ढलान प्रवणता हीटमैप' : 'Slope Steepness Heatmap', color: 'bg-rose-500' },
                 ].map((item) => (
                   <button
                     key={item.key}
@@ -516,7 +527,7 @@ export default function HyperLocalGISPage() {
                       <span>{item.label}</span>
                     </div>
                     <span className="text-[10px] font-bold text-cyan-300">
-                      {layers[item.key] ? 'ON' : 'OFF'}
+                      {layers[item.key] ? (gisLang === 'hi' ? 'चालू' : 'ON') : (gisLang === 'hi' ? 'बंद' : 'OFF')}
                     </span>
                   </button>
                 ))}
@@ -525,7 +536,7 @@ export default function HyperLocalGISPage() {
               {/* Catchment Flow Accumulation Slider */}
               <div className="pt-2 border-t border-slate-800 space-y-1.5">
                 <div className="flex justify-between font-mono text-[11px]">
-                  <span className="text-slate-400">Flow Accumulation</span>
+                  <span className="text-slate-400">{gisLang === 'hi' ? 'प्रवाह संचयन' : 'Flow Accumulation'}</span>
                   <span className="text-cyan-300 font-bold">{flowThreshold} km²</span>
                 </div>
                 <input
@@ -567,7 +578,7 @@ export default function HyperLocalGISPage() {
               <div className="flex items-start justify-between border-b border-slate-800 pb-3">
                 <div>
                   <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
-                    SPATIAL DOSSIER · {selectedLocation.state.toUpperCase()}
+                    {gisLang === 'hi' ? 'स्थानिक विवरण (SPATIAL DOSSIER)' : 'SPATIAL DOSSIER'} · {selectedLocation.state.toUpperCase()}
                   </span>
                   <h3 className="text-base font-black text-white mt-0.5">{selectedNode?.name}</h3>
                   <div className="text-[11px] text-slate-400 font-mono mt-0.5">
@@ -581,7 +592,7 @@ export default function HyperLocalGISPage() {
               {activeTool === 'PROFILE' ? (
                 <div className="space-y-2">
                   <div className="text-[10px] font-mono text-purple-400 uppercase font-bold">
-                    ELEVATION CROSS-SECTION PROFILE
+                    {gisLang === 'hi' ? 'ऊंचाई अनुप्रस्थ काट प्रोफाइल' : 'ELEVATION CROSS-SECTION PROFILE'}
                   </div>
                   <div className="bg-slate-950/90 p-3 rounded-xl border border-slate-800">
                     <svg viewBox="0 0 280 110" className="w-full h-24">
@@ -602,23 +613,23 @@ export default function HyperLocalGISPage() {
               ) : activeTool === 'MORPHOMETRY' ? (
                 <div className="space-y-2">
                   <div className="text-[10px] font-mono text-cyan-400 uppercase font-bold">
-                    HYDROLOGICAL CATCHMENT METRICS
+                    {gisLang === 'hi' ? 'जलीय जलग्रहण मीट्रिक' : 'HYDROLOGICAL CATCHMENT METRICS'}
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                     <div className="fp p-2.5 rounded-xl">
-                      <div className="text-slate-400 text-[10px]">Catchment Area</div>
+                      <div className="text-slate-400 text-[10px]">{gisLang === 'hi' ? 'जलग्रहण क्षेत्र' : 'Catchment Area'}</div>
                       <div className="font-bold text-cyan-300 text-sm mt-0.5">85.4 km²</div>
                     </div>
                     <div className="fp p-2.5 rounded-xl">
-                      <div className="text-slate-400 text-[10px]">Relief Ratio</div>
+                      <div className="text-slate-400 text-[10px]">{gisLang === 'hi' ? 'उच्चावच अनुपात' : 'Relief Ratio'}</div>
                       <div className="font-bold text-slate-200 text-sm mt-0.5">0.082</div>
                     </div>
                     <div className="fp p-2.5 rounded-xl">
-                      <div className="text-slate-400 text-[10px]">Drainage Density</div>
+                      <div className="text-slate-400 text-[10px]">{gisLang === 'hi' ? 'जल निकासी घनत्व' : 'Drainage Density'}</div>
                       <div className="font-bold text-blue-300 text-sm mt-0.5">2.4 km/km²</div>
                     </div>
                     <div className="fp p-2.5 rounded-xl">
-                      <div className="text-slate-400 text-[10px]">Concentration Time</div>
+                      <div className="text-slate-400 text-[10px]">{gisLang === 'hi' ? 'सांद्रता समय' : 'Concentration Time'}</div>
                       <div className="font-bold text-amber-300 text-sm mt-0.5">42 min</div>
                     </div>
                   </div>
@@ -629,11 +640,11 @@ export default function HyperLocalGISPage() {
                   
                   <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                     <div className="fp p-2.5 rounded-xl">
-                      <div className="text-slate-400 text-[10px]">Rainfall (3h)</div>
+                      <div className="text-slate-400 text-[10px]">{gisLang === 'hi' ? 'वर्षा (3 घंटे)' : 'Rainfall (3h)'}</div>
                       <div className="font-bold text-cyan-300 mt-0.5">{selectedLocation.rainfall3h}</div>
                     </div>
                     <div className="fp p-2.5 rounded-xl">
-                      <div className="text-slate-400 text-[10px]">River / Water Stage</div>
+                      <div className="text-slate-400 text-[10px]">{gisLang === 'hi' ? 'नदी / जल स्तर' : 'River / Water Stage'}</div>
                       <div className="font-bold text-blue-400 mt-0.5">{selectedLocation.riverStage}</div>
                     </div>
                   </div>

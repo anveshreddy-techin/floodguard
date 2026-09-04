@@ -342,7 +342,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
     // 2. ML MODELS, TRAINING & EVALUATION METRICS
     else if (q.includes('model') || q.includes('tier') || q.includes('csi') || q.includes('pr-auc') || q.includes('train') || q.includes('random forest') || q.includes('logistic') || q.includes('accuracy') || q.includes('brier') || q.includes('evaluation') || q.includes('metric')) {
       response = {
-        summary: "FloodGuard AI operates a 4-tier ML architecture trained on 7,200 multi-basin observations across 10 disaster-prone Indian regions. Tier C (Non-Linear Random Forest Ensemble) is actively promoted to PILOT_APPROVED.",
+        summary: "FloodGuard AI operates a 4-tier ML architecture trained on 7,200 multi-basin observations across 10 disaster-prone Indian regions. Tier C (Non-Linear Random Forest Ensemble) is registered as RESEARCH_PROTOTYPE.",
         observed_facts: [
           "Tier A (Transparent Baseline): PR-AUC 0.6284, CSI 0.5007 (Deterministic physical weights)",
           "Tier B (Calibrated Logistic Regression): PR-AUC 0.9974, CSI 0.9412 (Standardized linear classification)",
@@ -356,8 +356,8 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
           "Review training script at ml/training/train_all.py",
           "Inspect Model Registry at ml/artifacts/registry_manifest.json"
         ],
-        uncertainty_assessment: { uncertainty_level: "PILOT_APPROVED", note: "Holdout test set evaluated with zero leakage" },
-        authoritative_sources: ["FloodGuard Model Registry", "Model Card v2.0", "NDMA Evaluation Standards"]
+        uncertainty_assessment: { uncertainty_level: "RESEARCH_PROTOTYPE", note: "Holdout test set evaluated with zero leakage" },
+        authoritative_sources: ["FloodGuard Model Registry", "Model Card v2.0", "SIH26192 Technical Evaluation Standards"]
       };
     }
     // 3. HYDROLOGY FORMULAS & EQUATIONS
