@@ -26,6 +26,23 @@ import {
 import { RiskBadge, UncertaintyBadge } from './Badges';
 import { useAdaptive } from '@/context/AdaptiveContext';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
+import dynamic from 'next/dynamic';
+
+const HyperLocalRealMap = dynamic(
+  () => import('@/components/ui/HyperLocalRealMap').then((m) => m.HyperLocalRealMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center bg-slate-950">
+        <div className="text-center space-y-2">
+          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-cyan-300 text-xs font-mono font-bold animate-pulse">LOADING REAL GIS SATELLITE MAP…</p>
+          <p className="text-slate-500 text-[10px] font-mono">Fetching High-Res Satellite Tiles</p>
+        </div>
+      </div>
+    ),
+  }
+);
 
 export type MapLayerType = 'RISK' | 'RAINFALL' | 'SOIL' | 'TERRAIN' | 'RIVER' | 'EXPOSURE';
 
@@ -62,6 +79,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
   const { selectedLocation: ctxLocation } = useLocation();
   const loc = adaptiveLocation || ctxLocation || LOCATIONS[0];
 
+  const [renderMode, setRenderMode] = useState<'REAL_MAP' | 'SCHEMATIC'>('REAL_MAP');
   const [activeLayer, setActiveLayer] = useState<MapLayerType>('RISK');
   const [legendOpen, setLegendOpen] = useState<boolean>(false);
   const [hoveredNode, setHoveredNode] = useState<any>(null);
@@ -177,8 +195,27 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
           ))}
         </div>
 
-        {/* Right Tools: 100% Full Map Toggle & Step Pill */}
+        {/* Right Tools: Mode Switcher, 100% Full Map Toggle & Step Pill */}
         <div className="pointer-events-auto flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-1 glass-panel p-0.5 rounded-xl border border-cyan-500/30">
+            <button
+              onClick={() => setRenderMode('REAL_MAP')}
+              className={`px-2 py-1 rounded-lg text-[9px] sm:text-[11px] font-mono font-bold transition flex items-center gap-1 ${
+                renderMode === 'REAL_MAP' ? 'bg-cyan-500 text-slate-950 shadow font-black' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span>🛰️ REAL MAP</span>
+            </button>
+            <button
+              onClick={() => setRenderMode('SCHEMATIC')}
+              className={`px-2 py-1 rounded-lg text-[9px] sm:text-[11px] font-mono font-bold transition flex items-center gap-1 ${
+                renderMode === 'SCHEMATIC' ? 'bg-cyan-500 text-slate-950 shadow font-black' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span>📐 FLOW</span>
+            </button>
+          </div>
+
           <button
             onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
             className={`fp px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-[9px] sm:text-xs font-mono font-bold flex items-center gap-1 shadow-xl transition active:scale-95 shrink-0 ${
@@ -198,13 +235,23 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         </div>
       </div>
 
-      {/* Primary Vector SVG Interactive Map Canvas */}
-      <div className="w-full h-full flex items-center justify-center relative bg-[#020714]">
-        <svg
-          viewBox="0 0 800 500"
-          className="w-full h-full cursor-crosshair"
-          preserveAspectRatio={fitMode === 'MEET' ? 'xMidYMid meet' : 'xMidYMid slice'}
-        >
+      {/* Primary Real Satellite GIS Map View vs Vector Schematic Canvas */}
+      {renderMode === 'REAL_MAP' ? (
+        <div className="w-full h-full flex-1 relative bg-[#020714] overflow-hidden pt-12 sm:pt-14">
+          <HyperLocalRealMap
+            location={loc}
+            activeLayerFilter={activeLayer}
+            className="w-full h-full"
+            showControlBar={true}
+          />
+        </div>
+      ) : (
+        <div className="w-full h-full flex items-center justify-center relative bg-[#020714]">
+          <svg
+            viewBox="0 0 800 500"
+            className="w-full h-full cursor-crosshair"
+            preserveAspectRatio={fitMode === 'MEET' ? 'xMidYMid meet' : 'xMidYMid slice'}
+          >
           <defs>
             {/* Spec-Refined High-Risk Halo & Glow Gradients */}
             <radialGradient id="highRiskHalo" cx="50%" cy="50%" r="50%">
@@ -514,6 +561,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
           </div>
         )}
       </div>
+      )}
 
       {/* ── Sleek Unobtrusive Collapsible GIS Legend & Opacity (100% Clear Vision on Mobile) ── */}
       <div className="absolute bottom-20 left-3 sm:bottom-4 sm:left-4 z-30 pointer-events-auto">

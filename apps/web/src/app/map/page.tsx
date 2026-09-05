@@ -33,6 +33,23 @@ import {
 } from 'lucide-react';
 import { RiskBadge, DataModeBadge } from '@/components/ui/Badges';
 import { NationalRiverRiskMap } from '@/components/ui/NationalRiverRiskMap';
+import dynamic from 'next/dynamic';
+
+const HyperLocalRealMap = dynamic(
+  () => import('@/components/ui/HyperLocalRealMap').then((m) => m.HyperLocalRealMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center bg-slate-950">
+        <div className="text-center space-y-2">
+          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-cyan-300 text-xs font-mono font-bold animate-pulse">LOADING HYPER-LOCAL REAL MAP…</p>
+          <p className="text-slate-500 text-[10px] font-mono">Fetching Satellite Imagery &amp; Topographic Contours</p>
+        </div>
+      </div>
+    ),
+  }
+);
 
 export type GisToolMode = 'EXPLORE' | 'PROFILE' | 'ISOCHRONES' | 'MORPHOMETRY';
 export type GisLayerKey = 'DEM' | 'RIVER' | 'SURGE' | 'SENSORS' | 'SHELTERS' | 'SLOPE';
@@ -44,6 +61,8 @@ export default function HyperLocalGISPage() {
   const selectedLocation = adaptiveLocation || ctxLocation || LOCATIONS[0];
 
   const [activeMapView, setActiveMapView] = useState<'HYPER_LOCAL' | 'NATIONAL_RIVERS'>('HYPER_LOCAL');
+  const [gisRenderMode, setGisRenderMode] = useState<'REAL_MAP' | 'SCHEMATIC'>('REAL_MAP');
+  const [panelsOpen, setPanelsOpen] = useState<boolean>(false);
   const [activeTool, setActiveTool] = useState<GisToolMode>('EXPLORE');
   const [layers, setLayers] = useState<Record<GisLayerKey, boolean>>({
     DEM: true,
@@ -184,21 +203,42 @@ export default function HyperLocalGISPage() {
         <main className="flex-1 relative flex flex-col min-h-0 overflow-hidden bg-slate-950">
           {/* Top Floating Spatial GIS Command Bar (Clean, Single-Row Responsive Layout) */}
           <div className="absolute top-2.5 left-2.5 right-2.5 z-30 flex items-center justify-between gap-2 pointer-events-none">
-            {/* View Switcher: 3D Local GIS vs National River Map */}
+            {/* View Switcher: Real Map vs 3D Schematic vs National River Map */}
             <div className="pointer-events-auto flex items-center gap-1.5 glass-panel p-1 rounded-xl shadow-2xl border border-cyan-500/30">
               <button
-                onClick={() => setActiveMapView('HYPER_LOCAL')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1 ${
-                  activeMapView === 'HYPER_LOCAL' ? 'bg-cyan-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+                onClick={() => {
+                  setActiveMapView('HYPER_LOCAL');
+                  setGisRenderMode('REAL_MAP');
+                }}
+                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1.5 ${
+                  activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'REAL_MAP'
+                    ? 'bg-cyan-500 text-slate-950 shadow font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>🛰️ REAL MAP (GIS)</span>
+              </button>
+              <button
+                onClick={() => {
+                  setActiveMapView('HYPER_LOCAL');
+                  setGisRenderMode('SCHEMATIC');
+                }}
+                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1.5 ${
+                  activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'SCHEMATIC'
+                    ? 'bg-cyan-500 text-slate-950 shadow font-black'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 <Mountain className="w-3.5 h-3.5" />
-                <span>3D CATCHMENT</span>
+                <span>📐 3D CATCHMENT</span>
               </button>
               <button
                 onClick={() => setActiveMapView('NATIONAL_RIVERS')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1 ${
-                  activeMapView === 'NATIONAL_RIVERS' ? 'bg-cyan-500 text-slate-950 shadow' : 'text-cyan-300 hover:text-cyan-100'
+                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1.5 ${
+                  activeMapView === 'NATIONAL_RIVERS'
+                    ? 'bg-cyan-500 text-slate-950 shadow font-black'
+                    : 'text-cyan-300 hover:text-cyan-100'
                 }`}
               >
                 <Waves className="w-3.5 h-3.5 animate-pulse" />
@@ -262,6 +302,20 @@ export default function HyperLocalGISPage() {
                 </button>
               )}
 
+              {/* Desktop Dossier & Tool Panels Toggle */}
+              {activeMapView === 'HYPER_LOCAL' && (
+                <button
+                  onClick={() => setPanelsOpen(!panelsOpen)}
+                  className={`hidden md:flex fp px-2.5 py-1 md:px-3 md:py-1.5 rounded-xl text-[10px] md:text-xs font-mono font-bold items-center gap-1.5 shadow-xl transition active:scale-95 ${
+                    panelsOpen || gisRenderMode === 'SCHEMATIC' ? 'text-cyan-300 border-cyan-400 bg-cyan-950/40' : 'text-slate-400 hover:text-white'
+                  }`}
+                  title="Toggle GIS Layers & Dossier Side Panels"
+                >
+                  <Sliders className="w-3 h-3 text-cyan-400" />
+                  <span>{panelsOpen || gisRenderMode === 'SCHEMATIC' ? 'PANELS ON' : 'PANELS'}</span>
+                </button>
+              )}
+
               {/* Mobile Drawer Trigger Button */}
               {activeMapView === 'HYPER_LOCAL' && (
                 <button
@@ -283,9 +337,25 @@ export default function HyperLocalGISPage() {
             </div>
           )}
 
-          {/* Master Full-Bleed Spatial Vector GIS Canvas */}
-          <div className="flex-1 relative w-full h-full bg-slate-950 overflow-hidden flex items-center justify-center p-0">
-            <svg
+          {/* Master Full-Bleed Spatial Vector GIS Canvas: REAL MAP vs SCHEMATIC */}
+          {gisRenderMode === 'REAL_MAP' ? (
+            <div className="flex-1 relative w-full h-full bg-slate-950 overflow-hidden">
+              <HyperLocalRealMap
+                location={selectedLocation}
+                selectedNodeId={selectedNode?.id}
+                onSelectNode={(node) => {
+                  setSelectedNode(node);
+                  setMobileSheetTab('INSPECTOR');
+                  setMobileSheetOpen(true);
+                }}
+                gisLang={gisLang}
+                className="w-full h-full"
+                showControlBar={true}
+              />
+            </div>
+          ) : (
+            <div className="flex-1 relative w-full h-full bg-slate-950 overflow-hidden flex items-center justify-center p-0">
+              <svg
               viewBox="0 0 800 500"
               className="w-full h-full cursor-crosshair"
               preserveAspectRatio={fitMode === 'MEET' ? 'xMidYMid meet' : 'xMidYMid slice'}
@@ -491,9 +561,12 @@ export default function HyperLocalGISPage() {
                 })}
             </svg>
           </div>
+        )}
 
           {/* Desktop Left-Floating GIS Layer Control Box */}
-          <div className="hidden md:flex absolute top-16 left-4 bottom-6 w-72 z-[600] flex-col gap-3 pointer-events-none">
+          {(gisRenderMode === 'SCHEMATIC' || panelsOpen) && (
+            <>
+              <div className="hidden md:flex absolute top-16 left-4 bottom-6 w-72 z-[600] flex-col gap-3 pointer-events-none">
             <div className="pointer-events-auto fp fp-operational rounded-2xl p-4 space-y-3 shadow-2xl text-xs overflow-y-auto">
               <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                 <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold flex items-center gap-1.5">
@@ -677,6 +750,8 @@ export default function HyperLocalGISPage() {
               </div>
             </div>
           </div>
+        </>
+      )}
 
           {/* Mobile GIS Bottom Sheet — Proper bottom sheet, NOT full-screen overlay */}
           {mobileSheetOpen && (
