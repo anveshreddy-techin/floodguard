@@ -34,12 +34,13 @@ jobs:
 
       - name: Run unit test suite
         run: |
+          set +e
           PYTHONPATH=. python -m pytest tests/unit -v --tb=short 2>&1 | tee test_run.log
           TEST_EXIT=${PIPESTATUS[0]}
-          echo "## Backend API & ML Tests Output (Exit Code: $TEST_EXIT)" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
-          tail -n 120 test_run.log >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          if [ $TEST_EXIT -ne 0 ]; then
+            FAILED_LINE=$(grep -E "FAILED|ERROR|ModuleNotFoundError|ImportError" test_run.log | head -n 10 | tr '\n' ' ')
+            echo "::error title=Pytest Failure::$FAILED_LINE"
+          fi
           exit $TEST_EXIT
 
   frontend-build:
