@@ -16,10 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
           cache: 'pip'
 
       - name: Install dependencies
@@ -34,7 +34,13 @@ jobs:
 
       - name: Run unit test suite
         run: |
-          PYTHONPATH=. python -m pytest tests/unit -v --tb=short
+          PYTHONPATH=. python -m pytest tests/unit -v --tb=short 2>&1 | tee test_run.log
+          TEST_EXIT=${PIPESTATUS[0]}
+          echo "## Backend API & ML Tests Output (Exit Code: $TEST_EXIT)" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          tail -n 120 test_run.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          exit $TEST_EXIT
 
   frontend-build:
     name: Next.js Web Build
