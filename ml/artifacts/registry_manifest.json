@@ -23,10 +23,10 @@
       "pod": 1.0,
       "far": 0.0,
       "brier_score": 0.0812,
-      "latency_ms": 0.033
+      "latency_ms": 0.022
     },
     "artifact_path": "ml/artifacts/tier_a_baseline.joblib",
-    "artifact_checksum": "3e17386760920f988ad873b238a158afdf8b87eb028df907fe9c84ae4c715b76",
+    "artifact_checksum": "7bc18d38cfd914cbff097cc092d5d99450fa5585d5df043668a7b46919f99c04",
     "training_configuration": {
       "n_features": 25,
       "features": [
@@ -65,9 +65,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T08:21:31.864910+00:00",
+    "approval_date": "2026-09-05T09:21:44.176788+00:00",
     "limitations": "Evaluation on test split. High uncertainty: small positive sample count (n=3 < 15).",
-    "created_at": "2026-09-05T08:21:31.864910+00:00",
+    "created_at": "2026-09-05T09:21:44.176788+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   },
@@ -95,7 +95,7 @@
       "pod": 1.0,
       "far": 0.0,
       "brier_score": 0.0003,
-      "latency_ms": 0.108
+      "latency_ms": 0.082
     },
     "artifact_path": "ml/artifacts/tier_b_logistic.joblib",
     "artifact_checksum": "0463d0684c6730b02679ec11185a9202c164bd93d7c874cf2e66220834842e7f",
@@ -137,9 +137,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T08:21:31.864910+00:00",
+    "approval_date": "2026-09-05T09:21:44.176788+00:00",
     "limitations": "Evaluation on test split. High uncertainty: small positive sample count (n=3 < 15).",
-    "created_at": "2026-09-05T08:21:31.864910+00:00",
+    "created_at": "2026-09-05T09:21:44.176788+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   },
@@ -167,7 +167,7 @@
       "pod": 1.0,
       "far": 0.0,
       "brier_score": 0.0003,
-      "latency_ms": 1.266
+      "latency_ms": 0.647
     },
     "artifact_path": "ml/artifacts/tier_c_tree_ensemble.joblib",
     "artifact_checksum": "6811563a58fca9f79e20bf477677b2a745d8415c78951ccc665d8ea9146d4d1c",
@@ -209,9 +209,9 @@
     },
     "deployment_status": "RESEARCH_PROTOTYPE",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T08:21:31.869311+00:00",
+    "approval_date": "2026-09-05T09:21:44.179468+00:00",
     "limitations": "Evaluation on test split. High uncertainty: small positive sample count (n=3 < 15).",
-    "created_at": "2026-09-05T08:21:31.864910+00:00",
+    "created_at": "2026-09-05T09:21:44.176788+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   },
@@ -281,9 +281,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T08:21:31.864910+00:00",
+    "approval_date": "2026-09-05T09:21:44.176788+00:00",
     "limitations": "Tier D Isolation Forest Anomaly Screener evaluated on real test holdout.",
-    "created_at": "2026-09-05T08:21:31.864910+00:00",
+    "created_at": "2026-09-05T09:21:44.176788+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   }

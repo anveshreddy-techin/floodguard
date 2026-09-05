@@ -14,7 +14,7 @@
 | **Probability of Detection (POD)** | `1.0000` | > 0.75 |
 | **False Alarm Ratio (FAR)** | `0.0000` | < 0.35 |
 | **Brier Score (Calibration)** | `0.0003` | < 0.15 |
-| **Inference Latency** | `1.27 ms` | < 100 ms |
+| **Inference Latency** | `0.65 ms` | < 100 ms |
 
 ## Data & Sample Sizing
 - Test Samples: `9` (Positive: `3`, `33.33%`)
