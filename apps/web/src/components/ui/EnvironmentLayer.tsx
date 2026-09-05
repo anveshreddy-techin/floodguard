@@ -49,10 +49,6 @@ export const EnvironmentLayer: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const timeRef = useRef<number>(0);
-
-  if (pathname?.startsWith('/portal')) {
-    return null;
-  }
   const prefersReduced = useRef<boolean>(
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
@@ -76,6 +72,7 @@ export const EnvironmentLayer: React.FC = () => {
   }, [PARTICLE_COUNT, page]);
 
   useEffect(() => {
+    if (pathname?.startsWith('/portal')) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -211,7 +208,7 @@ export const EnvironmentLayer: React.FC = () => {
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [riskState, rainfallMm, riverStage, page, initParticles]);
+  }, [riskState, rainfallMm, riverStage, page, initParticles, pathname]);
 
   const rCfg = RISK_CONFIG[riskState];
 
@@ -223,6 +220,10 @@ export const EnvironmentLayer: React.FC = () => {
     HINDCAST:   'sepia(0.25) saturate(0.75) brightness(0.85)',
     REPLAY:     'sepia(0.3) saturate(0.7) brightness(0.82)',
   };
+
+  if (pathname?.startsWith('/portal')) {
+    return null;
+  }
 
   return (
     <div className="env-layer" style={{ filter: modeFilter[mode] }}>

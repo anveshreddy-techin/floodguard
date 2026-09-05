@@ -14,10 +14,6 @@ export const MobileNavigationWrapper: React.FC = () => {
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
   const [configDrawerOpen, setConfigDrawerOpen] = useState(false);
 
-  if (pathname?.startsWith('/portal')) {
-    return null;
-  }
-
   useEffect(() => {
     const handleOpenNav = () => {
       setConfigDrawerOpen(false);
@@ -36,6 +32,10 @@ export const MobileNavigationWrapper: React.FC = () => {
       window.removeEventListener('open-mobile-config-drawer', handleOpenConfig);
     };
   }, []);
+
+  if (pathname?.startsWith('/portal')) {
+    return null;
+  }
 
   return (
     <>
