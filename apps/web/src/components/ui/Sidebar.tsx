@@ -61,6 +61,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
   const navSections: NavSection[] = [
     {
+      title: 'PUBLIC INFORMATION INTERFACE',
+      phaseDesc: 'Citizen Portal & Community Advisory',
+      phaseColor: 'text-amber-400',
+      items: [
+        { id: 'public-portal', label: 'Public Information Portal', href: '/portal', icon: Globe, badge: 'GOV-STYLE' },
+      ],
+    },
+    {
       title: 'DURING • RESPONSE & RESCUE',
       phaseDesc: 'Disaster In-Progress Operations',
       phaseColor: 'text-rose-400',

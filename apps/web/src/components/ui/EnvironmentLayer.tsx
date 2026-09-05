@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { useEnvironment, RiskState, PageId, EnvMode } from '@/context/EnvironmentContext';
 
 /* ── Topographic contour paths (pre-computed mountain silhouettes) ── */
@@ -43,10 +44,15 @@ const PAGE_ACCENT: Partial<Record<PageId, string>> = {
 };
 
 export const EnvironmentLayer: React.FC = () => {
+  const pathname = usePathname();
   const { riskState, rainfallMm, riverStage, page, mode } = useEnvironment();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const timeRef = useRef<number>(0);
+
+  if (pathname?.startsWith('/portal')) {
+    return null;
+  }
   const prefersReduced = useRef<boolean>(
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );

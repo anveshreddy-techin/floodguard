@@ -171,6 +171,16 @@ export const Header: React.FC<{
               <span>SOS 112</span>
             </button>
 
+            {/* Public Information Portal Switcher */}
+            <Link
+              href="/portal"
+              className="flex px-2 sm:px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 items-center gap-1.5 shadow-sm active:scale-95 transition shrink-0"
+              title="Switch to Government-Style Public Information Portal"
+            >
+              <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span className="hidden sm:inline">PUBLIC PORTAL</span>
+            </Link>
+
             {/* Disaster Relief Donation Button (Desktop / Tablet) */}
             <button
               onClick={() => setDonateModalOpen(true)}

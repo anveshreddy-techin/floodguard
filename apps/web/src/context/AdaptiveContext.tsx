@@ -38,6 +38,9 @@ export interface LocationHierarchy {
   village: string;
 }
 
+export type FontSizeMultiplier = 'NORMAL' | 'LARGE' | 'XLARGE';
+export type PortalExperience = 'PUBLIC_PORTAL' | 'COMMAND_CENTER';
+
 export interface AdaptiveContextType {
   operatingMode: OperatingMode;
   setOperatingMode: (mode: OperatingMode) => void;
@@ -60,6 +63,12 @@ export interface AdaptiveContextType {
   breadcrumb: string;
   t: (key: string) => string;
   selectedLocation: LocationDossier;
+  fontSize: FontSizeMultiplier;
+  setFontSize: (size: FontSizeMultiplier) => void;
+  highContrast: boolean;
+  setHighContrast: React.Dispatch<React.SetStateAction<boolean>> | ((val: boolean | ((prev: boolean) => boolean)) => void);
+  experience: PortalExperience;
+  setExperience: (exp: PortalExperience) => void;
   isCitizen: boolean;
   isOperator: boolean;
   isResponder: boolean;
@@ -85,6 +94,9 @@ export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [language, setLanguage] = useState<SupportedLanguage>('en');
   const [hierarchy, setHierarchy] = useState<LocationHierarchy>(defaultHierarchy);
   const [dataMode, setDataMode] = useState<InternalDataMode>('SIMULATION_DATA');
+  const [fontSize, setFontSize] = useState<FontSizeMultiplier>('NORMAL');
+  const [highContrast, setHighContrast] = useState<boolean>(false);
+  const [experience, setExperience] = useState<PortalExperience>('PUBLIC_PORTAL');
 
   // Find nearest matching location dossier with strict state-first fallback
   const selectedLocation = useMemo(() => {
@@ -246,6 +258,12 @@ export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         breadcrumb,
         t,
         selectedLocation,
+        fontSize,
+        setFontSize,
+        highContrast,
+        setHighContrast,
+        experience,
+        setExperience,
         isCitizen: role === 'CITIZEN' || role === 'VIEWER',
         isOperator: ['VILLAGE_OPERATOR', 'DISTRICT_OPERATOR', 'STATE_OPERATOR', 'NATIONAL_OPERATOR'].includes(role),
         isResponder: role === 'FIELD_RESPONDER',

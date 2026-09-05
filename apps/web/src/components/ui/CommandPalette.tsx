@@ -19,6 +19,8 @@ import {
   FileText,
   HeartPulse,
   UploadCloud,
+  Globe,
+  AlertTriangle,
   X
 } from 'lucide-react';
 
@@ -49,6 +51,10 @@ export const CommandPalette: React.FC<{ isOpen: boolean; onClose: () => void }> 
   if (!isOpen) return null;
 
   const commands = [
+    { label: 'Public Information Portal (Institutional)', href: '/portal', icon: Globe, category: 'PUBLIC_PORTAL' },
+    { label: 'Public Risk & Alerts Registry', href: '/portal/alerts', icon: AlertTriangle, category: 'PUBLIC_PORTAL' },
+    { label: 'Public Evacuation Shelters Directory', href: '/portal/shelters', icon: Compass, category: 'PUBLIC_PORTAL' },
+    { label: 'Citizen Incident Reporting Form', href: '/portal/report', icon: FileText, category: 'PUBLIC_PORTAL' },
     { label: 'Command Center (100vh Overview)', href: '/', icon: ShieldAlert, category: 'COMMAND' },
     { label: 'My Safety & Escape Guidance HUD', href: '/safety', icon: Compass, category: 'COMMAND' },
     { label: 'Hyper-Local Vector GIS Map', href: '/map', icon: Map, category: 'INTELLIGENCE' },

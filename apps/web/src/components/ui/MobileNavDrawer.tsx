@@ -35,6 +35,13 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
   const navSections = [
     {
+      title: 'PUBLIC INFORMATION INTERFACE',
+      phaseColor: 'text-amber-400',
+      items: [
+        { id: 'public-portal', label: 'Public Information Portal', href: '/portal', icon: Globe, badge: 'GOV-STYLE' },
+      ],
+    },
+    {
       title: 'DURING • RESPONSE & RESCUE',
       phaseColor: 'text-rose-400',
       items: [

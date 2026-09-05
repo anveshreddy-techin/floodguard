@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { MobileBottomNav } from './MobileBottomNav';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MobileConfigDrawer } from './MobileConfigDrawer';
@@ -9,8 +10,13 @@ import { GlobalAiAssistant } from './GlobalAiAssistant';
 import { EmergencyDispatchModal } from './EmergencyDispatchModal';
 
 export const MobileNavigationWrapper: React.FC = () => {
+  const pathname = usePathname();
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
   const [configDrawerOpen, setConfigDrawerOpen] = useState(false);
+
+  if (pathname?.startsWith('/portal')) {
+    return null;
+  }
 
   useEffect(() => {
     const handleOpenNav = () => {
