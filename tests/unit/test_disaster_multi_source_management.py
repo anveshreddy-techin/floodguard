@@ -148,3 +148,86 @@ def test_continuous_training_buffer_and_trigger(client):
     data = res.json()
     assert "total_buffered_samples" in data
     assert "ready_for_retraining" in data
+
+
+def test_direct_device_telemetry_all_4_sensors(client):
+    """Test POST /api/v1/ingestion/telemetry for all 4 device types: Ultrasonic, Rain, Soil TDR, LoRaWAN."""
+    # 1. Ultrasonic River Level
+    res_us = client.post(
+        "/api/v1/ingestion/telemetry",
+        json={
+            "device_id": "DEV-ESP32-RISHI-001",
+            "device_type": "ULTRASONIC_WATER_LEVEL",
+            "location": {"village_id": "uk-chamoli-raini"},
+            "telemetry": {
+                "water_distance_m": 2.2,
+                "calculated_stage_m": 4.8,
+                "rate_of_rise_m_per_h": 0.55,
+                "battery_voltage_v": 4.1,
+            },
+        },
+    )
+    assert res_us.status_code == 200
+    d_us = res_us.json()
+    assert d_us["status"] == "ACCEPTED"
+    assert d_us["source_type_routed"] == "HYDROLOGICAL"
+    assert d_us["composite_risk_score"] > 50
+
+    # 2. Tipping Bucket Rain
+    res_rain = client.post(
+        "/api/v1/ingestion/telemetry",
+        json={
+            "device_id": "DEV-AWS-CHAMOLI-002",
+            "device_type": "RAIN_GAUGE",
+            "location": {"village_id": "uk-chamoli-raini"},
+            "telemetry": {
+                "rainfall_1h_mm": 55.0,
+                "rainfall_3h_mm": 88.0,
+                "peak_intensity_mm_h": 70.0,
+                "battery_voltage_v": 3.9,
+            },
+        },
+    )
+    assert res_rain.status_code == 200
+    d_rain = res_rain.json()
+    assert d_rain["status"] == "ACCEPTED"
+    assert d_rain["source_type_routed"] == "METEOROLOGICAL"
+
+    # 3. Soil Moisture TDR
+    res_soil = client.post(
+        "/api/v1/ingestion/telemetry",
+        json={
+            "device_id": "DEV-TDR-SLOPE-003",
+            "device_type": "SOIL_TDR",
+            "location": {"village_id": "uk-chamoli-raini"},
+            "telemetry": {
+                "soil_saturation_index": 0.92,
+                "volumetric_water_content_pct": 47.8,
+                "sensor_depth_cm": 30,
+            },
+        },
+    )
+    assert res_soil.status_code == 200
+    d_soil = res_soil.json()
+    assert d_soil["status"] == "ACCEPTED"
+    assert d_soil["source_type_routed"] == "GEOTECHNICAL"
+
+    # 4. LoRaWAN Gateway
+    res_gw = client.post(
+        "/api/v1/ingestion/telemetry",
+        json={
+            "device_id": "GW-LORA-ALAKNANDA-004",
+            "device_type": "LORAWAN_GATEWAY",
+            "location": {"village_id": "uk-chamoli-raini"},
+            "telemetry": {
+                "geophone_debris_vibration_db": 42.0,
+                "culvert_backpressure_ratio": 0.82,
+                "connected_nodes": 8,
+            },
+        },
+    )
+    assert res_gw.status_code == 200
+    d_gw = res_gw.json()
+    assert d_gw["status"] == "ACCEPTED"
+    assert d_gw["source_type_routed"] == "IOT_TELEMETRY"
+
