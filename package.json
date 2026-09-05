@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "cd apps/web && npm install && npm run build && cd ../.. && rm -rf out && cp -r apps/web/out out",
+    "build": "cd apps/web && npm install && npm run build && cd ../.. && rm -rf out public && cp -r apps/web/out out && cp -r apps/web/out public",
     "export": "npm run build"
   }
 }

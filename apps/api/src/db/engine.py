@@ -35,6 +35,7 @@ _is_sqlite_fallback = False
 
 
 def _build_engine(url: str):
+    global _is_sqlite_fallback, _active_url
     is_sqlite = "sqlite" in url
     kwargs = {
         "echo": settings.DEBUG,
@@ -43,7 +44,18 @@ def _build_engine(url: str):
         kwargs["pool_size"] = settings.DATABASE_POOL_SIZE
         kwargs["max_overflow"] = settings.DATABASE_MAX_OVERFLOW
         kwargs["pool_pre_ping"] = True
-    return create_async_engine(url, **kwargs)
+    try:
+        return create_async_engine(url, **kwargs)
+    except Exception as e:
+        logger.warning(
+            "failed_to_create_async_engine_falling_back_to_sqlite",
+            error=str(e),
+            attempted_url=url,
+            fallback_url=SQLITE_FALLBACK_URL,
+        )
+        _is_sqlite_fallback = True
+        _active_url = SQLITE_FALLBACK_URL
+        return create_async_engine(SQLITE_FALLBACK_URL, echo=settings.DEBUG)
 
 
 engine = _build_engine(_active_url)
