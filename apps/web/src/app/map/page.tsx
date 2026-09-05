@@ -246,8 +246,8 @@ export default function HyperLocalGISPage() {
               </button>
             </div>
 
-            {/* Desktop: Tool Switcher (When in HYPER_LOCAL view) */}
-            {activeMapView === 'HYPER_LOCAL' && (
+            {/* Desktop: Tool Switcher (ONLY when in 3D SCHEMATIC view) */}
+            {activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'SCHEMATIC' && (
               <div className="pointer-events-auto hidden md:flex items-center gap-2">
                 <div className="glass-panel rounded-xl p-1 flex items-center gap-1 shadow-xl">
                   {(['EXPLORE', 'PROFILE', 'ISOCHRONES', 'MORPHOMETRY'] as GisToolMode[]).map((tool) => (
@@ -272,11 +272,13 @@ export default function HyperLocalGISPage() {
 
             {/* Right: Viewport Mode Toggle & Info Triggers */}
             <div className="pointer-events-auto flex items-center gap-1.5">
-              {/* Coords HUD (Desktop only) */}
-              <div className="hidden lg:flex items-center gap-1.5 glass-panel px-3 py-1.5 rounded-xl text-[10px] font-mono text-cyan-300 shadow-xl border border-cyan-500/20">
-                <Crosshair className="w-3.5 h-3.5 text-cyan-400 animate-spin-slow" />
-                <span>{hoveredCoord ? `${hoveredCoord.lat}, ${hoveredCoord.lon} • ${hoveredCoord.ele} • ${hoveredCoord.slope}` : '30.5050° N, 79.1550° E • 1,180m • EPSG:32644'}</span>
-              </div>
+              {/* Coords HUD (Desktop only in Schematic) */}
+              {gisRenderMode === 'SCHEMATIC' && (
+                <div className="hidden lg:flex items-center gap-1.5 glass-panel px-3 py-1.5 rounded-xl text-[10px] font-mono text-cyan-300 shadow-xl border border-cyan-500/20">
+                  <Crosshair className="w-3.5 h-3.5 text-cyan-400 animate-spin-slow" />
+                  <span>{hoveredCoord ? `${hoveredCoord.lat}, ${hoveredCoord.lon} • ${hoveredCoord.ele} • ${hoveredCoord.slope}` : '30.5050° N, 79.1550° E • 1,180m • EPSG:32644'}</span>
+                </div>
+              )}
 
               {/* Bilingual Hindi/English GIS Toggle */}
               <button
@@ -288,8 +290,8 @@ export default function HyperLocalGISPage() {
                 <span>{gisLang === 'en' ? 'हिन्दी' : 'ENG'}</span>
               </button>
 
-              {/* 100% Full Map vs Zoom Focus Toggle */}
-              {activeMapView === 'HYPER_LOCAL' && (
+              {/* 100% Full Map vs Zoom Focus Toggle (Schematic only) */}
+              {activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'SCHEMATIC' && (
                 <button
                   onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
                   className={`fp px-2.5 py-1 md:px-3 md:py-1.5 rounded-xl text-[10px] md:text-xs font-mono font-bold flex items-center gap-1.5 shadow-xl transition active:scale-95 ${
@@ -302,22 +304,22 @@ export default function HyperLocalGISPage() {
                 </button>
               )}
 
-              {/* Desktop Dossier & Tool Panels Toggle */}
-              {activeMapView === 'HYPER_LOCAL' && (
+              {/* Desktop Dossier & Tool Panels Toggle (Schematic only) */}
+              {activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'SCHEMATIC' && (
                 <button
                   onClick={() => setPanelsOpen(!panelsOpen)}
                   className={`hidden md:flex fp px-2.5 py-1 md:px-3 md:py-1.5 rounded-xl text-[10px] md:text-xs font-mono font-bold items-center gap-1.5 shadow-xl transition active:scale-95 ${
-                    panelsOpen || gisRenderMode === 'SCHEMATIC' ? 'text-cyan-300 border-cyan-400 bg-cyan-950/40' : 'text-slate-400 hover:text-white'
+                    panelsOpen ? 'text-cyan-300 border-cyan-400 bg-cyan-950/40' : 'text-slate-400 hover:text-white'
                   }`}
                   title="Toggle GIS Layers & Dossier Side Panels"
                 >
                   <Sliders className="w-3 h-3 text-cyan-400" />
-                  <span>{panelsOpen || gisRenderMode === 'SCHEMATIC' ? 'PANELS ON' : 'PANELS'}</span>
+                  <span>{panelsOpen ? 'PANELS ON' : 'PANELS'}</span>
                 </button>
               )}
 
               {/* Mobile Drawer Trigger Button */}
-              {activeMapView === 'HYPER_LOCAL' && (
+              {activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'SCHEMATIC' && (
                 <button
                   onClick={() => setMobileSheetOpen(!mobileSheetOpen)}
                   className="md:hidden fp fp-operational px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold text-cyan-300 flex items-center gap-1 shadow-xl active:scale-95"
@@ -563,8 +565,8 @@ export default function HyperLocalGISPage() {
           </div>
         )}
 
-          {/* Desktop Left-Floating GIS Layer Control Box */}
-          {(gisRenderMode === 'SCHEMATIC' || panelsOpen) && (
+          {/* Desktop Left-Floating GIS Layer Control Box (Schematic only) */}
+          {gisRenderMode === 'SCHEMATIC' && panelsOpen && (
             <>
               <div className="hidden md:flex absolute top-16 left-4 bottom-6 w-72 z-[600] flex-col gap-3 pointer-events-none">
             <div className="pointer-events-auto fp fp-operational rounded-2xl p-4 space-y-3 shadow-2xl text-xs overflow-y-auto">

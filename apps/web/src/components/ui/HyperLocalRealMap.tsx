@@ -699,9 +699,9 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       {/* ── MAP CONTAINER ── */}
       <div ref={mapContainerRef} className="w-full h-full flex-1" style={{ zIndex: 1 }} />
 
-      {/* ── TOP CONTROL BAR: BASE MAP & LAYER TOGGLES (EASY UNDERSTANDING) ── */}
+      {/* ── TOP CONTROL BAR: BASE MAP & LAYER TOGGLES (NEVER OVERLAPS VIEW SWITCHER) ── */}
       {showControlBar && (
-        <div className="absolute top-3 left-3 right-3 z-[400] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+        <div className="absolute top-2.5 left-[345px] right-3 z-[400] hidden md:flex items-center justify-end gap-2 pointer-events-none">
           {/* Base Map Switcher */}
           <div className="pointer-events-auto glass-panel p-1 rounded-xl shadow-2xl border border-cyan-500/30 flex items-center gap-1">
             <span className="text-[10px] font-mono font-bold text-cyan-400 px-1.5 uppercase hidden sm:inline">
@@ -791,39 +791,121 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         </div>
       )}
 
-      {/* ── PLAIN-LANGUAGE "EASY UNDERSTANDING" SITUATION BANNER ── */}
-      <div className="absolute bottom-3 left-3 right-3 z-[400] pointer-events-none">
-        <div className="pointer-events-auto max-w-4xl mx-auto glass-panel border border-cyan-500/40 rounded-2xl p-3 md:p-3.5 shadow-2xl backdrop-blur-xl space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className={`w-3 h-3 rounded-full shrink-0 ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-400'}`} />
-              <h4 className="text-xs md:text-sm font-black text-white truncate uppercase font-mono">
-                {gisLang === 'hi' ? 'वास्तविक धरातलीय जीआईएस स्थिति' : 'HYPER-LOCAL GROUND SITUATION'}: {location.name}
-              </h4>
-              <RiskBadge level={location.riskLevel} />
-            </div>
-
+      {/* Mobile Map Style Bar (compact right pill, never collides) */}
+      {showControlBar && (
+        <div className="md:hidden absolute top-14 right-3 z-[400] flex items-center gap-1.5 pointer-events-none">
+          <div className="pointer-events-auto glass-panel p-1 rounded-xl shadow-xl border border-cyan-500/30 flex items-center gap-1">
+            {(['SATELLITE', 'TOPO', 'DARK'] as BaseMapTileType[]).map((tile) => (
+              <button
+                key={tile}
+                onClick={() => setActiveBaseMap(tile)}
+                className={`px-2 py-0.5 rounded-lg text-[9px] font-mono font-bold ${
+                  activeBaseMap === tile ? 'bg-cyan-500 text-slate-950 font-black' : 'text-slate-400'
+                }`}
+              >
+                {tile === 'SATELLITE' ? 'SAT' : tile}
+              </button>
+            ))}
             <button
-              onClick={() => setHudExpanded(!hudExpanded)}
-              className="text-[10px] font-mono text-cyan-400 hover:text-white uppercase font-bold underline shrink-0"
+              onClick={handleResetView}
+              className="p-1 rounded-lg text-cyan-300 hover:bg-slate-800"
+              title="Reset View"
             >
-              {hudExpanded ? (gisLang === 'hi' ? 'छुपाएं [-]' : 'HIDE [-]') : (gisLang === 'hi' ? 'विवरण देखें [+]' : 'DETAILS [+]')}
+              <RotateCcw className="w-3 h-3" />
             </button>
           </div>
+        </div>
+      )}
 
-          {hudExpanded && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-1 border-t border-slate-800/80 text-[11px] font-mono">
-              {/* 1. What's Happening */}
-              <div className="bg-slate-900/80 p-2 rounded-xl border border-slate-800 flex items-start gap-2">
+      {/* ── UNIFIED LEFT-SIDE INFORMATION PANEL (ALL INFORMATION NEATLY ON THE LEFT) ── */}
+      <div className="absolute top-14 left-3 z-[450] flex flex-col pointer-events-none">
+        {hudExpanded ? (
+          <div className="pointer-events-auto w-80 lg:w-[360px] max-h-[calc(100vh-170px)] bg-slate-950/95 border border-cyan-500/40 rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_25px_rgba(6,182,212,0.2)] backdrop-blur-2xl flex flex-col space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 animate-fade-in">
+            {/* Panel Header */}
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-400'}`} />
+                <div className="min-w-0">
+                  <span className="text-[9px] font-mono text-cyan-400 uppercase tracking-wider font-bold block truncate">
+                    {gisLang === 'hi' ? 'धरातलीय जीआईएस स्थिति' : 'HYPER-LOCAL GROUND SITUATION'}
+                  </span>
+                  <h4 className="text-xs font-black text-white truncate uppercase font-mono">
+                    {location.name}
+                  </h4>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <RiskBadge level={location.riskLevel} />
+                <button
+                  onClick={() => setHudExpanded(false)}
+                  className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                  title="Collapse Panel"
+                >
+                  ◀
+                </button>
+              </div>
+            </div>
+
+            {/* Selected Feature / Pin Inspector (If pin clicked, or defaults to village) */}
+            {selectedEntity && (
+              <div className="bg-slate-900/90 border border-cyan-500/40 rounded-xl p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-mono text-cyan-400 uppercase font-bold tracking-wider">
+                    📌 {selectedEntity.category || 'MAP FEATURE'}
+                  </span>
+                  {selectedEntity.id !== spatialEntities.village.id && (
+                    <button
+                      onClick={() => setSelectedEntity(spatialEntities.village)}
+                      className="text-[9px] font-mono text-slate-400 hover:text-white underline"
+                    >
+                      Reset to Village
+                    </button>
+                  )}
+                </div>
+                <h5 className="text-xs font-black text-white">{selectedEntity.name}</h5>
+                <p className="text-[11px] text-slate-300 leading-relaxed">{selectedEntity.desc}</p>
+
+                <div className="grid grid-cols-2 gap-1.5 pt-1 font-mono text-[10px]">
+                  {selectedEntity.elevation && (
+                    <div className="bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block text-[9px]">ELEVATION:</span>
+                      <span className="text-emerald-400 font-bold">{selectedEntity.elevation}</span>
+                    </div>
+                  )}
+                  {selectedEntity.reading && (
+                    <div className="bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block text-[9px]">LIVE READING:</span>
+                      <span className="text-cyan-300 font-bold">{selectedEntity.reading}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-2 rounded-lg bg-cyan-950/50 border border-cyan-500/30 text-[10px] text-cyan-200">
+                  <strong className="text-cyan-300 block mb-0.5 uppercase">
+                    {gisLang === 'hi' ? 'निर्देश:' : 'DIRECTIVE:'}
+                  </strong>
+                  {selectedEntity.action || 'Continue normal spatial situational monitoring.'}
+                </div>
+              </div>
+            )}
+
+            {/* Real-time Physical Telemetry */}
+            <div className="space-y-1.5">
+              <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider font-bold block">
+                {gisLang === 'hi' ? 'जमीनी टेलीमेट्री' : 'LIVE HYDROLOGIC TELEMETRY'}
+              </span>
+
+              {/* River Status */}
+              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 flex items-start gap-2">
                 <Waves className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-slate-400 text-[9px] uppercase font-bold">
-                    {gisLang === 'hi' ? 'नदी एवं वर्षा स्थिति' : 'RIVER & PRECIPITATION'}
+                <div className="min-w-0">
+                  <div className="text-slate-400 text-[9px] uppercase font-bold font-mono">
+                    {gisLang === 'hi' ? 'नदी जलस्तर' : 'RIVER STAGE & SURGE'}
                   </div>
-                  <div className="text-slate-200 font-bold mt-0.5">
+                  <div className="text-slate-200 font-bold text-xs mt-0.5 font-mono">
                     {location.riverStage} • Rain: {location.rainfall3h}
                   </div>
-                  <div className="text-[10px] text-amber-300">
+                  <div className="text-[10px] text-amber-300 font-mono mt-0.5">
                     {isHighRisk 
                       ? (gisLang === 'hi' ? '⚠️ नदी जलस्तर तेजी से बढ़ रहा है (+0.40m/h)' : '⚠️ River surging rapidly (+0.40m/h)')
                       : (gisLang === 'hi' ? 'प्रवाह सामान्य गति से जारी' : 'Normal stable channel flow')}
@@ -831,92 +913,62 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                 </div>
               </div>
 
-              {/* 2. Safe Evacuation Guidance */}
-              <div className="bg-slate-900/80 p-2 rounded-xl border border-slate-800 flex items-start gap-2">
-                <Navigation className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-slate-400 text-[9px] uppercase font-bold">
-                    {gisLang === 'hi' ? 'सुरक्षित निकासी मार्ग' : 'SAFE ESCAPE VECTOR'}
-                  </div>
-                  <div className="text-emerald-300 font-bold mt-0.5 truncate">
-                    {spatialEntities.primaryShelter.name}
-                  </div>
-                  <div className="text-[10px] text-slate-300">
-                    {gisLang === 'hi' ? '+120m ऊंचाई · 1.4 किमी (12-16 मिनट)' : '+120m Ridge Spur · 1.4 km (14 min walk)'}
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Lead Time / Action Required */}
-              <div className="bg-slate-900/80 p-2 rounded-xl border border-slate-800 flex items-start gap-2">
+              {/* Lead Time & Warning */}
+              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 flex items-start gap-2">
                 <Clock className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-slate-400 text-[9px] uppercase font-bold">
-                    {gisLang === 'hi' ? 'चेतावनी समय / निर्देश' : 'LEAD TIME & CITIZEN ACTION'}
+                <div className="min-w-0">
+                  <div className="text-slate-400 text-[9px] uppercase font-bold font-mono">
+                    {gisLang === 'hi' ? 'चेतावनी अग्रिम समय' : 'EARLY WARNING LEAD TIME'}
                   </div>
-                  <div className="text-white font-black mt-0.5">
+                  <div className="text-white font-black text-xs mt-0.5 font-mono">
                     {isHighRisk ? `${location.leadTimeMinutes} MIN ADVANCE WARNING` : 'NORMAL MONITORING'}
                   </div>
-                  <div className="text-[10px] text-rose-300 font-bold truncate">
+                  <div className="text-[10px] text-rose-300 font-bold font-mono mt-0.5">
                     {isHighRisk 
                       ? (gisLang === 'hi' ? 'निचले मार्ग बंद हैं! रिज पथ से निकलें।' : 'Avoid low riverbed! Use North Ridge.')
                       : (gisLang === 'hi' ? 'मार्ग खुले हैं।' : 'All pathways clear.')}
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      </div>
 
-      {/* ── CLICK INSPECTOR DRAWER / MODAL (WHEN A PIN IS CLICKED) ── */}
-      {selectedEntity && (
-        <div className="absolute top-16 right-3 z-[500] w-72 sm:w-80 glass-panel border border-cyan-500/50 rounded-2xl p-4 shadow-2xl backdrop-blur-2xl text-xs space-y-3 animate-fade-in">
-          <div className="flex items-start justify-between border-b border-slate-800 pb-2.5">
-            <div>
-              <span className="text-[9px] font-mono text-cyan-400 uppercase tracking-wider font-bold">
-                {selectedEntity.category || 'MAP FEATURE'}
-              </span>
-              <h3 className="text-sm font-black text-white mt-0.5 leading-tight">
-                {selectedEntity.name}
-              </h3>
+              {/* Safe Evacuation Shelter Vector */}
+              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-emerald-500/40 flex items-start gap-2">
+                <Navigation className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <div className="min-w-0 flex-1">
+                  <div className="text-slate-400 text-[9px] uppercase font-bold font-mono">
+                    {gisLang === 'hi' ? 'सुरक्षित शरण स्थल' : 'RECOMMENDED SAFE SHELTER'}
+                  </div>
+                  <div className="text-emerald-300 font-bold text-xs mt-0.5 truncate font-mono">
+                    {spatialEntities.primaryShelter.name}
+                  </div>
+                  <div className="text-[10px] text-slate-300 font-mono mt-0.5">
+                    {gisLang === 'hi' ? '+120m ऊंचाई · 1.4 किमी (14 मिनट)' : '+120m Ridge Spur · 1.4 km (14 min walk)'}
+                  </div>
+                </div>
+              </div>
             </div>
-            <button
-              onClick={() => setSelectedEntity(null)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg text-sm font-bold"
+
+            {/* Quick Action Button */}
+            <a
+              href="/safety"
+              className="w-full py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1.5 shadow-lg transition active:scale-95"
             >
-              ✕
-            </button>
+              <Compass className="w-3.5 h-3.5" />
+              <span>{gisLang === 'hi' ? 'सुरक्षित मार्ग गाइड (HUD)' : 'OPEN SAFE ESCAPE HUD'}</span>
+            </a>
           </div>
-
-          <div className="space-y-2 text-slate-300">
-            <p className="text-[11px] leading-relaxed">
-              {selectedEntity.desc}
-            </p>
-
-            {selectedEntity.reading && (
-              <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center font-mono">
-                <span className="text-slate-400 text-[10px]">LIVE MEASUREMENT:</span>
-                <span className="text-cyan-300 font-bold text-xs">{selectedEntity.reading}</span>
-              </div>
-            )}
-
-            {selectedEntity.elevation && (
-              <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center font-mono">
-                <span className="text-slate-400 text-[10px]">ELEVATION ASL:</span>
-                <span className="text-emerald-400 font-bold text-xs">{selectedEntity.elevation}</span>
-              </div>
-            )}
-
-            <div className="p-2.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-[11px] text-cyan-200">
-              <b className="text-cyan-300 block mb-0.5 font-mono text-[10px] uppercase">
-                {gisLang === 'hi' ? 'सलाह / निर्देश:' : 'RECOMMENDED ACTION:'}
-              </b>
-              {selectedEntity.action || 'Continue normal spatial situational monitoring.'}
-            </div>
-          </div>
-        </div>
-      )}
+        ) : (
+          /* Collapsed Pill Button on Left */
+          <button
+            onClick={() => setHudExpanded(true)}
+            className="pointer-events-auto px-3 py-2 rounded-xl bg-slate-950/95 border border-cyan-500/50 text-cyan-300 hover:text-white shadow-2xl flex items-center gap-2 text-xs font-mono font-bold transition active:scale-95"
+          >
+            <span className={`w-2 h-2 rounded-full ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-400'}`} />
+            <span>GIS INFO &amp; GROUND SITUATION</span>
+            <span className="text-[10px] text-cyan-400">▶</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 };
