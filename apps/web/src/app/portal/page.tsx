@@ -4,6 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAdaptive } from '@/context/AdaptiveContext';
 import {
+  PipelineVisualizer,
+  SachetAlertBanner,
+  NdmisReportCard,
+  NdrfDeploymentCard,
+} from '@/design-system/components';
+import {
   Home,
   Activity,
   CloudRain,
@@ -30,6 +36,8 @@ import {
   ZoomOut,
   Info,
   ChevronDown,
+  Eye,
+  Shield,
 } from 'lucide-react';
 
 interface DistrictRisk {
@@ -60,6 +68,18 @@ export default function PublicPortalDashboardPage() {
   const [activeMenu, setActiveMenu] = useState<string>('dashboard');
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [modalAction, setModalAction] = useState<string | null>(null);
+  const [portalView, setPortalView] = useState<'ALL' | 'OVERVIEW' | 'PIPELINE' | 'OPERATIONS'>('ALL');
+  const [gisLayers, setGisLayers] = useState<{
+    inundation: boolean;
+    slope: boolean;
+    drainage: boolean;
+    analogs: boolean;
+  }>({
+    inundation: true,
+    slope: true,
+    drainage: true,
+    analogs: true,
+  });
 
   const currentDistData = UTTARAKHAND_DISTRICTS[selectedDistrict] || UTTARAKHAND_DISTRICTS['Uttarkashi'];
 
@@ -198,7 +218,78 @@ export default function PublicPortalDashboardPage() {
 
       {/* ── MAIN CONTENT AREA (6 KPI CARDS + MAP + RECENT ALERTS + BOTTOM 3 TILES) ── */}
       <div className="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto">
+        {/* ── GOV BENCHMARK PILLAR VIEW TABS ── */}
+        <div className="bg-white border border-slate-200 rounded p-1.5 flex flex-wrap items-center justify-between gap-2 shadow-xs">
+          <div className="flex items-center gap-1.5 text-xs">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 px-2">
+              Gov Desk Views:
+            </span>
+            <button
+              type="button"
+              onClick={() => setPortalView('ALL')}
+              className={`px-3 py-1.5 rounded font-semibold text-xs transition cursor-pointer ${
+                portalView === 'ALL'
+                  ? 'bg-blue-900 text-white shadow-xs'
+                  : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              All Integrated Desk
+            </button>
+            <button
+              type="button"
+              onClick={() => setPortalView('PIPELINE')}
+              className={`px-3 py-1.5 rounded font-semibold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+                portalView === 'PIPELINE'
+                  ? 'bg-blue-900 text-white shadow-xs'
+                  : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              <span>9-Stage Prediction Pipeline</span>
+              <span className="bg-cyan-500 text-slate-950 font-mono text-[9px] px-1.5 py-0.2 rounded font-black">
+                CORE
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setPortalView('OPERATIONS')}
+              className={`px-3 py-1.5 rounded font-semibold text-xs transition cursor-pointer ${
+                portalView === 'OPERATIONS'
+                  ? 'bg-blue-900 text-white shadow-xs'
+                  : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              MHA NDMIS &amp; NDRF Operations
+            </button>
+            <button
+              type="button"
+              onClick={() => setPortalView('OVERVIEW')}
+              className={`px-3 py-1.5 rounded font-semibold text-xs transition cursor-pointer ${
+                portalView === 'OVERVIEW'
+                  ? 'bg-blue-900 text-white shadow-xs'
+                  : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              District Situation &amp; Map
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 pr-2 text-[11px] font-mono text-slate-500">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>NDMA SACHET · MHA NDMIS · NDRF · NDEM Active</span>
+          </div>
+        </div>
+
+        {/* ── SACHET BILINGUAL OASIS CAP v1.2 ALERT BANNER ── */}
+        <SachetAlertBanner district={selectedDistrict} state={hierarchy.state || 'Uttarakhand'} severity="RED" />
+
+        {/* ── 9-STAGE PHYSICAL PREDICTION PIPELINE (SIH26192) ── */}
+        {(portalView === 'ALL' || portalView === 'PIPELINE') && (
+          <PipelineVisualizer />
+        )}
+
         {/* ROW 1: TOP 6 METRIC CARDS */}
+        {(portalView === 'ALL' || portalView === 'OVERVIEW') && (
+        <>
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
           {/* Card 1: Active Alerts */}
           <div className="bg-white border border-slate-200 rounded p-3 shadow-xs flex items-center justify-between">
@@ -334,11 +425,62 @@ export default function PublicPortalDashboardPage() {
                 <button
                   type="button"
                   onClick={() => alert(`Active Focus: ${currentDistData.name} District (Risk: ${currentDistData.level})`)}
-                  className="bg-blue-800 hover:bg-blue-900 text-white text-xs font-semibold px-2.5 py-1 rounded transition active:scale-95 shadow-xs"
+                  className="bg-blue-800 hover:bg-blue-900 text-white text-xs font-semibold px-2.5 py-1 rounded transition active:scale-95 shadow-xs cursor-pointer"
                 >
                   District View
                 </button>
               </div>
+            </div>
+
+            {/* NDEM GIS Multi-Layer Toggles */}
+            <div className="flex flex-wrap items-center gap-1.5 py-1 px-2 bg-slate-100 rounded text-[10px] font-mono mb-2 border border-slate-200">
+              <span className="font-bold text-slate-500 uppercase tracking-wide mr-1">
+                NDEM GIS Layers:
+              </span>
+              <button
+                type="button"
+                onClick={() => setGisLayers((p) => ({ ...p, inundation: !p.inundation }))}
+                className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                  gisLayers.inundation
+                    ? 'bg-blue-800 text-white border-blue-900 font-bold shadow-xs'
+                    : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
+                }`}
+              >
+                🌊 Inundation Extent
+              </button>
+              <button
+                type="button"
+                onClick={() => setGisLayers((p) => ({ ...p, slope: !p.slope }))}
+                className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                  gisLayers.slope
+                    ? 'bg-purple-800 text-white border-purple-900 font-bold shadow-xs'
+                    : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
+                }`}
+              >
+                ⛰️ Slope &gt;30° (FoS)
+              </button>
+              <button
+                type="button"
+                onClick={() => setGisLayers((p) => ({ ...p, drainage: !p.drainage }))}
+                className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                  gisLayers.drainage
+                    ? 'bg-cyan-800 text-white border-cyan-900 font-bold shadow-xs'
+                    : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
+                }`}
+              >
+                💧 River Drainage
+              </button>
+              <button
+                type="button"
+                onClick={() => setGisLayers((p) => ({ ...p, analogs: !p.analogs }))}
+                className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                  gisLayers.analogs
+                    ? 'bg-amber-700 text-white border-amber-800 font-bold shadow-xs'
+                    : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
+                }`}
+              >
+                📜 Historical Analogs
+              </button>
             </div>
 
             {/* Vector Map Canvas (Uttarakhand District Geometry with Zoom Controls) */}
@@ -506,6 +648,93 @@ export default function PublicPortalDashboardPage() {
                   <circle cx="0" cy="0" r="6" fill="#ea580c" stroke="#ffffff" strokeWidth="1.5" />
                   <text x="0" y="2" textAnchor="middle" fill="#ffffff" fontSize="5" fontWeight="bold">!</text>
                 </g>
+
+                {/* ── NDEM SATELLITE & DISASTER INTELLIGENCE LAYERS (NRSC/ISRO) ── */}
+                {gisLayers.inundation && (
+                  <g id="ndem-inundation-layer">
+                    {/* Inundation zone along riverbeds */}
+                    <path
+                      d="M 120,70 Q 150,110 180,130 T 250,140"
+                      fill="none"
+                      stroke="#0284c7"
+                      strokeWidth="14"
+                      strokeOpacity="0.4"
+                      className="animate-pulse"
+                    />
+                    <path
+                      d="M 270,75 Q 310,105 340,120"
+                      fill="none"
+                      stroke="#0284c7"
+                      strokeWidth="14"
+                      strokeOpacity="0.4"
+                      className="animate-pulse"
+                    />
+                    <ellipse cx="160" cy="115" rx="22" ry="12" fill="#38bdf8" fillOpacity="0.6" stroke="#0284c7" strokeWidth="1" />
+                    <ellipse cx="305" cy="102" rx="28" ry="16" fill="#38bdf8" fillOpacity="0.6" stroke="#0284c7" strokeWidth="1" />
+                    <text x="305" y="105" textAnchor="middle" fill="#0369a1" fontSize="6.5" fontWeight="bold" fontFamily="monospace">
+                      Depth: 1.8m
+                    </text>
+                    <text x="160" y="118" textAnchor="middle" fill="#0369a1" fontSize="6" fontWeight="bold" fontFamily="monospace">
+                      Depth: 2.4m
+                    </text>
+                  </g>
+                )}
+
+                {gisLayers.slope && (
+                  <g id="ndem-slope-layer">
+                    {/* CartoDEM Slope >30° geotechnical danger polygons */}
+                    <polygon
+                      points="120,55 155,45 170,75 135,85"
+                      fill="#a855f7"
+                      fillOpacity="0.35"
+                      stroke="#7e22ce"
+                      strokeWidth="1.2"
+                      strokeDasharray="3,2"
+                    />
+                    <polygon
+                      points="265,65 315,50 330,85 285,100"
+                      fill="#a855f7"
+                      fillOpacity="0.35"
+                      stroke="#7e22ce"
+                      strokeWidth="1.2"
+                      strokeDasharray="3,2"
+                    />
+                    <text x="145" y="65" textAnchor="middle" fill="#6b21a8" fontSize="6" fontWeight="bold" fontFamily="monospace">
+                      DEM Slope 34° (FoS 1.04)
+                    </text>
+                    <text x="300" y="72" textAnchor="middle" fill="#6b21a8" fontSize="6" fontWeight="bold" fontFamily="monospace">
+                      DEM Slope 31° (FoS 1.08)
+                    </text>
+                  </g>
+                )}
+
+                {gisLayers.drainage && (
+                  <g id="ndem-drainage-network">
+                    {/* River mainstems and tributaries */}
+                    <path d="M 115,40 Q 140,80 160,130 T 170,185 T 150,230" fill="none" stroke="#2563eb" strokeWidth="2.5" />
+                    <path d="M 330,45 Q 310,90 280,120 T 235,160 T 170,185" fill="none" stroke="#2563eb" strokeWidth="2.5" />
+                    <path d="M 235,105 Q 240,130 235,160" fill="none" stroke="#0ea5e9" strokeWidth="1.8" strokeDasharray="4,2" />
+                    <text x="120" y="68" fill="#1d4ed8" fontSize="6.5" fontWeight="bold">Bhagirathi</text>
+                    <text x="310" y="58" fill="#1d4ed8" fontSize="6.5" fontWeight="bold">Alaknanda</text>
+                    <text x="245" y="125" fill="#0284c7" fontSize="5.5" fontWeight="bold">Mandakini</text>
+                  </g>
+                )}
+
+                {gisLayers.analogs && (
+                  <g id="ndem-historical-analogs">
+                    {/* 2013 Kedarnath Marker */}
+                    <circle cx="235" cy="105" r="4.5" fill="#dc2626" stroke="#ffffff" strokeWidth="1.5" />
+                    <text x="235" y="98" textAnchor="middle" fill="#991b1b" fontSize="6" fontWeight="bold" fontFamily="sans-serif">
+                      ★ 2013 Kedarnath
+                    </text>
+
+                    {/* 2021 Chamoli GLOF Marker */}
+                    <circle cx="340" cy="80" r="4.5" fill="#ea580c" stroke="#ffffff" strokeWidth="1.5" />
+                    <text x="340" y="73" textAnchor="middle" fill="#c2410c" fontSize="6" fontWeight="bold" fontFamily="sans-serif">
+                      ★ 2021 Chamoli GLOF
+                    </text>
+                  </g>
+                )}
               </svg>
 
               {/* Floating Legend (Bottom Left) */}
@@ -895,6 +1124,16 @@ export default function PublicPortalDashboardPage() {
             </div>
           </div>
         </div>
+        </>
+        )}
+
+        {/* ── MHA NDMIS & NDRF TACTICAL OPERATIONS (Theme 4 Benchmark) ── */}
+        {(portalView === 'ALL' || portalView === 'OPERATIONS') && (
+          <div className="space-y-4 pt-1">
+            <NdmisReportCard />
+            <NdrfDeploymentCard />
+          </div>
+        )}
       </div>
 
       {/* Action Notification Modal */}

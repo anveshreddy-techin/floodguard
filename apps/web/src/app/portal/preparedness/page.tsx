@@ -97,7 +97,87 @@ export default function PublicPreparednessPage() {
         </div>
       </div>
 
-      {/* Bottom Link to Shelters and Documents */}
+      {/* ── NIDM COMMUNITY PREPAREDNESS & DISASTER RISK REDUCTION CURRICULUM ── */}
+      <div className="bg-white border border-slate-300 rounded p-5 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-blue-800" />
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wide">
+                NIDM Community Preparedness &amp; Panchayat SOP Modules
+              </h3>
+              <p className="text-xs text-slate-500">
+                National Institute of Disaster Management (NIDM) · Ministry of Home Affairs Training Standard
+              </p>
+            </div>
+          </div>
+          <span className="bg-blue-100 text-blue-900 border border-blue-200 text-[10px] font-mono font-bold px-2 py-0.5 rounded self-start sm:self-auto">
+            NIDM-DRR-2026
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <div className="bg-slate-50 border border-slate-200 rounded p-3 space-y-1.5 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono font-bold uppercase text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
+                SOP 01 · PRE-MONSOON
+              </span>
+              <h4 className="font-bold text-slate-900 mt-1">Catchment Desiltation</h4>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Village panchayats must inspect culverts at KM 0.6 and ensure natural storm runoff channels are free from logjams and scree deposits.
+              </p>
+            </div>
+            <div className="pt-2 text-[10px] font-mono text-emerald-700 font-bold">
+              ✓ Verified by BDO / Gram Pradhan
+            </div>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded p-3 space-y-1.5 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono font-bold uppercase text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                SOP 02 · EARLY WARNING
+              </span>
+              <h4 className="font-bold text-slate-900 mt-1">PA Siren &amp; Whistle Protocol</h4>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Upon receiving RED SACHET alert, designated ward volunteers sound 3 long horn blasts and broadcast high-ground instructions via temple/mosque loudspeakers.
+              </p>
+            </div>
+            <div className="pt-2 text-[10px] font-mono text-emerald-700 font-bold">
+              ✓ Drill completed Aug 2026
+            </div>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded p-3 space-y-1.5 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono font-bold uppercase text-red-700 bg-red-50 px-1.5 py-0.5 rounded border border-red-200">
+                SOP 03 · EVACUATION
+              </span>
+              <h4 className="font-bold text-slate-900 mt-1">High-Ground Staging</h4>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Escort vulnerable households (elderly, children, infirm) along verified North Ridge Trail (+120m elevation) to GIC Shelter before road inundation.
+              </p>
+            </div>
+            <div className="pt-2 text-[10px] font-mono text-blue-700 font-bold">
+              NDRF 8th Bn Staged Escort
+            </div>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded p-3 space-y-1.5 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono font-bold uppercase text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                SOP 04 · RECOVERY
+              </span>
+              <h4 className="font-bold text-slate-900 mt-1">Water &amp; Silt Sanitation</h4>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Disinfect open wells and stream intakes with chlorine tablets. Do not consume raw tap water until PHED releases water purity clearance.
+              </p>
+            </div>
+            <div className="pt-2 text-[10px] font-mono text-slate-600 font-bold">
+              RO Plants Functional
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="bg-slate-100 border border-slate-300 rounded p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
         <div className="space-y-0.5">
           <span className="font-bold text-slate-900">Looking for safe high-ground facilities near your village?</span>

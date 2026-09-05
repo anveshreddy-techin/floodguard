@@ -10,6 +10,7 @@ import {
   TableColumn,
   SAMPLE_PUBLIC_ALERTS,
   PublicAlertItem,
+  SachetAlertBanner,
 } from '@/design-system/components';
 import {
   AlertTriangle,
@@ -21,6 +22,8 @@ import {
   ExternalLink,
   Info,
   CheckCircle2,
+  FileCode,
+  Radio,
 } from 'lucide-react';
 
 export default function PublicAlertsPage() {
@@ -99,6 +102,9 @@ export default function PublicAlertsPage() {
 
   return (
     <div className="space-y-6">
+      {/* ── SACHET NDMA BILINGUAL CAP v1.2 WARNING BANNER ── */}
+      <SachetAlertBanner district={selectedState !== 'ALL' ? selectedState : 'Chamoli'} state={selectedState !== 'ALL' ? selectedState : 'Uttarakhand'} severity="RED" />
+
       {/* Header section */}
       <div className="bg-white border border-slate-300 rounded p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3 mb-3">
@@ -106,7 +112,7 @@ export default function PublicAlertsPage() {
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-red-600" />
               <h2 className="text-base sm:text-lg font-bold text-slate-900">
-                National Flash Flood & Cascade Risk Advisories
+                National Flash Flood &amp; Cascade Risk Advisories (SACHET OASIS CAP v1.2)
               </h2>
             </div>
             <p className="text-xs text-slate-600 mt-0.5">
@@ -114,28 +120,41 @@ export default function PublicAlertsPage() {
             </p>
           </div>
 
-          {/* View toggle */}
-          <div className="flex items-center border border-slate-300 rounded overflow-hidden text-xs self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setViewMode('LIST')}
-              className={`px-3 py-1.5 font-semibold flex items-center gap-1.5 transition ${
-                viewMode === 'LIST' ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-700 hover:bg-slate-100'
-              }`}
+          {/* View toggle and CAP XML Link */}
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href="/api/v1/alerts/cap.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded border border-blue-300 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95"
             >
-              <List className="w-3.5 h-3.5" />
-              <span>List & Table</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('MAP_VIEW')}
-              className={`px-3 py-1.5 font-semibold flex items-center gap-1.5 border-l border-slate-300 transition ${
-                viewMode === 'MAP_VIEW' ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-700 hover:bg-slate-100'
-              }`}
-            >
-              <Map className="w-3.5 h-3.5" />
-              <span>Catchment Map</span>
-            </button>
+              <FileCode className="w-3.5 h-3.5 text-blue-700" />
+              <span>OASIS CAP XML Feed</span>
+              <ExternalLink className="w-3 h-3 text-blue-600" />
+            </a>
+
+            <div className="flex items-center border border-slate-300 rounded overflow-hidden text-xs self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setViewMode('LIST')}
+                className={`px-3 py-1.5 font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                  viewMode === 'LIST' ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                <List className="w-3.5 h-3.5" />
+                <span>List &amp; Table</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('MAP_VIEW')}
+                className={`px-3 py-1.5 font-semibold flex items-center gap-1.5 border-l border-slate-300 transition cursor-pointer ${
+                  viewMode === 'MAP_VIEW' ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                <Map className="w-3.5 h-3.5" />
+                <span>Catchment Map</span>
+              </button>
+            </div>
           </div>
         </div>
 
