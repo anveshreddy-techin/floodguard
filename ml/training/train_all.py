@@ -260,7 +260,7 @@ def run_full_training_pipeline() -> dict[str, Any]:
         b_den = max(0.01, 19.0 * 2.0 * np.sin(b_b) * np.cos(b_b))
         b_fos = float(min(4.5, max(0.25, b_num / b_den)))
         b_twi = float(np.log(12.0 / max(0.001, np.tan(b_b))))
-        b_row = np.array([[
+        b_features = [
             b_ev["rainfall_3h_peak"] * 0.25,
             b_ev["rainfall_3h_peak"] * 0.50,
             b_ev["rainfall_3h_peak"],
@@ -286,7 +286,13 @@ def run_full_training_pipeline() -> dict[str, Any]:
             0.30,
             38.0,
             0.65,
-        ]])
+        ]
+        if n_features >= 27:
+            # Sentinel-2 indices: ndvi and surface_water_index
+            b_ndvi = 0.22 if b_slope > 30.0 else 0.55
+            b_swi = 0.35 if "GLOF" in b_ev["name"] or "Breach" in b_ev["name"] else -0.05
+            b_features.extend([b_ndvi, b_swi])
+        b_row = np.array([b_features])
         b_prob = float(model_c.predict_proba(b_row)[0, 1])
         b_status = "DETECTED (TRUE POSITIVE)" if b_prob >= 0.50 else "MISSED (FALSE NEGATIVE)"
         print(f"  ★ {b_ev['name']:<50} | Prob: {b_prob*100:5.1f}% | {b_status}")

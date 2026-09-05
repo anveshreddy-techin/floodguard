@@ -51,6 +51,9 @@ class RainfallFeatures:
     data_age_hours: float | None = None
     source: str | None = None
     data_mode: str = "DEMO"
+    temperature_c: float | None = None
+    relative_humidity_pct: float | None = None
+    wind_speed_kmh: float | None = None
 
 
 @dataclass
@@ -66,7 +69,7 @@ class SoilFeatures:
 
 @dataclass
 class TerrainFeatures:
-    """Static terrain characteristics (from DEM)"""
+    """Static terrain characteristics (from DEM) & Satellite Optical Reflectance"""
     slope_degrees: float | None = None
     elevation_m: float | None = None
     twi: float | None = None
@@ -74,6 +77,8 @@ class TerrainFeatures:
     flow_accumulation: float | None = None
     historical_susceptibility: float | None = None
     landslide_density: float | None = None
+    ndvi: float | None = None
+    surface_water_index: float | None = None
 
 
 @dataclass
@@ -127,10 +132,27 @@ def load_ml_model(model_path: str | Path | None = None) -> bool:
         return False
 
 
-# Auto-load trained pilot ensemble model if present on disk
+_last_loaded_mtime: float = 0.0
 _default_pilot_artifact = Path("ml/artifacts/tier_c_tree_ensemble.joblib")
+
+
+def reload_if_updated(model_path: Path = _default_pilot_artifact) -> bool:
+    """Reloads artifact if modified on disk, ensuring fresh inference models."""
+    global _last_loaded_mtime
+    if model_path.exists():
+        try:
+            mtime = model_path.stat().st_mtime
+            if mtime > _last_loaded_mtime or _active_ml_model is None:
+                _last_loaded_mtime = mtime
+                return load_ml_model(model_path)
+        except Exception:
+            pass
+    return False
+
+
+# Auto-load trained pilot ensemble model if present on disk
 if _default_pilot_artifact.exists():
-    load_ml_model(_default_pilot_artifact)
+    reload_if_updated(_default_pilot_artifact)
 
 
 
@@ -202,12 +224,20 @@ def score_rainfall(f: RainfallFeatures) -> tuple[float, list[str], list[str]]:
             score = max(score, 40)
             evidence.append(f"24h accumulation: {f.rainfall_24h_mm:.0f}mm (heavy)")
 
-    # Antecedent rainfall
+    # Antecedent rainfall & atmospheric drying
     if f.antecedent_7d_mm is not None:
         antecedent_factor = min(1.5, 1 + (f.antecedent_7d_mm / 200))
         score = min(100, score * antecedent_factor)
         if f.antecedent_7d_mm > 100:
             evidence.append(f"7-day antecedent rainfall: {f.antecedent_7d_mm:.0f}mm (elevated pre-conditioning)")
+
+    if f.relative_humidity_pct is not None and f.relative_humidity_pct >= 80:
+        score = min(100, score * 1.08)
+        evidence.append(f"Atmospheric humidity {f.relative_humidity_pct:.0f}% — low vapor deficit preserves soil saturation")
+
+    if f.wind_speed_kmh is not None and f.wind_speed_kmh >= 35:
+        score = min(100, score * 1.05)
+        evidence.append(f"Wind speed {f.wind_speed_kmh:.0f}km/h — canopy leverage increases slope detachment risk")
 
     if f.data_age_hours is not None and f.data_age_hours > 3:
         gaps.append(f"Rainfall data is {f.data_age_hours:.0f} hours old — score has increased uncertainty")
@@ -287,6 +317,18 @@ def score_terrain(f: TerrainFeatures) -> tuple[float, list[str], list[str]]:
         if f.historical_susceptibility > 0.5:
             evidence.append(f"Historical susceptibility: {f.historical_susceptibility:.0%} (elevated based on past events)")
 
+    if f.ndvi is not None:
+        if f.ndvi < 0.20:
+            score = min(100, score + 12)
+            evidence.append(f"Sentinel-2 NDVI: {f.ndvi:.2f} (barren rock / low canopy — low root cohesion)")
+        elif f.ndvi > 0.65:
+            score = max(0.0, score - 8)
+            evidence.append(f"Sentinel-2 NDVI: {f.ndvi:.2f} (dense forest canopy — root cohesion mitigates shallow slide)")
+
+    if f.surface_water_index is not None and f.surface_water_index > 0.10:
+        score = min(100, score + 10)
+        evidence.append(f"Surface Water Index: {f.surface_water_index:.2f} (ponding / saturated surface channel)")
+
     score = min(100, score)
     gaps.append("Terrain susceptibility based on static DEM analysis")
 
@@ -346,6 +388,9 @@ class HybridRiskEngine:
         river: RiverFeatures | None = None,
         location_name: str = "Unknown Location",
     ) -> RiskOutput:
+        # Guarantee freshly retrained artifact is loaded if updated on disk
+        reload_if_updated()
+
         now = datetime.now(timezone.utc)
         all_gaps: list[str] = []
         all_evidence: list[dict] = []
@@ -421,6 +466,8 @@ class HybridRiskEngine:
                     "upstream_blockage_index": 0.1,
                     "geophone_debris_vibration_db": 22.0,
                     "culvert_backpressure_ratio": 0.4,
+                    "ndvi": tf.ndvi if tf.ndvi is not None else 0.45,
+                    "surface_water_index": tf.surface_water_index if tf.surface_water_index is not None else -0.10,
                 }
                 f_names = getattr(_active_ml_model, "feature_names", list(feat_map.keys()))
                 x_vec = np.array([[feat_map.get(fn, 0.0) for fn in f_names]])

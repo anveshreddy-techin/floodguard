@@ -22,13 +22,13 @@
       "csi": 1.0,
       "pod": 1.0,
       "far": 0.0,
-      "brier_score": 0.0812,
-      "latency_ms": 0.022
+      "brier_score": 0.1344,
+      "latency_ms": 0.028
     },
     "artifact_path": "ml/artifacts/tier_a_baseline.joblib",
-    "artifact_checksum": "7bc18d38cfd914cbff097cc092d5d99450fa5585d5df043668a7b46919f99c04",
+    "artifact_checksum": "1fd58fe67b6552555c5e3ee66655d1702c9fac4b08ac34892e07d749ff9a1961",
     "training_configuration": {
-      "n_features": 25,
+      "n_features": 27,
       "features": [
         "rainfall_15m_mm",
         "rainfall_30m_mm",
@@ -54,7 +54,9 @@
         "danger_level_diff_m",
         "upstream_blockage_index",
         "geophone_debris_vibration_db",
-        "culvert_backpressure_ratio"
+        "culvert_backpressure_ratio",
+        "ndvi",
+        "surface_water_index"
       ]
     },
     "thresholds": {
@@ -65,9 +67,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T09:21:44.176788+00:00",
+    "approval_date": "2026-09-05T17:06:37.668087+00:00",
     "limitations": "Evaluation on test split. High uncertainty: small positive sample count (n=3 < 15).",
-    "created_at": "2026-09-05T09:21:44.176788+00:00",
+    "created_at": "2026-09-05T17:06:37.668087+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   },
@@ -94,13 +96,13 @@
       "csi": 1.0,
       "pod": 1.0,
       "far": 0.0,
-      "brier_score": 0.0003,
-      "latency_ms": 0.082
+      "brier_score": 0.0004,
+      "latency_ms": 0.106
     },
     "artifact_path": "ml/artifacts/tier_b_logistic.joblib",
-    "artifact_checksum": "0463d0684c6730b02679ec11185a9202c164bd93d7c874cf2e66220834842e7f",
+    "artifact_checksum": "4f69eccd51bf25afe57f227260ab570844f65c0105cada37ced89b52da25c5d7",
     "training_configuration": {
-      "n_features": 25,
+      "n_features": 27,
       "features": [
         "rainfall_15m_mm",
         "rainfall_30m_mm",
@@ -126,7 +128,9 @@
         "danger_level_diff_m",
         "upstream_blockage_index",
         "geophone_debris_vibration_db",
-        "culvert_backpressure_ratio"
+        "culvert_backpressure_ratio",
+        "ndvi",
+        "surface_water_index"
       ]
     },
     "thresholds": {
@@ -137,9 +141,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T09:21:44.176788+00:00",
+    "approval_date": "2026-09-05T17:06:37.668087+00:00",
     "limitations": "Evaluation on test split. High uncertainty: small positive sample count (n=3 < 15).",
-    "created_at": "2026-09-05T09:21:44.176788+00:00",
+    "created_at": "2026-09-05T17:06:37.668087+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   },
@@ -167,12 +171,12 @@
       "pod": 1.0,
       "far": 0.0,
       "brier_score": 0.0003,
-      "latency_ms": 0.647
+      "latency_ms": 1.218
     },
     "artifact_path": "ml/artifacts/tier_c_tree_ensemble.joblib",
-    "artifact_checksum": "6811563a58fca9f79e20bf477677b2a745d8415c78951ccc665d8ea9146d4d1c",
+    "artifact_checksum": "27e1d5d84439d954a69e9833626277194ddf29318807dc3fa30ae49dcc926d79",
     "training_configuration": {
-      "n_features": 25,
+      "n_features": 27,
       "features": [
         "rainfall_15m_mm",
         "rainfall_30m_mm",
@@ -198,7 +202,9 @@
         "danger_level_diff_m",
         "upstream_blockage_index",
         "geophone_debris_vibration_db",
-        "culvert_backpressure_ratio"
+        "culvert_backpressure_ratio",
+        "ndvi",
+        "surface_water_index"
       ]
     },
     "thresholds": {
@@ -209,9 +215,9 @@
     },
     "deployment_status": "RESEARCH_PROTOTYPE",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T09:21:44.179468+00:00",
+    "approval_date": "2026-09-05T17:06:37.672519+00:00",
     "limitations": "Evaluation on test split. High uncertainty: small positive sample count (n=3 < 15).",
-    "created_at": "2026-09-05T09:21:44.176788+00:00",
+    "created_at": "2026-09-05T17:06:37.668087+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   },
@@ -235,16 +241,16 @@
     "evaluation_report": {
       "pr_auc": 1.0,
       "roc_auc": 1.0,
-      "csi": 0.75,
+      "csi": 0.6,
       "pod": 1.0,
-      "far": 0.25,
-      "brier_score": 0.1996964277361938,
+      "far": 0.4,
+      "brier_score": 0.22278812114272595,
       "latency_ms": 0.4
     },
     "artifact_path": "ml/artifacts/tier_d_anomaly.joblib",
-    "artifact_checksum": "108d87d8a2bd6fb08dc2631f72238e3807f7c100d167ec739193c64c5e621f75",
+    "artifact_checksum": "c9fc1fc9d1199da495dc1052e69182394b16e07d224bd443b11953748945a600",
     "training_configuration": {
-      "n_features": 25,
+      "n_features": 27,
       "features": [
         "rainfall_15m_mm",
         "rainfall_30m_mm",
@@ -270,7 +276,9 @@
         "danger_level_diff_m",
         "upstream_blockage_index",
         "geophone_debris_vibration_db",
-        "culvert_backpressure_ratio"
+        "culvert_backpressure_ratio",
+        "ndvi",
+        "surface_water_index"
       ]
     },
     "thresholds": {
@@ -281,9 +289,9 @@
     },
     "deployment_status": "RESEARCH_VALIDATED",
     "reviewer": "Principal Disaster Systems Engineer (SIH26192)",
-    "approval_date": "2026-09-05T09:21:44.176788+00:00",
+    "approval_date": "2026-09-05T17:06:37.668087+00:00",
     "limitations": "Tier D Isolation Forest Anomaly Screener evaluated on real test holdout.",
-    "created_at": "2026-09-05T09:21:44.176788+00:00",
+    "created_at": "2026-09-05T17:06:37.668087+00:00",
     "operational_validation_level": "RESEARCH_MODEL",
     "dataset_type": "REAL"
   }

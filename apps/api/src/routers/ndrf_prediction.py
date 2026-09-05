@@ -27,22 +27,21 @@ router = APIRouter(prefix="/api/v1/ndrf", tags=["NDRF MHA Multi-Source Predictio
 # ─── ML Model Singleton ───────────────────────────────────────────────────────
 
 _ml_model_cache: Any = None
-_model_load_attempted: bool = False
+_model_mtime: float = 0.0
 
 def get_active_ml_model():
-    """Load and cache the Tier C Tree Ensemble artifact."""
-    global _ml_model_cache, _model_load_attempted
-    if _ml_model_cache is not None:
-        return _ml_model_cache
-    if not _model_load_attempted:
-        _model_load_attempted = True
-        model_path = Path("ml/artifacts/tier_c_tree_ensemble.joblib")
-        if model_path.exists():
-            try:
+    """Load and cache the Tier C Tree Ensemble artifact, reloading if updated on disk."""
+    global _ml_model_cache, _model_mtime
+    model_path = Path("ml/artifacts/tier_c_tree_ensemble.joblib")
+    if model_path.exists():
+        try:
+            cur_mtime = model_path.stat().st_mtime
+            if _ml_model_cache is None or cur_mtime > _model_mtime:
                 import joblib
                 _ml_model_cache = joblib.load(model_path)
-            except Exception:
-                _ml_model_cache = None
+                _model_mtime = cur_mtime
+        except Exception:
+            pass
     return _ml_model_cache
 
 
@@ -714,6 +713,8 @@ async def ndrf_predict(body: dict):
         "upstream_blockage_index": float(body.get("upstream_blockage_index", 0.2)),
         "geophone_debris_vibration_db": geo,
         "culvert_backpressure_ratio": culvert,
+        "ndvi": float(body.get("ndvi", 0.45)),
+        "surface_water_index": float(body.get("surface_water_index", -0.10)),
     }
 
     # 1. Real ML Model Inference
@@ -776,7 +777,9 @@ async def ndrf_predict_live(body: dict):
     - Data Provenance: Granular Per-Source Attribution Matrix
     """
     from ..providers.open_meteo import OpenMeteoProvider
-    from ..providers.cwc_adapter import CWCAdapter
+    from ..providers.wris_provider import india_wris_provider
+    from ..providers.terrain_provider import srtm_terrain_provider
+    from ..providers.sentinel_provider import sentinel_provider
     from ..services.global_location_service import global_location_service
 
     lat_in = body.get("latitude") or body.get("lat")
@@ -830,24 +833,46 @@ async def ndrf_predict_live(body: dict):
     raw_soil = soil_list[-1] if soil_list else 0.35
     soil_sat = round(min(1.0, max(0.1, (raw_soil or 0.35) / 0.45)), 2)
 
-    # 2. Fetch live river hydrology (Copernicus GloFAS)
-    cwc = CWCAdapter()
-    river_res = await cwc.fetch_by_coords(lat, lon)
+
+    # 2. Live river hydrology — India-WRIS with GloFAS fallback (honest attribution)
+    river_res = await india_wris_provider.fetch_river_stage_with_fallback(lat, lon)
     discharge = river_res.get("discharge_cumecs", 45.0)
     rlevel = river_res.get("water_level_m", 2.2)
     rise = river_res.get("rate_of_rise_m_hr", 0.0)
     danger = river_res.get("danger_level_m", 5.0)
+    river_data_mode = river_res.get("data_mode", "UNAVAILABLE")
+    river_source = river_res.get("source", "GloFAS_Fallback")
 
-    # 3. Geotechnical Slope Stability (Infinite Slope FoS)
-    slope = float(v.get("slope_deg", 30.0))
+    # 3. Real SRTM 30m terrain via Open-Meteo elevation API
+    terrain_res = await srtm_terrain_provider.get_terrain_features(lat, lon)
+    slope = terrain_res.get("slope_degrees", float(v.get("slope_deg", 30.0)))
+    twi_v = terrain_res.get("twi", _twi(slope))
+    elev_m = terrain_res.get("elevation_m", float(body.get("elevation_m", 1850.0)))
     fos_v = _fos(slope, soil_sat)
-    twi_v = _twi(slope)
+    terrain_data_mode = terrain_res.get("data_mode", "UNAVAILABLE")
+
+    # 3b. Sentinel-2 NDVI / Surface Water Index
+    sentinel_res = await sentinel_provider.fetch_indices(lat, lon)
+    ndvi_val = sentinel_res.get("ndvi", 0.45)
+    swi_val = sentinel_res.get("surface_water_index", -0.10)
+    sentinel_data_mode = sentinel_res.get("data_mode", "SIMULATION")
+
+    # 3c. Auxiliary weather variables (temperature, humidity, wind) from Open-Meteo
+    temp_list = hourly.get("temperature_2m", [])
+    rh_list = hourly.get("relative_humidity_2m", [])
+    wind_list = hourly.get("wind_speed_10m", [])
+    temp_c = round(float(temp_list[-1]), 1) if temp_list else None
+    rh_pct = round(float(rh_list[-1]), 1) if rh_list else None
+    wind_kmh = round(float(wind_list[-1]), 1) if wind_list else None
+
     susc = float(v.get("landslide_susceptibility", 0.85))
     hist = 25.0
     geo = 24.0  # Environmental baseline (field hardware not yet deployed)
     culvert = 0.45
 
-    # 4. Construct 25-feature vector
+
+
+    # 4. Construct 27-feature vector (25 original + ndvi + surface_water_index)
     features_25 = {
         "rainfall_15m_mm": round(peak_intensity * 0.25, 2),
         "rainfall_30m_mm": round(peak_intensity * 0.50, 2),
@@ -861,7 +886,7 @@ async def ndrf_predict_live(body: dict):
         "soil_moisture_pct": round(raw_soil * 100.0, 1),
         "soil_saturation_index": soil_sat,
         "antecedent_7d_mm": round(rain_24h * 2.2, 1),
-        "elevation_m": float(body.get("elevation_m", 1850.0)),
+        "elevation_m": elev_m,
         "slope_degrees": slope,
         "twi": twi_v,
         "factor_of_safety_fos": fos_v,
@@ -874,6 +899,9 @@ async def ndrf_predict_live(body: dict):
         "upstream_blockage_index": 0.15,
         "geophone_debris_vibration_db": geo,
         "culvert_backpressure_ratio": culvert,
+        # Sentinel-2 satellite indices (T2)
+        "ndvi": ndvi_val,
+        "surface_water_index": swi_val,
     }
 
     # 5. Execute ML Tree Ensemble inference
@@ -923,20 +951,30 @@ async def ndrf_predict_live(body: dict):
                 "provider": "Open-Meteo High-Resolution NWP",
                 "value": f"{rain_3h} mm/3h (Peak: {peak_intensity} mm/h)",
             },
+            "weather_atmosphere": {
+                "mode": "LIVE",
+                "provider": "Open-Meteo NWP Surface Diagnostics",
+                "value": f"Temp: {temp_c}°C, RH: {rh_pct}%, Wind: {wind_kmh} km/h",
+            },
             "soil_saturation": {
                 "mode": "MODELLED",
                 "provider": "ECMWF Land Surface Model (0-7cm)",
                 "value": f"{round(soil_sat * 100.0, 1)}% saturation",
             },
             "river_discharge": {
-                "mode": "LIVE",
-                "provider": "Copernicus Emergency Management GloFAS",
-                "value": f"{discharge} m³/s (Rise: {rise} m/h)",
+                "mode": river_data_mode,
+                "provider": f"India-WRIS / CWC ({river_source})",
+                "value": f"{discharge} m³/s (Stage: {rlevel}m, Rise: {rise} m/h)",
             },
             "slope_stability": {
-                "mode": "CALCULATED_PHYSICS",
-                "provider": "Infinite Slope Equilibrium (SHALe/SLIP)",
-                "value": f"FoS {fos_v} (Slope: {slope}°)",
+                "mode": terrain_data_mode if terrain_data_mode == "LIVE_SRTM_QUERY" else "CALCULATED_PHYSICS",
+                "provider": "SRTM 30m DEM + Infinite Slope Equilibrium (SHALe)",
+                "value": f"FoS {fos_v} (Slope: {slope}°, Elev: {elev_m}m)",
+            },
+            "satellite_vegetation": {
+                "mode": sentinel_data_mode,
+                "provider": "Copernicus Sentinel-2 MSI (STAC Gateway)",
+                "value": f"NDVI {ndvi_val}, SWI {swi_val}",
             },
             "geophone_acoustic": {
                 "mode": "SYNTHETIC_SIMULATION",
@@ -958,11 +996,19 @@ async def ndrf_predict_live(body: dict):
             "river_water_level_m": rlevel,
             "river_rate_of_rise_mph": rise,
             "catchment_slope_deg": slope,
+            "elevation_m": elev_m,
+            "temperature_c": temp_c,
+            "relative_humidity_pct": rh_pct,
+            "wind_speed_kmh": wind_kmh,
+            "ndvi": ndvi_val,
+            "surface_water_index": swi_val,
         },
         "live_sources_used": [
-            "Open-Meteo_NWP_Precipitation",
+            "Open-Meteo_NWP_Precipitation_Weather",
             "ECMWF_Soil_Moisture_LandModel",
-            "Copernicus_GloFAS_River_Discharge",
+            "India_WRIS_GloFAS_Hydrology",
+            "SRTM_30m_Elevation_Terrain",
+            "Sentinel2_MSI_Surface_Indices",
             "SHALe_Slope_Stability_Physics",
             "TierC_RandomForest_ML_Inference",
         ],

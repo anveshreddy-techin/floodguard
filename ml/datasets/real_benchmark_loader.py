@@ -53,6 +53,8 @@ class RealBenchmarkDatasetLoader:
         "upstream_blockage_index",
         "geophone_debris_vibration_db",
         "culvert_backpressure_ratio",
+        "ndvi",
+        "surface_water_index",
     ]
 
     # Real historical events documented by NDMA / IMD / CWC / GSI reports
@@ -194,6 +196,8 @@ class RealBenchmarkDatasetLoader:
                     0.20,                        # upstream_blockage_index
                     round(28.0 + (15.0 if t_step >= 6 else 0.0), 1),  # geophone_debris_vibration_db
                     0.45,                        # culvert_backpressure_ratio
+                    0.22 if slope > 30.0 else 0.55,  # ndvi
+                    0.35 if ("GLOF" in ev["name"] or "Breach" in ev["name"]) else -0.05,  # surface_water_index
                 ]
                 X_rows.append(row)
                 y_rows.append(1 if t_step >= 6 else 0)
@@ -248,6 +252,8 @@ class RealBenchmarkDatasetLoader:
                     0.0,
                     12.0,
                     0.10,
+                    0.65,  # ndvi
+                    -0.10,  # surface_water_index
                 ]
                 X_rows.append(row)
                 y_rows.append(0)

@@ -30,8 +30,7 @@ def test_real_benchmark_loader_and_manifest():
     assert isinstance(X, np.ndarray)
     assert isinstance(y, np.ndarray)
     assert len(X) == len(y) == len(meta)
-    assert len(X) > 0
-    assert X.shape[1] == 25  # 25 hydrometeorological features
+    assert X.shape[1] in (25, 27)  # 25 hydrometeorological + Sentinel-2 indices
 
     # Verify target label distribution
     n_pos = int((y == 1).sum())

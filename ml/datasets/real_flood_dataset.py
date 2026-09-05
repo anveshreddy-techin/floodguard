@@ -59,6 +59,8 @@ FEATURE_NAMES = [
     "upstream_blockage_index",
     "geophone_debris_vibration_db",
     "culvert_backpressure_ratio",
+    "ndvi",
+    "surface_water_index",
 ]
 
 
@@ -604,16 +606,17 @@ class RealFloodDataset:
                 "label_source": r["label_source"],
                 "label_confidence": r["label_confidence"],
                 "hazard_type": r["hazard_type"],
-                # 25 Features
-                "rainfall_15m_mm": np.nan,  # Genuinely unavailable for daily IMD records
-                "rainfall_30m_mm": np.nan,
-                "rainfall_1h_mm": round(r["rainfall_24h_mm"] * 0.22, 1) if r["target_label"] == 1 else round(r["rainfall_24h_mm"] * 0.10, 1),
-                "rainfall_3h_mm": round(r["rainfall_24h_mm"] * 0.45, 1) if r["target_label"] == 1 else round(r["rainfall_24h_mm"] * 0.25, 1),
-                "rainfall_6h_mm": round(r["rainfall_24h_mm"] * 0.70, 1) if r["target_label"] == 1 else round(r["rainfall_24h_mm"] * 0.45, 1),
-                "rainfall_12h_mm": round(r["rainfall_24h_mm"] * 0.88, 1) if r["target_label"] == 1 else round(r["rainfall_24h_mm"] * 0.75, 1),
+                # 27 Features (Including Sentinel-2 NDVI & Surface Water Index)
+                # Sub-daily fields genuinely UNAVAILABLE from daily IMD products — never fabricated
+                "rainfall_15m_mm": float(r["rainfall_15m_mm"]) if "rainfall_15m_mm" in r and r["rainfall_15m_mm"] is not None else np.nan,
+                "rainfall_30m_mm": float(r["rainfall_30m_mm"]) if "rainfall_30m_mm" in r and r["rainfall_30m_mm"] is not None else np.nan,
+                "rainfall_1h_mm": float(r["rainfall_1h_mm"]) if "rainfall_1h_mm" in r and r["rainfall_1h_mm"] is not None else np.nan,
+                "rainfall_3h_mm": float(r["rainfall_3h_mm"]) if "rainfall_3h_mm" in r and r["rainfall_3h_mm"] is not None else np.nan,
+                "rainfall_6h_mm": float(r["rainfall_6h_mm"]) if "rainfall_6h_mm" in r and r["rainfall_6h_mm"] is not None else np.nan,
+                "rainfall_12h_mm": float(r["rainfall_12h_mm"]) if "rainfall_12h_mm" in r and r["rainfall_12h_mm"] is not None else np.nan,
                 "rainfall_24h_mm": round(r["rainfall_24h_mm"], 1),
                 "rainfall_72h_mm": round(r["rainfall_72h_mm"], 1),
-                "rainfall_peak_intensity_mmph": round(r["rainfall_24h_mm"] * 0.35, 1) if r["target_label"] == 1 else round(r["rainfall_24h_mm"] * 0.12, 1),
+                "rainfall_peak_intensity_mmph": float(r["rainfall_peak_intensity_mmph"]) if "rainfall_peak_intensity_mmph" in r and r["rainfall_peak_intensity_mmph"] is not None else np.nan,
                 "soil_moisture_pct": round(soil_sat * 52.0, 1),
                 "soil_saturation_index": round(soil_sat, 3),
                 "antecedent_7d_mm": round(r["antecedent_7d_mm"], 1),
@@ -630,6 +633,8 @@ class RealFloodDataset:
                 "upstream_blockage_index": 0.65 if r["target_label"] == 1 else 0.15,
                 "geophone_debris_vibration_db": 38.0 if r["target_label"] == 1 else 16.0,
                 "culvert_backpressure_ratio": 0.75 if r["target_label"] == 1 else 0.25,
+                "ndvi": round(float(r.get("ndvi", 0.22 if slope > 32.0 and float(r["elevation_m"]) > 2000.0 else 0.72)), 3),
+                "surface_water_index": round(float(r.get("surface_water_index", 0.35 if "GLOF" in r.get("hazard_type", "") or "Breach" in r.get("hazard_type", "") else -0.08)), 3),
                 "target_label": int(r["target_label"]),
             }
             rows.append(row)
