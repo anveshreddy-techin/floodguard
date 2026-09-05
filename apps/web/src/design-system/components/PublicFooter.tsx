@@ -38,23 +38,23 @@ export const PublicFooter: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Bottom Legal & Policy Bar (Matches Reference Image) */}
-      <div className="bg-[#06101d] py-3.5 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-2 text-slate-400 text-[11px]">
+      {/* 3. Bottom Legal & Policy Bar (Matches Reference Image Exactly) */}
+      <div className="bg-white text-slate-600 border-t border-slate-200 py-3 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-2 text-[11px]">
           <div>
-            © 2026 FloodGuard AI · SIH26192 Research Demonstration Platform. All Rights Reserved.
+            © 2025 Ministry of Home Affairs, Government of India. All Rights Reserved.
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-slate-400">
-            <Link href="/portal/about" className="hover:text-white transition">Privacy Policy</Link>
-            <span>|</span>
-            <Link href="/portal/about" className="hover:text-white transition">Terms of Use</Link>
-            <span>|</span>
-            <Link href="/portal/about" className="hover:text-white transition">Hyperlinking Policy</Link>
-            <span>|</span>
-            <Link href="/portal/contact" className="hover:text-white transition">Help</Link>
-            <span>|</span>
-            <Link href="/portal/contact" className="hover:text-white transition">Contact Us</Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-slate-600">
+            <Link href="/portal/about" className="hover:text-blue-900 transition">Privacy Policy</Link>
+            <span className="text-slate-300">|</span>
+            <Link href="/portal/about" className="hover:text-blue-900 transition">Terms of Use</Link>
+            <span className="text-slate-300">|</span>
+            <Link href="/portal/about" className="hover:text-blue-900 transition">Hyperlinking Policy</Link>
+            <span className="text-slate-300">|</span>
+            <Link href="/portal/contact" className="hover:text-blue-900 transition">Help</Link>
+            <span className="text-slate-300">|</span>
+            <Link href="/portal/contact" className="hover:text-blue-900 transition">Contact Us</Link>
           </div>
         </div>
       </div>

@@ -39,7 +39,7 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
   riverStage = 3.8,
   locationName = 'Sunderbans Nagar (Exposure Target)',
 }) => {
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const [isDocked, setIsDocked] = useState(true);
 
   if (isMinimized) {

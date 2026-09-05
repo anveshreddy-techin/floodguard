@@ -169,7 +169,10 @@ export const PublicNavigation: React.FC = () => {
                 <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
 
-              <div className="hidden group-hover:block absolute left-0 top-full w-56 bg-[#0c1f38] border border-slate-700 shadow-lg py-1 z-50 text-xs">
+              <div className="hidden group-hover:block absolute left-0 top-full w-64 bg-[#0c1f38] border border-slate-700 shadow-lg py-1 z-50 text-xs">
+                <Link href="/data-flow" className="block px-3 py-2 text-cyan-300 font-bold hover:bg-[#1b3a63] hover:text-white border-b border-slate-700/60">
+                  ⚡ How Data is Given (Architecture)
+                </Link>
                 <Link href="/portal/resources" className="block px-3 py-2 text-slate-200 hover:bg-[#1b3a63] hover:text-white">
                   Download CSV / GeoJSON Templates
                 </Link>
@@ -241,6 +244,9 @@ export const PublicNavigation: React.FC = () => {
         <div className="lg:hidden bg-[#0a172a] border-t border-slate-800 px-4 py-3 space-y-2 text-xs">
           <Link href="/portal" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-slate-200">
             Dashboard
+          </Link>
+          <Link href="/data-flow" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-cyan-300 font-bold">
+            ⚡ How Data is Given (Architecture)
           </Link>
           <Link href="/portal/alerts" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-slate-200">
             Alerts (12 Active)

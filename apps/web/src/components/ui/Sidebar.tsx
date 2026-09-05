@@ -66,6 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       phaseColor: 'text-amber-400',
       items: [
         { id: 'public-portal', label: 'Public Information Portal', href: '/portal', icon: Globe, badge: 'GOV-STYLE' },
+        { id: 'data-flow', label: 'How Data is Given', href: '/data-flow', icon: Database, badge: 'ARCHITECTURE' },
       ],
     },
     {

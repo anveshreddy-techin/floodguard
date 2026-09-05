@@ -8,6 +8,7 @@ import {
   SachetAlertBanner,
   NdmisReportCard,
   NdrfDeploymentCard,
+  DataArchitectureFlow,
 } from '@/design-system/components';
 import {
   Home,
@@ -21,6 +22,7 @@ import {
   Users,
   Compass,
   FileText,
+  Database,
   Clock,
   PhoneCall,
   Send,
@@ -68,7 +70,7 @@ export default function PublicPortalDashboardPage() {
   const [activeMenu, setActiveMenu] = useState<string>('dashboard');
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [modalAction, setModalAction] = useState<string | null>(null);
-  const [portalView, setPortalView] = useState<'ALL' | 'OVERVIEW' | 'PIPELINE' | 'OPERATIONS'>('ALL');
+  const [portalView, setPortalView] = useState<'ALL' | 'OVERVIEW' | 'DATA_FLOW' | 'PIPELINE' | 'OPERATIONS'>('ALL');
   const [gisLayers, setGisLayers] = useState<{
     inundation: boolean;
     slope: boolean;
@@ -157,6 +159,13 @@ export default function PublicPortalDashboardPage() {
               <span>Update Evacuation Plan</span>
             </Link>
             <Link
+              href="/data-flow"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 hover:text-blue-800 text-blue-900 bg-blue-50/60 font-bold transition text-left"
+            >
+              <Database className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+              <span>How Data is Given (Architecture)</span>
+            </Link>
+            <Link
               href="/portal/report"
               className="w-full flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-50 hover:text-blue-800 text-slate-700 transition text-left"
             >
@@ -237,6 +246,20 @@ export default function PublicPortalDashboardPage() {
             </button>
             <button
               type="button"
+              onClick={() => setPortalView('DATA_FLOW')}
+              className={`px-3 py-1.5 rounded font-semibold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+                portalView === 'DATA_FLOW'
+                  ? 'bg-blue-900 text-white shadow-xs'
+                  : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              <span>How Data Is Given</span>
+              <span className="bg-cyan-500 text-slate-950 font-mono text-[9px] px-1.5 py-0.2 rounded font-black">
+                FORMATS
+              </span>
+            </button>
+            <button
+              type="button"
               onClick={() => setPortalView('PIPELINE')}
               className={`px-3 py-1.5 rounded font-semibold text-xs transition cursor-pointer flex items-center gap-1.5 ${
                 portalView === 'PIPELINE'
@@ -245,7 +268,7 @@ export default function PublicPortalDashboardPage() {
               }`}
             >
               <span>9-Stage Prediction Pipeline</span>
-              <span className="bg-cyan-500 text-slate-950 font-mono text-[9px] px-1.5 py-0.2 rounded font-black">
+              <span className="bg-blue-600 text-white font-mono text-[9px] px-1.5 py-0.2 rounded font-black">
                 CORE
               </span>
             </button>
@@ -281,6 +304,11 @@ export default function PublicPortalDashboardPage() {
 
         {/* ── SACHET BILINGUAL OASIS CAP v1.2 ALERT BANNER ── */}
         <SachetAlertBanner district={selectedDistrict} state={hierarchy.state || 'Uttarakhand'} severity="RED" />
+
+        {/* ── HOW DATA IS GIVEN (DATA ARCHITECTURE & MULTI-SOURCE INGESTION) ── */}
+        {(portalView === 'ALL' || portalView === 'DATA_FLOW') && (
+          <DataArchitectureFlow />
+        )}
 
         {/* ── 9-STAGE PHYSICAL PREDICTION PIPELINE (SIH26192) ── */}
         {(portalView === 'ALL' || portalView === 'PIPELINE') && (
