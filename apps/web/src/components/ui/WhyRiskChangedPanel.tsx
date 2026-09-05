@@ -28,43 +28,45 @@ export const WhyRiskChangedPanel: React.FC = () => {
   ];
 
   return (
-    <div className="bg-[#0e1630] border border-[#223354] rounded-xl p-4 space-y-3 shadow-xl text-xs">
+    <div className="bg-[#0e1630] border border-[#223354] rounded-xl p-3.5 space-y-2.5 shadow-xl text-xs overflow-hidden">
       {/* Tab Selectors */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => setActiveTab('CONTRIBUTORS')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition font-medium ${
-              activeTab === 'CONTRIBUTORS' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            WHY RISK?
-          </button>
-          <button
-            onClick={() => setActiveTab('CHANGED')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition font-medium ${
-              activeTab === 'CHANGED' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            WHAT CHANGED?
-          </button>
-          <button
-            onClick={() => setActiveTab('MISSING')}
-            className={`px-2 py-1 rounded text-[10px] font-mono transition font-medium ${
-              activeTab === 'MISSING' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            DATA GAPS
-          </button>
-          <button
-            onClick={() => setActiveTab('ELIGIBILITY')}
-            className={`px-2 py-1 rounded text-[10px] font-mono transition font-medium ${
-              activeTab === 'ELIGIBILITY' ? 'bg-cyan-600 text-slate-950 font-black' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            ELIGIBILITY
-          </button>
-        </div>
+      <div className="grid grid-cols-4 gap-1 border-b border-slate-800 pb-2">
+        <button
+          onClick={() => setActiveTab('CONTRIBUTORS')}
+          className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-bold truncate ${
+            activeTab === 'CONTRIBUTORS' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+          title="Why Risk? Feature Decomposition"
+        >
+          WHY RISK
+        </button>
+        <button
+          onClick={() => setActiveTab('CHANGED')}
+          className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-bold truncate ${
+            activeTab === 'CHANGED' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+          title="What Changed? Parameter Deltas"
+        >
+          CHANGED
+        </button>
+        <button
+          onClick={() => setActiveTab('MISSING')}
+          className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-bold truncate ${
+            activeTab === 'MISSING' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+          title="Data Gaps & Sensor Fallbacks"
+        >
+          GAPS
+        </button>
+        <button
+          onClick={() => setActiveTab('ELIGIBILITY')}
+          className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-black truncate ${
+            activeTab === 'ELIGIBILITY' ? 'bg-cyan-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+          title="Location Prediction Eligibility"
+        >
+          ELIGIBILITY
+        </button>
       </div>
 
       {/* Tab 1: Contributors Decomposition */}
@@ -72,9 +74,9 @@ export const WhyRiskChangedPanel: React.FC = () => {
         <div className="space-y-2.5">
           {contributors.map((c, i) => (
             <div key={i} className="bg-slate-900/80 p-2.5 rounded border border-slate-800 space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-slate-200 text-[11px]">{c.name}</span>
-                <span className="font-mono text-cyan-400 text-[11px] font-bold">
+              <div className="flex items-center justify-between gap-1">
+                <span className="font-semibold text-slate-200 text-[11px] truncate min-w-0">{c.name}</span>
+                <span className="font-mono text-cyan-400 text-[11px] font-bold shrink-0">
                   {c.score}/100 <span className="text-slate-400 text-[10px]">({c.points} pts)</span>
                 </span>
               </div>

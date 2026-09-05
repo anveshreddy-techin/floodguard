@@ -23,7 +23,7 @@ export const RiskDial: React.FC<RiskDialProps> = ({
   dataFreshness = '3 min ago',
 }) => {
   // SVG gauge constants
-  const radius = 68;
+  const radius = 58;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference * 0.75; // 270 deg gauge
 
@@ -38,51 +38,51 @@ export const RiskDial: React.FC<RiskDialProps> = ({
   const activeColor = colorMap[level] || '#f97316';
 
   return (
-    <div className="glass-panel-glow rounded-2xl p-4 space-y-3 shadow-2xl">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-          <span className="font-mono text-xs font-black text-cyan-300 uppercase tracking-wider">
-            COMPOSITE RISK TRAJECTORY
+    <div className="glass-panel-glow rounded-2xl p-3.5 space-y-2.5 shadow-2xl overflow-hidden">
+      <div className="flex items-center justify-between border-b border-slate-800 pb-2 gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
+          <span className="font-mono text-xs font-black text-cyan-300 uppercase tracking-wider truncate">
+            COMPOSITE RISK
           </span>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-400 bg-slate-900/80 px-2 py-0.5 rounded-lg border border-slate-800">
-          <Clock className="w-3 h-3 text-cyan-400" />
-          <span>{dataFreshness}</span>
+        <div className="flex items-center gap-1 text-[10px] font-mono text-slate-400 bg-slate-900/80 px-2 py-0.5 rounded-lg border border-slate-800 shrink-0">
+          <Clock className="w-3 h-3 text-cyan-400 shrink-0" />
+          <span className="truncate">{dataFreshness}</span>
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-3">
         {/* SVG Circular Dial Gauge with Radial Glow */}
-        <div className="relative w-32 h-32 shrink-0 flex items-center justify-center">
-          <svg className="w-full h-full transform -rotate-135" viewBox="0 0 160 160">
+        <div className="relative w-28 h-28 shrink-0 flex items-center justify-center">
+          <svg className="w-full h-full transform -rotate-135" viewBox="0 0 140 140">
             <defs>
               <filter id="dialGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feGaussianBlur stdDeviation="4" result="blur" />
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
             </defs>
 
             {/* Background Arc */}
             <circle
-              cx="80"
-              cy="80"
+              cx="70"
+              cy="70"
               r={radius}
               fill="none"
               stroke="#131d3b"
-              strokeWidth="12"
+              strokeWidth="10"
               strokeDasharray={circumference}
               strokeDashoffset={circumference * 0.25}
               strokeLinecap="round"
             />
             {/* Foreground Active Risk Arc */}
             <circle
-              cx="80"
-              cy="80"
+              cx="70"
+              cy="70"
               r={radius}
               fill="none"
               stroke={activeColor}
-              strokeWidth="12"
+              strokeWidth="10"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
@@ -93,32 +93,34 @@ export const RiskDial: React.FC<RiskDialProps> = ({
 
           {/* Centered Dial Score Text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="text-3xl font-black font-mono text-slate-100 drop-shadow-[0_0_12px_rgba(249,115,22,0.6)]">
+            <span className="text-2xl font-black font-mono text-slate-100 drop-shadow-[0_0_12px_rgba(249,115,22,0.6)]">
               {score}
             </span>
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold">
+            <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest font-bold">
               / 100
             </span>
           </div>
         </div>
 
         {/* Trajectory & Risk Details */}
-        <div className="flex-1 space-y-2 text-xs">
-          <div className="flex items-center gap-2">
+        <div className="flex-1 min-w-0 space-y-2 text-xs">
+          <div className="flex items-center flex-wrap gap-1.5">
             <RiskBadge level={level} />
-            <span className="font-mono text-[11px] text-orange-400 flex items-center gap-0.5 font-bold bg-orange-950/60 px-2 py-0.5 rounded border border-orange-800/80">
-              <TrendingUp className="w-3.5 h-3.5" /> +{trendDelta} pts
+            <span className="font-mono text-[10px] text-orange-400 flex items-center gap-0.5 font-bold bg-orange-950/60 px-1.5 py-0.5 rounded border border-orange-800/80 shrink-0">
+              <TrendingUp className="w-3 h-3" /> +{trendDelta} pts
             </span>
           </div>
 
-          <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 space-y-1">
-            <div className="text-slate-400 text-[10px] uppercase font-mono">Primary Driver</div>
-            <div className="font-semibold text-slate-200 text-[11px] truncate">{primaryDriver}</div>
+          <div className="bg-slate-900/90 p-2 rounded-xl border border-slate-800 space-y-0.5">
+            <div className="text-slate-400 text-[9px] uppercase font-mono">Primary Driver</div>
+            <div className="font-semibold text-slate-200 text-[11px] truncate" title={primaryDriver}>
+              {primaryDriver}
+            </div>
           </div>
 
-          <div className="flex items-center justify-between pt-1 font-mono text-[10px]">
+          <div className="flex items-center justify-between pt-0.5 font-mono text-[10px]">
             <span className="text-slate-400">TRAJECTORY:</span>
-            <span className="text-orange-300 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+            <span className="text-orange-300 font-bold bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800 text-[9px]">
               MOD → HIGH
             </span>
           </div>

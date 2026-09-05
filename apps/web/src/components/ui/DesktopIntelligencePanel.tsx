@@ -67,11 +67,12 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
       className="hidden md:flex absolute top-3 right-3 z-[500] flex-col transition-all duration-300 pointer-events-none"
       style={{
         maxHeight: 'calc(100vh - 130px)',
-        width: isDocked ? '320px' : '360px',
+        width: isDocked ? '380px' : '440px',
+        maxWidth: 'calc(100vw - 280px)',
       }}
     >
       <div 
-        className="pointer-events-auto w-full h-full max-h-[calc(100vh-130px)] bg-[#070e1e]/92 backdrop-blur-2xl border border-cyan-500/40 rounded-3xl p-3.5 flex flex-col shadow-[0_15px_50px_rgba(0,0,0,0.8),0_0_20px_rgba(6,182,212,0.2)] space-y-2.5 overflow-hidden"
+        className="pointer-events-auto w-full h-full max-h-[calc(100vh-130px)] bg-[#070e1e]/95 backdrop-blur-2xl border border-cyan-500/40 rounded-3xl p-3 flex flex-col shadow-[0_15px_50px_rgba(0,0,0,0.8),0_0_20px_rgba(6,182,212,0.2)] space-y-2.5 overflow-hidden overflow-x-hidden"
       >
         {/* Panel Header with Controls */}
         <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 shrink-0">
@@ -104,7 +105,7 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
         </div>
 
         {/* Scrollable Intelligence Content (Strictly bounded so it never overflows) */}
-        <div className="flex-1 min-h-0 overflow-y-auto space-y-2.5 pr-1 scrollbar-thin scrollbar-thumb-slate-700">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden space-y-2.5 pr-1 scrollbar-thin scrollbar-thumb-slate-700">
           {/* Risk Dial Gauge */}
           <RiskDial
             score={score}
