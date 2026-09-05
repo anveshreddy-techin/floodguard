@@ -26,7 +26,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r apps/api/requirements.txt
-          pip install pytest pytest-asyncio scikit-learn joblib httpx aiosqlite asyncpg "bcrypt<=4.0.1"
+          pip install pytest pytest-asyncio scikit-learn joblib httpx aiosqlite asyncpg "bcrypt<=4.0.1" structlog
+
+      - name: Retrain ML models in runner environment
+        run: |
+          PYTHONPATH=. python -m ml.training.train_all
 
       - name: Run unit test suite
         run: |
