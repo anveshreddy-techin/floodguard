@@ -29,7 +29,10 @@ export const PublicNavigation: React.FC = () => {
   };
 
   return (
-    <nav className="w-full bg-[#0c1f38] text-white sticky top-0 z-40 border-b border-[#162f50] shadow-md select-none">
+    <nav
+      className="w-full bg-[#0c1f38] text-white sticky top-0 z-40 border-b border-[#162f50] shadow-md select-none"
+      style={{ backgroundColor: '#0c1f38', color: '#ffffff' }}
+    >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-10">
           {/* Desktop Nav Items */}
