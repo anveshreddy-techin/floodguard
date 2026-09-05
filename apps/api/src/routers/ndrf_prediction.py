@@ -995,40 +995,77 @@ async def ndrf_model_metrics():
         except Exception:
             manifest_data = {}
 
-    tier_c_status = manifest_data.get("art_tier_c_tree_ensemble", {}).get("deployment_status", "RESEARCH_PROTOTYPE")
+    def _tier_metrics(art_id: str) -> dict:
+        """Pull evaluation metrics and metadata from a manifest artifact entry."""
+        art = manifest_data.get(art_id, {})
+        ev = art.get("evaluation_report", {})
+        result: dict = {
+            "pr_auc": ev.get("pr_auc"),
+            "roc_auc": ev.get("roc_auc"),
+            "csi": ev.get("csi"),
+            "pod": ev.get("pod"),
+            "far": ev.get("far"),
+            "brier": ev.get("brier_score"),
+            "status": art.get("deployment_status", "RESEARCH_VALIDATED"),
+            "dataset_type": art.get("dataset_type", "UNKNOWN"),
+        }
+        if art.get("limitations"):
+            result["limitations"] = art["limitations"]
+        return result
+
+    top_status = manifest_data.get("art_tier_c_tree_ensemble", {}).get(
+        "deployment_status", "RESEARCH_PROTOTYPE"
+    )
+    dataset_type_global = manifest_data.get("art_tier_c_tree_ensemble", {}).get(
+        "dataset_type", "UNKNOWN"
+    )
 
     return {
-        "data_mode": "RESEARCH_PROTOTYPE",
+        "data_mode": top_status,
+        "dataset_type": dataset_type_global,
         "problem_statement": "SIH26192: Flash Flood Prediction System for Hilly Regions",
         "feature_schema": "5-Pillar NDRF Multi-Source (25 features)",
-        "training_methodology": "Location-holdout cross-validation on multi-basin hydrometeorological dataset",
-        "training_regions": ["UK_CHAMOLI", "HP_KULLU", "SK_TEESTA", "AS_CACHAR", "MH_MAHABALESHWAR", "BR_KOSI", "OR_MAHANADI", "JK_JHELUM"],
+        "training_methodology": "Location-holdout on real observational disaster dataset (NASA COOLR, GSI Bhukosh, IMD, CWC)",
+        "training_regions": [
+            "UK_CHAMOLI", "HP_KULLU", "SK_TEESTA", "AS_CACHAR",
+            "MH_MAHABALESHWAR", "BR_KOSI", "OR_MAHANADI", "JK_JHELUM"
+        ],
         "holdout_basins": ["UK_KEDARNATH", "KL_WAYANAD"],
+        "dataset_stats": {
+            "total_records": 69,
+            "positive_events": 23,
+            "negative_controls": 46,
+            "sources": ["NASA COOLR", "GSI Bhukosh", "NRSC Landslide Atlas", "IMD Daily Rainfall", "CWC Discharge Records"],
+            "note": (
+                "Test holdout n=9 (3 positive). Metrics at 1.0 reflect small test split, "
+                "not production reliability. Sub-daily rainfall (15 min, 30 min) are genuinely "
+                "unavailable from IMD daily-resolution data — stored as NaN/0.0, NOT fabricated."
+            )
+        },
         "metrics": {
-            "Tier_A_Transparent_Baseline": {
-                "pr_auc": 0.8221, "roc_auc": 0.8268, "csi": 0.7241, "pod": 1.0, "far": 0.2759, "brier": 0.1961,
-                "status": "RESEARCH_VALIDATED"
-            },
-            "Tier_B_Calibrated_Logistic": {
-                "pr_auc": 0.9972, "roc_auc": 0.9954, "csi": 0.9407, "pod": 0.9481, "far": 0.0083, "brier": 0.0300,
-                "status": "RESEARCH_VALIDATED"
-            },
-            "Tier_C_Random_Forest_Ensemble": {
-                "pr_auc": 1.0000, "roc_auc": 0.9999, "csi": 0.9416, "pod": 1.0000, "far": 0.0584, "brier": 0.0252,
-                "status": tier_c_status
-            },
-            "Tier_D_Anomaly_Screener": {
-                "status": "OPERATIONAL_SUPPLEMENT",
-                "description": "Isolation Forest. Flags novel sensor signatures."
-            }
+            "Tier_A_Transparent_Baseline": _tier_metrics("art_tier_a_baseline"),
+            "Tier_B_Calibrated_Logistic": _tier_metrics("art_tier_b_logistic"),
+            "Tier_C_Random_Forest_Ensemble": _tier_metrics("art_tier_c_tree_ensemble"),
+            "Tier_D_Anomaly_Screener": _tier_metrics("art_tier_d_anomaly"),
         },
         "metric_definitions": {
             "csi": "Critical Success Index = TP/(TP+FP+FN)",
             "pod": "Probability of Detection = TP/(TP+FN)",
             "far": "False Alarm Ratio = FP/(TP+FP)",
-            "pr_auc": "Precision-Recall Area Under Curve"
+            "pr_auc": "Precision-Recall Area Under Curve",
+            "roc_auc": "Receiver Operating Characteristic Area Under Curve",
+            "brier": "Brier Score (lower is better; 0 = perfect probability calibration)",
         },
-        "manifest_snapshot": manifest_data
+        "promotion_gate": (
+            "No model may be self-promoted past RESEARCH_VALIDATED without "
+            "a real named human reviewer conducting an independent evaluation."
+        ),
+        "iot_hardware_note": (
+            "Real-time geophone and culvert sensor data require physical IoT hardware "
+            "not covered by any data-acquisition or training task. System operates in "
+            "simulation/placeholder mode for those sensor channels."
+        ),
+        "manifest_snapshot": manifest_data,
     }
 
 

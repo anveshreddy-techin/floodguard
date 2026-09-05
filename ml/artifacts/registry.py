@@ -56,6 +56,7 @@ class ModelArtifact:
     limitations: str
     created_at: str
     operational_validation_level: OperationalValidationLevel = OperationalValidationLevel.RESEARCH_MODEL
+    dataset_type: str = "REAL"
 
 
 class ModelRegistry:
@@ -78,6 +79,8 @@ class ModelRegistry:
                         item["operational_validation_level"] = OperationalValidationLevel(item["operational_validation_level"])
                     else:
                         item["operational_validation_level"] = OperationalValidationLevel.RESEARCH_MODEL
+                    if "dataset_type" not in item:
+                        item["dataset_type"] = "REAL"
                     self._artifacts[art_id] = ModelArtifact(**item)
             except Exception:
                 pass
@@ -89,6 +92,7 @@ class ModelRegistry:
             d["deployment_status"] = item.deployment_status.value if hasattr(item.deployment_status, "value") else str(item.deployment_status)
             if hasattr(item, "operational_validation_level") and hasattr(item.operational_validation_level, "value"):
                 d["operational_validation_level"] = item.operational_validation_level.value
+            d["dataset_type"] = getattr(item, "dataset_type", "REAL")
             serialized[art_id] = d
 
         self._manifest_path.write_text(json.dumps(serialized, indent=2))

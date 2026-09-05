@@ -32,9 +32,17 @@ class BaselineModel:
     def predict_proba(self, X: pd.DataFrame | np.ndarray) -> np.ndarray:
         """Calculate normalized hazard score in range [0, 1]."""
         if isinstance(X, np.ndarray):
-            # Assume ordered features
-            scores = np.mean(X, axis=1) if X.ndim > 1 else np.array([float(X)])
-            return np.clip(scores / 100.0, 0.0, 1.0)
+            X_clean = np.nan_to_num(X)
+            if X_clean.ndim == 1:
+                X_clean = X_clean.reshape(1, -1)
+            # Physical baseline weighting: 35% rain (1h), 25% soil sat, 25% slope, 15% river rise
+            rain_norm = np.clip(X_clean[:, 2] / 50.0, 0.0, 1.0) if X_clean.shape[1] > 2 else 0.0
+            soil_norm = np.clip(X_clean[:, 10], 0.0, 1.0) if X_clean.shape[1] > 10 else 0.0
+            slope_norm = np.clip(X_clean[:, 13] / 45.0, 0.0, 1.0) if X_clean.shape[1] > 13 else 0.0
+            river_norm = np.clip(X_clean[:, 19] / 1.0, 0.0, 1.0) if X_clean.shape[1] > 19 else 0.0
+            prob_1 = np.clip(0.35 * rain_norm + 0.25 * soil_norm + 0.25 * slope_norm + 0.15 * river_norm, 0.0, 1.0)
+            prob_0 = 1.0 - prob_1
+            return np.column_stack([prob_0, prob_1])
 
         scores = np.zeros(len(X))
         total_weight = sum(self.weights.values()) or 1.0

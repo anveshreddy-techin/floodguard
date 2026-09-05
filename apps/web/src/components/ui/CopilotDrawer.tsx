@@ -305,7 +305,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
         observed_facts: [
           "System Status: Voice & Dialogue Engine Online (Speech-to-Text & Speech Synthesis active)",
           "Knowledge Base: 157 authoritative documents indexed covering all 28 Indian States & 8 UTs",
-          "Active ML Engine: Tier C Non-Linear Random Forest Ensemble (CSI: 0.9903, PR-AUC: 1.0000)"
+          "Active ML Engine: Tier C Non-Linear Random Forest Ensemble (trained on 69 real observational records — NASA COOLR + GSI Bhukosh + IMD + CWC)"
         ],
         model_interpretation: "Operating in real-time conversational assistance mode. Ready to support citizens, field operators, and disaster analysts.",
         potential_operator_actions: [
@@ -342,22 +342,25 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
     // 2. ML MODELS, TRAINING & EVALUATION METRICS
     else if (q.includes('model') || q.includes('tier') || q.includes('csi') || q.includes('pr-auc') || q.includes('train') || q.includes('random forest') || q.includes('logistic') || q.includes('accuracy') || q.includes('brier') || q.includes('evaluation') || q.includes('metric')) {
       response = {
-        summary: "FloodGuard AI operates a 4-tier ML architecture trained on 7,200 multi-basin observations across 10 disaster-prone Indian regions. Tier C (Non-Linear Random Forest Ensemble) is registered as RESEARCH_PROTOTYPE.",
+        summary: "FloodGuard AI operates a 4-tier ML architecture trained on 69 real observational disaster records (23 positive flood/landslide events) from NASA COOLR, GSI Bhukosh, IMD, CWC. Tier C (Non-Linear Random Forest Ensemble) is registered as RESEARCH_PROTOTYPE.",
         observed_facts: [
-          "Tier A (Transparent Baseline): PR-AUC 0.6284, CSI 0.5007 (Deterministic physical weights)",
-          "Tier B (Calibrated Logistic Regression): PR-AUC 0.9974, CSI 0.9412 (Standardized linear classification)",
-          "Tier C (Random Forest Ensemble): PR-AUC 1.0000, CSI 0.9903, POD 0.9903, FAR 0.0000, Brier Score 0.0060 (Active serving model)",
-          "Tier D (Isolation Forest Screener): Trained on 4,520 normal baseline samples for unsupervised anomaly detection",
-          "Holdout Validation: Tested on Kedarnath (Mandakini) and Wayanad (Western Ghats) holdout basins to eliminate spatial data leakage"
+          "Dataset: 69 records — 23 positive events (NASA COOLR, GSI Bhukosh, NRSC Atlas, IMD, CWC), 46 matched negative controls",
+          "Tier A (Transparent Baseline): dataset_type=REAL, trained on observational data, metrics in /model-monitoring",
+          "Tier B (Calibrated Logistic Regression): dataset_type=REAL, location-holdout evaluated",
+          "Tier C (Random Forest Ensemble): dataset_type=REAL, active serving model — metrics at 1.0 on small holdout (n=9), not production-validated",
+          "Tier D (Isolation Forest Screener): dataset_type=REAL, unsupervised anomaly supplement",
+          "Holdout Validation: Kedarnath (Mandakini) and Wayanad (Western Ghats) held out — zero spatial leakage",
+          "⚠ Honest caveat: test set n=9 (3 positive). Perfect metrics reflect small holdout, not production reliability.",
+          "⚠ Sub-daily rainfall (15 min, 30 min) remain genuinely unavailable from IMD daily data — stored as NaN/0.0"
         ],
-        model_interpretation: "The model captures complex non-linear interactions between high rainfall intensity (>35mm/h), steep terrain (>25°), and saturated soil (>80%), providing up to 45-60 minutes of early warning lead time.",
+        model_interpretation: "Model captures complex non-linear interactions between high rainfall intensity (>35 mm/h), steep terrain (>25°), and saturated soil (>80%), providing up to 45-60 minutes of estimated early warning lead time. No self-promotion beyond RESEARCH_VALIDATED without independent human reviewer.",
         potential_operator_actions: [
-          "Inspect model cards in /model-monitoring",
+          "Inspect model cards in /model-monitoring (live metrics from registry manifest)",
           "Review training script at ml/training/train_all.py",
-          "Inspect Model Registry at ml/artifacts/registry_manifest.json"
+          "Inspect real dataset at data/real/real_flood_dataset.csv (69 records)"
         ],
-        uncertainty_assessment: { uncertainty_level: "RESEARCH_PROTOTYPE", note: "Holdout test set evaluated with zero leakage" },
-        authoritative_sources: ["FloodGuard Model Registry", "Model Card v2.0", "SIH26192 Technical Evaluation Standards"]
+        uncertainty_assessment: { uncertainty_level: "RESEARCH_PROTOTYPE", note: "Holdout test set n=9 — metrics not yet production-validated" },
+        authoritative_sources: ["FloodGuard Model Registry (registry_manifest.json)", "NASA COOLR", "GSI Bhukosh", "IMD", "CWC"]
       };
     }
     // 3. HYDROLOGY FORMULAS & EQUATIONS

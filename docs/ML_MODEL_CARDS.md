@@ -10,15 +10,15 @@
 | Metric | Value | Target Guidance |
 |---|---|---|
 | **PR-AUC** | `1.0000` | > 0.70 |
-| **Critical Success Index (CSI)** | `0.9955` | > 0.40 |
-| **Probability of Detection (POD)** | `0.9989` | > 0.75 |
-| **False Alarm Ratio (FAR)** | `0.0034` | < 0.35 |
-| **Brier Score (Calibration)** | `0.0240` | < 0.15 |
-| **Inference Latency** | `0.01 ms` | < 100 ms |
+| **Critical Success Index (CSI)** | `1.0000` | > 0.40 |
+| **Probability of Detection (POD)** | `1.0000` | > 0.75 |
+| **False Alarm Ratio (FAR)** | `0.0000` | < 0.35 |
+| **Brier Score (Calibration)** | `0.0003` | < 0.15 |
+| **Inference Latency** | `1.27 ms` | < 100 ms |
 
 ## Data & Sample Sizing
-- Test Samples: `1440` (Positive: `887`, `61.6%`)
-- Statistical Reliability: `RELIABLE`
+- Test Samples: `9` (Positive: `3`, `33.33%`)
+- Statistical Reliability: `PRELIMINARY / DEMO`
 
 ## Limitations & Operational Warnings
-> Evaluation on test split.
+> Evaluation on test split. High uncertainty: small positive sample count (n=3 < 15).

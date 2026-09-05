@@ -58,6 +58,7 @@ export default function NDRFStudioPage() {
   const [liveDischarge, setLiveDischarge] = useState<number | null>(null);
   const [liveTimestamp, setLiveTimestamp] = useState<string | null>(null);
   const [benchmarkReport, setBenchmarkReport] = useState<any>(null);
+  const [mlMetrics, setMlMetrics] = useState<any>(null);
 
   useEffect(() => {
     setPage('model-monitoring');
@@ -66,6 +67,11 @@ export default function NDRFStudioPage() {
     fetch('/api/v1/ndrf/models/generalization-benchmark')
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d) setBenchmarkReport(d); })
+      .catch(() => {});
+
+    fetch('/api/v1/ndrf/models/metrics')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setMlMetrics(d); })
       .catch(() => {});
   }, [setPage, setMode]);
 
@@ -449,9 +455,33 @@ void loop() { /* Tipping bucket + TDR + Ultrasonic read & HMAC-SHA256 post */ }
 
           {/* ML Table */}
           <div className="fp fp-operational rounded-2xl p-5 border border-slate-800 bg-slate-900/50 overflow-x-auto">
-            <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-slate-400" /> ML Architecture Performance (Kedarnath/Wayanad Holdout)
-            </h3>
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-slate-400" /> ML Architecture Performance (Kedarnath/Wayanad Holdout)
+              </h3>
+              <div className="flex items-center gap-2 flex-wrap">
+                {mlMetrics?.dataset_type && (
+                  <span className={`text-[10px] font-mono px-2.5 py-1 rounded-full border font-semibold flex items-center gap-1 ${
+                    mlMetrics.dataset_type === 'REAL'
+                      ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                      : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                  }`}>
+                    <Database className="w-3 h-3" />
+                    DATASET: {mlMetrics.dataset_type}
+                  </span>
+                )}
+                {mlMetrics?.dataset_stats && (
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full border font-semibold bg-slate-800 text-slate-400 border-slate-700">
+                    n={mlMetrics.dataset_stats.total_records} ({mlMetrics.dataset_stats.positive_events}+)
+                  </span>
+                )}
+              </div>
+            </div>
+            {mlMetrics?.dataset_stats?.note && (
+              <p className="text-[10px] text-amber-400/80 bg-amber-500/10 border border-amber-500/20 rounded px-3 py-2 mb-3 font-mono leading-relaxed">
+                ⚠ {mlMetrics.dataset_stats.note}
+              </p>
+            )}
             <table className="w-full text-left text-xs whitespace-nowrap">
               <thead>
                 <tr className="text-slate-500 uppercase border-b border-slate-800">
@@ -461,34 +491,69 @@ void loop() { /* Tipping bucket + TDR + Ultrasonic read & HMAC-SHA256 post */ }
                   <th className="pb-2 font-medium">CSI</th>
                   <th className="pb-2 font-medium">POD</th>
                   <th className="pb-2 font-medium">FAR</th>
+                  <th className="pb-2 font-medium">Dataset</th>
                   <th className="pb-2 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody className="text-slate-300 font-mono">
-                <tr className="border-b border-slate-800/50">
-                  <td className="py-3 pl-2">Tier A Baseline</td><td>0.8221</td><td>0.8268</td><td>0.7241</td><td className="text-green-400">1.0000</td><td className="text-red-400">0.2759</td>
-                  <td><span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded text-[10px]">OPERATIONAL</span></td>
-                </tr>
-                <tr className="border-b border-slate-800/50">
-                  <td className="py-3 pl-2">Tier B Logistic</td><td>0.9972</td><td>0.9954</td><td>0.9407</td><td>0.9481</td><td className="text-green-400">0.0083</td>
-                  <td><span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded text-[10px]">OPERATIONAL</span></td>
-                </tr>
-                <tr className="bg-cyan-950/20 border-b border-slate-800/50">
-                  <td className="py-3 pl-2 text-cyan-400 font-bold">Tier C RF Ensemble</td>
-                  <td className="text-cyan-400 font-bold">1.0000</td>
-                  <td className="text-cyan-400 font-bold">0.9999</td>
-                  <td className="text-cyan-400 font-bold">0.9416</td>
-                  <td className="text-green-400 font-bold">1.0000</td>
-                  <td className="text-green-400 font-bold">0.0584</td>
-                  <td><span className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px]">RESEARCH_PROTOTYPE</span></td>
-                </tr>
-                <tr>
-                  <td className="py-3 pl-2 text-slate-500">Tier D Anomaly</td><td className="text-slate-500">—</td><td className="text-slate-500">—</td><td className="text-slate-500">—</td><td className="text-slate-500">—</td><td className="text-slate-500">—</td>
-                  <td><span className="bg-slate-800 text-slate-500 px-2 py-0.5 rounded text-[10px]">SUPPLEMENT</span></td>
-                </tr>
+                {(() => {
+                  const tiers = mlMetrics?.metrics ?? {};
+                  const tierA = tiers['Tier_A_Transparent_Baseline'] ?? {};
+                  const tierB = tiers['Tier_B_Calibrated_Logistic'] ?? {};
+                  const tierC = tiers['Tier_C_Random_Forest_Ensemble'] ?? {};
+                  const tierD = tiers['Tier_D_Anomaly_Screener'] ?? {};
+                  const fmt = (v: number | null | undefined) => v != null ? v.toFixed(4) : '—';
+                  const dtBadge = (dt: string | undefined) => dt === 'REAL'
+                    ? <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[9px]">REAL</span>
+                    : dt === 'UNKNOWN' || !dt
+                      ? <span className="bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded text-[9px]">—</span>
+                      : <span className="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px]">{dt}</span>;
+                  return (<>
+                    <tr className="border-b border-slate-800/50">
+                      <td className="py-3 pl-2">Tier A Baseline</td>
+                      <td>{fmt(tierA.pr_auc)}</td><td>{fmt(tierA.roc_auc)}</td>
+                      <td>{fmt(tierA.csi)}</td><td className="text-green-400">{fmt(tierA.pod)}</td>
+                      <td className="text-red-400">{fmt(tierA.far)}</td>
+                      <td>{dtBadge(tierA.dataset_type)}</td>
+                      <td><span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded text-[10px]">{tierA.status ?? 'RESEARCH_VALIDATED'}</span></td>
+                    </tr>
+                    <tr className="border-b border-slate-800/50">
+                      <td className="py-3 pl-2">Tier B Logistic</td>
+                      <td>{fmt(tierB.pr_auc)}</td><td>{fmt(tierB.roc_auc)}</td>
+                      <td>{fmt(tierB.csi)}</td><td>{fmt(tierB.pod)}</td>
+                      <td className="text-green-400">{fmt(tierB.far)}</td>
+                      <td>{dtBadge(tierB.dataset_type)}</td>
+                      <td><span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded text-[10px]">{tierB.status ?? 'RESEARCH_VALIDATED'}</span></td>
+                    </tr>
+                    <tr className="bg-cyan-950/20 border-b border-slate-800/50">
+                      <td className="py-3 pl-2 text-cyan-400 font-bold">Tier C RF Ensemble</td>
+                      <td className="text-cyan-400 font-bold">{fmt(tierC.pr_auc)}</td>
+                      <td className="text-cyan-400 font-bold">{fmt(tierC.roc_auc)}</td>
+                      <td className="text-cyan-400 font-bold">{fmt(tierC.csi)}</td>
+                      <td className="text-green-400 font-bold">{fmt(tierC.pod)}</td>
+                      <td className="text-green-400 font-bold">{fmt(tierC.far)}</td>
+                      <td>{dtBadge(tierC.dataset_type)}</td>
+                      <td><span className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px]">{tierC.status ?? 'RESEARCH_PROTOTYPE'}</span></td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 pl-2 text-slate-500">Tier D Anomaly</td>
+                      <td className="text-slate-500">{fmt(tierD.pr_auc)}</td>
+                      <td className="text-slate-500">{fmt(tierD.roc_auc)}</td>
+                      <td className="text-slate-500">{fmt(tierD.csi)}</td>
+                      <td className="text-slate-500">—</td><td className="text-slate-500">—</td>
+                      <td>{dtBadge(tierD.dataset_type)}</td>
+                      <td><span className="bg-slate-800 text-slate-500 px-2 py-0.5 rounded text-[10px]">SUPPLEMENT</span></td>
+                    </tr>
+                  </>);
+                })()}
               </tbody>
             </table>
+            {!mlMetrics && (
+              <p className="text-xs text-slate-500 mt-3 font-mono">Fetching live metrics from ML registry…</p>
+            )}
           </div>
+
+
 
           {/* ══════════════════════════════════════════════════════════════════════════
               GENERALIZATION BENCHMARK & SCIENTIFIC HOLDOUT SUITE (SIH26192)
