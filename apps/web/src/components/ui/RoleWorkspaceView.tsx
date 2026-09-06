@@ -453,11 +453,11 @@ export const RoleWorkspaceView: React.FC<{ className?: string }> = ({ className 
                 INCIDENT TASK CHECKLIST
               </Link>
               <Link
-                href="/missing-persons"
+                href="/incidents"
                 className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-purple-300 font-mono text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition"
               >
                 <Users className="w-4 h-4" />
-                SEARCH &amp; RESCUE GRID LOGS
+                TACTICAL INCIDENT LOGS
               </Link>
             </div>
           </div>

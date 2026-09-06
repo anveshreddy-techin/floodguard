@@ -206,9 +206,8 @@ export default function PublicPortalDashboardPage() {
       <aside className="w-full lg:w-64 bg-white border-r border-slate-200 shrink-0 p-3 space-y-5 shadow-xs">
         {/* SECTION 1: MAIN MENU */}
         <div>
-          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 px-2.5 mb-1.5 flex items-center justify-between">
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 px-2.5 mb-1.5">
             <span>MAIN MENU</span>
-            <span className="text-[9px] text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded font-bold">PORTAL</span>
           </div>
           <nav className="space-y-0.5 text-xs font-medium" aria-label="Portal Main Menu">
             {[
@@ -371,30 +370,24 @@ export default function PublicPortalDashboardPage() {
             <button
               type="button"
               onClick={() => setPortalView('DATA_FLOW')}
-              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer ${
                 portalView === 'DATA_FLOW'
                   ? 'bg-[#1b3a63] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
               }`}
             >
-              <span>How Data Is Given</span>
-              <span className="bg-cyan-500 text-slate-950 font-mono text-[9px] px-1.5 py-0.2 rounded font-black">
-                FORMATS
-              </span>
+              How Data Is Given
             </button>
             <button
               type="button"
               onClick={() => setPortalView('PIPELINE')}
-              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer ${
                 portalView === 'PIPELINE'
                   ? 'bg-[#1b3a63] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
               }`}
             >
-              <span>9-Stage Prediction Pipeline</span>
-              <span className="bg-blue-600 text-white font-mono text-[9px] px-1.5 py-0.2 rounded font-black">
-                CORE
-              </span>
+              9-Stage Prediction Pipeline
             </button>
             <button
               type="button"

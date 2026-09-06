@@ -68,7 +68,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
       title: 'AFTER • AUDIT, MEMORY & LEARNING',
       phaseColor: 'text-purple-400',
       items: [
-        { id: 'flight-recorder', label: 'Flight Recorder', href: '/flight-recorder', icon: Radio, badge: 'BLACK-BOX' },
+        { id: 'flight-recorder', label: 'Flight Recorder', href: '/flight-recorder', icon: Radio },
         { id: 'hindcast', label: 'Historical Hindcast', href: '/hindcast', icon: History },
         { id: 'replay', label: 'Historical Replay', href: '/replay', icon: History },
         { id: 'ledger', label: 'Prediction Ledger', href: '/ledger', icon: Database },
@@ -87,16 +87,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
         { id: 'model-monitoring', label: 'ML Models', href: '/model-monitoring', icon: Brain },
         { id: 'recovery', label: 'Recovery', href: '/recovery', icon: Zap },
         { id: 'cross-border', label: 'Cross-Border Basins', href: '/cross-border', icon: Globe },
-        { id: 'missing-persons', label: 'Missing Persons', href: '/missing-persons', icon: Users, badge: 'PROTECTED' },
         { id: 'admin', label: 'Admin Governance', href: '/admin', icon: ShieldCheck },
-      ],
-    },
-    {
-      title: 'SPECIAL • EVALUATION ARENA',
-      phaseColor: 'text-amber-400',
-      items: [
-        { id: 'predict-save-prove', label: 'Predict · Save · Prove', href: '/predict-save-prove', icon: Award, badge: 'FLAGSHIP' },
-        { id: 'challenge', label: 'Judge Challenge Mode', href: '/challenge', icon: HelpCircle, badge: 'ARENA' },
       ],
     },
   ];

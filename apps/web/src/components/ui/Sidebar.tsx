@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
         { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, shortcut: 'M', badge: 'LIVE' },
         { id: 'role-workspace', label: 'Role Workspaces', href: '/role-workspace', icon: Users, badge: '10 ROLES' },
         { id: 'donate', label: 'Disaster Relief Funds', href: '/donate', icon: Heart, badge: '80G EXEMPT' },
-        { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, shortcut: 'S', badge: 'HUD' },
+        { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, shortcut: 'S' },
         { id: 'incidents', label: 'Incident Command', href: '/incidents', icon: FileText },
       ],
     },
@@ -87,11 +87,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       phaseColor: 'text-cyan-400',
       items: [
         { id: 'map', label: 'Hyper-Local GIS', href: '/map', icon: Map },
-        { id: 'weather', label: 'Weather Intelligence', href: '/weather', icon: CloudRain, badge: 'IMD+NWP' },
-        { id: 'river-basins', label: 'National River Map', href: '/river-basins', icon: Waves, badge: 'PAN-INDIA' },
+        { id: 'weather', label: 'Weather Intelligence', href: '/weather', icon: CloudRain },
+        { id: 'river-basins', label: 'National River Map', href: '/river-basins', icon: Waves },
         { id: 'cascade', label: 'Upstream Cascade', href: '/cascade', icon: Layers },
         { id: 'village', label: 'Village Dossier', href: '/village/demo-village-003', icon: Map },
-        { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle, badge: 'WHAT-IF' },
+        { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle },
         { id: 'sensors', label: 'IoT & Telemetry', href: '/sensors', icon: Activity },
         { id: 'upload', label: 'Data Ingestion', href: '/upload', icon: UploadCloud },
       ],
@@ -101,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       phaseDesc: 'Post-Disaster Forensic Review',
       phaseColor: 'text-purple-400',
       items: [
-        { id: 'flight-recorder', label: 'Flight Recorder', href: '/flight-recorder', icon: Radio, badge: 'BLACK-BOX' },
+        { id: 'flight-recorder', label: 'Flight Recorder', href: '/flight-recorder', icon: Radio },
         { id: 'hindcast', label: 'Historical Hindcast', href: '/hindcast', icon: History, shortcut: 'H' },
         { id: 'replay', label: 'Historical Replay', href: '/replay', icon: History, shortcut: 'R' },
         { id: 'ledger', label: 'Prediction Ledger', href: '/ledger', icon: Database },
@@ -109,15 +109,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
         { id: 'benchmark', label: 'Event Benchmark', href: '/benchmark', icon: BarChart3 },
         { id: 'audit', label: 'Audit & Provenance', href: '/audit', icon: ShieldCheck },
         { id: 'system', label: 'System Health', href: '/system', icon: HeartPulse },
-      ],
-    },
-    {
-      title: 'SPECIAL • EVALUATION ARENA',
-      phaseDesc: 'SIH26192 Flagship Features',
-      phaseColor: 'text-amber-400',
-      items: [
-        { id: 'predict-save-prove', label: 'Predict · Save · Prove', href: '/predict-save-prove', icon: Award, badge: 'FLAGSHIP' },
-        { id: 'challenge', label: 'Judge Challenge Mode', href: '/challenge', icon: HelpCircle, badge: 'ARENA' },
       ],
     },
     {
@@ -130,7 +121,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
         { id: 'model-monitoring', label: 'NDRF ML Studio', href: '/model-monitoring', icon: Brain },
         { id: 'recovery', label: 'Recovery', href: '/recovery', icon: Zap },
         { id: 'cross-border', label: 'Cross-Border Basins', href: '/cross-border', icon: Globe },
-        { id: 'missing-persons', label: 'Missing Persons', href: '/missing-persons', icon: Users, badge: 'PROTECTED' },
       ],
     },
 

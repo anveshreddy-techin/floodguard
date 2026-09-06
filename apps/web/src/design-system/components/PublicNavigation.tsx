@@ -115,9 +115,6 @@ export const PublicNavigation: React.FC = () => {
             >
               <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
               <span>Alerts</span>
-              <span className="bg-red-600 text-white text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full">
-                12
-              </span>
             </Link>
 
             {/* 5. Risk Map */}

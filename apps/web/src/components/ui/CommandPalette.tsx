@@ -62,8 +62,6 @@ export const CommandPalette: React.FC<{ isOpen: boolean; onClose: () => void }> 
     { label: 'Village Dossier: Sunderbans Nagar', href: '/village/demo-village-003', icon: Map, category: 'INTELLIGENCE' },
     { label: 'Historical Hindcast Lab (5 Disasters)', href: '/hindcast', icon: History, category: 'INTELLIGENCE' },
     { label: 'Prediction Memory & Audit Ledger', href: '/ledger', icon: Database, category: 'INTELLIGENCE' },
-    { label: 'Predict · Save · Prove (Flagship)', href: '/predict-save-prove', icon: Award, category: 'SPECIAL' },
-    { label: 'Judge Challenge Mode (6 Stress Tests)', href: '/challenge', icon: HelpCircle, category: 'SPECIAL' },
     { label: 'Scenario Simulator & What-If Lab', href: '/simulation', icon: PlayCircle, category: 'LABS' },
     { label: 'Historical Event Time Machine', href: '/replay', icon: History, category: 'LABS' },
     { label: 'IoT & Telemetry Constellation', href: '/sensors', icon: Activity, category: 'LABS' },

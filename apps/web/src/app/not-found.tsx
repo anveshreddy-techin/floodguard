@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ShieldAlert, ArrowLeft, Home, Map, Layers, PlayCircle, HelpCircle } from 'lucide-react';
+import { ShieldAlert, ArrowLeft, Home, Map, Layers, PlayCircle, HelpCircle, Compass } from 'lucide-react';
 
 export default function NotFound() {
   return (
@@ -44,10 +44,10 @@ export default function NotFound() {
             <Layers className="w-4 h-4" /> Upstream Cascade
           </Link>
           <Link
-            href="/challenge"
-            className="p-2.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-800/80 rounded-lg flex items-center justify-center gap-1.5 font-medium transition"
+            href="/safety"
+            className="p-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-800/80 rounded-lg flex items-center justify-center gap-1.5 font-medium transition"
           >
-            <HelpCircle className="w-4 h-4" /> Judge Mode
+            <Compass className="w-4 h-4" /> Safety Guidance
           </Link>
         </div>
       </div>
