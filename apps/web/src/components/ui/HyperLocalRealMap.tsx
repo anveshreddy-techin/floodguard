@@ -373,9 +373,9 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
     // 2. Primary High-Ground Shelter (+120m ASL above riverbed)
     const primaryShelter = {
       id: `shelter-primary-${location.id}`,
-      name: `${location.name.split('/')[0].trim()} Community Shelter (+120m)`,
+      name: `${location.name.split('/')[0].trim()} Designated Assembly Shelter (+120m)`,
       type: 'SHELTER',
-      category: 'SAFE_ASSEMBLY',
+      category: 'DESIGNATED_ASSEMBLY',
       lat: primaryShelterCoords[0],
       lon: primaryShelterCoords[1],
       elevation: `${baseEle + 120} m ASL`,
@@ -387,11 +387,11 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       riskScore: 12,
       status: 'OPERATIONAL & STOCKED',
       desc: gisLang === 'hi'
-        ? `प्राथमिक आपदा राहत आश्रय स्थल। नदी तल से +120 मीटर ऊपर सुरक्षित रिज पर।`
+        ? `नामित आपदा राहत आश्रय स्थल। नदी तल से +120 मीटर ऊपर सुरक्षित रिज पर।`
         : `Designated reinforced community shelter on stable rocky spur. Located +120m above 100-year peak water level.`,
       action: gisLang === 'hi'
-        ? 'अनुशंसित सुरक्षित गंतव्य। भोजन, पेयजल एवं प्राथमिक चिकित्सा उपलब्ध।'
-        : 'Primary safe destination. Stocked with emergency rations, satellite radio, and clean water.',
+        ? 'अनुशंसित नामित गंतव्य। भोजन, पेयजल एवं प्राथमिक चिकित्सा उपलब्ध।'
+        : 'Designated high-ground assembly destination. Stocked with emergency rations, satellite radio, and clean water.',
     };
 
     // 3. Secondary Shelter / Panchayat Bhavan (+85m ASL)
@@ -399,7 +399,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       id: `shelter-secondary-${location.id}`,
       name: `${location.region.split('(')[0].trim()} Panchayat Bhavan (+85m)`,
       type: 'SHELTER_SECONDARY',
-      category: 'SAFE_ASSEMBLY',
+      category: 'DESIGNATED_ASSEMBLY',
       lat: secondaryShelterCoords[0],
       lon: secondaryShelterCoords[1],
       elevation: `${baseEle + 85} m ASL`,
@@ -409,9 +409,9 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       riskScore: 18,
       status: 'STANDBY ACTIVE',
       desc: gisLang === 'hi'
-        ? 'द्वितीयक आश्रय केंद्र। पश्चिमी पहाड़ी ढलान पर सुरक्षित स्थान।'
+        ? 'द्वितीयक आश्रय केंद्र। पश्चिमी पहाड़ी ढलान पर नामित स्थान।'
         : 'Secondary designated relief center on western hill slope. Alternate option if north ridge trail is crowded.',
-      action: gisLang === 'hi' ? 'वैकल्पिक सुरक्षित केंद्र।' : 'Alternate safe assembly center.',
+      action: gisLang === 'hi' ? 'वैकल्पिक नामित केंद्र।' : 'Alternate designated assembly center.',
     };
 
     // 4. AWS Weather Station (Rainfall Gauge)
@@ -642,11 +642,14 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         })
           .addTo(lg)
           .bindPopup(`
-            <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;min-width:210px;">
-              <b style="color:${floodColor};">🌊 100-YR FLOOD INUNDATION ENVELOPE</b><br/>
+            <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;min-width:240px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px;">
+                <b style="color:${floodColor};font-size:12px;">🌊 100-YR FLOOD ENVELOPE</b>
+                <span style="font-size:9px;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:4px;border:1px solid #f59e0b;font-weight:bold;">ILLUSTRATIVE</span>
+              </div>
               <b>Risk Category:</b> ${location.riskLevel}<br/>
               <b>Modeled Water Depth:</b> ${isHighRisk ? '1.8m - 3.4m (High Velocity)' : '0.4m - 1.0m (Channel)'}<br/>
-              <b>Alignment:</b> Direct overlay along real river gorge &amp; floodway<br/>
+              <b>Hydraulic Fidelity:</b> Illustrative hydraulic estimate (Not survey-grade LiDAR/DEM simulation)<br/>
               <b>Warning:</b> Low-lying structures and river crossings are exposed.
             </div>
           `);
@@ -670,11 +673,11 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         })
           .addTo(lg)
           .bindPopup(`
-            <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;">
-              <b style="color:#0284c7;">💧 ${location.region.split('(')[0]} Mainstem River Channel</b><br/>
+            <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;min-width:220px;">
+              <b style="color:#0284c7;">💧 ${location.region.split('(')[0]} Mainstem Channel</b><br/>
               <b>Current Water Stage:</b> ${location.riverStage}<br/>
-              <b>Threshold Status:</b> ${isHighRisk ? '⚠️ FLASH DANGER THRESHOLD EXCEEDED' : '✅ SAFE NORMAL FLOW'}<br/>
-              <b>Path:</b> Traced along actual Google Earth riverbed canyon<br/>
+              <b>Threshold Status:</b> ${isHighRisk ? '⚠️ FLASH DANGER THRESHOLD EXCEEDED' : '✅ NORMAL SEASONAL FLOW'}<br/>
+              <b>Geometry:</b> Traced along riverbed canyon (Illustrative approximation)<br/>
               <b>Velocity:</b> 4.2 m/s downstream surge
             </div>
           `);
@@ -700,7 +703,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                 <b style="color:#ea580c;">⚠️ Rishiganga Surge Tributary Gorge</b><br/>
                 <b>Hazard Vector:</b> Glacial / Moraine Outburst Surge Corridor<br/>
                 <b>Confluence:</b> Raini Bridge Confluence (joins Dhauliganga)<br/>
-                <b>Velocity:</b> 6.4 m/s debris torrent
+                <b>Discharge Velocity:</b> 6.4 m/s debris torrent (Illustrative)
               </div>
             `);
         }
@@ -753,7 +756,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           .bindTooltip('10 min walk buffer (500m)', { permanent: false, direction: 'top' });
       }
 
-      // ── 5. SAFE EVACUATION ESCAPE TRAIL (CYAN / EMERALD POLYLINE) ──
+      // ── 5. CANDIDATE EVACUATION ESCAPE TRAIL (CYAN / EMERALD POLYLINE) ──
       if (layers.evacuationRoute) {
         L.polyline(spatialEntities.evacuationTrail, {
           color: '#10b981',
@@ -770,11 +773,11 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           .addTo(lg)
           .bindPopup(`
             <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;">
-              <b style="color:#059669;">🚶 RECOMMENDED ESCAPE VECTOR: North Ridge Trail</b><br/>
+              <b style="color:#059669;">🚶 CANDIDATE ESCAPE VECTOR: North Ridge Trail</b><br/>
               <b>Destination:</b> ${spatialEntities.primaryShelter.name}<br/>
-              <b>Elevation Gain:</b> +120m uphill (Safe above floodline)<br/>
+              <b>Elevation Gain:</b> +120m uphill (Above modeled floodline)<br/>
               <b>Walking Distance:</b> 1.4 km (~14-18 minutes)<br/>
-              <b>Route Status:</b> CLEAR & MONITORED BY SDRF
+              <b>Route Status:</b> CLEAR &amp; MONITORED BY SDRF (CANDIDATE · UNVERIFIED ON GROUND)
             </div>
           `);
 
@@ -819,7 +822,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         .addTo(lg);
       villageMarker.on('click', () => handleEntityClick(spatialEntities.village));
 
-      // ── 7. PINS: PRIMARY SAFE SHELTER ──
+      // ── 7. PINS: PRIMARY DESIGNATED SHELTER ──
       const shelterIcon = L.divIcon({
         html: `
           <div style="position:relative;display:flex;flex-direction:column;align-items:center;cursor:pointer;">
@@ -827,12 +830,12 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               🏫
             </div>
             <div style="background:rgba(6,78,59,0.95);border:1px solid #34d399;color:#a7f3d0;font-family:monospace;font-size:10px;font-weight:bold;padding:2px 6px;border-radius:6px;margin-top:3px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.6);">
-              SAFE SHELTER (+120m)
+              DESIGNATED SHELTER (+120m)
             </div>
           </div>`,
         className: '',
-        iconSize: [130, 56],
-        iconAnchor: [65, 20],
+        iconSize: [160, 56],
+        iconAnchor: [80, 20],
       });
 
       const shelterMarker = L.marker([spatialEntities.primaryShelter.lat, spatialEntities.primaryShelter.lon], { icon: shelterIcon, zIndexOffset: 950 })
@@ -969,22 +972,25 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           <div className="pointer-events-auto hidden md:flex items-center gap-1.5 glass-panel p-1 rounded-xl border border-slate-700/80 shadow-2xl">
             <button
               onClick={() => setLayers((p) => ({ ...p, floodZone: !p.floodZone }))}
+              title="100-Year Modeled Inundation Corridor (Illustrative Hydraulic Estimate)"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
                 layers.floodZone ? 'bg-orange-500/30 text-orange-300 border border-orange-500/40' : 'text-slate-500 opacity-60'
               }`}
             >
               <Waves className="w-3 h-3" />
               <span>FLOOD ZONE</span>
+              <span className="text-[8px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">ESTIMATE</span>
             </button>
 
             <button
               onClick={() => setLayers((p) => ({ ...p, evacuationRoute: !p.evacuationRoute }))}
+              title="Candidate High-Ground Escape Trail (Unverified Ground Surface)"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
                 layers.evacuationRoute ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-500/40' : 'text-slate-500 opacity-60'
               }`}
             >
               <Navigation className="w-3 h-3" />
-              <span>SAFE ROUTE</span>
+              <span>CANDIDATE ROUTE</span>
             </button>
 
             <button
@@ -1166,12 +1172,12 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                 </div>
               </div>
 
-              {/* Safe Evacuation Shelter Vector */}
+              {/* Designated Evacuation Shelter Vector */}
               <div className="bg-slate-900/80 p-2.5 rounded-xl border border-emerald-500/40 flex items-start gap-2">
                 <Navigation className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
                   <div className="text-slate-400 text-[9px] uppercase font-bold font-mono">
-                    {gisLang === 'hi' ? 'सुरक्षित शरण स्थल' : 'RECOMMENDED SAFE SHELTER'}
+                    {gisLang === 'hi' ? 'नामित शरण स्थल' : 'DESIGNATED ASSEMBLY SHELTER'}
                   </div>
                   <div className="text-emerald-300 font-bold text-xs mt-0.5 truncate font-mono">
                     {spatialEntities.primaryShelter.name}
@@ -1181,6 +1187,11 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* Provenance & Illustrative Disclaimer Banner */}
+              <div className="px-2.5 py-1.5 rounded-lg bg-amber-950/40 border border-amber-500/30 text-[9px] font-mono text-amber-300/90 leading-tight">
+                ⚠️ <strong>OVERLAY FIDELITY:</strong> Flood corridor &amp; river centerline are illustrative hydraulic estimates (not survey-grade LiDAR/DEM simulations).
+              </div>
             </div>
 
             {/* Quick Action Button */}
@@ -1189,7 +1200,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               className="w-full py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1.5 shadow-lg transition active:scale-95"
             >
               <Compass className="w-3.5 h-3.5" />
-              <span>{gisLang === 'hi' ? 'सुरक्षित मार्ग गाइड (HUD)' : 'OPEN SAFE ESCAPE HUD'}</span>
+              <span>{gisLang === 'hi' ? 'मार्ग गाइड (HUD)' : 'OPEN ESCAPE GUIDANCE HUD'}</span>
             </a>
           </div>
         ) : (

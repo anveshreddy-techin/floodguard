@@ -105,7 +105,7 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
           weight: 2,
         })
           .addTo(lg)
-          .bindPopup(`<b style="color:#10b981">✅ SAFE ZONE · NORMAL ELEVATED GROUND</b><br>No active river flood inundation detected at this location.`);
+          .bindPopup(`<b style="color:#10b981">✅ LOWEST EXPOSURE · ELEVATED GROUND</b><br>No active river flood inundation detected at this location.`);
       } else {
         L.circle(center, {
           radius: riskRadiusM,
@@ -171,7 +171,7 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
         <div style="font-family:monospace;font-size:12px;line-height:1.6">
           <b style="color:#10b981">📍 YOUR LOCATION · ${locationName}</b><br>
           ${userLat.toFixed(5)}°N, ${userLon.toFixed(5)}°E (${stateName})<br>
-          <b style="color:#10b981">✅ STATUS: SAFE ZONE</b><br>
+          <b style="color:#10b981">✅ STATUS: LOWEST EXPOSURE (ELEVATED)</b><br>
           <span style="color:#94a3b8">Normal dry ground. No active flood threat detected.</span>
         </div>` : `
         <div style="font-family:monospace;font-size:12px;line-height:1.6">

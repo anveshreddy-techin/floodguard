@@ -206,7 +206,7 @@ export default function AdminControlPage() {
                   </tr>
                   <tr>
                     <td className="py-2.5 font-bold text-slate-400">VIEWER / DEMO</td>
-                    <td>Public Advisories & Safe Routes</td>
+                    <td>Public Advisories & Candidate Evacuation Routes</td>
                     <td className="text-slate-500">Read Only</td>
                     <td className="text-rose-400">Masked / Anonymized</td>
                     <td className="text-slate-500">None</td>

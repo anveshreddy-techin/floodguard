@@ -51,6 +51,22 @@ const HyperLocalRealMap = dynamic(
   }
 );
 
+const Real3DTerrainCatchment = dynamic(
+  () => import('@/components/ui/Real3DTerrainCatchment'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center bg-slate-950">
+        <div className="text-center space-y-2">
+          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-cyan-300 text-xs font-mono font-bold animate-pulse">INITIALIZING 3D TERRAIN…</p>
+          <p className="text-slate-500 text-[10px] font-mono">Loading WebGL &amp; SRTM Terrarium DEM</p>
+        </div>
+      </div>
+    ),
+  }
+);
+
 export type GisToolMode = 'EXPLORE' | 'PROFILE' | 'ISOCHRONES' | 'MORPHOMETRY';
 export type GisLayerKey = 'DEM' | 'RIVER' | 'SURGE' | 'SENSORS' | 'SHELTERS' | 'SLOPE';
 
@@ -231,7 +247,7 @@ export default function HyperLocalGISPage() {
                 }`}
               >
                 <Mountain className="w-3.5 h-3.5" />
-                <span>📐 3D CATCHMENT</span>
+                <span>⛰️ REAL 3D TERRAIN</span>
               </button>
               <button
                 onClick={() => setActiveMapView('NATIONAL_RIVERS')}
@@ -356,214 +372,8 @@ export default function HyperLocalGISPage() {
               />
             </div>
           ) : (
-            <div className="flex-1 relative w-full h-full bg-slate-950 overflow-hidden flex items-center justify-center p-0">
-              <svg
-              viewBox="0 0 800 500"
-              className="w-full h-full cursor-crosshair"
-              preserveAspectRatio={fitMode === 'MEET' ? 'xMidYMid meet' : 'xMidYMid slice'}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={() => setHoveredCoord(null)}
-            >
-              <defs>
-                <radialGradient id="highRiskHaloGis" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#E67E22" stopOpacity="0.75" />
-                  <stop offset="35%" stopColor="#E74C3C" stopOpacity="0.45" />
-                  <stop offset="70%" stopColor="#E67E22" stopOpacity="0.15" />
-                  <stop offset="100%" stopColor="#E67E22" stopOpacity="0.0" />
-                </radialGradient>
-
-                <radialGradient id="safeShelterGis" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#2ECC71" stopOpacity="0.5" />
-                  <stop offset="60%" stopColor="#2ECC71" stopOpacity="0.15" />
-                  <stop offset="100%" stopColor="#2ECC71" stopOpacity="0.0" />
-                </radialGradient>
-
-                <linearGradient id="slopeHeat" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#E74C3C" stopOpacity="0.4" />
-                  <stop offset="50%" stopColor="#F39C12" stopOpacity="0.2" />
-                  <stop offset="100%" stopColor="#2ECC71" stopOpacity="0.1" />
-                </linearGradient>
-
-                <filter id="gisNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="4" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-              </defs>
-
-              {/* Layer 1: Digital Elevation Model (DEM) Topographic Contours */}
-              {layers.DEM && (
-                <g>
-                  <path d="M 50,50 Q 200,20 400,60 T 750,40 L 780,480 L 20,480 Z" fill="#060e22" stroke="#122045" strokeWidth="1.5" />
-                  <path d="M 80,120 Q 240,90 440,140 T 720,110 L 750,480 L 50,480 Z" fill="#091430" stroke="#162a5c" strokeWidth="1.2" />
-                  <path d="M 120,200 Q 300,160 500,220 T 700,190 L 720,480 L 100,480 Z" fill="#0c1b40" stroke="#1c3675" strokeWidth="1.2" />
-                  <path d="M 160,300 Q 350,260 550,310 T 680,280 L 700,480 L 140,480 Z" fill="#0f2252" stroke="#244594" strokeWidth="1.2" />
-                  
-                  {/* Subtle Sub-Grid Gridlines */}
-                  <line x1="0" y1="125" x2="800" y2="125" stroke="rgba(0, 168, 232, 0.08)" strokeDasharray="4 8" />
-                  <line x1="0" y1="250" x2="800" y2="250" stroke="rgba(0, 168, 232, 0.08)" strokeDasharray="4 8" />
-                  <line x1="0" y1="375" x2="800" y2="375" stroke="rgba(0, 168, 232, 0.08)" strokeDasharray="4 8" />
-                  <line x1="200" y1="0" x2="200" y2="500" stroke="rgba(0, 168, 232, 0.08)" strokeDasharray="4 8" />
-                  <line x1="400" y1="0" x2="400" y2="500" stroke="rgba(0, 168, 232, 0.08)" strokeDasharray="4 8" />
-                  <line x1="600" y1="0" x2="600" y2="500" stroke="rgba(0, 168, 232, 0.08)" strokeDasharray="4 8" />
-
-                  {/* Elevation Spot Contours */}
-                  <text x="70" y="45" fill="#475569" fontSize="9" fontFamily="monospace">3,800m</text>
-                  <text x="95" y="115" fill="#475569" fontSize="9" fontFamily="monospace">3,200m</text>
-                  <text x="135" y="195" fill="#475569" fontSize="9" fontFamily="monospace">2,400m</text>
-                  <text x="175" y="295" fill="#475569" fontSize="9" fontFamily="monospace">1,600m</text>
-                </g>
-              )}
-
-              {/* Layer 2: Slope Gradient Heatmap */}
-              {layers.SLOPE && (
-                <g>
-                  <path d="M 50,50 Q 200,20 400,60 T 750,40 L 720,110 L 80,120 Z" fill="url(#slopeHeat)" />
-                  <text x="320" y="40" fill="#E74C3C" fontSize="10" fontWeight="bold" fontFamily="monospace">STEEP SLOPE: 38°-44°</text>
-                </g>
-              )}
-
-              {/* Layer 3: Dynamic Surge Corridor & Inundation Flood Envelope */}
-              {layers.SURGE && (
-                <g>
-                  <ellipse cx="480" cy="280" rx="190" ry="120" fill="url(#highRiskHaloGis)" className="animate-halo-pulse" />
-                  <ellipse cx="480" cy="280" rx="190" ry="120" fill="none" stroke="#E67E22" strokeWidth="1.8" strokeDasharray="6,4" className="opacity-90" />
-                  <ellipse cx="480" cy="280" rx="240" ry="155" fill="none" stroke="#F39C12" strokeWidth="1.2" strokeDasharray="4,4" className="opacity-60" />
-                  <text x="480" y="380" textAnchor="middle" fill="#E67E22" fontSize="10" fontWeight="bold" fontFamily="monospace">100-YR MODELED INUNDATION BUFFER</text>
-                </g>
-              )}
-
-              {/* Layer 4: Strahler River Stream Flow Network */}
-              {layers.RIVER && (
-                <g>
-                  {/* Order 3 Primary Channel */}
-                  <path d="M 180,90 Q 280,140 360,220 T 480,280 T 640,420" fill="none" stroke="#0073E6" strokeWidth="7" strokeLinecap="round" />
-                  <path
-                    d="M 180,90 Q 280,140 360,220 T 480,280 T 640,420"
-                    fill="none"
-                    stroke="#00A8E8"
-                    strokeWidth="3.5"
-                    strokeDasharray="14 18"
-                    className="flow-stream"
-                    filter="url(#gisNeonGlow)"
-                  />
-
-                  {/* Tributary 1 (Order 2) */}
-                  <path d="M 320,60 Q 330,140 360,220" fill="none" stroke="#1E90FF" strokeWidth="4" />
-                  <path
-                    d="M 320,60 Q 330,140 360,220"
-                    fill="none"
-                    stroke="#00A8E8"
-                    strokeWidth="2"
-                    strokeDasharray="8 14"
-                    className="flow-stream-fast"
-                  />
-
-                  {/* Tributary 2 (Order 1) */}
-                  <path d="M 520,110 Q 500,200 480,280" fill="none" stroke="#1E90FF" strokeWidth="3" />
-                </g>
-              )}
-
-              {/* Layer 5: Evacuation Isochrones (10m, 20m, 30m walk buffers) */}
-              {(layers.SHELTERS || activeTool === 'ISOCHRONES') && (
-                <g>
-                  {/* Candidate Route Vector */}
-                  <path
-                    d="M 480,280 Q 540,250 610,210"
-                    fill="none"
-                    stroke="#2ECC71"
-                    strokeWidth="3.5"
-                    strokeDasharray="8 8"
-                    className="flow-stream-slow"
-                    filter="url(#gisNeonGlow)"
-                  />
-                  {/* Shelter Isochrone Bands */}
-                  <circle cx="610" cy="210" r="50" fill="none" stroke="#2ECC71" strokeWidth="1.2" strokeDasharray="3,3" opacity="0.8" />
-                  <circle cx="610" cy="210" r="90" fill="none" stroke="#2ECC71" strokeWidth="1" strokeDasharray="4,4" opacity="0.5" />
-                  <circle cx="610" cy="210" r="140" fill="none" stroke="#2ECC71" strokeWidth="0.8" strokeDasharray="5,5" opacity="0.3" />
-                  <text x="610" y="155" textAnchor="middle" fill="#2ECC71" fontSize="9" fontFamily="monospace">10 min isochrone</text>
-                  <text x="610" y="115" textAnchor="middle" fill="#2ECC71" fontSize="9" fontFamily="monospace">20 min isochrone</text>
-                </g>
-              )}
-
-              {/* Interactive Point Nodes */}
-              {layers.SENSORS &&
-                mapNodes.map((node) => {
-                  const isSelected = selectedNode?.id === node.id;
-                  const isShelter = node.type === 'SHELTER';
-                  const isHigh = node.risk === 'HIGH';
-                  const nodeColor = isShelter ? '#2ECC71' : isHigh ? '#E67E22' : '#00A8E8';
-
-                  return (
-                    <g
-                      key={node.id}
-                      className="cursor-pointer transition-all duration-300 group"
-                      onClick={() => {
-                        setSelectedNode(node);
-                        setMobileSheetTab('INSPECTOR');
-                        setMobileSheetOpen(true);
-                      }}
-                    >
-                      {/* Outer Pulsing Aura for High Risk / Selected */}
-                      {(isSelected || (isHigh && !isShelter)) && (
-                        <circle cx={node.x} cy={node.y} r={isSelected ? '28' : '22'} fill="none" stroke={isHigh ? '#E67E22' : '#00A8E8'} strokeWidth="2" className="animate-halo-pulse" />
-                      )}
-
-                      {/* Shelter Aura */}
-                      {isShelter && (
-                        <circle cx={node.x} cy={node.y} r="20" fill="url(#safeShelterGis)" className="animate-pulse" />
-                      )}
-
-                      <circle
-                        cx={node.x}
-                        cy={node.y}
-                        r={isSelected ? '14' : isHigh ? '13' : '10'}
-                        fill={nodeColor}
-                        stroke="#ffffff"
-                        strokeWidth={isSelected ? '3.5' : '2'}
-                        filter="url(#gisNeonGlow)"
-                        className={isHigh && !isShelter ? 'animate-color-shift' : ''}
-                      />
-
-                      {/* Label Box */}
-                      <rect
-                        x={node.x - 65}
-                        y={node.y + 16}
-                        width="130"
-                        height="26"
-                        rx="6"
-                        fill="rgba(8, 15, 30, 0.85)"
-                        stroke="rgba(0, 168, 232, 0.3)"
-                        strokeWidth="0.8"
-                      />
-                      <text
-                        x={node.x}
-                        y={node.y + 28}
-                        textAnchor="middle"
-                        fill="#ffffff"
-                        fontSize="10"
-                        fontWeight="bold"
-                        fontFamily="monospace"
-                      >
-                        {node.name.split(' (')[0]}
-                      </text>
-
-                      <text
-                        x={node.x}
-                        y={node.y + 38}
-                        textAnchor="middle"
-                        fill={nodeColor}
-                        fontSize="9"
-                        fontWeight="bold"
-                        fontFamily="monospace"
-                      >
-                        {node.value}
-                      </text>
-                    </g>
-                  );
-                })}
-            </svg>
-          </div>
-        )}
+            <Real3DTerrainCatchment location={selectedLocation} />
+          )}
 
           {/* Desktop Left-Floating GIS Layer Control Box (Schematic only) */}
           {gisRenderMode === 'SCHEMATIC' && panelsOpen && (

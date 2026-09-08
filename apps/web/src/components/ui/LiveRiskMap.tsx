@@ -150,7 +150,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         riskScore: 12.0,
         riskLevel: 'LOW',
         color: SPEC_COLORS.risk.safe,
-        trend: 'SAFE ZONE',
+        trend: 'LOWEST EXPOSURE',
         capacity: 450,
         desc: `Designated elevated assembly point on high ground in ${loc.state}.`,
       },

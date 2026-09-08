@@ -109,7 +109,7 @@ export default function CommandCenterPage() {
                     href="/safety"
                     className="px-3 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow-lg transition active:scale-95"
                   >
-                    <Compass className="w-3.5 h-3.5" /> SAFE ROUTE
+                    <Compass className="w-3.5 h-3.5" /> CANDIDATE ROUTE
                   </Link>
                   <button
                     onClick={() => {
@@ -143,8 +143,8 @@ export default function CommandCenterPage() {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <Link href="/safety" className="px-3 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow-lg transition active:scale-95">
-                  <Compass className="w-3.5 h-3.5" /> SAFE ROUTE
+                  <Link href="/safety" className="px-3 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow-lg transition active:scale-95">
+                  <Compass className="w-3.5 h-3.5" /> CANDIDATE ROUTE
                 </Link>
                 <button
                   onClick={() => { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('open-emergency-modal')); }}

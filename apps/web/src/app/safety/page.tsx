@@ -105,7 +105,7 @@ export default function MySafetyPage() {
       status: 'OUTSIDE_RISK_AREA',
       risk: 'LOW',
       guidanceLvl: 0,
-      title: `YOU ARE IN A SAFE ZONE · NO ACTIVE FLOOD RISK`,
+      title: `NO ACTIVE RIVER FLOOD INUNDATION DETECTED · ELEVATED GROUND`,
       msg: `Your coordinates in ${locState} (${activeLat.toFixed(4)}°N, ${activeLon.toFixed(4)}°E) are situated on dry roadway and elevated terrain with no river inundation detected. Routine monitoring active.`,
       isSafe: true,
     },
@@ -223,11 +223,11 @@ export default function MySafetyPage() {
             <div>
               <div className="flex items-center gap-2.5">
                 <span className={`chip ${isSafeZone ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'chip-live'}`}>
-                  {isSafeZone ? 'SAFE STATUS' : 'DECISION SUPPORT'}
+                  {isSafeZone ? 'ELEVATED GROUND' : 'DECISION SUPPORT'}
                 </span>
                 <h1 className="text-xl font-black text-white flex items-center gap-2 tracking-tight">
                   <Compass className="w-5 h-5 text-cyan-400 animate-spin-slow" />
-                  MY SAFETY &amp; CONSERVATIVE ESCAPE GUIDANCE
+                  CONSERVATIVE ESCAPE &amp; EVACUATION GUIDANCE
                 </h1>
               </div>
               <p className="text-xs text-slate-400 mt-1 font-sans">
@@ -279,7 +279,7 @@ export default function MySafetyPage() {
             </div>
             <p className="text-slate-200 leading-relaxed font-sans text-xs">
               {isSafeZone
-                ? `Local authorities confirm that ${locName} in ${locState} is currently in a normal, elevated safe zone with dry roads and no active flood inundation. Standard meteorological monitoring remains active.`
+                ? `Local authorities confirm that ${locName} in ${locState} is currently in a normal, elevated area with dry roads and no active river inundation. Standard meteorological monitoring remains active.`
                 : `Local administration in ${locRegion} advises all residents in low-lying corridors of ${locName} to stay alert, avoid crossing swollen streams, and monitor siren broadcasts.`}
             </p>
           </div>
@@ -307,7 +307,7 @@ export default function MySafetyPage() {
                       : 'bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800'
                   }`}
                 >
-                  {idx === 0 ? '✅ SAFE ZONE (0)' : idx === 1 ? '🟡 NEAR (1)' : idx === 2 ? '🟠 HIGH RISK (2)' : '🔴 CRITICAL (3)'}
+                  {idx === 0 ? '✅ LOWEST EXPOSURE (0)' : idx === 1 ? '🟡 NEAR (1)' : idx === 2 ? '🟠 HIGH RISK (2)' : '🔴 CRITICAL (3)'}
                 </button>
               ))}
             </div>
