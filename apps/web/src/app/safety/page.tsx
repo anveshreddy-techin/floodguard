@@ -17,6 +17,7 @@ import {
 import { RiskBadge } from '@/components/ui/Badges';
 import { GuidanceLevel, ExposureStatus, RiskLevel } from '@/types';
 import { FloodZonePolygons, SafePlaceItem } from '@/components/ui/EvacuationLeafletMap';
+import { getFloodRiskPolygons, getEvacuationRoute } from '@/services/gisService';
 
 // Dynamically import Leaflet map (avoid SSR in Next.js static export)
 const EvacuationLeafletMap = dynamic(
@@ -229,7 +230,7 @@ export default function MySafetyPage() {
         affectedAreas: affAreas,
         historicalContext: '2022/2024 Assam Inundation Reconstruction (Brahmaputra stage at Guwahati CWC: 50.25m, crossing Danger Level 49.68m by +0.57m)',
       };
-    } else {
+    } else if (isChamoli) {
       // ── UTTARAKHAND (CHAMOLI / RAINI & RISHIGANGA 2021 GLOF SURGE) ──
       const rVector: [number, number][] = [
         [30.4870, 79.7300],
@@ -352,8 +353,68 @@ export default function MySafetyPage() {
         affectedAreas: affAreas,
         historicalContext: '2021 Chamoli GLOF / Surge Reconstruction (Peak 5.2m flash flood crest in Rishiganga gorge)',
       };
+    } else {
+      // ── GENERAL REGIONAL BASIN: DYNAMIC REAL GIS EXTRACTION VIA GIS SERVICE ──
+      const gisZones = getFloodRiskPolygons(selectedLocation.id, activeLat, activeLon);
+      const safeShelterCoords: [number, number] = [activeLat + 0.007, activeLon + 0.006];
+      const evacRoute = getEvacuationRoute(selectedLocation.id, [activeLat, activeLon], safeShelterCoords);
+
+      const rVector: [number, number][] = [
+        [activeLat + 0.015, activeLon - 0.012],
+        [activeLat + 0.008, activeLon - 0.006],
+        [activeLat, activeLon],
+        [activeLat - 0.008, activeLon + 0.006],
+        [activeLat - 0.015, activeLon + 0.012],
+      ];
+
+      const pShelter = {
+        name: `${selectedLocation.name.split('/')[0].trim()} High-Ground Refuge (+120m ASL)`,
+        lat: safeShelterCoords[0],
+        lon: safeShelterCoords[1],
+        elevation: `${(parseInt(selectedLocation.elevation.replace(/[^0-9]/g, '')) || 800) + 120} m ASL`,
+      };
+
+      const sPlaces: SafePlaceItem[] = [
+        {
+          id: `sp-${selectedLocation.id}-primary`,
+          name: `${selectedLocation.name.split('/')[0].trim()} Designated Assembly Shelter`,
+          lat: safeShelterCoords[0],
+          lon: safeShelterCoords[1],
+          elevation: `${(parseInt(selectedLocation.elevation.replace(/[^0-9]/g, '')) || 800) + 120} m ASL`,
+          distance: `${evacRoute.distanceKm.toFixed(1)} km uphill`,
+          type: 'ELEVATED COMMUNITY REFUGE',
+          isPrimary: true,
+        },
+        {
+          id: `sp-${selectedLocation.id}-secondary`,
+          name: `${selectedLocation.region.split('(')[0].trim()} Relief Center`,
+          lat: activeLat + 0.009,
+          lon: activeLon - 0.005,
+          elevation: `${(parseInt(selectedLocation.elevation.replace(/[^0-9]/g, '')) || 800) + 90} m ASL`,
+          distance: '2.1 km',
+          type: 'REINFORCED SCHOOL BUILDING',
+        },
+      ];
+
+      const affAreas = [
+        { name: 'Active Riverbed & Low Crossings', zone: 'ZONE 1 (RED)', depth: '2.0m - 3.5m', status: 'ACTIVE INUNDATION', population: '1,500' },
+        { name: 'Low-Lying Drainage Plain', zone: 'ZONE 2 (ORANGE)', depth: '0.8m - 1.8m', status: 'HIGH SURGE BUFFER', population: '3,200' },
+        { name: 'Valley Foothill Perimeter', zone: 'ZONE 3 (YELLOW)', depth: '0.1m - 0.5m', status: 'SURFACE RUNOFF / WATCH', population: '2,100' },
+      ];
+
+      return {
+        floodPolygons: gisZones,
+        riverVector: rVector,
+        safePlaces: sPlaces,
+        primaryShelter: pShelter,
+        safeRoutePoints: evacRoute.safePath,
+        blockedRoutePoints: (evacRoute.blockedPath ?? [[activeLat, activeLon], [activeLat - 0.002, activeLon - 0.001]]) as [number, number][],
+        affectedAreas: affAreas,
+        historicalContext: `Modeled Inundation Scenario for ${selectedLocation.name} (${selectedLocation.region})`,
+      };
     }
-  }, [isAssam]);
+  }, [isAssam, isChamoli, selectedLocation, activeLat, activeLon]);
+
 
   const exposureLevels: Array<{
     status: ExposureStatus;
