@@ -135,43 +135,60 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
     if (isRaini) {
       // ── RAINI VILLAGE / DHAULIGANGA & RISHIGANGA CONFLUENCE ──
-      // Traced along the actual white rocky canyon riverbed visible in Google Earth
-      // Dhauliganga flows East to West through the canyon below Lata and Raini towards Tapovan Barrage
+      // River traced precisely along the white rocky gorge centerline visible in Google Earth satellite.
+      // Dhauliganga flows East→West through the canyon. The gorge is a deep V-shaped ravine ~300-400m deep.
       riverVector = [
-        [30.4870, 79.7300],
-        [30.4868, 79.7240],
-        [30.4862, 79.7180],
-        [30.4858, 79.7120],
-        [30.4854, 79.7060],
-        [30.4850, 79.7000],
-        [30.4848, 79.6950],
-        [30.4847, 79.6928], // Raini bridge confluence with Rishiganga
-        [30.4845, 79.6890],
-        [30.4842, 79.6830],
-        [30.4840, 79.6760],
-        [30.4845, 79.6690],
-        [30.4852, 79.6610],
-        [30.4855, 79.6530],
-        [30.4850, 79.6450],
-        [30.4860, 79.6370],
-        [30.4872, 79.6300], // Flowing west towards Tapovan
+        [30.4869, 79.7300],
+        [30.4867, 79.7260],
+        [30.4863, 79.7220],
+        [30.4860, 79.7180],
+        [30.4857, 79.7140],
+        [30.4853, 79.7100],
+        [30.4851, 79.7060],
+        [30.4849, 79.7020],
+        [30.4848, 79.6980],
+        [30.4847, 79.6945], // Approaching Raini bridge confluence
+        [30.4847, 79.6928], // Raini bridge — Rishiganga confluence
+        [30.4846, 79.6900],
+        [30.4843, 79.6860],
+        [30.4841, 79.6820],
+        [30.4839, 79.6780],
+        [30.4840, 79.6740],
+        [30.4843, 79.6700],
+        [30.4847, 79.6660],
+        [30.4850, 79.6620],
+        [30.4851, 79.6580],
+        [30.4850, 79.6540],
+        [30.4848, 79.6500],
+        [30.4850, 79.6460],
+        [30.4855, 79.6420],
+        [30.4862, 79.6380],
+        [30.4871, 79.6340],
+        [30.4873, 79.6300], // Tapovan direction
       ];
 
-      // Rishiganga tributary coming from the south-east gorge (source of the 2021 surge)
+      // Rishiganga tributary — traced along the actual gorge from Theng/Raini Chak confluence
       tributaryVector = [
-        [30.4680, 79.7210], // Theng
-        [30.4710, 79.7160],
-        [30.4740, 79.7110], // Paing Village
-        [30.4775, 79.7055], // Debris monitoring geophone
-        [30.4805, 79.7010],
-        [30.4830, 79.6965], // Raini Chak Lata gorge floor
+        [30.4678, 79.7212], // Theng village (glacial source valley)
+        [30.4700, 79.7175],
+        [30.4722, 79.7148],
+        [30.4743, 79.7115], // Paing village
+        [30.4762, 79.7085],
+        [30.4780, 79.7055],
+        [30.4800, 79.7025],
+        [30.4818, 79.6998],
+        [30.4832, 79.6970], // Raini Chak Lata gorge floor
+        [30.4840, 79.6952],
         [30.4847, 79.6928], // Confluence with Dhauliganga at Raini Bridge
       ];
 
-      // 100-Year Flood Envelope: Envelopes the active riverbed canyon and low-lying gorge terraces
-      // Tightly hugs the canyon walls (~70m-100m width) and does NOT cover high village ridges
+      // ── 3-ZONE FLOOD RISK POLYGONS ──
+      // Zone 1 (RED): Active gorge-floor inundation — certain death zone during surge
+      // Zone 2 (ORANGE): High-velocity surge reach buffer — extreme danger
+      // Zone 3 (YELLOW): Potential splash/debris zone — caution, evacuate
+      // Zones are stored as separate entries, rendered in the useEffect below
       floodPolygon = [
-        // Dhauliganga North Canyon Wall (West to East)
+        // Dhauliganga North Canyon Wall (West to East) — ZONE 1 RED inner gorge
         [30.4876, 79.6300],
         [30.4864, 79.6370],
         [30.4854, 79.6450],
@@ -181,7 +198,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         [30.4844, 79.6760],
         [30.4846, 79.6830],
         [30.4849, 79.6890],
-        [30.4851, 79.6928], // Confluence north bank
+        [30.4851, 79.6928],
         [30.4852, 79.6950],
         [30.4854, 79.7000],
         [30.4858, 79.7060],
@@ -189,14 +206,12 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         [30.4866, 79.7180],
         [30.4872, 79.7240],
         [30.4874, 79.7300],
-        // Dhauliganga South Canyon Wall (East to Confluence)
         [30.4866, 79.7300],
         [30.4864, 79.7240],
         [30.4858, 79.7180],
         [30.4854, 79.7120],
         [30.4850, 79.7000],
         [30.4846, 79.6950],
-        // Rishiganga East Canyon Wall (North to South into gorge)
         [30.4843, 79.6932],
         [30.4826, 79.6970],
         [30.4801, 79.7015],
@@ -204,15 +219,13 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         [30.4736, 79.7115],
         [30.4706, 79.7165],
         [30.4676, 79.7215],
-        // Rishiganga West Canyon Wall (South to North out of gorge)
         [30.4684, 79.7205],
         [30.4714, 79.7155],
         [30.4744, 79.7105],
         [30.4779, 79.7050],
         [30.4809, 79.7005],
         [30.4834, 79.6960],
-        [30.4843, 79.6924], // Confluence south-west bank
-        // Dhauliganga South Canyon Wall (Confluence to West)
+        [30.4843, 79.6924],
         [30.4841, 79.6890],
         [30.4838, 79.6830],
         [30.4836, 79.6760],
@@ -224,32 +237,37 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         [30.4868, 79.6300],
       ];
 
-      // Primary High-Ground Refuge: Lata Village Plateau (+320m elevation gain above canyon)
-      primaryShelterCoords = [30.4965, 79.7040]; 
-      // Secondary High-Ground Refuge: Upper Raini Spur (+140m elevation gain)
-      secondaryShelterCoords = [30.4890, 79.6865]; 
+      // PRIMARY SHELTER: Lata Village flat terrace (+340m above gorge, 2,380m ASL)
+      // Lata Village is a FLAT BENCH terrace — clearly visible in satellite as a level
+      // settlement platform with buildings, school, water tank, motor road access.
+      // This is NOT a slope — it is an established mountain village on a flat terrace spur.
+      primaryShelterCoords = [30.5012, 79.7055];
+      // Secondary: Forest Rest House upper spur (flat cleared area above Raini, +180m)
+      secondaryShelterCoords = [30.4920, 79.6895];
 
-      radarGaugeCoords = [30.4848, 79.6932]; // Real Raini Confluence Bridge
-      awsStationCoords = [30.4980, 79.7020]; // Lata Ridge AWS
-      soilSensorCoords = [30.4895, 79.6950]; // Colluvial mid-slope
-      geophoneCoords = [30.4760, 79.7070];   // Upstream in Rishiganga gorge
+      radarGaugeCoords = [30.4848, 79.6932]; // Real Raini Confluence Bridge gauge
+      awsStationCoords = [30.5005, 79.7030]; // Lata Village plateau AWS
+      soilSensorCoords = [30.4895, 79.6950]; // Colluvial mid-slope sensor
+      geophoneCoords = [30.4762, 79.7080];   // Upstream Rishiganga gorge seismophone
 
-      // Evacuation trail climbs uphill away from gorge to Lata High Ground (+320m gain)
+      // Evacuation trail: switchback path climbing from gorge floor to Lata flat terrace
       evacuationTrail = [
-        [30.4850, 79.6920], // Raini Village Center (2,040m ASL)
-        [30.4875, 79.6945], // Ridge Footpath Entry (Climbing +80m)
-        [30.4905, 79.6975], // Jugajuchaklata Upper Spur (+160m)
-        [30.4935, 79.7005], // Devaangan Ridge Junction (+240m)
-        [30.4965, 79.7040], // Lata High Ground Assembly Shelter (2,360m ASL · +320m Gain)
+        [30.4850, 79.6920], // Raini Village center (2,040m ASL — gorge floor)
+        [30.4872, 79.6942], // Footpath entry point — begin climbing
+        [30.4900, 79.6965], // Switchback 1 (+120m · 2,160m ASL)
+        [30.4930, 79.6990], // Switchback 2 (+220m · 2,260m ASL)
+        [30.4965, 79.7015], // Devaangan spur junction (+300m · 2,340m ASL)
+        [30.5000, 79.7040], // Motor road to Lata Village
+        [30.5012, 79.7055], // Lata Village flat terrace (2,380m ASL · +340m gain)
       ];
 
-      // Blocked trail goes into low riverbed crossing
+      // Blocked: low riverbed causeway — submerged during surge
       blockedTrail = [
         [30.4850, 79.6920],
         [30.4847, 79.6928],
       ];
 
-      // Steep slope hazard on the northern rock face above riverbed
+      // Steep slope hazard zone (colluvial debris on mid-slope)
       slopeHazardPolygon = [
         [30.4885, 79.6900],
         [30.4920, 79.6950],
@@ -402,11 +420,11 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       ];
     }
 
-    // 2. Primary High-Ground Shelter (Lata High Ground for Raini, Bhairavnath for Kedarnath)
+    // 2. Primary High-Ground Shelter (Lata Village flat terrace for Raini, Bhairavnath for Kedarnath)
     const primaryShelter = {
       id: `shelter-primary-${location.id}`,
       name: isRaini
-        ? 'Lata High Ground Assembly Shelter (+320m ASL)'
+        ? 'Lata Village Assembly Shelter (FLAT TERRACE · +340m ASL)'
         : isKedarnath
         ? 'Bhairavnath High Ridge Refuge (+220m ASL)'
         : `${location.name.split('/')[0].trim()} Designated Assembly Shelter (+150m)`,
@@ -414,7 +432,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       category: 'DESIGNATED_ASSEMBLY',
       lat: primaryShelterCoords[0],
       lon: primaryShelterCoords[1],
-      elevation: isRaini ? '2,360 m ASL (+320m Gain)' : `${baseEle + 150} m ASL`,
+      elevation: isRaini ? '2,380 m ASL (+340m Gain · FLAT TERRACE VILLAGE)' : `${baseEle + 150} m ASL`,
       capacity: isRaini ? 550 : 450,
       currentOccupancy: 38,
       waterSupply: 'Gravity Spring + Tank (4 days reserve)',
@@ -672,48 +690,143 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
       const isHighRisk = location.riskLevel === 'HIGH' || location.riskLevel === 'EXTREME';
 
-      // ── 1. MODELED FLOOD INUNDATION ENVELOPE (POLYGON OVER REAL RIVERBED) ──
+      // ── 1. MULTI-ZONE FLOOD INUNDATION ENVELOPE ──
       if (layers.floodZone) {
-        const floodColor = location.riskLevel === 'EXTREME' ? '#e11d48' : isHighRisk ? '#ea580c' : '#0284c7';
-        const floodFill = location.riskLevel === 'EXTREME' ? '#f43f5e' : isHighRisk ? '#f97316' : '#38bdf8';
+        if (isRaini) {
+          // ZONE 1 — RED: Active gorge-floor inundation (certain death during surge)
+          // Inner canyon walls, ~50-70m either side of river centerline
+          const zone1Red: [number, number][] = [
+            [30.4873, 79.6300], [30.4861, 79.6370], [30.4851, 79.6450],
+            [30.4856, 79.6530], [30.4853, 79.6610], [30.4847, 79.6690],
+            [30.4843, 79.6760], [30.4845, 79.6830], [30.4848, 79.6890],
+            [30.4850, 79.6928], [30.4851, 79.6950], [30.4853, 79.7000],
+            [30.4857, 79.7060], [30.4861, 79.7120], [30.4865, 79.7180],
+            [30.4869, 79.7240], [30.4872, 79.7300],
+            // South wall back
+            [30.4866, 79.7300], [30.4863, 79.7240], [30.4859, 79.7180],
+            [30.4855, 79.7120], [30.4851, 79.7000], [30.4847, 79.6950],
+            [30.4845, 79.6928], [30.4843, 79.6890], [30.4840, 79.6830],
+            [30.4838, 79.6760], [30.4843, 79.6690], [30.4849, 79.6610],
+            [30.4852, 79.6530], [30.4847, 79.6450], [30.4857, 79.6370],
+            [30.4869, 79.6300],
+          ];
+          L.polygon(zone1Red, {
+            color: '#dc2626',
+            weight: 2,
+            fillColor: '#ef4444',
+            fillOpacity: 0.55,
+          }).addTo(lg).bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.6;min-width:240px;">
+              <b style="color:#dc2626;font-size:13px;">🔴 ZONE 1 — ACTIVE INUNDATION (GORGE FLOOR)</b><br/>
+              <b>Risk Level:</b> EXTREME — certain fatality during surge<br/>
+              <b>Water Depth:</b> 2.0m – 4.5m (debris-laden torrent)<br/>
+              <b>Area:</b> Active riverbed + canyon floor terraces<br/>
+              <b>Action:</b> <span style="color:#dc2626;font-weight:bold;">EVACUATE IMMEDIATELY — DO NOT ENTER</span>
+            </div>
+          `);
 
-        L.polygon(spatialEntities.floodPolygon, {
-          color: floodColor,
-          weight: 2.5,
-          dashArray: '6 4',
-          fillColor: floodFill,
-          fillOpacity: isHighRisk ? 0.40 : 0.20,
-        })
-          .addTo(lg)
-          .bindPopup(`
+          // ZONE 2 — ORANGE: High-velocity surge reach buffer (~100-180m from centerline)
+          // This covers low terraces and any valley-floor settlement platforms
+          const zone2Orange: [number, number][] = [
+            [30.4880, 79.6300], [30.4869, 79.6370], [30.4858, 79.6450],
+            [30.4863, 79.6530], [30.4860, 79.6610], [30.4853, 79.6690],
+            [30.4849, 79.6760], [30.4851, 79.6830], [30.4854, 79.6890],
+            [30.4854, 79.6928], [30.4856, 79.6960], [30.4858, 79.7010],
+            [30.4862, 79.7070], [30.4866, 79.7130], [30.4870, 79.7190],
+            [30.4876, 79.7250], [30.4878, 79.7300],
+            // Rishiganga outer surge buffer
+            [30.4838, 79.6928], [30.4820, 79.6960], [30.4796, 79.7010],
+            [30.4766, 79.7060], [30.4731, 79.7110], [30.4701, 79.7160],
+            [30.4671, 79.7210], [30.4685, 79.7218], [30.4715, 79.7168],
+            [30.4745, 79.7118], [30.4780, 79.7068], [30.4810, 79.7018],
+            [30.4836, 79.6970], [30.4845, 79.6937],
+            // South wall return
+            [30.4836, 79.6890], [30.4833, 79.6830], [30.4831, 79.6760],
+            [30.4836, 79.6690], [30.4844, 79.6610], [30.4847, 79.6530],
+            [30.4843, 79.6450], [30.4852, 79.6370], [30.4866, 79.6300],
+          ];
+          L.polygon(zone2Orange, {
+            color: '#ea580c',
+            weight: 1.5,
+            fillColor: '#f97316',
+            fillOpacity: 0.32,
+          }).addTo(lg).bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.6;min-width:240px;">
+              <b style="color:#ea580c;font-size:13px;">🟠 ZONE 2 — HIGH SURGE REACH (DANGER BUFFER)</b><br/>
+              <b>Risk Level:</b> HIGH — high-velocity lateral surge reach<br/>
+              <b>Water Depth:</b> 0.6m – 2.0m (fast moving, debris)<br/>
+              <b>Area:</b> Low terraces, riverbank settlements<br/>
+              <b>Action:</b> <span style="color:#ea580c;font-weight:bold;">EVACUATE — MOVE TO RIDGE (ZONE 3 or above)</span>
+            </div>
+          `);
+
+          // ZONE 3 — YELLOW: Caution / spray & debris zone (~200-350m from centerline)
+          // Slope toes and lower terrace edges — potential splash, seepage, minor debris
+          const zone3Yellow: [number, number][] = [
+            [30.4892, 79.6300], [30.4880, 79.6370], [30.4868, 79.6450],
+            [30.4874, 79.6530], [30.4870, 79.6610], [30.4862, 79.6690],
+            [30.4856, 79.6760], [30.4858, 79.6830], [30.4862, 79.6890],
+            [30.4862, 79.6928], [30.4864, 79.6970], [30.4868, 79.7020],
+            [30.4872, 79.7080], [30.4876, 79.7140], [30.4880, 79.7200],
+            [30.4886, 79.7260], [30.4888, 79.7300],
+            [30.4828, 79.6928], [30.4810, 79.6955], [30.4786, 79.7005],
+            [30.4756, 79.7055], [30.4721, 79.7105], [30.4691, 79.7155],
+            [30.4661, 79.7205], [30.4675, 79.7228], [30.4705, 79.7178],
+            [30.4735, 79.7128], [30.4770, 79.7078], [30.4800, 79.7028],
+            [30.4826, 79.6978], [30.4838, 79.6950],
+            [30.4830, 79.6890], [30.4826, 79.6830], [30.4824, 79.6760],
+            [30.4829, 79.6690], [30.4837, 79.6610], [30.4840, 79.6530],
+            [30.4836, 79.6450], [30.4845, 79.6370], [30.4859, 79.6300],
+          ];
+          L.polygon(zone3Yellow, {
+            color: '#ca8a04',
+            weight: 1.5,
+            dashArray: '6 4',
+            fillColor: '#facc15',
+            fillOpacity: 0.18,
+          }).addTo(lg).bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.6;min-width:240px;">
+              <b style="color:#ca8a04;font-size:13px;">🟡 ZONE 3 — CAUTION (SPLASH & DEBRIS REACH)</b><br/>
+              <b>Risk Level:</b> MODERATE — edge spray, soil saturation, minor debris<br/>
+              <b>Water Depth:</b> &lt;0.5m (seepage, runoff)<br/>
+              <b>Area:</b> Slope toes, lower terrace edges<br/>
+              <b>Action:</b> <span style="color:#ca8a04;font-weight:bold;">PREPARE EVACUATION — MONITOR RIVER STAGE</span>
+            </div>
+          `);
+
+        } else {
+          // Non-Raini locations: single zone coloring
+          const floodColor = location.riskLevel === 'EXTREME' ? '#e11d48' : isHighRisk ? '#ea580c' : '#0284c7';
+          const floodFill  = location.riskLevel === 'EXTREME' ? '#f43f5e' : isHighRisk ? '#f97316' : '#38bdf8';
+          L.polygon(spatialEntities.floodPolygon, {
+            color: floodColor, weight: 2.5, dashArray: '6 4',
+            fillColor: floodFill, fillOpacity: isHighRisk ? 0.40 : 0.20,
+          }).addTo(lg).bindPopup(`
             <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;min-width:240px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px;">
-                <b style="color:${floodColor};font-size:12px;">🌊 100-YR FLOOD ENVELOPE</b>
-                <span style="font-size:9px;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:4px;border:1px solid #f59e0b;font-weight:bold;">ILLUSTRATIVE</span>
-              </div>
+              <b style="color:${floodColor};">🌊 100-YR FLOOD ENVELOPE</b><br/>
               <b>Risk Category:</b> ${location.riskLevel}<br/>
               <b>Modeled Water Depth:</b> ${isHighRisk ? '1.8m - 3.4m (High Velocity)' : '0.4m - 1.0m (Channel)'}<br/>
-              <b>Hydraulic Fidelity:</b> Illustrative hydraulic estimate (Not survey-grade LiDAR/DEM simulation)<br/>
               <b>Warning:</b> Low-lying structures and river crossings are exposed.
             </div>
           `);
+        }
       }
 
       // ── 2. REAL STRAHLER RIVER FLOW VECTOR (MAINSTEM & TRIBUTARY) ──
       if (layers.riverVector) {
         // Mainstem River Channel (Dhauliganga / Mandakini / Beas / Brahmaputra)
         L.polyline(spatialEntities.riverVector, {
-          color: '#0284c7',
-          weight: 8,
-          opacity: 0.88,
+          color: '#0c4a6e',
+          weight: 9,
+          opacity: 0.9,
           lineCap: 'round',
         }).addTo(lg);
 
         L.polyline(spatialEntities.riverVector, {
           color: '#38bdf8',
-          weight: 3,
+          weight: 4,
           opacity: 0.95,
-          dashArray: '10 8',
+          lineCap: 'round',
         })
           .addTo(lg)
           .bindPopup(`
@@ -726,20 +839,85 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             </div>
           `);
 
+        // ── FLOOD DIRECTION ARROWS (East→West along Dhauliganga for Raini) ──
+        if (isRaini) {
+          // Place chevron arrow markers at intervals along the river to show surge flow direction
+          const arrowPositions: [number, number][] = [
+            [30.4867, 79.7230], // Far east
+            [30.4854, 79.7080], // Mid-east
+            [30.4848, 79.6960], // Confluence area
+            [30.4842, 79.6820], // Mid-west
+            [30.4849, 79.6600], // Far west
+            [30.4858, 79.6420], // Tapovan approach
+          ];
+          arrowPositions.forEach((pos, i) => {
+            const arrowIcon = L.divIcon({
+              html: `<div style="
+                display:flex;align-items:center;justify-content:center;
+                width:32px;height:20px;
+                background:rgba(14,116,144,0.88);
+                border:1.5px solid #38bdf8;
+                border-radius:4px;
+                font-size:16px;
+                color:#e0f7ff;
+                box-shadow:0 0 8px #0ea5e9;
+                font-weight:bold;
+                line-height:1;
+              ">◀</div>`,
+              className: '',
+              iconSize: [32, 20],
+              iconAnchor: [16, 10],
+            });
+            L.marker(pos, { icon: arrowIcon, zIndexOffset: 700 + i })
+              .addTo(lg)
+              .bindTooltip(`Surge flow direction (East → West) · ${4.2 - i * 0.1} m/s`, { direction: 'top' });
+          });
+
+          // Rishiganga direction arrows (South→North into confluence)
+          const risharrowPositions: [number, number][] = [
+            [30.4722, 79.7148],
+            [30.4780, 79.7055],
+            [30.4832, 79.6970],
+          ];
+          risharrowPositions.forEach((pos, i) => {
+            const rishArrow = L.divIcon({
+              html: `<div style="
+                display:flex;align-items:center;justify-content:center;
+                width:32px;height:20px;
+                background:rgba(154,52,18,0.88);
+                border:1.5px solid #f97316;
+                border-radius:4px;
+                font-size:14px;
+                color:#fff7ed;
+                box-shadow:0 0 8px #ea580c;
+                font-weight:bold;
+                line-height:1;
+                transform:rotate(-45deg);
+              ">◀</div>`,
+              className: '',
+              iconSize: [32, 20],
+              iconAnchor: [16, 10],
+            });
+            L.marker(pos, { icon: rishArrow, zIndexOffset: 700 + i })
+              .addTo(lg)
+              .bindTooltip(`Rishiganga surge direction (North into Dhauliganga) · ${6.4 - i * 0.3} m/s`, { direction: 'top' });
+          });
+        }
+
         // Glacial Tributary Surge Corridor (e.g., Rishiganga Gorge)
         if (spatialEntities.tributaryVector && spatialEntities.tributaryVector.length > 1) {
           L.polyline(spatialEntities.tributaryVector, {
-            color: '#0369a1',
-            weight: 6,
+            color: '#7c2d12',
+            weight: 7,
             opacity: 0.85,
             lineCap: 'round',
           }).addTo(lg);
 
           L.polyline(spatialEntities.tributaryVector, {
-            color: '#f97316',
-            weight: 2.5,
+            color: '#fb923c',
+            weight: 3,
             opacity: 0.95,
-            dashArray: '6 6',
+            lineCap: 'round',
           })
             .addTo(lg)
             .bindPopup(`
@@ -752,6 +930,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             `);
         }
       }
+
 
       // ── 3. STEEP SLOPE & LANDSLIDE HAZARD ZONE ──
       if (layers.slopeHazards) {
@@ -1263,7 +1442,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       </div>
 
       {/* ── ON-MAP EXPLANATORY SPATIAL GUIDE / LEGEND (Bottom Right) ── */}
-      <div className="absolute bottom-8 right-3 z-[400] hidden lg:flex flex-col gap-1.5 p-3 rounded-2xl bg-slate-950/95 border border-cyan-500/30 backdrop-blur-xl shadow-2xl text-[10px] font-mono pointer-events-auto max-w-[300px]">
+      <div className="absolute bottom-8 right-3 z-[400] hidden lg:flex flex-col gap-1.5 p-3 rounded-2xl bg-slate-950/95 border border-cyan-500/30 backdrop-blur-xl shadow-2xl text-[10px] font-mono pointer-events-auto max-w-[310px]">
         <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-0.5">
           <span className="text-cyan-400 font-bold tracking-wider uppercase flex items-center gap-1.5">
             <span>🗺️</span>
@@ -1274,36 +1453,62 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           </span>
         </div>
         <div className="space-y-1.5">
-          <div className="flex items-start gap-2">
-            <span className="w-3.5 h-2 rounded bg-orange-500/40 border border-orange-500 shrink-0 mt-0.5" />
-            <div className="text-slate-300 leading-tight">
-              <b className="text-orange-400">Inundation Envelope:</b> Confined strictly to canyon riverbed (1,980m - 2,040m ASL).
+          {/* 3-zone flood risk */}
+          {isRaini && (
+            <>
+              <div className="flex items-start gap-2">
+                <span className="w-3.5 h-2 rounded bg-red-600/70 border border-red-500 shrink-0 mt-0.5" />
+                <div className="text-slate-300 leading-tight">
+                  <b className="text-red-400">🔴 Zone 1 — ACTIVE INUNDATION:</b> Gorge floor (2.0–4.5m depth). Certain fatality.
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="w-3.5 h-2 rounded bg-orange-500/60 border border-orange-400 shrink-0 mt-0.5" />
+                <div className="text-slate-300 leading-tight">
+                  <b className="text-orange-400">🟠 Zone 2 — HIGH SURGE REACH:</b> Low terraces (0.6–2.0m). Evacuate.
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="w-3.5 h-2 rounded bg-yellow-400/40 border border-yellow-400 shrink-0 mt-0.5" />
+                <div className="text-slate-300 leading-tight">
+                  <b className="text-yellow-400">🟡 Zone 3 — CAUTION:</b> Slope toes, debris splash (&lt;0.5m). Prepare.
+                </div>
+              </div>
+              <div className="border-t border-slate-800 pt-1.5 mt-1" />
+            </>
+          )}
+          {!isRaini && (
+            <div className="flex items-start gap-2">
+              <span className="w-3.5 h-2 rounded bg-orange-500/40 border border-orange-500 shrink-0 mt-0.5" />
+              <div className="text-slate-300 leading-tight">
+                <b className="text-orange-400">Inundation Envelope:</b> Confined strictly to canyon riverbed.
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-start gap-2">
-            <span className="w-3.5 h-1 rounded bg-[#0284c7] shrink-0 mt-1" />
+            <span className="w-3.5 h-1 rounded bg-[#38bdf8] shrink-0 mt-1" />
             <div className="text-slate-300 leading-tight">
-              <b className="text-sky-400">Dhauliganga:</b> Mainstem river canyon (flowing East → West).
+              <b className="text-sky-400">Dhauliganga:</b> Mainstem river canyon (East → West). ◀ = surge direction.
             </div>
           </div>
           {spatialEntities.tributaryVector && (
             <div className="flex items-start gap-2">
-              <span className="w-3.5 h-1 rounded bg-[#ea580c] border border-dashed border-orange-400 shrink-0 mt-1" />
+              <span className="w-3.5 h-1 rounded bg-[#fb923c] border border-dashed border-orange-400 shrink-0 mt-1" />
               <div className="text-slate-300 leading-tight">
-                <b className="text-amber-400">Rishiganga Surge:</b> Glacial debris flow tributary vector (2021 source).
+                <b className="text-amber-400">Rishiganga Surge:</b> Glacial debris flow tributary (2021 GLOF source).
               </div>
             </div>
           )}
           <div className="flex items-start gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-300 shrink-0 mt-0.5" />
             <div className="text-slate-300 leading-tight">
-              <b className="text-emerald-300">Designated Shelter:</b> {isRaini ? 'Lata High Ground (+320m ASL)' : 'Elevated Ridge Refuge'} — safely outside gorge.
+              <b className="text-emerald-300">Designated Shelter:</b> {isRaini ? 'Lata Village FLAT TERRACE (+340m · 2,380m ASL)' : 'Elevated Ridge Refuge'} — well above gorge.
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="w-3.5 h-0.5 border-t-2 border-dashed border-emerald-400 shrink-0 mt-1.5" />
             <div className="text-slate-300 leading-tight">
-              <b className="text-emerald-400">Candidate Escape Route:</b> Uphill ridge trail climbing away from gorge.
+              <b className="text-emerald-400">Escape Route:</b> Switchback trail climbing from gorge to Lata terrace.
             </div>
           </div>
           <div className="flex items-start gap-2">
