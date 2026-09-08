@@ -187,6 +187,13 @@ export default function HyperLocalGISPage() {
     setRiskState('HIGH');
     setRainfallMm(48);
     setRiverStage(3.8);
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === '3d') {
+        setGisRenderMode('SCHEMATIC');
+      }
+    }
   }, [setPage, setMode, setRiskState, setRainfallMm, setRiverStage]);
 
   const toggleLayer = (key: GisLayerKey) => {
