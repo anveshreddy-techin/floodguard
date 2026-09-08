@@ -32,7 +32,8 @@ import {
   Users,
   Waves,
   CloudRain,
-  Heart
+  Heart,
+  AlertTriangle
 } from 'lucide-react';
 
 interface NavItem {
@@ -75,6 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       phaseColor: 'text-rose-400',
       items: [
         { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, shortcut: 'M', badge: 'LIVE' },
+        { id: 'dashboard-alerts', label: 'Live Dashboard & Alerts', href: '/dashboard', icon: AlertTriangle, badge: '4. LIVE' },
         { id: 'role-workspace', label: 'Role Workspaces', href: '/role-workspace', icon: Users, badge: '10 ROLES' },
         { id: 'donate', label: 'Disaster Relief Funds', href: '/donate', icon: Heart, badge: '80G EXEMPT' },
         { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, shortcut: 'S' },

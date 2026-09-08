@@ -29,10 +29,12 @@ import {
   Home,
   Info,
   Zap,
-  Globe
+  Globe,
+  AlertTriangle
 } from 'lucide-react';
 import { RiskBadge, DataModeBadge } from '@/components/ui/Badges';
 import { NationalRiverRiskMap } from '@/components/ui/NationalRiverRiskMap';
+import { LiveDashboardAlertsView } from '@/components/ui/LiveDashboardAlertsView';
 import dynamic from 'next/dynamic';
 
 const HyperLocalRealMap = dynamic(
@@ -76,7 +78,7 @@ export default function HyperLocalGISPage() {
   const { selectedLocation: ctxLocation, setSelectedLocation, selectLocationById } = useLocation();
   const selectedLocation = adaptiveLocation || ctxLocation || LOCATIONS[0];
 
-  const [activeMapView, setActiveMapView] = useState<'HYPER_LOCAL' | 'NATIONAL_RIVERS'>('HYPER_LOCAL');
+  const [activeMapView, setActiveMapView] = useState<'HYPER_LOCAL' | 'NATIONAL_RIVERS' | 'DASHBOARD_ALERTS'>('HYPER_LOCAL');
   const [gisRenderMode, setGisRenderMode] = useState<'REAL_MAP' | 'SCHEMATIC'>('REAL_MAP');
   const [panelsOpen, setPanelsOpen] = useState<boolean>(false);
   const [activeTool, setActiveTool] = useState<GisToolMode>('EXPLORE');
@@ -192,6 +194,8 @@ export default function HyperLocalGISPage() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('view') === '3d') {
         setGisRenderMode('SCHEMATIC');
+      } else if (params.get('view') === 'dashboard' || params.get('view') === 'alerts' || params.get('tab') === 'alerts') {
+        setActiveMapView('DASHBOARD_ALERTS');
       }
     }
   }, [setPage, setMode, setRiskState, setRainfallMm, setRiverStage]);
@@ -267,6 +271,17 @@ export default function HyperLocalGISPage() {
                 <Waves className="w-3.5 h-3.5 animate-pulse" />
                 <span>🇮🇳 NATIONAL RIVERS</span>
               </button>
+              <button
+                onClick={() => setActiveMapView('DASHBOARD_ALERTS')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] md:text-xs font-mono font-bold transition flex items-center gap-1.5 ${
+                  activeMapView === 'DASHBOARD_ALERTS'
+                    ? 'bg-gradient-to-r from-red-600 to-rose-700 text-white shadow font-black border border-red-400/50'
+                    : 'text-rose-300 hover:text-white'
+                }`}
+              >
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
+                <span>📊 LIVE DASHBOARD &amp; ALERTS</span>
+              </button>
             </div>
 
             {/* Right: Viewport Mode Toggle & Info Triggers */}
@@ -283,6 +298,13 @@ export default function HyperLocalGISPage() {
             </div>
           </div>
 
+          {/* Conditional View Render Overlay for Live Dashboard & Alerts */}
+          {activeMapView === 'DASHBOARD_ALERTS' && (
+            <div className="absolute inset-0 pt-14 p-1 sm:p-4 overflow-y-auto pb-20 md:pb-4 min-h-0 bg-slate-950 z-40">
+              <LiveDashboardAlertsView onClose={() => setActiveMapView('HYPER_LOCAL')} />
+            </div>
+          )}
+
           {/* Conditional View Render Overlay for National River Map */}
           {activeMapView === 'NATIONAL_RIVERS' && (
             <div className="absolute inset-0 pt-14 p-1 sm:p-4 overflow-y-auto pb-28 md:pb-4 min-h-0 bg-slate-950 z-20">
@@ -291,23 +313,25 @@ export default function HyperLocalGISPage() {
           )}
 
           {/* Master Full-Bleed Spatial Vector GIS Canvas: REAL MAP vs SCHEMATIC */}
-          {gisRenderMode === 'REAL_MAP' ? (
-            <div className="flex-1 relative w-full h-full bg-slate-950 overflow-hidden">
-              <HyperLocalRealMap
-                location={selectedLocation}
-                selectedNodeId={selectedNode?.id}
-                onSelectNode={(node) => {
-                  setSelectedNode(node);
-                  setMobileSheetTab('INSPECTOR');
-                  setMobileSheetOpen(true);
-                }}
-                gisLang={gisLang}
-                className="w-full h-full"
-                showControlBar={true}
-              />
-            </div>
-          ) : (
-            <Real3DTerrainCatchment location={selectedLocation} />
+          {activeMapView === 'HYPER_LOCAL' && (
+            gisRenderMode === 'REAL_MAP' ? (
+              <div className="flex-1 relative w-full h-full bg-slate-950 overflow-hidden">
+                <HyperLocalRealMap
+                  location={selectedLocation}
+                  selectedNodeId={selectedNode?.id}
+                  onSelectNode={(node) => {
+                    setSelectedNode(node);
+                    setMobileSheetTab('INSPECTOR');
+                    setMobileSheetOpen(true);
+                  }}
+                  gisLang={gisLang}
+                  className="w-full h-full"
+                  showControlBar={true}
+                />
+              </div>
+            ) : (
+              <Real3DTerrainCatchment location={selectedLocation} />
+            )
           )}
 
 

@@ -106,6 +106,20 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
 
         {/* Scrollable Intelligence Content (Strictly bounded so it never overflows) */}
         <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden space-y-2.5 pr-1 scrollbar-thin scrollbar-thumb-slate-700">
+          {/* Quick link to 4. Live Dashboard & Alerts */}
+          <Link
+            href="/dashboard"
+            className="w-full py-2 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-mono text-xs font-black flex items-center justify-between shadow-lg transition active:scale-95 border border-red-400/50"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+              <span>4. LIVE DASHBOARD &amp; ALERTS</span>
+            </div>
+            <span className="text-[10px] bg-red-950/80 px-2 py-0.5 rounded-full border border-red-400/60 font-mono">
+              82% RISK ➔
+            </span>
+          </Link>
+
           {/* Risk Dial Gauge */}
           <RiskDial
             score={score}
