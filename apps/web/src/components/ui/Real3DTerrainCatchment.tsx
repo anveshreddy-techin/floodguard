@@ -32,20 +32,22 @@ function getTerrainConfig(loc: LocationDossier) {
 
   const markers = isRaini
     ? [
-        { lngLat: [79.6920, 30.4850] as [number, number], label: 'RAINI VILLAGE', color: '#E74C3C', icon: '🏘️' },
-        { lngLat: [79.6935, 30.4895] as [number, number], label: 'DESIGNATED ASSEMBLY SHELTER (+120m)', color: '#2ECC71', icon: '🏕️' },
-        { lngLat: [79.6932, 30.4856] as [number, number], label: 'RISHIGANGA CONFLUENCE GAUGE', color: '#3498DB', icon: '📡' },
-        { lngLat: [79.7125, 30.4715] as [number, number], label: 'RISHIGANGA HEADWATER', color: '#00BCD4', icon: '🌊' },
+        { lngLat: [79.6920, 30.4850] as [number, number], label: 'RAINI VILLAGE (2,040m)', color: '#E74C3C', icon: '🏘️' },
+        { lngLat: [79.7040, 30.4965] as [number, number], label: 'LATA HIGH GROUND SHELTER (+320m · 2,360m)', color: '#2ECC71', icon: '🏕️' },
+        { lngLat: [79.6865, 30.4890] as [number, number], label: 'UPPER RAINI SPUR SHELTER (+140m)', color: '#38BDF8', icon: '🏛️' },
+        { lngLat: [79.6932, 30.4848] as [number, number], label: 'RISHIGANGA CONFLUENCE GAUGE', color: '#3498DB', icon: '📡' },
+        { lngLat: [79.7210, 30.4680] as [number, number], label: 'RISHIGANGA GORGE HEADWATER', color: '#00BCD4', icon: '🌊' },
+        { lngLat: [79.7020, 30.4980] as [number, number], label: 'LATA RIDGE AWS TELEMETRY', color: '#F59E0B', icon: '🌤️' },
       ]
     : isKedarnath
     ? [
-        { lngLat: [79.0669, 30.7346] as [number, number], label: 'KEDARNATH TEMPLE', color: '#E74C3C', icon: '⛪' },
-        { lngLat: [79.0700, 30.7400] as [number, number], label: 'DESIGNATED SHELTER ZONE', color: '#2ECC71', icon: '🏕️' },
+        { lngLat: [79.0669, 30.7346] as [number, number], label: 'KEDARNATH TEMPLE (3,584m)', color: '#E74C3C', icon: '⛪' },
+        { lngLat: [79.0735, 30.7385] as [number, number], label: 'BHAIRAVNATH HIGH RIDGE REFUGE (+220m)', color: '#2ECC71', icon: '🏕️' },
         { lngLat: [79.0652, 30.7320] as [number, number], label: 'MANDAKINI HEADWATER GAUGE', color: '#3498DB', icon: '📡' },
       ]
     : [
         { lngLat: center, label: loc.name.toUpperCase(), color: '#E74C3C', icon: '📍' },
-        { lngLat: [loc.lon + 0.002, loc.lat + 0.004] as [number, number], label: 'DESIGNATED SHELTER', color: '#2ECC71', icon: '🏕️' },
+        { lngLat: [loc.lon + 0.006, loc.lat + 0.008] as [number, number], label: 'DESIGNATED HIGH-GROUND REFUGE', color: '#2ECC71', icon: '🏕️' },
       ];
 
   return { center, zoom, pitch, bearing, exaggeration, markers };
@@ -173,6 +175,11 @@ export default function Real3DTerrainCatchment({ location }: Props) {
 
           setMapLoaded(true);
         });
+
+        // Fallback timer ensures WebGL canvas and 3D controls reveal promptly
+        const fallbackTimer = setTimeout(() => {
+          setMapLoaded(true);
+        }, 1000);
 
         map.on('pitchend', () => setPitch(Math.round(map.getPitch())));
         map.on('rotateend', () => setBearing(Math.round(map.getBearing())));
