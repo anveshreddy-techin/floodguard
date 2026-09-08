@@ -33,11 +33,11 @@ function getTerrainConfig(loc: LocationDossier) {
   const markers = isRaini
     ? [
         { lngLat: [79.6920, 30.4850] as [number, number], label: 'RAINI VILLAGE (2,040m)', color: '#E74C3C', icon: '🏘️' },
-        { lngLat: [79.7040, 30.4965] as [number, number], label: 'LATA HIGH GROUND SHELTER (+320m · 2,360m)', color: '#2ECC71', icon: '🏕️' },
+        { lngLat: [79.7055, 30.5012] as [number, number], label: 'LATA VILLAGE FLAT TERRACE SHELTER (+340m · 2,380m)', color: '#2ECC71', icon: '🏕️' },
         { lngLat: [79.6865, 30.4890] as [number, number], label: 'UPPER RAINI SPUR SHELTER (+140m)', color: '#38BDF8', icon: '🏛️' },
         { lngLat: [79.6932, 30.4848] as [number, number], label: 'RISHIGANGA CONFLUENCE GAUGE', color: '#3498DB', icon: '📡' },
         { lngLat: [79.7210, 30.4680] as [number, number], label: 'RISHIGANGA GORGE HEADWATER', color: '#00BCD4', icon: '🌊' },
-        { lngLat: [79.7020, 30.4980] as [number, number], label: 'LATA RIDGE AWS TELEMETRY', color: '#F59E0B', icon: '🌤️' },
+        { lngLat: [79.7030, 30.5005] as [number, number], label: 'LATA VILLAGE AWS TELEMETRY', color: '#F59E0B', icon: '🌤️' },
       ]
     : isKedarnath
     ? [
