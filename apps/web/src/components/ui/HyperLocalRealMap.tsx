@@ -131,7 +131,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
     let geophoneCoords: [number, number];
     let evacuationTrail: [number, number][];
     let blockedTrail: [number, number][];
-    let slopeHazardPolygon: [number, number][];
+    let slopeHazardPolygon: [number, number][] = [];
 
     if (isRaini) {
       // ── RAINI VILLAGE / DHAULIGANGA & RISHIGANGA CONFLUENCE ──
@@ -363,11 +363,67 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         [lat, lon],
         [lat - 0.002, lon - 0.001],
       ];
+    } else if (isGuwahati) {
+      // ── GUWAHATI / BRAHMAPUTRA RIVER & BHARALU CONFLUENCE (ASSAM) ──
+      // Brahmaputra flows East to West through the valley past Uzan Bazar, Fancy Bazar, Bharalumukh, Pandu
+      riverVector = [
+        [26.1950, 91.8200],
+        [26.1920, 91.7850],
+        [26.1880, 91.7600],
+        [26.1820, 91.7400],
+        [26.1750, 91.7150], // Confluence with Bharalu river & sluice gate
+        [26.1620, 91.6850], // Pandu Port
+        [26.1550, 91.6600], // Saraighat Bridge
+      ];
+
+      // Bharalu River Tributary (urban stormwater backflow channel during Brahmaputra surge)
+      tributaryVector = [
+        [26.1250, 91.7750], // Basistha / Beltola headwaters
+        [26.1400, 91.7600], // Dispur / Downtown
+        [26.1550, 91.7400], // Anil Nagar / Hatigaon lowlands
+        [26.1680, 91.7280], // Bharalumukh Sluice Gate
+        [26.1750, 91.7150], // Confluence with Brahmaputra
+      ];
+
+      // 100-Year Flood Envelope: Active alluvial inundation along riverfront & Bharalu backflow
+      floodPolygon = [
+        [26.1950, 91.8200], [26.1920, 91.7850], [26.1880, 91.7600],
+        [26.1820, 91.7400], [26.1750, 91.7150], [26.1620, 91.6850],
+        [26.1550, 91.6600], [26.1480, 91.6600], [26.1550, 91.6850],
+        [26.1680, 91.7150], [26.1750, 91.7400], [26.1810, 91.7600],
+        [26.1850, 91.7850], [26.1880, 91.8200],
+      ];
+
+      // Primary Shelter: Kamakhya Nilachal Hilltop Refuge (215m ASL, +160m above river)
+      primaryShelterCoords = [26.1660, 91.7055];
+      // Secondary Shelter: Sarania Hill High Ground Relief Center (140m ASL, +85m)
+      secondaryShelterCoords = [26.1780, 91.7650];
+
+      radarGaugeCoords = [26.1750, 91.7150]; // Bharalumukh CWC gauge
+      awsStationCoords = [26.1660, 91.7055]; // Kamakhya Hilltop AWS
+      soilSensorCoords = [26.1400, 91.7450]; // Urban lowland probe
+      geophoneCoords = [26.1550, 91.6600];   // Saraighat scour sensor
+
+      // Safe Route: Climbing uphill along Kamakhya Access Road away from riverfront
+      evacuationTrail = [
+        [26.1550, 91.7300],
+        [26.1580, 91.7220],
+        [26.1620, 91.7140],
+        [26.1660, 91.7055],
+      ];
+
+      // Blocked Route: Low-lying MG Road riverfront boulevard (submerged)
+      blockedTrail = [
+        [26.1550, 91.7300],
+        [26.1700, 91.7350],
+        [26.1750, 91.7400],
+      ];
+
       slopeHazardPolygon = [
-        [lat + 0.008, lon - 0.005],
-        [lat + 0.013, lon - 0.002],
-        [lat + 0.011, lon + 0.004],
-        [lat + 0.006, lon + 0.001],
+        [26.1600, 91.7000],
+        [26.1630, 91.7100],
+        [26.1610, 91.7150],
+        [26.1580, 91.7050],
       ];
     } else {
       // ── GENERIC LOCATION REALISTIC DRAINAGE GRADIENT ──
@@ -420,11 +476,13 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       ];
     }
 
-    // 2. Primary High-Ground Shelter (Lata Village flat terrace for Raini, Bhairavnath for Kedarnath)
+    // 2. Primary High-Ground Shelter (Lata Village flat terrace for Raini, Kamakhya for Guwahati, Bhairavnath for Kedarnath)
     const primaryShelter = {
       id: `shelter-primary-${location.id}`,
       name: isRaini
         ? 'Lata Village Assembly Shelter (FLAT TERRACE · +340m ASL)'
+        : isGuwahati
+        ? 'Kamakhya Nilachal Hilltop Community Refuge (+160m ASL)'
         : isKedarnath
         ? 'Bhairavnath High Ridge Refuge (+220m ASL)'
         : `${location.name.split('/')[0].trim()} Designated Assembly Shelter (+150m)`,
@@ -432,7 +490,11 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       category: 'DESIGNATED_ASSEMBLY',
       lat: primaryShelterCoords[0],
       lon: primaryShelterCoords[1],
-      elevation: isRaini ? '2,380 m ASL (+340m Gain · FLAT TERRACE VILLAGE)' : `${baseEle + 150} m ASL`,
+      elevation: isRaini
+        ? '2,380 m ASL (+340m Gain · FLAT TERRACE VILLAGE)'
+        : isGuwahati
+        ? '215 m ASL (+160m Gain · GRANITE HILL BENCH)'
+        : `${baseEle + 150} m ASL`,
       capacity: isRaini ? 550 : 450,
       currentOccupancy: 38,
       waterSupply: 'Gravity Spring + Tank (4 days reserve)',
@@ -794,7 +856,75 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             </div>
           `);
 
-        } else {
+        } else if (isGuwahati) {
+          // ── ASSAM (GUWAHATI / BRAHMAPUTRA FLOOD) ──
+          // ZONE 1 — RED: Active inundation along Brahmaputra riverfront & Bharalu backflow
+          const zone1RedGuwahati: [number, number][] = [
+            [26.1950, 91.8200], [26.1920, 91.7850], [26.1880, 91.7600],
+            [26.1820, 91.7400], [26.1750, 91.7150], [26.1620, 91.6850],
+            [26.1550, 91.6600], [26.1480, 91.6600], [26.1550, 91.6850],
+            [26.1680, 91.7150], [26.1750, 91.7400], [26.1810, 91.7600],
+            [26.1850, 91.7850], [26.1880, 91.8200],
+          ];
+          L.polygon(zone1RedGuwahati, {
+            color: '#dc2626',
+            weight: 2.5,
+            fillColor: '#ef4444',
+            fillOpacity: 0.52,
+          }).addTo(lg).bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.6;min-width:240px;">
+              <b style="color:#dc2626;font-size:13px;">🔴 ZONE 1 — ACTIVE BRAHMAPUTRA INUNDATION</b><br/>
+              <b>Risk Level:</b> EXTREME — Submerged lowlands &amp; Bharalu backflow<br/>
+              <b>Water Depth:</b> 2.0m – 3.5m (River stage 50.25m vs Danger 49.68m)<br/>
+              <b>Area:</b> Pandu Port, Bharalumukh, Fancy Bazar ghats<br/>
+              <b>Action:</b> <span style="color:#dc2626;font-weight:bold;">EVACUATE IMMEDIATELY TO NILACHAL / KAMAKHYA</span>
+            </div>
+          `);
+
+          // ZONE 2 — ORANGE: High-velocity surge & urban stormwater waterlogging buffer
+          const zone2OrangeGuwahati: [number, number][] = [
+            [26.2000, 91.8250], [26.1960, 91.7850], [26.1920, 91.7600],
+            [26.1860, 91.7400], [26.1800, 91.7150], [26.1660, 91.6800],
+            [26.1500, 91.6500], [26.1380, 91.6600], [26.1450, 91.6900],
+            [26.1580, 91.7200], [26.1650, 91.7450], [26.1700, 91.7700],
+            [26.1750, 91.8000], [26.1800, 91.8300],
+          ];
+          L.polygon(zone2OrangeGuwahati, {
+            color: '#ea580c',
+            weight: 2,
+            fillColor: '#f97316',
+            fillOpacity: 0.35,
+          }).addTo(lg).bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.6;min-width:240px;">
+              <b style="color:#ea580c;font-size:13px;">🟠 ZONE 2 — HIGH SURGE BUFFER (LOWLAND WARDS)</b><br/>
+              <b>Water Depth:</b> 0.8m – 1.8m (Stormwater backflow)<br/>
+              <b>Area:</b> Anil Nagar, Nabin Nagar, Hatigaon, Zoo Road corridors<br/>
+              <b>Action:</b> <span style="color:#ea580c;font-weight:bold;">MOVE VALUABLES &amp; ASCEND TO HIGHER GROUND</span>
+            </div>
+          `);
+
+          // ZONE 3 — YELLOW: Caution & drainage runout perimeter
+          const zone3YellowGuwahati: [number, number][] = [
+            [26.2050, 91.8300], [26.2000, 91.7850], [26.1950, 91.7600],
+            [26.1900, 91.7400], [26.1850, 91.7100], [26.1700, 91.6750],
+            [26.1450, 91.6450], [26.1300, 91.6550], [26.1380, 91.6950],
+            [26.1500, 91.7250], [26.1580, 91.7500], [26.1620, 91.7800],
+            [26.1680, 91.8100], [26.1750, 91.8400],
+          ];
+          L.polygon(zone3YellowGuwahati, {
+            color: '#ca8a04',
+            weight: 1.5,
+            dashArray: '6 4',
+            fillColor: '#facc15',
+            fillOpacity: 0.20,
+          }).addTo(lg).bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.6;min-width:240px;">
+              <b style="color:#ca8a04;font-size:13px;">🟡 ZONE 3 — CAUTION / WATCH (HILL FOOTHILLS)</b><br/>
+              <b>Water Depth:</b> &lt;0.5m (Surface runoff &amp; splash)<br/>
+              <b>Area:</b> Nilachal / Sarania / Narakasur foothill perimeters<br/>
+              <b>Action:</b> Prepare emergency kits · Monitor ASDMA siren broadcasts
+            </div>
+          `);
           // Non-Raini locations: single zone coloring
           const floodColor = location.riskLevel === 'EXTREME' ? '#e11d48' : isHighRisk ? '#ea580c' : '#0284c7';
           const floodFill  = location.riskLevel === 'EXTREME' ? '#f43f5e' : isHighRisk ? '#f97316' : '#38bdf8';
@@ -901,6 +1031,38 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             L.marker(pos, { icon: rishArrow, zIndexOffset: 700 + i })
               .addTo(lg)
               .bindTooltip(`Rishiganga surge direction (North into Dhauliganga) · ${6.4 - i * 0.3} m/s`, { direction: 'top' });
+          });
+        }
+
+        // ── FLOOD DIRECTION ARROWS (East→West along Brahmaputra for Guwahati) ──
+        if (isGuwahati) {
+          const assamArrowPositions: [number, number][] = [
+            [26.1920, 91.7850],
+            [26.1820, 91.7400],
+            [26.1680, 91.7000],
+            [26.1580, 91.6700],
+          ];
+          assamArrowPositions.forEach((pos, i) => {
+            const arrowIcon = L.divIcon({
+              html: `<div style="
+                display:flex;align-items:center;justify-content:center;
+                width:32px;height:20px;
+                background:rgba(14,116,144,0.88);
+                border:1.5px solid #38bdf8;
+                border-radius:4px;
+                font-size:16px;
+                color:#e0f7ff;
+                box-shadow:0 0 8px #0ea5e9;
+                font-weight:bold;
+                line-height:1;
+              ">◀</div>`,
+              className: '',
+              iconSize: [32, 20],
+              iconAnchor: [16, 10],
+            });
+            L.marker(pos, { icon: arrowIcon, zIndexOffset: 700 + i })
+              .addTo(lg)
+              .bindTooltip(`Brahmaputra discharge (East → West) · 3.8 m/s`, { direction: 'top' });
           });
         }
 
@@ -1477,44 +1639,67 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               <div className="border-t border-slate-800 pt-1.5 mt-1" />
             </>
           )}
-          {!isRaini && (
+          {isGuwahati && (
+            <>
+              <div className="flex items-start gap-2">
+                <span className="w-3.5 h-2 rounded bg-red-600/70 border border-red-500 shrink-0 mt-0.5" />
+                <div className="text-slate-300 leading-tight">
+                  <b className="text-red-400">🔴 Zone 1 — ACTIVE INUNDATION:</b> Brahmaputra riverfront &amp; Bharalu backflow (2.0–3.5m).
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="w-3.5 h-2 rounded bg-orange-500/60 border border-orange-400 shrink-0 mt-0.5" />
+                <div className="text-slate-300 leading-tight">
+                  <b className="text-orange-400">🟠 Zone 2 — SURGE BUFFER:</b> Anil Nagar, Hatigaon lowlands (0.8–1.8m).
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="w-3.5 h-2 rounded bg-yellow-400/40 border border-yellow-400 shrink-0 mt-0.5" />
+                <div className="text-slate-300 leading-tight">
+                  <b className="text-yellow-400">🟡 Zone 3 — CAUTION:</b> Hill foothills &amp; drainage perimeter (&lt;0.5m).
+                </div>
+              </div>
+              <div className="border-t border-slate-800 pt-1.5 mt-1" />
+            </>
+          )}
+          {!isRaini && !isGuwahati && (
             <div className="flex items-start gap-2">
               <span className="w-3.5 h-2 rounded bg-orange-500/40 border border-orange-500 shrink-0 mt-0.5" />
               <div className="text-slate-300 leading-tight">
-                <b className="text-orange-400">Inundation Envelope:</b> Confined strictly to canyon riverbed.
+                <b className="text-orange-400">Inundation Envelope:</b> Confined to modeled riverbed corridor.
               </div>
             </div>
           )}
           <div className="flex items-start gap-2">
             <span className="w-3.5 h-1 rounded bg-[#38bdf8] shrink-0 mt-1" />
             <div className="text-slate-300 leading-tight">
-              <b className="text-sky-400">Dhauliganga:</b> Mainstem river canyon (East → West). ◀ = surge direction.
+              <b className="text-sky-400">{isGuwahati ? 'Brahmaputra River' : 'Dhauliganga'}:</b> Flowing East → West. ◀ = surge direction.
             </div>
           </div>
           {spatialEntities.tributaryVector && (
             <div className="flex items-start gap-2">
               <span className="w-3.5 h-1 rounded bg-[#fb923c] border border-dashed border-orange-400 shrink-0 mt-1" />
               <div className="text-slate-300 leading-tight">
-                <b className="text-amber-400">Rishiganga Surge:</b> Glacial debris flow tributary (2021 GLOF source).
+                <b className="text-amber-400">{isGuwahati ? 'Bharalu Stormwater Backflow' : 'Rishiganga Surge'}:</b> {isGuwahati ? 'Urban flood backflow channel' : 'Glacial debris flow tributary'}.
               </div>
             </div>
           )}
           <div className="flex items-start gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-300 shrink-0 mt-0.5" />
             <div className="text-slate-300 leading-tight">
-              <b className="text-emerald-300">Designated Shelter:</b> {isRaini ? 'Lata Village FLAT TERRACE (+340m · 2,380m ASL)' : 'Elevated Ridge Refuge'} — well above gorge.
+              <b className="text-emerald-300">Designated Shelter:</b> {isRaini ? 'Lata Village FLAT TERRACE (+340m · 2,380m ASL)' : isGuwahati ? 'Kamakhya Nilachal Hilltop Refuge (+160m · 215m ASL)' : 'Elevated Ridge Refuge'}.
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="w-3.5 h-0.5 border-t-2 border-dashed border-emerald-400 shrink-0 mt-1.5" />
             <div className="text-slate-300 leading-tight">
-              <b className="text-emerald-400">Escape Route:</b> Switchback trail climbing from gorge to Lata terrace.
+              <b className="text-emerald-400">Escape Route:</b> {isGuwahati ? 'Kamakhya Access Road uphill' : 'Switchback trail climbing to high terrace'}.
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="w-3.5 h-0.5 border-t-2 border-dashed border-rose-500 shrink-0 mt-1.5" />
             <div className="text-slate-400 leading-tight">
-              <b className="text-rose-400">Blocked Vector:</b> Low riverbed crossing (submerged by active surge).
+              <b className="text-rose-400">Blocked Vector:</b> {isGuwahati ? 'MG Road riverfront causeway (submerged)' : 'Low riverbed crossing (submerged)'}.
             </div>
           </div>
         </div>

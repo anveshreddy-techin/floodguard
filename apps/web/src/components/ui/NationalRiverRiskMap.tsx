@@ -154,7 +154,7 @@ export const NationalRiverRiskMap: React.FC<{
             <span className="text-[10px] text-slate-400">NATIONAL AVG RISK</span>
             <div className="text-xl font-black text-white">{nationalStats.avgRisk}%</div>
           </div>
-          <span className="w-2.5 h-2.5 rounded-full bg-orange-400 animate-ping" />
+          <span className="w-2.5 h-2.5 rounded-full bg-orange-400 shadow-[0_0_8px_#fb923c]" />
         </div>
 
         <div className="p-2.5 rounded-xl bg-slate-950/60 border border-rose-900/40 flex items-center justify-between">
@@ -374,29 +374,15 @@ export const NationalRiverRiskMap: React.FC<{
                     onMouseEnter={() => setHoveredPoint(pt)}
                     onMouseLeave={() => setHoveredPoint(null)}
                   >
-                    {/* Expanding Radar Ping (For Critical Points) */}
-                    {pt.riskPercentage >= 75 && (
-                      <circle
-                        cx={pt.svgX}
-                        cy={pt.svgY}
-                        r={isSelected ? 26 : 18}
-                        fill="none"
-                        stroke={riskColor}
-                        strokeWidth="1.5"
-                        strokeOpacity="0.6"
-                        className="animate-ping"
-                      />
-                    )}
-
                     {/* Outer Glow Shield */}
                     <circle
                       cx={pt.svgX}
                       cy={pt.svgY}
-                      r={isSelected ? 16 : isHovered ? 12 : 9}
+                      r={isSelected ? 14 : isHovered ? 11 : 8}
                       fill={riskColor}
                       fillOpacity={isSelected ? 0.35 : 0.2}
                       stroke={riskColor}
-                      strokeWidth={isSelected ? 2.5 : 1.5}
+                      strokeWidth={isSelected ? 2 : 1}
                     />
 
                     {/* Inner Core Solid Node */}
@@ -442,7 +428,7 @@ export const NationalRiverRiskMap: React.FC<{
             <div className="absolute bottom-2 left-2 bg-slate-950/90 border border-slate-800/80 rounded-2xl p-2.5 backdrop-blur-md text-[10px] font-mono space-y-1 shadow-xl hidden sm:block">
               <span className="text-slate-400 font-bold uppercase tracking-wider block">HYDROLOGICAL RISK SCALE</span>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
                 <span className="text-rose-300 font-bold">≥ 85% CRITICAL</span>
               </div>
               <div className="flex items-center gap-2">

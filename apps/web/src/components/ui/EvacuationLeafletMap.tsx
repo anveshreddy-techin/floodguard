@@ -2,6 +2,23 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
+export interface FloodZonePolygons {
+  zone1Red: [number, number][];
+  zone2Orange: [number, number][];
+  zone3Yellow: [number, number][];
+}
+
+export interface SafePlaceItem {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  elevation: string;
+  distance: string;
+  type: string;
+  isPrimary?: boolean;
+}
+
 interface EvacMapProps {
   userLat: number;
   userLon: number;
@@ -19,6 +36,11 @@ interface EvacMapProps {
   riverName?: string;
   riskLevel?: string;
   isSafeZone?: boolean;
+  // Enhanced Multi-Zone & River Inputs
+  floodPolygons?: FloodZonePolygons;
+  riverVector?: [number, number][];
+  safePlaces?: SafePlaceItem[];
+  historicalEventLabel?: string;
 }
 
 export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
@@ -38,6 +60,10 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
   riverName = 'River Mainstem',
   riskLevel = 'HIGH',
   isSafeZone = false,
+  floodPolygons,
+  riverVector,
+  safePlaces = [],
+  historicalEventLabel,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -73,13 +99,13 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
       if (!mapInstanceRef.current && mapRef.current) {
         const map = L.map(mapRef.current, {
           center: [userLat, userLon],
-          zoom: 14,
+          zoom: 13.5,
           zoomControl: true,
           scrollWheelZoom: true,
         });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · FloodGuard AI',
           maxZoom: 19,
         }).addTo(map);
 
@@ -93,167 +119,301 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
       const lg = layerGroupRef.current;
       lg.clearLayers();
 
-      const center = riskZoneCenter ?? [userLat, userLon] as [number, number];
+      const center = riskZoneCenter ?? ([userLat, userLon] as [number, number]);
 
-      // ── Buffer Circle: Green if SAFE, Red dashed if HAZARD ──
-      if (isSafeZone) {
+      // ── 1. 3-ZONE FLOOD RISK OVERLAYS (RED, ORANGE, YELLOW) ──
+      if (!isSafeZone) {
+        if (floodPolygons) {
+          // Yellow Zone 3 — Outer Advisory / Waterlogging
+          if (floodPolygons.zone3Yellow && floodPolygons.zone3Yellow.length > 2) {
+            L.polygon(floodPolygons.zone3Yellow, {
+              color: '#ca8a04',
+              weight: 1.5,
+              dashArray: '6 4',
+              fillColor: '#facc15',
+              fillOpacity: 0.22,
+            })
+              .addTo(lg)
+              .bindPopup(`
+                <div style="font-family:monospace;font-size:12px;line-height:1.6;color:#0f172a;min-width:230px;">
+                  <b style="color:#ca8a04;font-size:13px;">🟡 ZONE 3 — CAUTION / ADVISORY BUFFER</b><br/>
+                  <b>Water Depth:</b> &lt;0.5m (Urban waterlogging &amp; splash runout)<br/>
+                  <b>Area:</b> Slope toes, outer drainage perimeter<br/>
+                  <b>Status:</b> Prepare to evacuate · Keep battery devices charged
+                </div>
+              `);
+          }
+
+          // Orange Zone 2 — High Surge Reach Buffer
+          if (floodPolygons.zone2Orange && floodPolygons.zone2Orange.length > 2) {
+            L.polygon(floodPolygons.zone2Orange, {
+              color: '#ea580c',
+              weight: 2,
+              fillColor: '#f97316',
+              fillOpacity: 0.35,
+            })
+              .addTo(lg)
+              .bindPopup(`
+                <div style="font-family:monospace;font-size:12px;line-height:1.6;color:#0f172a;min-width:230px;">
+                  <b style="color:#ea580c;font-size:13px;">🟠 ZONE 2 — HIGH SURGE REACH BUFFER</b><br/>
+                  <b>Water Depth:</b> 0.6m – 2.0m (High velocity runoff)<br/>
+                  <b>Area:</b> Low alluvial terraces, riverfront municipal wards<br/>
+                  <b>Directive:</b> <span style="color:#ea580c;font-weight:bold;">MOVE TO HIGHER GROUND IMMEDIATELY</span>
+                </div>
+              `);
+          }
+
+          // Red Zone 1 — Active Inundation / Submerged Channel
+          if (floodPolygons.zone1Red && floodPolygons.zone1Red.length > 2) {
+            L.polygon(floodPolygons.zone1Red, {
+              color: '#dc2626',
+              weight: 2.5,
+              fillColor: '#ef4444',
+              fillOpacity: 0.52,
+            })
+              .addTo(lg)
+              .bindPopup(`
+                <div style="font-family:monospace;font-size:12px;line-height:1.6;color:#0f172a;min-width:230px;">
+                  <b style="color:#dc2626;font-size:13px;">🔴 ZONE 1 — ACTIVE INUNDATION (CRITICAL)</b><br/>
+                  <b>Water Depth:</b> 2.0m – 4.5m (Torrential Surge)<br/>
+                  <b>Area:</b> Submerged riverbed, breached embankments, ghats<br/>
+                  <b>Danger:</b> <span style="color:#dc2626;font-weight:bold;">EXTREME SURGE DANGER — DO NOT ENTER!</span>
+                </div>
+              `);
+          }
+        } else {
+          // Dynamic Concentric Multi-Zone fallback centered on coordinates
+          // Zone 3 (Yellow): 1000m radius
+          L.circle(center, {
+            radius: riskRadiusM * 1.6,
+            color: '#ca8a04',
+            weight: 1.5,
+            dashArray: '6 4',
+            fillColor: '#facc15',
+            fillOpacity: 0.20,
+          })
+            .addTo(lg)
+            .bindPopup(`<b style="color:#ca8a04">🟡 ZONE 3 — CAUTION BUFFER</b><br/>Precautionary perimeter (<0.5m waterlogging)`);
+
+          // Zone 2 (Orange): 650m radius
+          L.circle(center, {
+            radius: riskRadiusM,
+            color: '#ea580c',
+            weight: 2,
+            fillColor: '#f97316',
+            fillOpacity: 0.32,
+          })
+            .addTo(lg)
+            .bindPopup(`<b style="color:#ea580c">🟠 ZONE 2 — HIGH SURGE BUFFER</b><br/>Low-lying areas at risk (0.6m–2.0m)`);
+
+          // Zone 1 (Red): 380m radius
+          L.circle(center, {
+            radius: riskRadiusM * 0.58,
+            color: '#dc2626',
+            weight: 2.5,
+            fillColor: '#ef4444',
+            fillOpacity: 0.50,
+          })
+            .addTo(lg)
+            .bindPopup(`<b style="color:#dc2626">🔴 ZONE 1 — ACTIVE INUNDATION</b><br/>Submerged flash flood channel (2.0m–4.0m)`);
+        }
+      } else {
+        // Safe condition: Green buffer circle
         L.circle(center, {
-          radius: 350,
+          radius: 380,
           color: '#10b981',
           fillColor: '#10b981',
           fillOpacity: 0.12,
           weight: 2,
         })
           .addTo(lg)
-          .bindPopup(`<b style="color:#10b981">✅ LOWEST EXPOSURE · ELEVATED GROUND</b><br>No active river flood inundation detected at this location.`);
-      } else {
-        L.circle(center, {
-          radius: riskRadiusM,
-          color: '#ef4444',
-          fillColor: '#ef4444',
-          fillOpacity: 0.18,
-          weight: 2,
-          dashArray: '8 4',
-        })
-          .addTo(lg)
-          .bindPopup(`<b style="color:#ef4444">⚠️ ${locationName.toUpperCase()} FLOOD RISK ZONE</b><br>Modeled ${riskLevel} flood inundation corridor<br>Avoid low-lying depressions`);
+          .bindPopup(`<b style="color:#10b981">✅ LOWEST EXPOSURE · ELEVATED GROUND</b><br>Dry roadway terrain with no active inundation.`);
       }
 
-      // ── Safe Evacuation Route (Cyan polyline) ──
+      // ── 2. REAL RIVER FLOW VECTOR (IF PROVIDED) ──
+      if (riverVector && riverVector.length > 1) {
+        L.polyline(riverVector, {
+          color: '#0369a1',
+          weight: 8,
+          opacity: 0.85,
+          lineCap: 'round',
+        }).addTo(lg);
+
+        L.polyline(riverVector, {
+          color: '#38bdf8',
+          weight: 3.5,
+          opacity: 0.95,
+          lineCap: 'round',
+        })
+          .addTo(lg)
+          .bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;">
+              <b style="color:#0284c7">💧 ${riverName}</b><br/>
+              Current State: Active Monsoon / Surge Hydrograph<br/>
+              <b>Surge Flow Direction:</b> Downstream Valley Gradient
+            </div>
+          `);
+      }
+
+      // ── 3. CANDIDATE EVACUATION ESCAPE VECTOR (GREEN / CYAN) ──
       L.polyline(routePoints, {
-        color: isSafeZone ? '#10b981' : '#22d3ee',
+        color: isSafeZone ? '#10b981' : '#059669',
         weight: 6,
         opacity: 0.95,
         lineCap: 'round',
         lineJoin: 'round',
-      })
-        .addTo(lg)
-        .bindPopup(`<b style="color:#22d3ee">📍 ${isSafeZone ? 'PRIMARY RIDGE TRAIL' : 'RECOMMENDED ESCAPE VECTOR'}</b><br>${shelterName}<br>+120m Elevation Gain · 1.4 km`);
-
-      L.polyline(routePoints, {
-        color: isSafeZone ? '#6ee7b7' : '#a5f3fc',
-        weight: 2,
-        opacity: 0.4,
-        dashArray: '4 10',
       }).addTo(lg);
 
-      // ── Blocked Route (Red dashes) — only shown if in flood hazard ──
+      L.polyline(routePoints, {
+        color: '#a7f3d0',
+        weight: 2,
+        dashArray: '4 8',
+      })
+        .addTo(lg)
+        .bindPopup(`
+          <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;">
+            <b style="color:#059669">🚶 CANDIDATE ESCAPE ROUTE</b><br/>
+            Destination: ${shelterName}<br/>
+            <b>Path:</b> Uphill / High-ground corridor safely outside inundation zone.
+          </div>
+        `);
+
+      // ── 4. BLOCKED ROUTE (RED DASHES) ──
       if (!isSafeZone && blockedPoints.length > 1) {
         L.polyline(blockedPoints, {
-          color: '#dc2626',
+          color: '#ef4444',
           weight: 5,
-          opacity: 0.85,
-          dashArray: '6 5',
+          opacity: 0.9,
+          dashArray: '6 6',
         })
           .addTo(lg)
-          .bindPopup('<b style="color:#dc2626">🚫 BLOCKED ROUTE</b><br>Low-Lying Drainage Bypass Link<br>HIGH INUNDATION RISK — Avoid completely');
+          .bindPopup(`
+            <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;">
+              <b style="color:#dc2626">🚫 BLOCKED ROADWAY / SUBMERGED CAUSEWAY</b><br/>
+              Condition: Inundated under active surge water.<br/>
+              <span style="color:#dc2626;font-weight:bold;">DO NOT ATTEMPT TO CROSS!</span>
+            </div>
+          `);
       }
 
-      // ── YOU Marker (Animated pulsing dot: Emerald if Safe, Cyan if Operational) ──
-      const youColor = isSafeZone ? '#10b981' : '#0891b2';
-      const youGlow = isSafeZone ? 'rgba(16,185,129,0.3)' : 'rgba(6,182,212,0.3)';
-      const youBorder = isSafeZone ? '#34d399' : '#67e8f9';
+      // ── 5. USER POSITION PIN ──
+      const youColor = isSafeZone ? '#10b981' : '#f97316';
+      const youBorder = isSafeZone ? '#34d399' : '#fed7aa';
 
       const youIcon = L.divIcon({
         html: `
-          <div style="position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center">
-            <div style="position:absolute;width:42px;height:42px;background:${youGlow};border-radius:50%;animation:rp 1.4s infinite"></div>
-            <div style="position:absolute;width:28px;height:28px;background:${youGlow};border-radius:50%;animation:rp 1.4s 0.35s infinite"></div>
+          <div style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;width:34px;height:34px;background:${isSafeZone ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.35)'};border-radius:50%;"></div>
             <div style="position:relative;width:18px;height:18px;background:${youColor};border:3px solid ${youBorder};border-radius:50%;box-shadow:0 0 14px ${youColor};z-index:10"></div>
-            <style>@keyframes rp{0%{transform:scale(0.8);opacity:0.9}70%{transform:scale(1.9);opacity:0}100%{transform:scale(2.2);opacity:0}}</style>
           </div>`,
         className: '',
-        iconSize: [42, 42],
-        iconAnchor: [21, 21],
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
       });
-
-      const userPopup = isSafeZone ? `
-        <div style="font-family:monospace;font-size:12px;line-height:1.6">
-          <b style="color:#10b981">📍 YOUR LOCATION · ${locationName}</b><br>
-          ${userLat.toFixed(5)}°N, ${userLon.toFixed(5)}°E (${stateName})<br>
-          <b style="color:#10b981">✅ STATUS: LOWEST EXPOSURE (ELEVATED)</b><br>
-          <span style="color:#94a3b8">Normal dry ground. No active flood threat detected.</span>
-        </div>` : `
-        <div style="font-family:monospace;font-size:12px;line-height:1.6">
-          <b style="color:#22d3ee">📍 YOUR LOCATION · ${locationName}</b><br>
-          ${userLat.toFixed(5)}°N, ${userLon.toFixed(5)}°E (${stateName})<br>
-          GPS Accuracy: ±15m<br>
-          <b style="color:#f87171">⚠️ INSIDE ${riskLevel} RISK CORRIDOR</b><br>
-          <span style="color:#fbbf24">Evacuate toward ${shelterName}</span>
-        </div>`;
 
       L.marker([userLat, userLon], { icon: youIcon, zIndexOffset: 1000 })
         .addTo(lg)
-        .bindPopup(userPopup);
+        .bindPopup(`
+          <div style="font-family:monospace;font-size:12px;line-height:1.6;color:#0f172a;">
+            <b style="color:#0f172a">📍 YOUR CURRENT POSITION · ${locationName}</b><br/>
+            ${userLat.toFixed(5)}°N, ${userLon.toFixed(5)}°E (${stateName})<br/>
+            Status: <b style="color:${isSafeZone ? '#059669' : '#dc2626'}">${isSafeZone ? 'SAFE (ELEVATED)' : 'EXPOSED IN SURGE AREA'}</b><br/>
+            ${!isSafeZone ? `<span style="color:#dc2626;font-weight:bold;">Follow green route to ${shelterName}</span>` : ''}
+          </div>
+        `);
 
-      // ── PRIMARY SHELTER Marker ──
+      // ── 6. PRIMARY & SECONDARY DESIGNATED SHELTERS ──
       const shelterIcon = L.divIcon({
         html: `
-          <div style="display:flex;flex-direction:column;align-items:center">
-            <div style="background:#15803d;border:3px solid #4ade80;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 16px rgba(22,163,74,0.8)">🏫</div>
-            <div style="width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:13px solid #15803d;margin-top:-2px"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+            <div style="background:#059669;border:3px solid #6ee7b7;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 16px rgba(16,185,129,0.8);color:white;">
+              🏕️
+            </div>
+            <div style="background:rgba(15,23,42,0.92);border:1px solid #10b981;color:#a7f3d0;font-family:monospace;font-size:9px;font-weight:bold;padding:2px 5px;border-radius:4px;margin-top:2px;white-space:nowrap;">
+              SAFE REFUGE
+            </div>
           </div>`,
         className: '',
-        iconSize: [36, 49],
-        iconAnchor: [18, 49],
+        iconSize: [90, 52],
+        iconAnchor: [45, 26],
       });
 
-      L.marker([shelterLat, shelterLon], { icon: shelterIcon, zIndexOffset: 900 })
+      L.marker([shelterLat, shelterLon], { icon: shelterIcon, zIndexOffset: 950 })
         .addTo(lg)
         .bindPopup(`
-          <div style="font-family:monospace;font-size:12px;line-height:1.6">
-            <b style="color:#4ade80">🏫 PRIMARY EVACUATION SHELTER</b><br>
-            ${shelterName}<br>
-            Capacity: 350 persons (${stateName})<br>
-            Elevation: +120m above modeled base terrain<br>
-            <b style="color:#4ade80">Status: SHELTER ACTIVE &amp; STOCKED ✓</b>
-          </div>`);
+          <div style="font-family:monospace;font-size:12px;line-height:1.6;color:#0f172a;min-width:240px;">
+            <b style="color:#059669;font-size:13px;">🏕️ PRIMARY DESIGNATED SAFE REFUGE</b><br/>
+            <b>Name:</b> ${shelterName}<br/>
+            <b>Elevation:</b> High Ground (Safely above flood hazard)<br/>
+            <b>Supplies:</b> Potable Water, Emergency Food, First-Aid ✓<br/>
+            <b>State Agency:</b> ${stateName} Disaster Management Authority
+          </div>
+        `);
 
-      // ── SECONDARY SHELTER ──
-      const shelter2Icon = L.divIcon({
-        html: `
-          <div style="display:flex;flex-direction:column;align-items:center">
-            <div style="background:#1d4ed8;border:2px solid #60a5fa;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 10px rgba(29,78,216,0.6)">🏛️</div>
-            <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid #1d4ed8;margin-top:-1px"></div>
-          </div>`,
-        className: '',
-        iconSize: [28, 38],
-        iconAnchor: [14, 38],
-      });
+      // Additional Safe Places (if provided)
+      if (safePlaces && safePlaces.length > 0) {
+        safePlaces.forEach((sp) => {
+          if (Math.abs(sp.lat - shelterLat) > 0.001 || Math.abs(sp.lon - shelterLon) > 0.001) {
+            const secIcon = L.divIcon({
+              html: `
+                <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+                  <div style="background:#0284c7;border:2px solid #38bdf8;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 10px rgba(2,132,199,0.6);color:white;">
+                    🏛️
+                  </div>
+                  <div style="background:rgba(15,23,42,0.92);border:1px solid #0284c7;color:#bae6fd;font-family:monospace;font-size:9px;font-weight:bold;padding:1px 4px;border-radius:4px;margin-top:2px;white-space:nowrap;">
+                    ${sp.name.split(' ')[0]}
+                  </div>
+                </div>`,
+              className: '',
+              iconSize: [70, 44],
+              iconAnchor: [35, 20],
+            });
 
-      L.marker([userLat + 0.012, userLon + 0.006], { icon: shelter2Icon, zIndexOffset: 800 })
-        .addTo(lg)
-        .bindPopup(`
-          <div style="font-family:monospace;font-size:12px;line-height:1.6">
-            <b style="color:#60a5fa">🏛️ SECONDARY SHELTER — Panchayat Relief Hall</b><br>
-            Distance: 2.1 km, +85m elevation gain<br>
-            Avoids lower bottleneck culvert<br>
-            <b style="color:#60a5fa">Status: CANDIDATE ROUTE</b>
-          </div>`);
+            L.marker([sp.lat, sp.lon], { icon: secIcon, zIndexOffset: 850 })
+              .addTo(lg)
+              .bindPopup(`
+                <div style="font-family:monospace;font-size:12px;line-height:1.5;color:#0f172a;">
+                  <b style="color:#0284c7;">🏛️ SECONDARY SAFE REFUGE: ${sp.name}</b><br/>
+                  <b>Elevation:</b> ${sp.elevation}<br/>
+                  <b>Type:</b> ${sp.type} · High Ground<br/>
+                  <b>Distance:</b> ${sp.distance}
+                </div>
+              `);
+          }
+        });
+      }
 
-      // ── NDRF / SDRF Camp ──
+      // ── 7. SDRF / EMERGENCY POST ──
       const ndrfIcon = L.divIcon({
         html: `
-          <div style="background:#7c3aed;color:white;border:2px solid #a78bfa;border-radius:8px;padding:3px 8px;font-family:monospace;font-size:10px;font-weight:900;white-space:nowrap;box-shadow:0 0 10px rgba(124,58,237,0.5)">
-            🚑 ${stateName.toUpperCase()} SDRF / NDRF
+          <div style="background:#6d28d9;color:white;border:2px solid #c4b5fd;border-radius:8px;padding:3px 8px;font-family:monospace;font-size:10px;font-weight:900;white-space:nowrap;box-shadow:0 0 10px rgba(109,40,217,0.6)">
+            🚑 ${stateName.toUpperCase()} SDRF / 112
           </div>`,
         className: '',
         iconSize: [110, 24],
         iconAnchor: [55, 12],
       });
 
-      L.marker([userLat + 0.015, userLon - 0.010], { icon: ndrfIcon })
+      L.marker([shelterLat + 0.003, shelterLon + 0.003], { icon: ndrfIcon, zIndexOffset: 800 })
         .addTo(lg)
         .bindPopup(`
-          <div style="font-family:monospace;font-size:12px;line-height:1.6">
-            <b style="color:#a78bfa">🚑 ${stateName} Emergency Response Post</b><br>
-            Trained Quick Response Force · Rescue Boats Ready<br>
-            Emergency Radio: 156.525 MHz · Helpline: 112 / 1070
-          </div>`);
+          <div style="font-family:monospace;font-size:12px;line-height:1.6;color:#0f172a;">
+            <b style="color:#6d28d9">🚑 ${stateName} Emergency Response Unit</b><br/>
+            Trained Rescue Boats &amp; Paramedic Post<br/>
+            <b>Emergency Helpline:</b> 112 / 1070
+          </div>
+        `);
 
-      // Fit map to new coordinates
-      const allPoints: [number, number][] = [[userLat, userLon], [shelterLat, shelterLon], ...routePoints];
-      map.fitBounds(L.latLngBounds(allPoints), { padding: [55, 55], maxZoom: 15 });
+      // Fit map to points
+      const allPoints: [number, number][] = [
+        [userLat, userLon],
+        [shelterLat, shelterLon],
+        ...routePoints,
+      ];
+      if (riverVector && riverVector.length > 0) {
+        allPoints.push(riverVector[0], riverVector[riverVector.length - 1]);
+      }
+      map.fitBounds(L.latLngBounds(allPoints), { padding: [50, 50], maxZoom: 15 });
       setMapReady(true);
     };
 
@@ -279,51 +439,45 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
     riverName,
     riskLevel,
     isSafeZone,
+    floodPolygons,
+    riverVector,
+    safePlaces,
   ]);
 
   return (
-    <div className="relative w-full h-[460px] sm:h-[540px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
-      <div ref={mapRef} className="w-full h-full" style={{ zIndex: 1 }} />
+    <div className="relative w-full h-[460px] sm:h-[520px] rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl">
+      <div ref={mapRef} className="w-full h-full" />
 
-      {/* Floating Mode Pill Top-Center */}
-      <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-[400] bg-slate-950/90 border border-slate-800/90 rounded-full px-3.5 py-1 text-xs font-mono font-bold backdrop-blur-md shadow-xl flex items-center gap-2">
-        <span className={`w-2 h-2 rounded-full ${isSafeZone ? 'bg-emerald-400' : 'bg-cyan-400'} animate-ping`} />
-        <span className={isSafeZone ? 'text-emerald-300' : 'text-cyan-300'}>
-          {locationMode === 'BROWSER' ? '📍 LIVE GPS' : 'DEMO DRILL LOCATION'}
-        </span>
-        <span className="text-slate-500">|</span>
-        <span className="text-slate-300">{stateName}</span>
-      </div>
-
-      {/* Floating Coordinates Bar */}
-      <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-[400] bg-slate-900/80 border border-slate-800 rounded-lg px-2.5 py-0.5 text-[10px] font-mono text-slate-300 backdrop-blur-md">
-        {userLat.toFixed(4)}°N · {userLon.toFixed(4)}°E
-      </div>
-
-      {/* Mini Map Legend in Bottom Right */}
-      <div className="absolute bottom-3 right-3 z-[400] bg-slate-950/95 border border-slate-800 rounded-2xl p-2.5 text-[10px] font-mono space-y-1 backdrop-blur-md shadow-2xl hidden sm:block">
-        <span className="text-slate-400 font-bold uppercase tracking-wider block">MAP LEGEND</span>
-        <div className="flex items-center gap-2">
-          <span className={`w-2.5 h-2.5 rounded-full ${isSafeZone ? 'bg-emerald-400' : 'bg-cyan-400'}`} />
-          <span className="text-slate-200">Your Location ({isSafeZone ? 'Safe' : 'Active'})</span>
+      {/* ── ON-MAP EXPLANATORY HUD COLOR LEGEND (Bottom Right) ── */}
+      <div className="absolute bottom-3 right-3 z-[400] bg-slate-950/95 border border-cyan-500/40 rounded-xl p-2.5 backdrop-blur-xl text-[10px] font-mono shadow-2xl space-y-1.5 pointer-events-auto max-w-[260px]">
+        <div className="text-cyan-300 font-bold uppercase tracking-wider border-b border-slate-800 pb-1 flex items-center justify-between">
+          <span>🗺️ FLOOD RISK &amp; REFUGE</span>
+          <span className="text-[9px] text-slate-400">{stateName}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-          <span className="text-slate-200">Primary Shelter (Elevated)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-          <span className="text-slate-200">Secondary Shelter</span>
-        </div>
-        {!isSafeZone && (
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-            <span className="text-rose-300">Modeled Flood Zone</span>
+            <span className="w-3 h-2 rounded bg-red-600/80 border border-red-500 shrink-0" />
+            <span className="text-red-300 font-bold">🔴 Active Inundation (Fatal surge)</span>
           </div>
-        )}
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-2 rounded bg-orange-500/70 border border-orange-400 shrink-0" />
+            <span className="text-orange-300 font-bold">🟠 High Surge Buffer (Low ground)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-2 rounded bg-yellow-400/50 border border-yellow-400 shrink-0" />
+            <span className="text-yellow-300 font-bold">🟡 Caution Zone (Waterlogging)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-300 shrink-0" />
+            <span className="text-emerald-300 font-bold">🟢 Safe Elevated Shelter</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-0.5 border-t-2 border-dashed border-rose-500 shrink-0" />
+            <span className="text-rose-400 font-bold">🚫 Submerged Roadway</span>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
-
 export default EvacuationLeafletMap;
