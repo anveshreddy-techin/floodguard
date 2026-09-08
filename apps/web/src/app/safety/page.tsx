@@ -63,6 +63,15 @@ export default function MySafetyPage() {
     setPage('safety');
     setMode('DEMO');
     setRiskState('HIGH');
+
+    // Read ?loc= query parameter for direct preset switching
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const locParam = urlParams.get('loc');
+      if (locParam) {
+        handleSelectPreset(locParam);
+      }
+    }
   }, [setPage, setMode, setRiskState]);
 
   // Check active state

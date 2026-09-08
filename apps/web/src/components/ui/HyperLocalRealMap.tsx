@@ -925,7 +925,8 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               <b>Action:</b> Prepare emergency kits · Monitor ASDMA siren broadcasts
             </div>
           `);
-          // Non-Raini locations: single zone coloring
+        } else {
+          // Non-Raini / Non-Guwahati locations: single zone coloring
           const floodColor = location.riskLevel === 'EXTREME' ? '#e11d48' : isHighRisk ? '#ea580c' : '#0284c7';
           const floodFill  = location.riskLevel === 'EXTREME' ? '#f43f5e' : isHighRisk ? '#f97316' : '#38bdf8';
           L.polygon(spatialEntities.floodPolygon, {
