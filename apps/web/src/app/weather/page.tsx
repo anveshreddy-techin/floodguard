@@ -363,11 +363,11 @@ export default function WeatherIntelligencePage() {
           <RelatedAppsBar activeAppId="weather" />
 
           {/* Top Control Ribbon: Location Adaptation & Action Triggers */}
-          <div className="bg-white border border-slate-200 shadow-sm p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3">
+          <div className="bg-white border border-slate-200 shadow-sm p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 font-sans">
             
             {/* Left: State & Corridor Selector */}
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 px-3 py-1.5 rounded-xl text-xs font-mono text-blue-700 font-bold shadow-2xs">
+              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 px-3 py-1.5 rounded-xl text-xs text-blue-700 font-semibold shadow-2xs">
                 <MapPin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 <select
                   value={hierarchy.state}
@@ -396,7 +396,7 @@ export default function WeatherIntelligencePage() {
               </div>
 
               {/* Specific Location Corridor Pill */}
-              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 px-3 py-1.5 rounded-xl text-xs font-mono text-slate-700 font-bold shadow-2xs">
+              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 px-3 py-1.5 rounded-xl text-xs text-slate-700 font-semibold shadow-2xs">
                 <Compass className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                 <select
                   value={selectedLocation.id}
@@ -419,7 +419,7 @@ export default function WeatherIntelligencePage() {
               {/* Device GPS Trigger */}
               <button
                 onClick={handleTriggerGPS}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 border transition active:scale-95 shadow-2xs ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition active:scale-95 shadow-2xs ${
                   gpsActive
                     ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700 shadow-sm'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
@@ -427,7 +427,7 @@ export default function WeatherIntelligencePage() {
                 title="Use Live Device GPS"
               >
                 <Navigation className="w-3.5 h-3.5" />
-                <span>{gpsActive ? 'GPS ACTIVE' : 'USE GPS'}</span>
+                <span>{gpsActive ? 'GPS Active' : 'Use GPS'}</span>
               </button>
             </div>
 
@@ -435,20 +435,20 @@ export default function WeatherIntelligencePage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setReportModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 border border-amber-600 text-slate-950 text-xs font-mono font-black flex items-center gap-1.5 shadow-sm active:scale-95 transition"
+                className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 border border-amber-600 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition"
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline">REPORT HAZARD</span>
-                <span className="xs:hidden">REPORT</span>
+                <span className="hidden xs:inline">Report Hazard</span>
+                <span className="xs:hidden">Report</span>
               </button>
 
               <button
                 onClick={() => setUploadModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 border border-blue-700 text-white text-xs font-mono font-black flex items-center gap-1.5 shadow-sm active:scale-95 transition"
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 border border-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition"
               >
                 <UploadCloud className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline">UPLOAD CSV</span>
-                <span className="xs:hidden">UPLOAD</span>
+                <span className="hidden xs:inline">Upload CSV</span>
+                <span className="xs:hidden">Upload</span>
               </button>
             </div>
           </div>

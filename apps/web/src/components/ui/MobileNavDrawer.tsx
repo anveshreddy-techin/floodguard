@@ -110,7 +110,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                       <div className="text-xs font-bold text-slate-900 truncate">
                         {hub.shortTitle}
                       </div>
-                      <div className="text-[9px] font-mono text-slate-500 truncate">
+                      <div className="text-[10px] text-slate-500 truncate font-medium">
                         {hub.badge} · {hub.relatedApps.length} tools
                       </div>
                     </div>
@@ -126,7 +126,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
                 {/* Related Apps List */}
                 {isExpanded && (
-                  <div className="p-1.5 space-y-0.5">
+                  <div className="p-1.5 space-y-0.5 font-sans">
                     {hub.relatedApps.map((item) => {
                       const Icon = item.icon;
                       const isActive = pathname === item.href || (pathname.startsWith('/village') && item.id === 'village');
@@ -144,11 +144,11 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
                             <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-500'}`} />
-                            <span className="truncate">{item.label}</span>
+                            <span className="truncate text-xs">{item.label}</span>
                           </div>
 
                           {item.tag && (
-                            <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold shrink-0 ${
+                            <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
                               isActive ? 'bg-blue-700 text-blue-100' : 'bg-slate-100 border border-slate-200 text-slate-600'
                             }`}>
                               {item.tag}
@@ -165,9 +165,9 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
         </div>
 
         {/* Footer info */}
-        <div className="p-3 border-t border-slate-200 bg-white text-[11px] font-mono flex items-center justify-between">
-          <span className="font-bold text-blue-700">SIH26192 • THEME 4</span>
-          <span className="text-emerald-700 font-bold">5 OPERATIONAL HUBS</span>
+        <div className="p-3 border-t border-slate-200 bg-white text-xs font-sans flex items-center justify-between">
+          <span className="font-semibold text-blue-700">SIH26192 • Theme 4</span>
+          <span className="text-emerald-700 font-semibold">5 Unified Hubs</span>
         </div>
       </div>
     </div>

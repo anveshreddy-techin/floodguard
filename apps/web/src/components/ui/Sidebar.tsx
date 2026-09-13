@@ -34,89 +34,89 @@ export interface AppHubOption {
 export const APP_HUB_OPTIONS: AppHubOption[] = [
   {
     id: 'hub-ops',
-    title: 'OPERATIONS & INCIDENT HUB',
+    title: 'Operations & Emergency Hub',
     shortTitle: 'Operations',
     desc: 'Live Command, Alerts, 10 Roles & Evacuation',
     icon: ShieldAlert,
-    badge: 'RESPONSE',
+    badge: 'Response',
     accentColor: '#EF4444',
     defaultHref: '/',
     relatedApps: [
-      { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, tag: 'LIVE OPS', badgeColor: 'red' },
-      { id: 'dashboard-alerts', label: 'Live Dashboard & Alerts', href: '/dashboard', icon: AlertTriangle, tag: 'ALERTS', badgeColor: 'red' },
-      { id: 'role-workspace', label: '10 Role Workspaces', href: '/role-workspace', icon: Users, tag: 'COMMAND', badgeColor: 'blue' },
+      { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, tag: 'Live Ops', badgeColor: 'red' },
+      { id: 'dashboard-alerts', label: 'Live Dashboard & Alerts', href: '/dashboard', icon: AlertTriangle, tag: 'Alerts', badgeColor: 'red' },
+      { id: 'role-workspace', label: '10 Role Workspaces', href: '/role-workspace', icon: Users, tag: 'Command', badgeColor: 'blue' },
       { id: 'incidents', label: 'Incident Command & SOP', href: '/incidents', icon: FileText, tag: 'SOP' },
-      { id: 'safety', label: 'My Safety & Evacuation HUD', href: '/safety', icon: Compass, tag: 'RESCUE', badgeColor: 'green' },
+      { id: 'safety', label: 'My Safety & Evacuation HUD', href: '/safety', icon: Compass, tag: 'Rescue', badgeColor: 'green' },
     ],
   },
   {
     id: 'hub-gis',
-    title: 'GEOSPATIAL & HYDROLOGY LAB',
+    title: 'Geospatial & Hydrology Lab',
     shortTitle: 'Geospatial Lab',
     desc: 'Terrain GIS, River Basins, Cascade & Simulation',
     icon: Map,
-    badge: 'GIS LAB',
+    badge: 'GIS Lab',
     accentColor: '#3B82F6',
     defaultHref: '/map',
     relatedApps: [
-      { id: 'map', label: 'Hyper-Local GIS Map', href: '/map', icon: Map, tag: 'SATELLITE', badgeColor: 'blue' },
-      { id: 'river-basins', label: 'National River Basins', href: '/river-basins', icon: Waves, tag: 'SURGE MAP' },
-      { id: 'cascade', label: 'Upstream Cascade Physics', href: '/cascade', icon: Layers, tag: 'PHYSICS' },
-      { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle, tag: 'WHAT-IF' },
-      { id: 'village', label: 'Village Dossier Inspector', href: '/village/loc-uk-chamoli', icon: MapPin, tag: 'GROUND' },
+      { id: 'map', label: 'Hyper-Local GIS Map', href: '/map', icon: Map, tag: 'Satellite', badgeColor: 'blue' },
+      { id: 'river-basins', label: 'National River Basins', href: '/river-basins', icon: Waves, tag: 'Surge Map' },
+      { id: 'cascade', label: 'Upstream Cascade Physics', href: '/cascade', icon: Layers, tag: 'Physics' },
+      { id: 'simulation', label: 'Scenario Simulator', href: '/simulation', icon: PlayCircle, tag: 'What-If' },
+      { id: 'village', label: 'Village Dossier Inspector', href: '/village/loc-uk-chamoli', icon: MapPin, tag: 'Ground' },
     ],
   },
   {
     id: 'hub-met',
-    title: 'METEOROLOGY & INGESTION',
+    title: 'Meteorology & Ingestion Pipeline',
     shortTitle: 'Meteorology',
     desc: 'Weather, IoT Sensors, Ingestion & Providers',
     icon: CloudRain,
-    badge: 'TELEMETRY',
+    badge: 'Telemetry',
     accentColor: '#10B981',
     defaultHref: '/weather',
     relatedApps: [
-      { id: 'weather', label: 'Weather Intelligence', href: '/weather', icon: CloudRain, tag: 'NWP/RADAR', badgeColor: 'blue' },
+      { id: 'weather', label: 'Weather Intelligence', href: '/weather', icon: CloudRain, tag: 'Radar/NWP', badgeColor: 'blue' },
       { id: 'sensors', label: 'IoT & Telemetry Network', href: '/sensors', icon: Activity, tag: 'LoRaWAN' },
-      { id: 'upload', label: 'Data Ingestion Workbench', href: '/upload', icon: UploadCloud, tag: 'INTAKE' },
+      { id: 'upload', label: 'Data Ingestion Workbench', href: '/upload', icon: UploadCloud, tag: 'Intake' },
       { id: 'data-sources', label: 'Data Providers Registry', href: '/data-sources', icon: Server, tag: 'IMD/CWC' },
-      { id: 'ingestion', label: 'Ingestion Jobs Queue', href: '/ingestion', icon: RefreshCw, tag: 'PIPELINE' },
+      { id: 'ingestion', label: 'Ingestion Jobs Queue', href: '/ingestion', icon: RefreshCw, tag: 'Pipeline' },
     ],
   },
   {
     id: 'hub-forensics',
-    title: 'FORENSICS, HINDCAST & MEMORY',
+    title: 'Forensics, Hindcast & Audit',
     shortTitle: 'Forensics',
     desc: 'Historical Replay, Prediction Ledger & Audit',
     icon: History,
-    badge: 'FORENSICS',
+    badge: 'Forensics',
     accentColor: '#A855F7',
     defaultHref: '/hindcast',
     relatedApps: [
       { id: 'hindcast', label: 'Historical Hindcast Lab', href: '/hindcast', icon: History, tag: '2000-2026', badgeColor: 'purple' },
-      { id: 'replay', label: 'Strict Replay Studio', href: '/replay', icon: History, tag: 'REPLAY' },
-      { id: 'events', label: 'Event Memory Archive', href: '/events', icon: History, tag: 'CATALOG' },
+      { id: 'replay', label: 'Strict Replay Studio', href: '/replay', icon: History, tag: 'Replay' },
+      { id: 'events', label: 'Event Memory Archive', href: '/events', icon: History, tag: 'Archive' },
       { id: 'ledger', label: 'Prediction Ledger', href: '/ledger', icon: Database, tag: 'SHA-256' },
-      { id: 'benchmark', label: 'Holdout Benchmark Suite', href: '/benchmark', icon: BarChart3, tag: 'METRICS' },
-      { id: 'flight-recorder', label: 'Blackbox Flight Recorder', href: '/flight-recorder', icon: Radio, tag: 'AUDIT' },
+      { id: 'benchmark', label: 'Holdout Benchmark Suite', href: '/benchmark', icon: BarChart3, tag: 'Metrics' },
+      { id: 'flight-recorder', label: 'Blackbox Flight Recorder', href: '/flight-recorder', icon: Radio, tag: 'Blackbox' },
     ],
   },
   {
     id: 'hub-gov',
-    title: 'GOVERNANCE & PUBLIC PORTAL',
+    title: 'Governance & Public Portal',
     shortTitle: 'Governance',
     desc: 'ML Model Studio, Cross-Border & Public Citizen Portal',
     icon: Brain,
-    badge: 'GOV / ML',
+    badge: 'Gov & ML',
     accentColor: '#F59E0B',
     defaultHref: '/model-monitoring',
     relatedApps: [
-      { id: 'model-monitoring', label: 'NDRF ML Model Studio', href: '/model-monitoring', icon: Brain, tag: 'AI EVAL', badgeColor: 'blue' },
-      { id: 'cross-border', label: 'Cross-Border River Basins', href: '/cross-border', icon: Globe, tag: 'NEPAL/INDIA' },
-      { id: 'recovery', label: 'Disaster Recovery & Rehab', href: '/recovery', icon: Zap, tag: 'POST-EVENT' },
+      { id: 'model-monitoring', label: 'NDRF ML Model Studio', href: '/model-monitoring', icon: Brain, tag: 'AI Eval', badgeColor: 'blue' },
+      { id: 'cross-border', label: 'Cross-Border River Basins', href: '/cross-border', icon: Globe, tag: 'Nepal/India' },
+      { id: 'recovery', label: 'Disaster Recovery & Rehab', href: '/recovery', icon: Zap, tag: 'Post-Event' },
       { id: 'admin', label: 'Admin Governance & RBAC', href: '/admin', icon: ShieldCheck, tag: 'RBAC' },
-      { id: 'public-portal', label: 'Public Citizen Portal', href: '/portal', icon: Globe, tag: 'CITIZENS', badgeColor: 'amber' },
-      { id: 'data-flow', label: 'Data Architecture Flow', href: '/data-flow', icon: Database, tag: 'SPECS' },
+      { id: 'public-portal', label: 'Public Citizen Portal', href: '/portal', icon: Globe, tag: 'Citizens', badgeColor: 'amber' },
+      { id: 'data-flow', label: 'Data Architecture Flow', href: '/data-flow', icon: Database, tag: 'Specs' },
     ],
   },
 ];
@@ -236,10 +236,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                       <HubIcon className="w-3.5 h-3.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-[11px] font-bold text-white tracking-wide truncate group-hover:text-blue-300 transition">
+                      <div className="text-xs font-bold text-white tracking-normal truncate group-hover:text-blue-300 transition">
                         {hub.shortTitle}
                       </div>
-                      <div className="text-[9px] font-mono text-slate-400 truncate">
+                      <div className="text-[10px] text-slate-400 truncate font-medium">
                         {hub.badge}
                       </div>
                     </div>
@@ -271,7 +271,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
               {/* Related Sub-Applications (Nested in the same option) */}
               {!collapsed && isHubExpanded && (
-                <div className="px-2 pb-2 pt-0.5 space-y-0.5 border-t border-white/5">
+                <div className="px-2 pb-2 pt-0.5 space-y-0.5 border-t border-white/5 font-sans">
                   {hub.relatedApps.map((subApp) => {
                     const SubIcon = subApp.icon;
                     const isActive = activeTab === subApp.id || (activeTab.startsWith('village') && subApp.id === 'village');
@@ -290,17 +290,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                         className={`flex items-center justify-between pl-3 pr-2 py-1.5 rounded-lg text-xs transition group relative ${
                           isActive 
                             ? 'bg-blue-600 text-white font-semibold shadow-xs' 
-                            : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                            : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
                         }`}
                       >
                         {/* Sub-tree connecting indicator */}
                         <div className="flex items-center gap-2 min-w-0">
                           <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-300'}`} />
-                          <span className="truncate text-[11px]">{subApp.label}</span>
+                          <span className="truncate text-xs">{subApp.label}</span>
                         </div>
 
                         {subApp.tag && (
-                          <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0 border ${badgeBg}`}>
+                          <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 border ${badgeBg}`}>
                             {subApp.tag}
                           </span>
                         )}
@@ -317,11 +317,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       {/* ── Footer ── */}
       {!collapsed && (
         <div
-          className="p-3 border-t text-[10px] font-mono flex items-center justify-between bg-black/20"
+          className="p-3 border-t text-xs font-sans flex items-center justify-between bg-black/20"
           style={{ borderColor: 'rgba(255,255,255,0.08)', color: '#88A4B8' }}
         >
-          <span className="font-bold text-blue-400">SIH26192 • THEME 4</span>
-          <span className="text-emerald-400 font-bold">5 HUBS INTEGRATED</span>
+          <span className="font-semibold text-blue-400">SIH26192 • Theme 4</span>
+          <span className="text-emerald-400 font-semibold">5 Unified Hubs</span>
         </div>
       )}
     </aside>

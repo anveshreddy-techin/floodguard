@@ -13,32 +13,32 @@ export const SourceComparisonPanel: React.FC<SourceComparisonPanelProps> = ({
   fusionMethod = 'Hierarchical Authoritative Priority with Fallback Fusion',
 }) => {
   return (
-    <div className="bg-white border border-slate-200 shadow-sm p-4 sm:p-5 rounded-2xl space-y-4">
+    <div className="bg-white border border-slate-200 shadow-sm p-4 sm:p-5 rounded-2xl space-y-4 font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700 shrink-0">
             <Layers className="w-4 h-4" />
           </div>
-          <h3 className="text-sm font-black font-mono text-slate-900 tracking-wide uppercase">
-            MULTI-PROVIDER SOURCE COMPARISON & AGREEMENT MATRIX
+          <h3 className="text-sm font-bold text-slate-900 tracking-tight">
+            Multi-Source Weather Agreement Matrix
           </h3>
         </div>
-        <div className="text-[11px] font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 w-fit">
+        <div className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 w-fit">
           Method: {fusionMethod}
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs font-mono">
-          <thead className="bg-slate-100 text-slate-700 border-b border-slate-200">
+        <table className="w-full text-left text-xs font-sans">
+          <thead className="bg-slate-50 text-slate-700 border-b border-slate-200 font-semibold">
             <tr>
-              <th className="p-3 font-black">Data Provider</th>
-              <th className="p-3 font-black">Source Classification</th>
-              <th className="p-3 font-black">Status</th>
-              <th className="p-3 font-black">Observed / Forecast Rain</th>
-              <th className="p-3 font-black">Freshness & Latency</th>
-              <th className="p-3 font-black">Cross-Agreement</th>
-              <th className="p-3 font-black">Integration Notes</th>
+              <th className="p-3">Data Provider</th>
+              <th className="p-3">Source Classification</th>
+              <th className="p-3">Status</th>
+              <th className="p-3">Observed / Forecast Rain</th>
+              <th className="p-3">Freshness & Latency</th>
+              <th className="p-3">Cross-Agreement</th>
+              <th className="p-3">Integration Notes</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-800">
