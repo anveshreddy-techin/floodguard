@@ -394,9 +394,9 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
         </div>
       ) : (
         /* ── Multi-Timeframe Data Table ── */
-        <div className="overflow-x-auto max-h-72 border border-slate-800 rounded-2xl">
-          <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-[#050d20] text-slate-400 border-b border-slate-800 sticky top-0">
+        <div className="overflow-x-auto max-h-72 border border-slate-200 rounded-2xl shadow-xs">
+          <table className="w-full text-left text-xs font-sans">
+            <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 sticky top-0 font-semibold">
               {timeframe === 'HOURS' && (
                 <tr>
                   <th className="p-2.5">Time</th>
@@ -429,48 +429,48 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
                 </tr>
               )}
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-slate-200 text-slate-700">
               {timeframe === 'HOURS' && displayHours.map((h, i) => (
-                <tr key={i} className="hover:bg-slate-900/60">
-                  <td className="p-2.5 text-cyan-300 font-bold">
+                <tr key={i} className="hover:bg-slate-50 transition">
+                  <td className="p-2.5 text-blue-700 font-bold font-mono">
                     {new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </td>
                   <td className="p-2.5">{h.condition_code?.replace(/_/g, ' ')}</td>
-                  <td className={`p-2.5 font-bold ${h.precipitation_mm >= 15 ? 'text-rose-400' : 'text-slate-200'}`}>
+                  <td className={`p-2.5 font-bold font-mono ${h.precipitation_mm >= 15 ? 'text-rose-600' : 'text-slate-900'}`}>
                     {h.precipitation_mm ?? 0} mm/h
                   </td>
-                  <td className="p-2.5 text-amber-300 font-bold">{h.accumulated_precipitation_mm ?? 0} mm</td>
-                  <td className="p-2.5 text-teal-300">{h.rain_probability_pct ?? 0}%</td>
-                  <td className="p-2.5">{h.temperature_c ?? '--'}°C</td>
-                  <td className="p-2.5">{h.wind_speed_kmh ?? '--'} km/h</td>
+                  <td className="p-2.5 text-amber-700 font-bold font-mono">{h.accumulated_precipitation_mm ?? 0} mm</td>
+                  <td className="p-2.5 text-teal-700 font-semibold font-mono">{h.rain_probability_pct ?? 0}%</td>
+                  <td className="p-2.5 font-mono">{h.temperature_c ?? '--'}°C</td>
+                  <td className="p-2.5 font-mono">{h.wind_speed_kmh ?? '--'} km/h</td>
                 </tr>
               ))}
 
               {timeframe === 'DAYS' && displayDays.map((d, i) => (
-                <tr key={i} className="hover:bg-slate-900/60">
-                  <td className="p-2.5 text-cyan-300 font-bold">{d.date}</td>
+                <tr key={i} className="hover:bg-slate-50 transition">
+                  <td className="p-2.5 text-blue-700 font-bold font-mono">{d.date}</td>
                   <td className="p-2.5">{d.dominant_condition?.replace(/_/g, ' ')}</td>
-                  <td className={`p-2.5 font-bold ${d.total_precipitation_mm >= 50 ? 'text-rose-400' : 'text-slate-200'}`}>
+                  <td className={`p-2.5 font-bold font-mono ${d.total_precipitation_mm >= 50 ? 'text-rose-600' : 'text-slate-900'}`}>
                     {d.total_precipitation_mm} mm
                   </td>
-                  <td className="p-2.5 text-teal-300">{d.rain_probability_max_pct}%</td>
-                  <td className="p-2.5">{d.temperature_min_c}°C – {d.temperature_max_c}°C</td>
-                  <td className="p-2.5 text-slate-400">{d.warning_source || 'Open-Meteo NWP'}</td>
+                  <td className="p-2.5 text-teal-700 font-semibold font-mono">{d.rain_probability_max_pct}%</td>
+                  <td className="p-2.5 font-mono">{d.temperature_min_c}°C – {d.temperature_max_c}°C</td>
+                  <td className="p-2.5 text-slate-500">{d.warning_source || 'Open-Meteo NWP'}</td>
                 </tr>
               ))}
 
               {timeframe === 'WEEKS' && weeksData.map((w, i) => (
-                <tr key={i} className="hover:bg-slate-900/60">
-                  <td className="p-2.5 text-purple-300 font-bold">{w.label}</td>
-                  <td className="p-2.5 font-bold text-slate-200">{w.total_rainfall_mm} mm</td>
-                  <td className={`p-2.5 font-bold ${w.anomaly_departure_pct > 0 ? 'text-rose-400' : 'text-cyan-300'}`}>
+                <tr key={i} className="hover:bg-slate-50 transition">
+                  <td className="p-2.5 text-purple-700 font-bold font-mono">{w.label}</td>
+                  <td className="p-2.5 font-bold font-mono text-slate-900">{w.total_rainfall_mm} mm</td>
+                  <td className={`p-2.5 font-bold font-mono ${w.anomaly_departure_pct > 0 ? 'text-rose-600' : 'text-blue-700'}`}>
                     {w.anomaly_departure_pct > 0 ? `+${w.anomaly_departure_pct}%` : `${w.anomaly_departure_pct}%`}
                   </td>
-                  <td className="p-2.5 text-amber-300">±{w.nwp_ensemble_spread_mm} mm</td>
-                  <td className="p-2.5 text-purple-400 font-bold">{w.soil_saturation_buildup_pct}%</td>
+                  <td className="p-2.5 text-amber-700 font-mono">±{w.nwp_ensemble_spread_mm} mm</td>
+                  <td className="p-2.5 text-purple-700 font-bold font-mono">{w.soil_saturation_buildup_pct}%</td>
                   <td className="p-2.5">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                      w.risk_category === 'SURGE_WARNING' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-slate-800 text-slate-300'
+                      w.risk_category === 'SURGE_WARNING' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-700 border border-slate-200'
                     }`}>
                       {w.risk_category}
                     </span>
@@ -483,10 +483,10 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
       )}
 
       {/* ── Legend & Footnote ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-[10px] font-mono text-slate-400 border-t border-slate-800/60 pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] font-sans text-slate-500 border-t border-slate-200 pt-3">
         <div className="flex items-center gap-4 flex-wrap">
           <span className="flex items-center gap-1.5">
-            <span className="w-3 h-2 bg-cyan-500 rounded-xs" /> 
+            <span className="w-3 h-2 bg-blue-600 rounded-xs" /> 
             {timeframe === 'HOURS' ? 'Hourly Rain (mm/h)' : (timeframe === 'DAYS' ? 'Daily Rain (mm/d)' : 'Weekly Rain (mm/w)')}
           </span>
           <span className="flex items-center gap-1.5">

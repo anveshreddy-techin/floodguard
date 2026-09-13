@@ -314,7 +314,7 @@ export const PipelineVisualizer: React.FC<{
                     >
                       {s.stage}
                     </span>
-                    <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-cyan-300' : 'text-slate-500'}`} />
+                    <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-600' : 'text-slate-500'}`} />
                   </div>
                   <div className={`text-[10px] font-bold leading-tight line-clamp-1 ${isSelected ? 'text-white' : 'text-slate-900'}`}>
                     {s.shortName}
@@ -379,7 +379,7 @@ export const PipelineVisualizer: React.FC<{
               <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 mb-1">
                 GOVERNING PHYSICAL / MATHEMATICAL FORMULA
               </div>
-              <div className="bg-slate-900 text-cyan-300 font-mono text-[11px] p-2.5 rounded border border-slate-800 overflow-x-auto">
+              <div className="bg-slate-100 text-slate-800 font-mono text-[11px] p-2.5 rounded border border-slate-300 overflow-x-auto">
                 <code>{selected.equation}</code>
               </div>
               <p className="text-[11px] text-slate-600 mt-1 italic">

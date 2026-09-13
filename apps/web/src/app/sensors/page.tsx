@@ -168,37 +168,40 @@ export default function SensorsConstellationPage() {
           </div>
 
           {/* ── HERO: Mountain Elevation Cross-Section Spatial Sensor Map ── */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-4 sm:p-6 shadow-sm relative overflow-hidden">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-sm relative overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
-              <span className="text-xs font-mono font-black text-blue-700 flex items-center gap-2">
+              <span className="text-xs font-sans font-bold text-blue-700 flex items-center gap-2">
                 <Mountain className="w-4 h-4 text-blue-600" />
-                CATCHMENT ELEVATION DEPLOYMENT PROFILE (1,450m Ridge → 1,180m Gorge)
+                Catchment Elevation Deployment Profile (1,450m Ridge → 1,180m Gorge)
               </span>
-              <span className="text-[10px] font-mono text-slate-500 font-bold">CLICK SENSOR NODE TO INSPECT TELEMETRY</span>
+              <span className="text-xs font-sans text-slate-500 font-medium">Click sensor node to inspect real-time telemetry</span>
             </div>
 
             {/* Spatial Mountain SVG Canvas */}
-            <div className="w-full h-56 sm:h-64 bg-[#0F1E36] rounded-2xl relative overflow-hidden border border-slate-300 shadow-inner">
+            <div className="w-full h-56 sm:h-64 bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200 shadow-inner">
               <svg viewBox="0 0 800 320" className="w-full h-full object-cover">
                 <defs>
                   <linearGradient id="mountainSlopeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#1E3A5F" stopOpacity="0.95" />
-                    <stop offset="50%" stopColor="#152B47" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#0B1728" stopOpacity="0.98" />
+                    <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.8" />
+                    <stop offset="50%" stopColor="#cbd5e1" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#e2e8f0" stopOpacity="1" />
                   </linearGradient>
 
                   <radialGradient id="sensorPulseGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#00A8E8" stopOpacity="0.8" />
-                    <stop offset="60%" stopColor="#00A8E8" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#00A8E8" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#0284c7" stopOpacity="0.8" />
+                    <stop offset="60%" stopColor="#0284c7" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
                   </radialGradient>
                 </defs>
+
+                {/* Sky / Atmospheric background */}
+                <rect width="800" height="320" fill="#f8fafc" />
 
                 {/* Topographic Mountain Silhouette Profile */}
                 <path
                   d="M 50,40 Q 200,90 350,150 T 600,240 L 780,280 L 780,320 L 20,320 Z"
                   fill="url(#mountainSlopeGrad)"
-                  stroke="#1e3a8a"
+                  stroke="#64748b"
                   strokeWidth="1.5"
                 />
 
@@ -206,25 +209,25 @@ export default function SensorsConstellationPage() {
                 <path
                   d="M 580,240 Q 660,260 780,290"
                   fill="none"
-                  stroke="#38BDF8"
+                  stroke="#0284c7"
                   strokeWidth="8"
                   strokeLinecap="round"
                   strokeOpacity="0.85"
                 />
 
                 {/* Elevation Baseline Markers */}
-                <line x1="50" y1="40" x2="780" y2="40" stroke="rgba(255,255,255,0.2)" strokeDasharray="3 4" />
-                <line x1="50" y1="140" x2="780" y2="140" stroke="rgba(255,255,255,0.2)" strokeDasharray="3 4" />
-                <line x1="50" y1="260" x2="780" y2="260" stroke="rgba(255,255,255,0.2)" strokeDasharray="3 4" />
-                <text x="60" y="35" fill="#94a3b8" fontSize="9" fontFamily="monospace" fontWeight="bold">1,450m (Ridge Peak)</text>
-                <text x="60" y="135" fill="#94a3b8" fontSize="9" fontFamily="monospace" fontWeight="bold">1,320m (Mid Slope)</text>
-                <text x="60" y="255" fill="#94a3b8" fontSize="9" fontFamily="monospace" fontWeight="bold">1,180m (River Gorge)</text>
+                <line x1="50" y1="40" x2="780" y2="40" stroke="rgba(100,116,139,0.3)" strokeDasharray="3 4" />
+                <line x1="50" y1="140" x2="780" y2="140" stroke="rgba(100,116,139,0.3)" strokeDasharray="3 4" />
+                <line x1="50" y1="260" x2="780" y2="260" stroke="rgba(100,116,139,0.3)" strokeDasharray="3 4" />
+                <text x="60" y="35" fill="#475569" fontSize="10" fontFamily="sans-serif" fontWeight="bold">1,450m (Ridge Peak)</text>
+                <text x="60" y="135" fill="#475569" fontSize="10" fontFamily="sans-serif" fontWeight="bold">1,320m (Mid Slope)</text>
+                <text x="60" y="255" fill="#475569" fontSize="10" fontFamily="sans-serif" fontWeight="bold">1,180m (River Gorge)</text>
 
                 {/* Interactive Sensor Nodes */}
                 {sensorNodes.map((s, idx) => {
                   const isSelected = selectedSensorIndex === idx;
                   const isDegraded = s.status === 'DEGRADED';
-                  const nodeColor = isDegraded ? '#F59E0B' : '#38BDF8';
+                  const nodeColor = isDegraded ? '#d97706' : '#0284c7';
 
                   return (
                     <g
@@ -251,7 +254,7 @@ export default function SensorsConstellationPage() {
                         fill={nodeColor}
                         stroke="#ffffff"
                         strokeWidth={isSelected ? '3' : '1.5'}
-                        style={{ filter: `drop-shadow(0 0 10px ${nodeColor})` }}
+                        style={{ filter: `drop-shadow(0 2px 6px rgba(0,0,0,0.15))` }}
                       />
 
                       {/* Label Pill */}
@@ -261,15 +264,15 @@ export default function SensorsConstellationPage() {
                         width="90"
                         height="20"
                         rx="5"
-                        fill="rgba(15,23,42,0.95)"
-                        stroke={isSelected ? '#38bdf8' : 'rgba(255,255,255,0.3)'}
-                        strokeWidth={isSelected ? '1.5' : '0.8'}
+                        fill="rgba(255,255,255,0.95)"
+                        stroke={isSelected ? '#0284c7' : '#cbd5e1'}
+                        strokeWidth={isSelected ? '2' : '1'}
                       />
                       <text
                         x={s.coords.x}
                         y={s.coords.y + 30}
                         textAnchor="middle"
-                        fill={isSelected ? '#38bdf8' : '#ffffff'}
+                        fill={isSelected ? '#0284c7' : '#1e293b'}
                         fontSize="9"
                         fontWeight="bold"
                         fontFamily="monospace"

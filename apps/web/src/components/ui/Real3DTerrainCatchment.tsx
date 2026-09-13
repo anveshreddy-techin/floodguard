@@ -778,7 +778,7 @@ export default function Real3DTerrainCatchment({ location }: Props) {
           <div className="text-amber-400 text-lg mb-2">⚠️ 3D TERRAIN NOT INITIALIZED</div>
           <div className="text-slate-500 mb-1">WebGL / MapLibre initialization failed:</div>
           <div className="text-slate-600 text-[10px] max-w-xs mb-3">{loadError}</div>
-          <div className="text-cyan-400 text-[11px]">Use 🛰️ REAL MAP (GIS) for Google Earth satellite overlay.</div>
+          <div className="text-blue-600 text-[11px] font-sans font-medium">Use 🛰️ REAL MAP (GIS) for Google Earth satellite overlay.</div>
         </div>
       </div>
     );
@@ -791,19 +791,19 @@ export default function Real3DTerrainCatchment({ location }: Props) {
 
       {/* Loading Overlay */}
       {!mapLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-950/90 z-20 backdrop-blur-sm">
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90 z-20 backdrop-blur-sm">
           <div className="text-center space-y-2">
-            <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
-            <div className="text-cyan-400 font-mono text-xs font-bold animate-pulse">⛰️ LOADING 3D TERRAIN &amp; RISK OVERLAYS…</div>
-            <div className="text-slate-500 font-mono text-[10px]">Projecting 3-Zone Flood Polygons, Slope Hazard &amp; River Flow on SRTM DEM</div>
+            <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="text-blue-400 font-mono text-xs font-bold animate-pulse">⛰️ LOADING 3D TERRAIN &amp; RISK OVERLAYS…</div>
+            <div className="text-slate-400 font-mono text-[10px]">Projecting 3-Zone Flood Polygons, Slope Hazard &amp; River Flow on SRTM DEM</div>
           </div>
         </div>
       )}
 
       {/* ── TOP-LEFT BADGE: Flood Risk 3D Map ── */}
-      <div className="absolute top-16 left-4 z-10 bg-[#0d2244]/90 border border-blue-400/40 rounded-full px-4 py-1.5 shadow-2xl backdrop-blur-md flex items-center gap-2.5 pointer-events-auto">
-        <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-        <span className="text-white text-xs sm:text-sm font-bold font-sans tracking-wide">
+      <div className="absolute top-16 left-4 z-10 bg-white/95 border border-slate-200 rounded-full px-4 py-1.5 shadow-md backdrop-blur-md flex items-center gap-2.5 pointer-events-auto">
+        <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
+        <span className="text-slate-900 text-xs sm:text-sm font-bold font-sans tracking-wide">
           Flood Risk 3D Map ({location.name.includes('/') ? location.name.split('/')[0].trim() : location.name})
         </span>
       </div>
@@ -877,17 +877,17 @@ export default function Real3DTerrainCatchment({ location }: Props) {
 
       {/* ── 3D Camera & Elevation HUD (Bottom-Left) ── */}
       <div className="absolute bottom-4 left-4 z-10 flex flex-col gap-2 pointer-events-auto max-w-[240px]">
-        <div className="bg-slate-900/95 border border-cyan-500/30 rounded-xl p-3 backdrop-blur-md shadow-2xl">
-          <div className="text-cyan-400 font-mono text-[10px] font-bold mb-2 tracking-widest flex items-center justify-between">
+        <div className="bg-white/95 border border-slate-200 rounded-xl p-3 backdrop-blur-md shadow-xl text-slate-800 font-sans">
+          <div className="text-slate-900 font-sans text-xs font-bold mb-2 tracking-wide flex items-center justify-between">
             <span>⛰️ 3D TERRAIN CONTROLS</span>
-            <span className="text-[9px] text-slate-400">SRTM DEM</span>
+            <span className="text-[10px] text-slate-500 font-mono">SRTM DEM</span>
           </div>
 
           {/* Pitch */}
           <div className="mb-2">
-            <div className="flex justify-between text-[9px] font-mono text-slate-400 mb-0.5">
+            <div className="flex justify-between text-[11px] font-sans text-slate-600 mb-0.5">
               <span>CAMERA PITCH (TILT)</span>
-              <span className="text-cyan-300 font-bold">{pitch}°</span>
+              <span className="text-blue-700 font-bold font-mono">{pitch}°</span>
             </div>
             <input
               type="range"
@@ -895,15 +895,15 @@ export default function Real3DTerrainCatchment({ location }: Props) {
               max={80}
               value={pitch}
               onChange={(e) => handlePitchChange(Number(e.target.value))}
-              className="w-full h-1.5 accent-cyan-400 bg-slate-800 rounded-lg cursor-pointer"
+              className="w-full h-1.5 accent-blue-600 bg-slate-200 rounded-lg cursor-pointer"
             />
           </div>
 
           {/* Bearing */}
           <div className="mb-2">
-            <div className="flex justify-between text-[9px] font-mono text-slate-400 mb-0.5">
+            <div className="flex justify-between text-[11px] font-sans text-slate-600 mb-0.5">
               <span>BEARING (ROTATION)</span>
-              <span className="text-cyan-300 font-bold">{bearing}°</span>
+              <span className="text-blue-700 font-bold font-mono">{bearing}°</span>
             </div>
             <input
               type="range"
@@ -911,15 +911,15 @@ export default function Real3DTerrainCatchment({ location }: Props) {
               max={180}
               value={bearing}
               onChange={(e) => handleBearingChange(Number(e.target.value))}
-              className="w-full h-1.5 accent-cyan-400 bg-slate-800 rounded-lg cursor-pointer"
+              className="w-full h-1.5 accent-blue-600 bg-slate-200 rounded-lg cursor-pointer"
             />
           </div>
 
           {/* Exaggeration */}
           <div className="mb-2.5">
-            <div className="flex justify-between text-[9px] font-mono text-slate-400 mb-0.5">
+            <div className="flex justify-between text-[11px] font-sans text-slate-600 mb-0.5">
               <span>VERTICAL EXAGGERATION</span>
-              <span className="text-cyan-300 font-bold">{exaggeration.toFixed(1)}×</span>
+              <span className="text-blue-700 font-bold font-mono">{exaggeration.toFixed(1)}×</span>
             </div>
             <input
               type="range"
@@ -928,21 +928,21 @@ export default function Real3DTerrainCatchment({ location }: Props) {
               step={0.1}
               value={exaggeration}
               onChange={(e) => setExaggeration(Number(e.target.value))}
-              className="w-full h-1.5 accent-cyan-400 bg-slate-800 rounded-lg cursor-pointer"
+              className="w-full h-1.5 accent-blue-600 bg-slate-200 rounded-lg cursor-pointer"
             />
           </div>
 
           <button
             onClick={handleResetView}
-            className="w-full py-1.5 rounded-lg text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition active:scale-95"
+            className="w-full py-1.5 rounded-lg text-xs font-sans font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition active:scale-95 cursor-pointer"
           >
             ↺ RESET CAMERA ANGLE
           </button>
         </div>
 
         {/* Honest Notice */}
-        <div className="bg-amber-950/80 border border-amber-500/40 rounded-lg p-2 text-[9px] font-mono text-amber-200">
-          <span className="font-bold text-amber-300">⚠️ ELEVATION FIDELITY:</span> 30m SRTM DEM mesh. For disaster response, cross-reference official CWC / Survey of India benchmarks.
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-[11px] font-sans text-amber-900">
+          <span className="font-bold text-amber-800">⚠️ ELEVATION FIDELITY:</span> 30m SRTM DEM mesh. For disaster response, cross-reference official CWC / Survey of India benchmarks.
         </div>
       </div>
 

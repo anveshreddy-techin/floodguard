@@ -85,22 +85,22 @@ export const CommandPalette: React.FC<{ isOpen: boolean; onClose: () => void }> 
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-start justify-center pt-20 p-4 animate-in fade-in duration-200">
-      <div className="bg-[#0e1630] border border-[#223354] rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden text-slate-100 flex flex-col">
+    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-start justify-center pt-20 p-4 animate-in fade-in duration-200">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden text-slate-900 flex flex-col font-sans">
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3.5 border-b border-slate-800 gap-3">
-          <Search className="w-5 h-5 text-cyan-400 shrink-0" />
+        <div className="flex items-center px-4 py-3.5 border-b border-slate-200 gap-3">
+          <Search className="w-5 h-5 text-blue-600 shrink-0" />
           <input
             type="text"
             autoFocus
             placeholder="Type a view, location, sensor, or command..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent text-sm text-slate-100 placeholder-slate-500 focus:outline-none font-mono"
+            className="w-full bg-transparent text-sm text-slate-900 placeholder-slate-400 focus:outline-none font-sans"
           />
           <button
             onClick={onClose}
-            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition"
+            className="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition"
           >
             <X className="w-4 h-4" />
           </button>
@@ -115,29 +115,29 @@ export const CommandPalette: React.FC<{ isOpen: boolean; onClose: () => void }> 
                 <button
                   key={idx}
                   onClick={() => handleSelect(item.href)}
-                  className="w-full px-3 py-2.5 rounded-xl flex items-center justify-between text-xs hover:bg-blue-600/30 hover:border-cyan-400/40 border border-transparent transition text-left group"
+                  className="w-full px-3 py-2.5 rounded-xl flex items-center justify-between text-xs hover:bg-blue-50 hover:border-blue-200 border border-transparent transition text-left group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 group-hover:text-white shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition shrink-0">
                       <Icon className="w-3.5 h-3.5" />
                     </div>
-                    <span className="font-semibold text-slate-200 group-hover:text-white">{item.label}</span>
+                    <span className="font-semibold text-slate-700 group-hover:text-blue-900">{item.label}</span>
                   </div>
-                  <span className="text-[10px] font-mono bg-slate-900 px-2 py-0.5 rounded text-slate-400 group-hover:text-cyan-300">
+                  <span className="text-[10px] font-sans font-bold bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600 group-hover:bg-blue-100 group-hover:text-blue-800">
                     {item.category}
                   </span>
                 </button>
               );
             })
           ) : (
-            <div className="p-6 text-center text-slate-400 text-xs font-mono">
+            <div className="p-6 text-center text-slate-500 text-xs font-sans">
               No matching views or commands found.
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-2 border-t border-slate-800 bg-[#070d1e] text-[10px] font-mono text-slate-500 flex items-center justify-between">
+        <div className="px-4 py-2.5 border-t border-slate-200 bg-slate-50 text-[11px] font-sans text-slate-500 flex items-center justify-between">
           <span>NAVIGATION SHORTCUTS: ESC to close</span>
           <span>ENTER to select</span>
         </div>

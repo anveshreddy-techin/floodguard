@@ -1220,8 +1220,8 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       {showControlBar && (
         <div className="absolute top-2.5 left-[345px] right-3 z-[400] hidden md:flex items-center justify-end gap-2 pointer-events-none">
           {/* Base Map Switcher */}
-          <div className="pointer-events-auto glass-panel p-1 rounded-xl shadow-2xl border border-cyan-500/30 flex items-center gap-1">
-            <span className="text-[10px] font-mono font-bold text-cyan-400 px-1.5 uppercase hidden sm:inline">
+          <div className="pointer-events-auto bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-md border border-slate-200 flex items-center gap-1">
+            <span className="text-[10px] font-mono font-bold text-blue-600 px-1.5 uppercase hidden sm:inline">
               MAP STYLE:
             </span>
             {(
@@ -1238,8 +1238,8 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                 title={tile.desc}
                 className={`px-2.5 py-1 rounded-lg text-[10px] md:text-xs font-mono font-bold transition-all transform active:scale-95 ${
                   activeBaseMap === tile.id
-                    ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                    ? 'bg-blue-600 text-white shadow-xs font-black'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 {tile.label}
@@ -1248,47 +1248,49 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           </div>
 
           {/* Quick Layer Checkbox Toggles */}
-          <div className="pointer-events-auto hidden md:flex items-center gap-1.5 glass-panel p-1 rounded-xl border border-slate-700/80 shadow-2xl">
+          <div className="pointer-events-auto hidden md:flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200 shadow-md">
             <button
               onClick={() => setLayers((p) => ({ ...p, floodZone: !p.floodZone }))}
               title="100-Year Modeled Inundation Corridor (Illustrative Hydraulic Estimate)"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.floodZone ? 'bg-orange-500/30 text-orange-300 border border-orange-500/40' : 'text-slate-500 opacity-60'
+                layers.floodZone ? 'bg-orange-100 text-orange-800 border border-orange-300' : 'text-slate-400 hover:text-slate-600'
               }`}
             >
-              <Waves className="w-3 h-3" />
+              <Waves className="w-3 h-3 text-orange-600" />
               <span>FLOOD ZONE</span>
-              <span className="text-[8px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">ESTIMATE</span>
+              <span className="text-[8px] px-1 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300 font-bold">ESTIMATE</span>
             </button>
 
             <button
               onClick={() => setLayers((p) => ({ ...p, evacuationRoute: !p.evacuationRoute }))}
               title="Candidate High-Ground Escape Trail (Unverified Ground Surface)"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.evacuationRoute ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-500/40' : 'text-slate-500 opacity-60'
+                layers.evacuationRoute ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'text-slate-400 hover:text-slate-600'
               }`}
             >
-              <Navigation className="w-3 h-3" />
+              <Navigation className="w-3 h-3 text-emerald-600" />
               <span>CANDIDATE ROUTE</span>
             </button>
 
             <button
               onClick={() => setLayers((p) => ({ ...p, sensors: !p.sensors }))}
+              title="Real IoT Gauges"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.sensors ? 'bg-blue-500/30 text-blue-300 border border-blue-500/40' : 'text-slate-500 opacity-60'
+                layers.sensors ? 'bg-blue-100 text-blue-800 border border-blue-300' : 'text-slate-400 hover:text-slate-600'
               }`}
             >
-              <Radio className="w-3 h-3" />
+              <Radio className="w-3 h-3 text-blue-600" />
               <span>IOT SENSORS</span>
             </button>
 
             <button
               onClick={() => setLayers((p) => ({ ...p, slopeHazards: !p.slopeHazards }))}
+              title="Steep Slope Hazards"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.slopeHazards ? 'bg-rose-500/30 text-rose-300 border border-rose-500/40' : 'text-slate-500 opacity-60'
+                layers.slopeHazards ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'text-slate-400 hover:text-slate-600'
               }`}
             >
-              <Mountain className="w-3 h-3" />
+              <Mountain className="w-3 h-3 text-rose-600" />
               <span>SLOPE RISK</span>
             </button>
           </div>
@@ -1297,14 +1299,14 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           <div className="pointer-events-auto flex items-center gap-1.5">
             <button
               onClick={handleResetView}
-              className="glass-panel hover:bg-slate-800 p-1.5 rounded-xl text-cyan-300 border border-cyan-500/30 shadow-xl active:scale-95 transition"
+              className="bg-white/95 hover:bg-slate-100 p-1.5 rounded-xl text-slate-700 border border-slate-200 shadow-md active:scale-95 transition"
               title="Reset View to Village Center"
             >
               <RotateCcw className="w-4 h-4" />
             </button>
 
-            <div className="glass-panel px-2.5 py-1 rounded-xl text-[10px] font-mono text-cyan-300 border border-cyan-500/30 hidden lg:flex items-center gap-1.5 shadow-xl">
-              <MapPin className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <div className="bg-white/95 px-2.5 py-1 rounded-xl text-[10px] font-mono text-slate-700 border border-slate-200 hidden lg:flex items-center gap-1.5 shadow-md">
+              <MapPin className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
               <span>{location.lat.toFixed(4)}°N, {location.lon.toFixed(4)}°E ({location.elevation})</span>
             </div>
           </div>
@@ -1314,13 +1316,13 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       {/* Mobile Map Style Bar (compact right pill, never collides) */}
       {showControlBar && (
         <div className="md:hidden absolute top-14 right-3 z-[400] flex items-center gap-1.5 pointer-events-none">
-          <div className="pointer-events-auto glass-panel p-1 rounded-xl shadow-xl border border-cyan-500/30 flex items-center gap-1">
+          <div className="pointer-events-auto bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-md border border-slate-200 flex items-center gap-1">
             {(['SATELLITE', 'TOPO', 'DARK'] as BaseMapTileType[]).map((tile) => (
               <button
                 key={tile}
                 onClick={() => setActiveBaseMap(tile)}
                 className={`px-2 py-0.5 rounded-lg text-[9px] font-mono font-bold ${
-                  activeBaseMap === tile ? 'bg-cyan-500 text-slate-950 font-black' : 'text-slate-400'
+                  activeBaseMap === tile ? 'bg-blue-600 text-white font-black' : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 {tile === 'SATELLITE' ? 'EARTH' : tile}
@@ -1328,7 +1330,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             ))}
             <button
               onClick={handleResetView}
-              className="p-1 rounded-lg text-cyan-300 hover:bg-slate-800"
+              className="p-1 rounded-lg text-slate-600 hover:bg-slate-100"
               title="Reset View"
             >
               <RotateCcw className="w-3 h-3" />
@@ -1340,16 +1342,16 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       {/* ── UNIFIED LEFT-SIDE INFORMATION PANEL (ALL INFORMATION NEATLY ON THE LEFT) ── */}
       <div className="absolute top-14 left-3 z-[450] flex flex-col pointer-events-none">
         {hudExpanded ? (
-          <div className="pointer-events-auto w-80 lg:w-[360px] max-h-[calc(100vh-170px)] bg-slate-950/95 border border-cyan-500/40 rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_25px_rgba(6,182,212,0.2)] backdrop-blur-2xl flex flex-col space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 animate-fade-in">
+          <div className="pointer-events-auto w-80 lg:w-[360px] max-h-[calc(100vh-170px)] bg-white/95 border border-slate-200 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 animate-fade-in">
             {/* Panel Header */}
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
               <div className="flex items-center gap-2 min-w-0">
-                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-400'}`} />
+                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}`} />
                 <div className="min-w-0">
-                  <span className="text-[9px] font-mono text-cyan-400 uppercase tracking-wider font-bold block truncate">
+                  <span className="text-[9px] font-mono text-blue-600 uppercase tracking-wider font-bold block truncate">
                     {gisLang === 'hi' ? 'धरातलीय जीआईएस स्थिति' : 'HYPER-LOCAL GROUND SITUATION'}
                   </span>
-                  <h4 className="text-xs font-black text-white truncate uppercase font-mono">
+                  <h4 className="text-xs font-black text-slate-900 truncate uppercase font-sans">
                     {location.name}
                   </h4>
                 </div>
@@ -1358,7 +1360,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                 <RiskBadge level={location.riskLevel} />
                 <button
                   onClick={() => setHudExpanded(false)}
-                  className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                  className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition"
                   title="Collapse Panel"
                 >
                   ◀
@@ -1368,40 +1370,40 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
             {/* Selected Feature / Pin Inspector (If pin clicked, or defaults to village) */}
             {selectedEntity && (
-              <div className="bg-slate-900/90 border border-cyan-500/40 rounded-xl p-3 space-y-2">
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-mono text-cyan-400 uppercase font-bold tracking-wider">
+                  <span className="text-[9px] font-mono text-blue-600 uppercase font-bold tracking-wider">
                     📌 {selectedEntity.category || 'MAP FEATURE'}
                   </span>
                   {selectedEntity.id !== spatialEntities.village.id && (
                     <button
                       onClick={() => setSelectedEntity(spatialEntities.village)}
-                      className="text-[9px] font-mono text-slate-400 hover:text-white underline"
+                      className="text-[9px] font-mono text-slate-500 hover:text-blue-600 underline"
                     >
                       Reset to Village
                     </button>
                   )}
                 </div>
-                <h5 className="text-xs font-black text-white">{selectedEntity.name}</h5>
-                <p className="text-[11px] text-slate-300 leading-relaxed">{selectedEntity.desc}</p>
+                <h5 className="text-xs font-black text-slate-900">{selectedEntity.name}</h5>
+                <p className="text-[11px] text-slate-600 leading-relaxed">{selectedEntity.desc}</p>
 
                 <div className="grid grid-cols-2 gap-1.5 pt-1 font-mono text-[10px]">
                   {selectedEntity.elevation && (
-                    <div className="bg-slate-950 p-1.5 rounded-lg border border-slate-800">
-                      <span className="text-slate-400 block text-[9px]">ELEVATION:</span>
-                      <span className="text-emerald-400 font-bold">{selectedEntity.elevation}</span>
+                    <div className="bg-white p-1.5 rounded-lg border border-slate-200">
+                      <span className="text-slate-500 block text-[9px]">ELEVATION:</span>
+                      <span className="text-emerald-700 font-bold">{selectedEntity.elevation}</span>
                     </div>
                   )}
                   {selectedEntity.reading && (
-                    <div className="bg-slate-950 p-1.5 rounded-lg border border-slate-800">
-                      <span className="text-slate-400 block text-[9px]">LIVE READING:</span>
-                      <span className="text-cyan-300 font-bold">{selectedEntity.reading}</span>
+                    <div className="bg-white p-1.5 rounded-lg border border-slate-200">
+                      <span className="text-slate-500 block text-[9px]">LIVE READING:</span>
+                      <span className="text-blue-700 font-bold">{selectedEntity.reading}</span>
                     </div>
                   )}
                 </div>
 
-                <div className="p-2 rounded-lg bg-cyan-950/50 border border-cyan-500/30 text-[10px] text-cyan-200">
-                  <strong className="text-cyan-300 block mb-0.5 uppercase">
+                <div className="p-2 rounded-lg bg-blue-50 border border-blue-200 text-[10px] text-blue-800">
+                  <strong className="text-blue-700 block mb-0.5 uppercase">
                     {gisLang === 'hi' ? 'निर्देश:' : 'DIRECTIVE:'}
                   </strong>
                   {selectedEntity.action || 'Continue normal spatial situational monitoring.'}
@@ -1411,21 +1413,21 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
             {/* Real-time Physical Telemetry */}
             <div className="space-y-1.5">
-              <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider font-bold block">
+              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider font-bold block">
                 {gisLang === 'hi' ? 'जमीनी टेलीमेट्री' : 'LIVE HYDROLOGIC TELEMETRY'}
               </span>
 
               {/* River Status */}
-              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 flex items-start gap-2">
-                <Waves className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-start gap-2">
+                <Waves className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div className="min-w-0">
-                  <div className="text-slate-400 text-[9px] uppercase font-bold font-mono">
+                  <div className="text-slate-500 text-[9px] uppercase font-bold font-mono">
                     {gisLang === 'hi' ? 'नदी जलस्तर' : 'RIVER STAGE & SURGE'}
                   </div>
-                  <div className="text-slate-200 font-bold text-xs mt-0.5 font-mono">
+                  <div className="text-slate-800 font-bold text-xs mt-0.5 font-mono">
                     {location.riverStage} • Rain: {location.rainfall3h}
                   </div>
-                  <div className="text-[10px] text-amber-300 font-mono mt-0.5">
+                  <div className="text-[10px] text-amber-700 font-mono mt-0.5">
                     {isHighRisk 
                       ? (gisLang === 'hi' ? '⚠️ नदी जलस्तर तेजी से बढ़ रहा है (+0.40m/h)' : '⚠️ River surging rapidly (+0.40m/h)')
                       : (gisLang === 'hi' ? 'प्रवाह सामान्य गति से जारी' : 'Normal stable channel flow')}
@@ -1434,16 +1436,16 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               </div>
 
               {/* Lead Time & Warning */}
-              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 flex items-start gap-2">
-                <Clock className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-start gap-2">
+                <Clock className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
                 <div className="min-w-0">
-                  <div className="text-slate-400 text-[9px] uppercase font-bold font-mono">
+                  <div className="text-slate-500 text-[9px] uppercase font-bold font-mono">
                     {gisLang === 'hi' ? 'चेतावनी अग्रिम समय' : 'EARLY WARNING LEAD TIME'}
                   </div>
-                  <div className="text-white font-black text-xs mt-0.5 font-mono">
+                  <div className="text-slate-900 font-black text-xs mt-0.5 font-mono">
                     {isHighRisk ? `${location.leadTimeMinutes} MIN ADVANCE WARNING` : 'NORMAL MONITORING'}
                   </div>
-                  <div className="text-[10px] text-rose-300 font-bold font-mono mt-0.5">
+                  <div className="text-[10px] text-rose-700 font-bold font-mono mt-0.5">
                     {isHighRisk 
                       ? (gisLang === 'hi' ? 'निचले मार्ग बंद हैं! लता हाई रिज पथ से निकलें।' : 'Avoid low riverbed! Evacuate uphill to Lata Ridge.')
                       : (gisLang === 'hi' ? 'मार्ग खुले हैं।' : 'All pathways clear.')}
@@ -1452,16 +1454,16 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               </div>
 
               {/* Designated Evacuation Shelter Vector */}
-              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-emerald-500/40 flex items-start gap-2">
-                <Navigation className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 flex items-start gap-2">
+                <Navigation className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
-                  <div className="text-slate-400 text-[9px] uppercase font-bold font-mono">
+                  <div className="text-slate-500 text-[9px] uppercase font-bold font-mono">
                     {gisLang === 'hi' ? 'नामित शरण स्थल' : 'DESIGNATED ASSEMBLY SHELTER'}
                   </div>
-                  <div className="text-emerald-300 font-bold text-xs mt-0.5 truncate font-mono">
+                  <div className="text-emerald-700 font-bold text-xs mt-0.5 truncate font-mono">
                     {spatialEntities.primaryShelter.name}
                   </div>
-                  <div className="text-[10px] text-slate-300 font-mono mt-0.5">
+                  <div className="text-[10px] text-slate-600 font-mono mt-0.5">
                     {isRaini 
                       ? (gisLang === 'hi' ? '+320m ऊंचाई (लता पठार) · 1.4 किमी (20 मिनट)' : '+320m Elevation Gain (Lata Plateau) · 1.4 km (20 min uphill walk)')
                       : (gisLang === 'hi' ? '+150m ऊंचाई · 1.2 किमी (14 मिनट)' : '+150m Ridge Spur · 1.2 km (14 min walk)')}
@@ -1470,7 +1472,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               </div>
 
               {/* Provenance & Illustrative Disclaimer Banner */}
-              <div className="px-2.5 py-1.5 rounded-lg bg-amber-950/40 border border-amber-500/30 text-[9px] font-mono text-amber-300/90 leading-tight">
+              <div className="px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-[9px] font-mono text-amber-800 leading-tight">
                 ⚠️ <strong>OVERLAY FIDELITY:</strong> Flood corridor &amp; river centerline are illustrative hydraulic estimates (not survey-grade LiDAR/DEM simulations).
               </div>
             </div>
@@ -1478,7 +1480,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             {/* Quick Action Button */}
             <a
               href="/safety"
-              className="w-full py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1.5 shadow-lg transition active:scale-95"
+              className="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold font-sans text-center flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95"
             >
               <Compass className="w-3.5 h-3.5" />
               <span>{gisLang === 'hi' ? 'मार्ग गाइड (HUD)' : 'OPEN ESCAPE GUIDANCE HUD'}</span>
@@ -1488,23 +1490,23 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           /* Collapsed Pill Button on Left */
           <button
             onClick={() => setHudExpanded(true)}
-            className="pointer-events-auto px-3 py-2 rounded-xl bg-slate-950/95 border border-cyan-500/50 text-cyan-300 hover:text-white shadow-2xl flex items-center gap-2 text-xs font-mono font-bold transition active:scale-95"
+            className="pointer-events-auto px-3 py-2 rounded-xl bg-white/95 border border-slate-200 text-slate-700 hover:text-slate-900 shadow-md backdrop-blur-md flex items-center gap-2 text-xs font-sans font-bold transition active:scale-95"
           >
             <span className={`w-2 h-2 rounded-full ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-400'}`} />
             <span>GIS INFO &amp; GROUND SITUATION</span>
-            <span className="text-[10px] text-cyan-400">▶</span>
+            <span className="text-[10px] text-slate-400">▶</span>
           </button>
         )}
       </div>
 
       {/* ── ON-MAP EXPLANATORY SPATIAL GUIDE / LEGEND (Bottom Right) ── */}
-      <div className="absolute bottom-8 right-3 z-[400] hidden lg:flex flex-col gap-1.5 p-3 rounded-2xl bg-slate-950/95 border border-cyan-500/30 backdrop-blur-xl shadow-2xl text-[10px] font-mono pointer-events-auto max-w-[310px]">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-0.5">
-          <span className="text-cyan-400 font-bold tracking-wider uppercase flex items-center gap-1.5">
+      <div className="absolute bottom-8 right-3 z-[400] hidden lg:flex flex-col gap-1.5 p-3 rounded-2xl bg-white/95 border border-slate-200 backdrop-blur-md shadow-lg text-[10px] font-mono pointer-events-auto max-w-[310px]">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-0.5">
+          <span className="text-blue-600 font-bold tracking-wider uppercase flex items-center gap-1.5">
             <span>🗺️</span>
             <span>HYDRAULIC &amp; REFUGE GUIDE</span>
           </span>
-          <span className="text-[9px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold">
+          <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-bold">
             {location.name.split('/')[0].trim()}
           </span>
         </div>
@@ -1514,106 +1516,106 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             <>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-red-600/70 border border-red-500 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-red-400">🔴 Zone 1 — ACTIVE INUNDATION:</b> Gorge floor (2.0–4.5m depth). Certain fatality.
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-red-600">🔴 Zone 1 — ACTIVE INUNDATION:</b> Gorge floor (2.0–4.5m depth). Certain fatality.
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-orange-500/60 border border-orange-400 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-orange-400">🟠 Zone 2 — HIGH SURGE REACH:</b> Low terraces (0.6–2.0m). Evacuate.
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-orange-600">🟠 Zone 2 — HIGH SURGE REACH:</b> Low terraces (0.6–2.0m). Evacuate.
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-yellow-400/40 border border-yellow-400 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-yellow-400">🟡 Zone 3 — CAUTION:</b> Slope toes, debris splash (&lt;0.5m). Prepare.
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-yellow-700">🟡 Zone 3 — CAUTION:</b> Slope toes, debris splash (&lt;0.5m). Prepare.
                 </div>
               </div>
-              <div className="border-t border-slate-800 pt-1.5 mt-1" />
+              <div className="border-t border-slate-200 pt-1.5 mt-1" />
             </>
           )}
           {isGuwahati && (
             <>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-red-600/70 border border-red-500 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-red-400">🔴 Zone 1 — ACTIVE INUNDATION:</b> Brahmaputra riverfront &amp; Bharalu backflow (2.0–3.5m).
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-red-600">🔴 Zone 1 — ACTIVE INUNDATION:</b> Brahmaputra riverfront &amp; Bharalu backflow (2.0–3.5m).
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-orange-500/60 border border-orange-400 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-orange-400">🟠 Zone 2 — SURGE BUFFER:</b> Anil Nagar, Hatigaon lowlands (0.8–1.8m).
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-orange-600">🟠 Zone 2 — SURGE BUFFER:</b> Anil Nagar, Hatigaon lowlands (0.8–1.8m).
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-yellow-400/40 border border-yellow-400 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-yellow-400">🟡 Zone 3 — CAUTION:</b> Hill foothills &amp; drainage perimeter (&lt;0.5m).
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-yellow-700">🟡 Zone 3 — CAUTION:</b> Hill foothills &amp; drainage perimeter (&lt;0.5m).
                 </div>
               </div>
-              <div className="border-t border-slate-800 pt-1.5 mt-1" />
+              <div className="border-t border-slate-200 pt-1.5 mt-1" />
             </>
           )}
           {!isRaini && !isGuwahati && (
             <>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-red-600/70 border border-red-500 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-red-400">🔴 Zone 1 — ACTIVE INUNDATION:</b> Floodplain floor (1.5–3.5m). Evacuate.
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-red-600">🔴 Zone 1 — ACTIVE INUNDATION:</b> Floodplain floor (1.5–3.5m). Evacuate.
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-orange-500/60 border border-orange-400 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-orange-400">🟠 Zone 2 — SURGE BUFFER:</b> Low terraces (0.5–1.5m). Prepare.
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-orange-600">🟠 Zone 2 — SURGE BUFFER:</b> Low terraces (0.5–1.5m). Prepare.
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="w-3.5 h-2 rounded bg-yellow-400/40 border border-yellow-400 shrink-0 mt-0.5" />
-                <div className="text-slate-300 leading-tight">
-                  <b className="text-yellow-400">🟡 Zone 3 — CAUTION:</b> Slope toes, debris splash (&lt;0.5m). Monitor.
+                <div className="text-slate-700 leading-tight">
+                  <b className="text-yellow-700">🟡 Zone 3 — CAUTION:</b> Slope toes, debris splash (&lt;0.5m). Monitor.
                 </div>
               </div>
-              <div className="border-t border-slate-800 pt-1.5 mt-1" />
+              <div className="border-t border-slate-200 pt-1.5 mt-1" />
             </>
           )}
           <div className="flex items-start gap-2">
             <span className="w-3.5 h-1 rounded bg-[#38bdf8] shrink-0 mt-1" />
-            <div className="text-slate-300 leading-tight">
-              <b className="text-sky-400">{isGuwahati ? 'Brahmaputra River' : isRaini ? 'Dhauliganga' : `${location.region.split('(')[0].trim()} Waterway`}:</b> Flowing downstream. ▶ = surge direction.
+            <div className="text-slate-700 leading-tight">
+              <b className="text-sky-600">{isGuwahati ? 'Brahmaputra River' : isRaini ? 'Dhauliganga' : `${location.region.split('(')[0].trim()} Waterway`}:</b> Flowing downstream. ▶ = surge direction.
             </div>
           </div>
           {spatialEntities.tributaryVector && (
             <div className="flex items-start gap-2">
               <span className="w-3.5 h-1 rounded bg-[#fb923c] border border-dashed border-orange-400 shrink-0 mt-1" />
-              <div className="text-slate-300 leading-tight">
-                <b className="text-amber-400">{isGuwahati ? 'Bharalu Stormwater Backflow' : 'Rishiganga Surge'}:</b> {isGuwahati ? 'Urban flood backflow channel' : 'Glacial debris flow tributary'}.
+              <div className="text-slate-700 leading-tight">
+                <b className="text-amber-700">{isGuwahati ? 'Bharalu Stormwater Backflow' : 'Rishiganga Surge'}:</b> {isGuwahati ? 'Urban flood backflow channel' : 'Glacial debris flow tributary'}.
               </div>
             </div>
           )}
           <div className="flex items-start gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-300 shrink-0 mt-0.5" />
-            <div className="text-slate-300 leading-tight">
-              <b className="text-emerald-300">Designated Shelter:</b> {isRaini ? 'Lata Village FLAT TERRACE (+340m · 2,380m ASL)' : isGuwahati ? 'Kamakhya Nilachal Hilltop Refuge (+160m · 215m ASL)' : 'Elevated Ridge Refuge (Point-in-Polygon verified)'}.
+            <div className="text-slate-700 leading-tight">
+              <b className="text-emerald-700">Designated Shelter:</b> {isRaini ? 'Lata Village FLAT TERRACE (+340m · 2,380m ASL)' : isGuwahati ? 'Kamakhya Nilachal Hilltop Refuge (+160m · 215m ASL)' : 'Elevated Ridge Refuge (Point-in-Polygon verified)'}.
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="w-3.5 h-0.5 border-t-2 border-dashed border-emerald-400 shrink-0 mt-1.5" />
-            <div className="text-slate-300 leading-tight">
-              <b className="text-emerald-400">Escape Route:</b> {isGuwahati ? 'Kamakhya Access Road uphill' : isRaini ? 'Switchback trail to Lata terrace' : 'GIS-routed high-ground trail'}.
+            <div className="text-slate-700 leading-tight">
+              <b className="text-emerald-700">Escape Route:</b> {isGuwahati ? 'Kamakhya Access Road uphill' : isRaini ? 'Switchback trail to Lata terrace' : 'GIS-routed high-ground trail'}.
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="w-3.5 h-0.5 border-t-2 border-dashed border-rose-500 shrink-0 mt-1.5" />
-            <div className="text-slate-400 leading-tight">
-              <b className="text-rose-400">Blocked Vector:</b> {isGuwahati ? 'MG Road riverfront causeway (submerged)' : 'Low riverbed crossing (submerged)'}.
+            <div className="text-slate-600 leading-tight">
+              <b className="text-rose-600">Blocked Vector:</b> {isGuwahati ? 'MG Road riverfront causeway (submerged)' : 'Low riverbed crossing (submerged)'}.
             </div>
           </div>
           {/* Data status banner */}
-          <div className="border-t border-slate-800 pt-1.5 mt-1">
-            <div className="text-[9px] font-mono bg-slate-900 rounded px-2 py-1 border border-amber-500/40 text-amber-300 text-center leading-tight">
+          <div className="border-t border-slate-200 pt-1.5 mt-1">
+            <div className="text-[9px] font-mono bg-amber-50 rounded px-2 py-1 border border-amber-200 text-amber-800 text-center leading-tight">
               ⚡ HYBRID: Real GIS + Simulated Flood Scenario<br/>
               <span className="text-slate-500">{osmWaterways.length > 0 ? `✅ OSM river geometry (${osmWaterways.length} segments)` : '⏳ OSM loading...'}</span>
             </div>

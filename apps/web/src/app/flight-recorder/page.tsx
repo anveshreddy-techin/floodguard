@@ -78,22 +78,22 @@ export default function FlightRecorderPage() {
   const selected = flightEvents[selectedEventIndex];
 
   return (
-    <div className="flex flex-col min-h-screen select-none">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="flight-recorder" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-6xl mx-auto space-y-5 pb-24 md:pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="chip chip-demo">BLACK BOX AUDIT</span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                  <Radio className="w-5 h-5 text-amber-400" />
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-300 text-xs font-semibold">BLACK BOX AUDIT</span>
+                <h1 className="text-xl font-bold font-sans text-slate-900 flex items-center gap-2">
+                  <Radio className="w-5 h-5 text-amber-600" />
                   FLOODGUARD FLIGHT RECORDER
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
+              <p className="text-sm text-slate-600 mt-1 font-sans">
                 Synchronized audit stream of telemetry arrival, model execution, risk transitions, and operator interventions
               </p>
             </div>
@@ -109,16 +109,16 @@ export default function FlightRecorderPage() {
                   <div
                     key={evt.index}
                     onClick={() => setSelectedEventIndex(idx)}
-                    className={`p-4 rounded-2xl cursor-pointer transition-all duration-300 flex items-start gap-3.5 ${
+                    className={`p-4 rounded-2xl cursor-pointer transition-all duration-300 flex items-start gap-3.5 border ${
                       isSelected
-                        ? 'fp-operational ring-2 ring-cyan-400 shadow-xl scale-[1.01]'
-                        : 'fp hover:bg-slate-900/60'
+                        ? 'border-blue-500 ring-2 ring-blue-400/30 bg-blue-50/40 shadow-sm scale-[1.01]'
+                        : 'border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 shadow-sm'
                     }`}
                   >
                     <div
                       className="w-9 h-9 rounded-xl flex items-center justify-center font-mono font-bold text-xs shrink-0"
                       style={{
-                        backgroundColor: `${evt.color}25`,
+                        backgroundColor: `${evt.color}20`,
                         color: evt.color,
                         border: `1px solid ${evt.color}60`
                       }}
@@ -126,15 +126,15 @@ export default function FlightRecorderPage() {
                       {evt.index}
                     </div>
 
-                    <div className="flex-1 min-w-0 space-y-1">
+                    <div className="flex-1 min-w-0 space-y-1 font-sans">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold" style={{ color: evt.color }}>
+                        <span className="text-xs font-sans font-bold uppercase" style={{ color: evt.color }}>
                           {evt.type}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-400">{evt.time}</span>
+                        <span className="text-xs font-mono text-slate-500">{evt.time}</span>
                       </div>
-                      <div className="font-bold text-white text-xs leading-snug">{evt.title}</div>
-                      <div className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">{evt.desc}</div>
+                      <div className="font-bold text-slate-900 text-xs font-sans leading-snug">{evt.title}</div>
+                      <div className="text-xs text-slate-600 font-sans line-clamp-2 leading-relaxed">{evt.desc}</div>
                     </div>
                   </div>
                 );
@@ -143,37 +143,37 @@ export default function FlightRecorderPage() {
 
             {/* Selected Trace Details */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="fp fp-operational rounded-3xl p-6 space-y-4 shadow-2xl animate-slide-up">
-                <div className="border-b border-slate-800 pb-3">
-                  <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">
+              <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-sm animate-slide-up">
+                <div className="border-b border-slate-200 pb-3">
+                  <span className="text-xs font-sans text-amber-700 uppercase tracking-wider font-bold">
                     EVENT RECORD #{selected.index}
                   </span>
-                  <h3 className="text-base font-black text-white mt-1">{selected.title}</h3>
+                  <h3 className="text-base font-bold font-sans text-slate-900 mt-1">{selected.title}</h3>
                 </div>
 
-                <div className="space-y-2 text-xs font-mono">
-                  <div className="flex justify-between text-slate-300">
-                    <span className="text-slate-400">Timestamp:</span>
-                    <span className="font-bold text-cyan-300">{selected.time}</span>
+                <div className="space-y-2 text-xs font-sans">
+                  <div className="flex justify-between text-slate-700">
+                    <span className="text-slate-500">Timestamp:</span>
+                    <span className="font-mono font-bold text-blue-700">{selected.time}</span>
                   </div>
-                  <div className="flex justify-between text-slate-300">
-                    <span className="text-slate-400">Trace ID:</span>
-                    <span className="text-purple-300 font-bold">{selected.traceId}</span>
+                  <div className="flex justify-between text-slate-700">
+                    <span className="text-slate-500">Trace ID:</span>
+                    <span className="font-mono text-purple-700 font-bold">{selected.traceId}</span>
                   </div>
-                  <div className="flex justify-between text-slate-300">
-                    <span className="text-slate-400">Executing Actor:</span>
-                    <span className="text-slate-200">{selected.actor}</span>
+                  <div className="flex justify-between text-slate-700">
+                    <span className="text-slate-500">Executing Actor:</span>
+                    <span className="text-slate-900 font-medium">{selected.actor}</span>
                   </div>
                 </div>
 
-                <div className="space-y-2 pt-2 border-t border-slate-800">
-                  <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
+                <div className="space-y-2 pt-2 border-t border-slate-200">
+                  <span className="text-xs font-sans font-bold text-slate-600 uppercase tracking-wider block">
                     CRYPTOGRAPHIC EVIDENCE INPUTS
                   </span>
-                  <div className="space-y-1.5 text-xs font-mono">
+                  <div className="space-y-1.5 text-xs font-sans">
                     {selected.evidence.map((ev, i) => (
-                      <div key={i} className="fp p-2.5 rounded-xl text-slate-200 flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <div key={i} className="bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-slate-800 flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                         <span>{ev}</span>
                       </div>
                     ))}

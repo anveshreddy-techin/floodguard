@@ -58,7 +58,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenConfig }
   return (
     <nav 
       aria-label="Mobile Navigation Bar"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#070f24]/95 backdrop-blur-2xl border-t border-cyan-500/30 safe-bottom select-none shadow-[0_-8px_30px_rgba(0,0,0,0.85)]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 safe-bottom select-none shadow-[0_-4px_20px_rgba(0,0,0,0.06)]"
     >
       <div className="flex items-center justify-around px-2 py-1.5 h-16 max-w-lg mx-auto">
         {navItems.map((item) => {
@@ -70,49 +70,49 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenConfig }
               href={item.href}
               className={`flex-1 flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-200 relative group active:scale-90 ${
                 isActive
-                  ? 'text-cyan-300 font-black'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'text-blue-600 font-bold'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               <div className="relative">
                 <Icon className={`w-5 h-5 transition-transform ${
-                  isActive ? 'scale-110 text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.9)]' : ''
-                } ${item.highlight && !isActive ? 'text-amber-400' : ''}`} />
+                  isActive ? 'scale-110 text-blue-600' : ''
+                } ${item.highlight && !isActive ? 'text-amber-600' : ''}`} />
 
                 {item.badge && (
-                  <span className={`absolute -top-1.5 -right-3 text-[8px] font-mono px-1 rounded-full font-bold ${
+                  <span className={`absolute -top-1.5 -right-3 text-[8px] font-sans px-1 rounded-full font-bold ${
                     item.badge === 'LIVE' 
-                      ? 'bg-rose-500 text-white animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.8)]' 
-                      : 'bg-cyan-400 text-slate-950 font-black'
+                      ? 'bg-red-600 text-white animate-pulse shadow-sm' 
+                      : 'bg-blue-600 text-white font-bold'
                   }`}>
                     {item.badge}
                   </span>
                 )}
               </div>
 
-              <span className={`text-[10px] font-mono mt-0.5 tracking-tight ${
-                isActive ? 'text-cyan-300 font-bold' : 'text-slate-400'
+              <span className={`text-[10px] font-sans mt-0.5 tracking-tight ${
+                isActive ? 'text-blue-600 font-bold' : 'text-slate-500'
               }`}>
                 {item.label}
               </span>
 
               {isActive && (
-                <div className="w-6 h-0.5 bg-gradient-to-r from-cyan-400 to-sky-300 rounded-full mt-0.5 shadow-[0_0_8px_rgba(6,182,212,1)]" />
+                <div className="w-6 h-0.5 bg-blue-600 rounded-full mt-0.5 shadow-sm" />
               )}
             </Link>
           );
         })}
 
-        {/* 5th Action: Sector & Mode Configuration Drawer (Red Box Controls) */}
+        {/* 5th Action: Sector & Mode Configuration Drawer */}
         <button
           onClick={onOpenConfig}
-          className="flex-1 flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-cyan-300 active:scale-90 transition"
+          className="flex-1 flex flex-col items-center justify-center py-1 rounded-xl text-slate-500 hover:text-blue-600 active:scale-90 transition"
           title="Open Sector, Role, Language & Mode Settings"
         >
-          <div className="w-5 h-5 rounded-lg bg-slate-900/90 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-sm">
+          <div className="w-5 h-5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm">
             <SlidersHorizontal className="w-3.5 h-3.5" />
           </div>
-          <span className="text-[10px] font-mono mt-0.5 text-slate-400">
+          <span className="text-[10px] font-sans mt-0.5 text-slate-500">
             Sector
           </span>
         </button>

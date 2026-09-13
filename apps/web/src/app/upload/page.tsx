@@ -376,7 +376,7 @@ export default function DataIngestionWorkbenchPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#020714]">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8]">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="upload" />
@@ -384,16 +384,16 @@ export default function DataIngestionWorkbenchPage() {
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-6xl mx-auto space-y-6 pb-24 md:pb-6 overflow-y-auto">
           
           {/* Top Title Banner */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
                 <span className="chip chip-demo">LIVE INGESTION PORTAL</span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                  <UploadCloud className="w-5 h-5 text-cyan-400" />
+                <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2 font-sans">
+                  <UploadCloud className="w-5 h-5 text-blue-600" />
                   DATA INGESTION &amp; DEVICE TELEMETRY WORKBENCH
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
+              <p className="text-xs text-slate-600 mt-1 font-sans font-medium">
                 Real-world Open-Meteo weather API ingestion, direct ESP32/Raspberry Pi IoT telemetry push, manual staff gauge logging, and CSV pipelines.
               </p>
             </div>
@@ -401,24 +401,24 @@ export default function DataIngestionWorkbenchPage() {
           </div>
 
           {/* Ingestion Source Tabs */}
-          <div className="flex gap-2 border-b border-slate-800 pb-2 overflow-x-auto no-scrollbar font-mono text-xs">
+          <div className="flex gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar font-mono text-xs">
             <button
               onClick={() => setActiveIngestTab('UNIVERSAL_DISPATCH')}
               className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 shrink-0 ${
                 activeIngestTab === 'UNIVERSAL_DISPATCH'
-                  ? 'bg-rose-500 text-white shadow-lg font-black animate-pulse'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  ? 'bg-red-600 text-white shadow-sm font-black'
+                  : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300'
               }`}
             >
-              <ShieldAlert className="w-4 h-4 text-rose-300" />
+              <ShieldAlert className="w-4 h-4 text-white" />
               <span>🚨 UNIVERSAL INTAKE &amp; DISASTER DISPATCH</span>
             </button>
             <button
               onClick={() => setActiveIngestTab('LIVE_API')}
               className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 shrink-0 ${
                 activeIngestTab === 'LIVE_API'
-                  ? 'bg-cyan-500 text-slate-950 shadow-lg font-black'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  ? 'bg-blue-600 text-white shadow-sm font-black'
+                  : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300'
               }`}
             >
               <Globe className="w-4 h-4" />
@@ -428,8 +428,8 @@ export default function DataIngestionWorkbenchPage() {
               onClick={() => setActiveIngestTab('DEVICE_IOT')}
               className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 shrink-0 ${
                 activeIngestTab === 'DEVICE_IOT'
-                  ? 'bg-cyan-500 text-slate-950 shadow-lg font-black'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  ? 'bg-purple-600 text-white shadow-sm font-black'
+                  : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300'
               }`}
             >
               <Cpu className="w-4 h-4" />
@@ -439,8 +439,8 @@ export default function DataIngestionWorkbenchPage() {
               onClick={() => setActiveIngestTab('MANUAL_GAUGE')}
               className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 shrink-0 ${
                 activeIngestTab === 'MANUAL_GAUGE'
-                  ? 'bg-cyan-500 text-slate-950 shadow-lg font-black'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  ? 'bg-emerald-600 text-white shadow-sm font-black'
+                  : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300'
               }`}
             >
               <Smartphone className="w-4 h-4" />
@@ -450,8 +450,8 @@ export default function DataIngestionWorkbenchPage() {
               onClick={() => setActiveIngestTab('FILE_UPLOAD')}
               className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 shrink-0 ${
                 activeIngestTab === 'FILE_UPLOAD'
-                  ? 'bg-cyan-500 text-slate-950 shadow-lg font-black'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  ? 'bg-blue-600 text-white shadow-sm font-black'
+                  : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-300'
               }`}
             >
               <FolderOpen className="w-4 h-4" />
@@ -463,18 +463,18 @@ export default function DataIngestionWorkbenchPage() {
           {activeIngestTab === 'UNIVERSAL_DISPATCH' && (
             <div className="space-y-6 animate-fade-in">
               {/* Universal Input Console */}
-              <div className="fp fp-operational rounded-3xl p-5 sm:p-6 space-y-5 border border-rose-500/40 shadow-2xl">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
+              <div className="bg-white rounded-3xl p-5 sm:p-6 space-y-5 border border-slate-200 shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-2">
                   <div>
-                    <h2 className="text-sm font-mono font-bold text-rose-300 uppercase flex items-center gap-2">
-                      <ShieldAlert className="w-4 h-4 text-rose-400 animate-bounce" />
+                    <h2 className="text-sm font-sans font-bold text-slate-900 uppercase flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 text-red-600" />
                       UNIVERSAL MULTI-SOURCE DISASTER DATA INTAKE (SIH26192)
                     </h2>
-                    <p className="text-[11px] font-mono text-slate-400 mt-0.5">
+                    <p className="text-[11px] font-sans text-slate-600 mt-0.5">
                       Accepts ANY data type from ANY location across India, by ANY field responder / sensor network.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950 px-2.5 py-1 rounded-xl border border-cyan-800 font-bold">
+                  <span className="text-[10px] font-mono text-blue-800 bg-blue-50 px-2.5 py-1 rounded-xl border border-blue-200 font-bold">
                     CONNECTED TO NDRF EARLY WARNING PIPELINE
                   </span>
                 </div>
@@ -483,11 +483,11 @@ export default function DataIngestionWorkbenchPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
                   {/* Column 1: Field Actor Role */}
                   <div>
-                    <label className="text-slate-400 block mb-1 font-bold">1. FIELD ACTOR / RESCUE SECTOR:</label>
+                    <label className="text-slate-700 block mb-1 font-bold">1. FIELD ACTOR / RESCUE SECTOR:</label>
                     <select
                       value={universalFieldRole}
                       onChange={(e) => setUniversalFieldRole(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-cyan-300 font-bold focus:border-cyan-400"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold focus:border-blue-500 focus:outline-none shadow-xs"
                     >
                       <option value="NDRF_COMMANDER">🎖️ NDRF Incident Commander (EOC)</option>
                       <option value="FIELD_HYDROLOGIST">🌊 Field Hydro-Meteorologist (IMD/CWC)</option>
@@ -500,11 +500,11 @@ export default function DataIngestionWorkbenchPage() {
 
                   {/* Column 2: Data Source Type */}
                   <div>
-                    <label className="text-slate-400 block mb-1 font-bold">2. DATA SOURCE TYPE:</label>
+                    <label className="text-slate-700 block mb-1 font-bold">2. DATA SOURCE TYPE:</label>
                     <select
                       value={universalSourceType}
                       onChange={(e) => setUniversalSourceType(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-amber-300 font-bold focus:border-amber-400"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold focus:border-blue-500 focus:outline-none shadow-xs"
                     >
                       <option value="METEOROLOGICAL">🌧️ METEOROLOGICAL (Rainfall, Doppler QPE, AWS)</option>
                       <option value="HYDROLOGICAL">🌊 HYDROLOGICAL (River Level, Rate of Rise, Dam Spill)</option>
@@ -517,11 +517,11 @@ export default function DataIngestionWorkbenchPage() {
 
                   {/* Column 3: Target Location Across India */}
                   <div>
-                    <label className="text-slate-400 block mb-1 font-bold">3. TARGET LOCATION (PAN-INDIA):</label>
+                    <label className="text-slate-700 block mb-1 font-bold">3. TARGET LOCATION (PAN-INDIA):</label>
                     <select
                       value={universalTargetVillage}
                       onChange={(e) => setUniversalTargetVillage(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-emerald-300 font-bold focus:border-emerald-400"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold focus:border-blue-500 focus:outline-none shadow-xs"
                     >
                       <option value="uk-chamoli-raini">Raini Village (Chamoli, Uttarakhand) — Rishiganga Basin</option>
                       <option value="uk-kedarnath-town">Kedarnath Township (Rudraprayag, Uttarakhand) — Mandakini Basin</option>
@@ -533,39 +533,39 @@ export default function DataIngestionWorkbenchPage() {
                 </div>
 
                 {/* Specific Telemetry Form Controls */}
-                <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-4">
-                  <div className="text-[11px] font-mono font-bold text-slate-300 uppercase flex items-center gap-2">
-                    <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+                  <div className="text-[11px] font-mono font-bold text-slate-700 uppercase flex items-center gap-2">
+                    <Sliders className="w-3.5 h-3.5 text-blue-600" />
                     MEASUREMENT TELEMETRY INPUTS FOR {universalSourceType}:
                   </div>
 
                   {universalSourceType === 'METEOROLOGICAL' && (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
                       <div>
-                        <label className="text-slate-400 block mb-1">1-HOUR RAINFALL (mm):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">1-HOUR RAINFALL (mm):</label>
                         <input
                           type="number"
                           value={rain1h}
                           onChange={(e) => setRain1h(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="text-slate-400 block mb-1">3-HOUR ACCUMULATION (mm):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">3-HOUR ACCUMULATION (mm):</label>
                         <input
                           type="number"
                           value={rain3h}
                           onChange={(e) => setRain3h(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-amber-300 font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-amber-800 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="text-slate-400 block mb-1">PEAK INTENSITY (mm/h):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">PEAK INTENSITY (mm/h):</label>
                         <input
                           type="number"
                           value={rainPeak}
                           onChange={(e) => setRainPeak(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-rose-400 font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-red-600 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -574,23 +574,23 @@ export default function DataIngestionWorkbenchPage() {
                   {universalSourceType === 'HYDROLOGICAL' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
                       <div>
-                        <label className="text-slate-400 block mb-1">RIVER WATER LEVEL STAGE (m):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">RIVER WATER LEVEL STAGE (m):</label>
                         <input
                           type="number"
                           step="0.05"
                           value={riverStage}
                           onChange={(e) => setRiverStage(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-cyan-300 font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-blue-700 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="text-slate-400 block mb-1">RATE OF RISE (m/h):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">RATE OF RISE (m/h):</label>
                         <input
                           type="number"
                           step="0.05"
                           value={riverRiseRate}
                           onChange={(e) => setRiverRiseRate(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-rose-400 font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-red-600 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -599,18 +599,18 @@ export default function DataIngestionWorkbenchPage() {
                   {universalSourceType === 'GEOTECHNICAL' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
                       <div>
-                        <label className="text-slate-400 block mb-1">SOIL SATURATION RATIO (Sr: 0.0 - 1.0):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">SOIL SATURATION RATIO (Sr: 0.0 - 1.0):</label>
                         <input
                           type="number"
                           step="0.02"
                           value={soilSat}
                           onChange={(e) => setSoilSat(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-amber-300 font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-amber-800 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="text-slate-400 block mb-1">CALCULATED VOLUMETRIC MOISTURE (VWC %):</label>
-                        <div className="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-emerald-400 font-bold">
+                        <label className="text-slate-700 block mb-1 font-semibold">CALCULATED VOLUMETRIC MOISTURE (VWC %):</label>
+                        <div className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-emerald-700 font-bold shadow-xs">
                           {(parseFloat(soilSat) * 52.0).toFixed(1)}% VWC (Root-Zone Calibrated)
                         </div>
                       </div>
@@ -620,23 +620,23 @@ export default function DataIngestionWorkbenchPage() {
                   {universalSourceType === 'IOT_TELEMETRY' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
                       <div>
-                        <label className="text-slate-400 block mb-1">GEOPHONE DEBRIS VIBRATION (dB):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">GEOPHONE DEBRIS VIBRATION (dB):</label>
                         <input
                           type="number"
                           step="0.5"
                           value={geophoneDb}
                           onChange={(e) => setGeophoneDb(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-purple-300 font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-purple-700 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="text-slate-400 block mb-1">CULVERT BACKPRESSURE RATIO:</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">CULVERT BACKPRESSURE RATIO:</label>
                         <input
                           type="number"
                           step="0.02"
                           value={culvertBp}
                           onChange={(e) => setCulvertBp(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-rose-300 font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-red-600 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -645,21 +645,21 @@ export default function DataIngestionWorkbenchPage() {
                   {universalSourceType === 'COMMUNITY_FIELD' && (
                     <div className="space-y-3 text-xs font-mono">
                       <div>
-                        <label className="text-slate-400 block mb-1">VISUAL STAFF GAUGE LEVEL (m):</label>
+                        <label className="text-slate-700 block mb-1 font-semibold">VISUAL STAFF GAUGE LEVEL (m):</label>
                         <input
                           type="number"
                           step="0.05"
                           value={riverStage}
                           onChange={(e) => setRiverStage(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-bold"
+                          className="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                         />
                       </div>
-                      <label className="flex items-center gap-2 cursor-pointer text-slate-200">
+                      <label className="flex items-center gap-2 cursor-pointer text-slate-800 font-medium">
                         <input
                           type="checkbox"
                           checked={debrisObserved}
                           onChange={(e) => setDebrisObserved(e.target.checked)}
-                          className="accent-rose-500 w-4 h-4 rounded"
+                          className="accent-red-600 w-4 h-4 rounded"
                         />
                         <span>Eyewitness Alert: Active Boulder/Mud Debris Surge observed flowing upstream</span>
                       </label>
@@ -668,13 +668,13 @@ export default function DataIngestionWorkbenchPage() {
 
                   {universalSourceType === 'GEOLOGICAL' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-                      <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <span className="text-slate-400 block text-[10px]">CRACK DISPLACEMENT RATE:</span>
-                        <span className="text-sm font-bold text-amber-300">+3.5 mm/h (Extensometer Active)</span>
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-slate-500 block text-[10px] font-bold">CRACK DISPLACEMENT RATE:</span>
+                        <span className="text-sm font-bold text-amber-700">+3.5 mm/h (Extensometer Active)</span>
                       </div>
-                      <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <span className="text-slate-400 block text-[10px]">GSI REGIONAL SUSCEPTIBILITY:</span>
-                        <span className="text-sm font-bold text-rose-300">0.90 / 1.0 (Very High Hazard Zone)</span>
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-slate-500 block text-[10px] font-bold">GSI REGIONAL SUSCEPTIBILITY:</span>
+                        <span className="text-sm font-bold text-red-600">0.90 / 1.0 (Very High Hazard Zone)</span>
                       </div>
                     </div>
                   )}
@@ -682,12 +682,12 @@ export default function DataIngestionWorkbenchPage() {
 
                 {/* Transmission & Ground Truth Controls */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-                  <label className="flex items-center gap-2 text-xs font-mono text-slate-300 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-mono text-slate-700 cursor-pointer font-medium">
                     <input
                       type="checkbox"
                       checked={isGroundTruth}
                       onChange={(e) => setIsGroundTruth(e.target.checked)}
-                      className="accent-emerald-400 w-4 h-4 rounded"
+                      className="accent-emerald-600 w-4 h-4 rounded"
                     />
                     <span>⭐ Mark as Verified Event Ground-Truth for Continuous ML Retraining</span>
                   </label>
@@ -695,7 +695,7 @@ export default function DataIngestionWorkbenchPage() {
                   <button
                     onClick={handleUniversalIngest}
                     disabled={isTransmittingUniversal}
-                    className="btn-danger px-6 py-3 rounded-2xl text-xs font-mono font-black text-white flex items-center justify-center gap-2 shadow-2xl active:scale-95 transition"
+                    className="btn-danger px-6 py-3 rounded-2xl text-xs font-sans font-bold text-white flex items-center justify-center gap-2 shadow-sm active:scale-95 transition bg-red-600 hover:bg-red-700"
                   >
                     {isTransmittingUniversal ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     <span>INGEST DATA &amp; BROADCAST TO DISASTER AGENCIES</span>
@@ -705,25 +705,25 @@ export default function DataIngestionWorkbenchPage() {
 
               {/* Real-Time Disaster Ingestion & Multi-Agency Dispatch Receipt */}
               {universalResult && (
-                <div className="fp fp-operational rounded-3xl p-5 sm:p-6 space-y-5 border border-emerald-500/50 shadow-2xl animate-slide-up">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
+                <div className="bg-white rounded-3xl p-5 sm:p-6 space-y-5 border border-emerald-300 shadow-sm animate-slide-up">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                        <span className="text-xs font-mono font-bold text-emerald-300 uppercase">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                        <span className="text-xs font-mono font-bold text-emerald-800 uppercase">
                           INGESTION SUCCESSFUL — INGEST ID: {universalResult.ingest_id}
                         </span>
                       </div>
-                      <p className="text-[11px] font-mono text-slate-400 mt-0.5">
+                      <p className="text-[11px] font-sans text-slate-600 mt-0.5">
                         Location: {universalResult.location.village_name} ({universalResult.location.district}, {universalResult.location.state})
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2 font-mono text-xs">
-                      <span className="px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
-                        Risk: <strong className="text-rose-400">{universalResult.risk_assessment.composite_risk_score}/100</strong>
+                      <span className="px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 text-slate-700">
+                        Risk: <strong className="text-red-600">{universalResult.risk_assessment.composite_risk_score}/100</strong>
                       </span>
-                      <span className="px-3 py-1 rounded-xl bg-rose-950 text-rose-300 border border-rose-800 font-bold">
+                      <span className="px-3 py-1 rounded-xl bg-red-50 text-red-700 border border-red-200 font-bold">
                         {universalResult.risk_assessment.alert_stage}
                       </span>
                     </div>
@@ -731,90 +731,90 @@ export default function DataIngestionWorkbenchPage() {
 
                   {/* Multi-Agency Outbound Broadcast Ledger */}
                   <div className="space-y-3">
-                    <h3 className="text-xs font-mono font-bold text-cyan-300 uppercase flex items-center gap-2">
-                      <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
+                    <h3 className="text-xs font-mono font-bold text-blue-900 uppercase flex items-center gap-2">
+                      <Radio className="w-4 h-4 text-blue-600 animate-pulse" />
                       AUTOMATED DISASTER MANAGEMENT OUTBOUND BROADCAST (6 EXTERNAL AGENCIES)
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono">
                       {/* 1. OASIS CAP XML */}
-                      <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 shadow-xs">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-bold">1. OASIS CAP v1.2 XML</span>
-                          <span className="px-2 py-0.5 rounded text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-800">
+                          <span className="text-slate-900 font-bold">1. OASIS CAP v1.2 XML</span>
+                          <span className="px-2 py-0.5 rounded text-[9px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold">
                             {universalResult.disaster_management_outbound?.oasis_cap_xml?.status || 'GENERATED'}
                           </span>
                         </div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-[10px] text-slate-600">
                           Target: {universalResult.disaster_management_outbound?.oasis_cap_xml?.target_system || 'NDMA SACHET Gateway'}
                         </div>
                       </div>
 
                       {/* 2. CMAS Cell Broadcast */}
-                      <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 shadow-xs">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-bold">2. CMAS CELL BROADCAST</span>
-                          <span className="px-2 py-0.5 rounded text-[9px] bg-rose-950 text-rose-300 border border-rose-800">
+                          <span className="text-slate-900 font-bold">2. CMAS CELL BROADCAST</span>
+                          <span className="px-2 py-0.5 rounded text-[9px] bg-red-50 text-red-700 border border-red-200 font-bold">
                             QUEUED TO TOWERS
                           </span>
                         </div>
-                        <div className="text-[10px] text-rose-300 truncate">
+                        <div className="text-[10px] text-red-700 truncate font-semibold">
                           {universalResult.disaster_management_outbound?.cmas_cell_broadcast?.bilingual_payload?.hi || 'आपातकालीन चेतावनी'}
                         </div>
                       </div>
 
                       {/* 3. State EOC Webhook */}
-                      <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 shadow-xs">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-bold">3. STATE EOC / SDMA</span>
-                          <span className="px-2 py-0.5 rounded text-[9px] bg-cyan-950 text-cyan-300 border border-cyan-800">
+                          <span className="text-slate-900 font-bold">3. STATE EOC / SDMA</span>
+                          <span className="px-2 py-0.5 rounded text-[9px] bg-blue-100 text-blue-800 border border-blue-300 font-bold">
                             DISPATCHED
                           </span>
                         </div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-[10px] text-slate-600">
                           Target: {universalResult.disaster_management_outbound?.state_eoc_webhook?.agency || 'State Emergency Operations Center'}
                         </div>
                       </div>
 
                       {/* 4. Local Siren Controller */}
-                      <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 shadow-xs">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-bold">4. VILLAGE SIREN RELAY</span>
-                          <span className={`px-2 py-0.5 rounded text-[9px] ${
+                          <span className="text-slate-900 font-bold">4. VILLAGE SIREN RELAY</span>
+                          <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${
                             universalResult.disaster_management_outbound?.local_siren_controller?.status === 'TRIGGERED'
-                              ? 'bg-rose-950 text-rose-300 border border-rose-700 animate-pulse'
-                              : 'bg-slate-800 text-slate-400'
+                              ? 'bg-red-50 text-red-700 border border-red-300 animate-pulse'
+                              : 'bg-slate-200 text-slate-600'
                           }`}>
                             {universalResult.disaster_management_outbound?.local_siren_controller?.status || 'STANDBY'}
                           </span>
                         </div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-[10px] text-slate-600">
                           Pattern: {universalResult.disaster_management_outbound?.local_siren_controller?.signal_pattern || 'CONTINUOUS_ALARM'}
                         </div>
                       </div>
 
                       {/* 5. Aapda Mitra Broadcast */}
-                      <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 shadow-xs">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-bold">5. AAPDA MITRA DISPATCH</span>
-                          <span className="px-2 py-0.5 rounded text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-800">
+                          <span className="text-slate-900 font-bold">5. AAPDA MITRA DISPATCH</span>
+                          <span className="px-2 py-0.5 rounded text-[9px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold">
                             SMS &amp; WHATSAPP
                           </span>
                         </div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-[10px] text-slate-600">
                           Directive transmitted to 48 village volunteer phones
                         </div>
                       </div>
 
                       {/* 6. NDRF Battalion Deployment */}
-                      <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 shadow-xs">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-bold">6. NDRF BATTALION COMMAND</span>
-                          <span className="px-2 py-0.5 rounded text-[9px] bg-rose-950 text-rose-300 border border-rose-800 font-bold">
+                          <span className="text-slate-900 font-bold">6. NDRF BATTALION COMMAND</span>
+                          <span className="px-2 py-0.5 rounded text-[9px] bg-red-100 text-red-800 border border-red-300 font-bold">
                             DEPLOYMENT ORDER
                           </span>
                         </div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-[10px] text-slate-600">
                           Assigned: {universalResult.disaster_management_outbound?.ndrf_battalion_deployment?.battalion || '8th Bn NDRF'} (1078)
                         </div>
                       </div>
@@ -822,13 +822,13 @@ export default function DataIngestionWorkbenchPage() {
                   </div>
 
                   {/* Continuous Training Trigger Panel */}
-                  <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
                     <div>
-                      <div className="font-bold text-white flex items-center gap-2">
-                        <Cpu className="w-4 h-4 text-cyan-400" />
+                      <div className="font-bold text-slate-900 flex items-center gap-2 font-sans">
+                        <Cpu className="w-4 h-4 text-blue-600" />
                         CONTINUOUS MODEL RETRAINING BUFFER
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
+                      <p className="text-[11px] text-slate-600 mt-0.5 font-sans">
                         Verified field events are stored for continuous calibration and out-of-basin spatial re-validation.
                       </p>
                     </div>
@@ -836,15 +836,15 @@ export default function DataIngestionWorkbenchPage() {
                     <button
                       onClick={handleTriggerContinuousRetrain}
                       disabled={isRetraining}
-                      className="px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold active:scale-95 transition flex items-center gap-2 shrink-0"
+                      className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold active:scale-95 transition flex items-center gap-2 shrink-0 shadow-sm"
                     >
-                      {isRetraining ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+                      {isRetraining ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 text-yellow-300" />}
                       <span>TRIGGER CONTINUOUS RETRAINING</span>
                     </button>
                   </div>
 
                   {retrainStatus && (
-                    <div className="p-3 rounded-xl bg-cyan-950 border border-cyan-500 text-cyan-200 text-xs font-mono">
+                    <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-mono font-bold">
                       {retrainStatus}
                     </div>
                   )}
@@ -856,25 +856,25 @@ export default function DataIngestionWorkbenchPage() {
           {/* ── TAB 1: LIVE OPEN-METEO WEATHER API ── */}
           {activeIngestTab === 'LIVE_API' && (
             <div className="space-y-4 animate-fade-in">
-              <div className="p-5 rounded-3xl bg-slate-900/80 border border-cyan-500/40 shadow-2xl space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-cyan-400" />
+                    <h3 className="text-sm font-bold text-slate-900 font-sans uppercase flex items-center gap-2">
+                      <Globe className="w-4 h-4 text-blue-600" />
                       Live Indian Coordinates Weather &amp; Soil Moisture Stream
                     </h3>
-                    <p className="text-xs text-slate-400 font-sans mt-0.5">
+                    <p className="text-xs text-slate-600 font-sans mt-0.5">
                       Directly query real-time meteorological observations from Open-Meteo (No auth required)
                     </p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-xl bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-mono font-bold">
+                  <span className="px-2.5 py-1 rounded-xl bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-mono font-bold">
                     PUBLIC OPEN API
                   </span>
                 </div>
 
                 {/* Preset Location Pills */}
                 <div className="space-y-1.5 font-mono text-xs">
-                  <span className="text-slate-400 text-[11px] font-bold">QUICK-LOAD MONITORED DISASTER ZONES:</span>
+                  <span className="text-slate-700 text-[11px] font-bold">QUICK-LOAD MONITORED DISASTER ZONES:</span>
                   <div className="flex flex-wrap gap-1.5">
                     {Object.entries(PRESET_COORDS).map(([key, data]) => (
                       <button
@@ -887,8 +887,8 @@ export default function DataIngestionWorkbenchPage() {
                         }}
                         className={`px-3 py-1.5 rounded-xl border text-[11px] font-bold transition flex items-center gap-1.5 ${
                           selectedLocationPreset === key
-                            ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500'
-                            : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                            ? 'bg-blue-50 text-blue-800 border-blue-400 font-black shadow-xs'
+                            : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
                         }`}
                       >
                         <span>{data.name.split(' (')[0]}</span>
@@ -901,30 +901,30 @@ export default function DataIngestionWorkbenchPage() {
                 {/* Custom Lat/Lon Input & Query Trigger */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                   <div>
-                    <label className="text-[10px] font-mono text-slate-400 block mb-1">LATITUDE (°N):</label>
+                    <label className="text-[10px] font-mono text-slate-700 font-bold block mb-1">LATITUDE (°N):</label>
                     <input
                       type="number"
                       step="0.0001"
                       value={customLat}
                       onChange={(e) => setCustomLat(Number(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-mono focus:border-cyan-400 focus:outline-none"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 font-mono font-bold focus:border-blue-500 focus:outline-none shadow-xs"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-mono text-slate-400 block mb-1">LONGITUDE (°E):</label>
+                    <label className="text-[10px] font-mono text-slate-700 font-bold block mb-1">LONGITUDE (°E):</label>
                     <input
                       type="number"
                       step="0.0001"
                       value={customLon}
                       onChange={(e) => setCustomLon(Number(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-mono focus:border-cyan-400 focus:outline-none"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 font-mono font-bold focus:border-blue-500 focus:outline-none shadow-xs"
                     />
                   </div>
                   <div className="flex items-end">
                     <button
                       onClick={() => handleFetchLiveWeather(customLat, customLon, `Custom Coord (${customLat}, ${customLon})`)}
                       disabled={isFetchingLive}
-                      className="w-full py-2.5 rounded-xl btn-primary text-white font-mono text-xs font-black flex items-center justify-center gap-2 shadow-lg active:scale-95 transition"
+                      className="w-full py-2.5 rounded-xl btn-primary text-white font-sans text-xs font-bold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition bg-blue-600 hover:bg-blue-700"
                     >
                       {isFetchingLive ? (
                         <>
@@ -933,7 +933,7 @@ export default function DataIngestionWorkbenchPage() {
                         </>
                       ) : (
                         <>
-                          <Zap className="w-4 h-4 text-cyan-300" />
+                          <Zap className="w-4 h-4 text-yellow-300" />
                           <span>PULL REAL-TIME TELEMETRY</span>
                         </>
                       )}
@@ -943,41 +943,41 @@ export default function DataIngestionWorkbenchPage() {
 
                 {/* Live Result Display */}
                 {liveApiResponse && (
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-cyan-500/50 space-y-3 mt-4">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 mt-4">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                       <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                        <span className="text-xs font-mono font-bold text-emerald-300">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                        <span className="text-xs font-mono font-bold text-emerald-800">
                           LIVE API RESPONSE RECEIVED · {liveApiResponse.location}
                         </span>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400">
+                      <span className="text-[10px] font-mono text-slate-500 font-semibold">
                         Elevation: {liveApiResponse.elevation}m ASL
                       </span>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs">
-                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
-                        <span className="text-[10px] text-slate-400">TEMPERATURE</span>
-                        <div className="text-lg font-black text-white mt-0.5">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-slate-500 font-bold">TEMPERATURE</span>
+                        <div className="text-lg font-black text-slate-900 mt-0.5">
                           {liveApiResponse.current?.temperature_2m} °C
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
-                        <span className="text-[10px] text-slate-400">PRECIPITATION</span>
-                        <div className="text-lg font-black text-cyan-300 mt-0.5">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-blue-700 font-bold">PRECIPITATION</span>
+                        <div className="text-lg font-black text-blue-600 mt-0.5">
                           {liveApiResponse.current?.precipitation} mm
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
-                        <span className="text-[10px] text-slate-400">SURFACE HUMIDITY</span>
-                        <div className="text-lg font-black text-blue-300 mt-0.5">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-slate-500 font-bold">SURFACE HUMIDITY</span>
+                        <div className="text-lg font-black text-slate-800 mt-0.5">
                           {liveApiResponse.current?.relative_humidity_2m} %
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
-                        <span className="text-[10px] text-slate-400">SOIL MOISTURE (0-1cm)</span>
-                        <div className="text-lg font-black text-amber-300 mt-0.5">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-amber-700 font-bold">SOIL MOISTURE (0-1cm)</span>
+                        <div className="text-lg font-black text-amber-800 mt-0.5">
                           {(liveApiResponse.hourly_moisture?.surface_0_1cm * 100).toFixed(1)} %
                         </div>
                       </div>
@@ -991,18 +991,18 @@ export default function DataIngestionWorkbenchPage() {
           {/* ── TAB 2: DIRECT IOT HARDWARE TELEMETRY ── */}
           {activeIngestTab === 'DEVICE_IOT' && (
             <div className="space-y-4 animate-fade-in">
-              <div className="p-5 rounded-3xl bg-slate-900/80 border border-purple-500/40 shadow-2xl space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
-                      <Cpu className="w-4 h-4 text-purple-400" />
+                    <h3 className="text-sm font-bold text-slate-900 font-sans uppercase flex items-center gap-2">
+                      <Cpu className="w-4 h-4 text-purple-600" />
                       Direct IoT Sensor Gateway &amp; Telemetry Payload Ingestion
                     </h3>
-                    <p className="text-xs text-slate-400 font-sans mt-0.5">
+                    <p className="text-xs text-slate-600 font-sans mt-0.5">
                       Accepts live REST POST / MQTT telemetry payloads from ESP32, Raspberry Pi, and LoRaWAN gateways.
                     </p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-xl bg-purple-950 text-purple-300 border border-purple-800 text-[10px] font-mono font-bold">
+                  <span className="px-2.5 py-1 rounded-xl bg-purple-50 text-purple-800 border border-purple-200 text-[10px] font-mono font-bold">
                     ENDPOINT: /api/v1/ingestion/telemetry
                   </span>
                 </div>
@@ -1023,14 +1023,14 @@ export default function DataIngestionWorkbenchPage() {
                         onClick={() => handleSelectDeviceType(dev.id)}
                         className={`p-3 rounded-2xl border text-left flex flex-col gap-1.5 transition-all ${
                           active
-                            ? 'bg-purple-950 text-purple-200 border-purple-400 shadow-lg shadow-purple-900/40'
-                            : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-purple-700 hover:text-white'
+                            ? 'bg-purple-50 text-purple-900 border-purple-400 shadow-xs'
+                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-purple-300 hover:text-slate-900'
                         }`}
                       >
                         <div className="flex items-center gap-1.5">
-                          <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-purple-300' : 'text-purple-600'}`} />
+                          <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-purple-600' : 'text-slate-500'}`} />
                           <span className="font-bold truncate">{dev.label}</span>
-                          {active && <Check className="w-3 h-3 text-purple-400 ml-auto" />}
+                          {active && <Check className="w-3 h-3 text-purple-600 ml-auto" />}
                         </div>
                         <span className="text-[9px] text-slate-500 font-sans leading-tight">{dev.desc}</span>
                       </button>
@@ -1039,28 +1039,28 @@ export default function DataIngestionWorkbenchPage() {
                 </div>
 
                 {/* ── What each sensor measures ── */}
-                <div className="p-3 rounded-xl bg-slate-950 border border-purple-900/40 text-[10px] font-mono text-slate-400 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[10px] font-mono text-slate-600 grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {selectedDeviceType === 'ULTRASONIC_STAGE' && (<>
-                    <span>📏 <b className="text-cyan-400">Water Distance</b> (m)</span>
-                    <span>🌊 <b className="text-cyan-400">River Stage</b> (m)</span>
-                    <span>⬆ <b className="text-amber-400">Rate of Rise</b> (m/h)</span>
+                    <span>📏 <b className="text-blue-700">Water Distance</b> (m)</span>
+                    <span>🌊 <b className="text-blue-700">River Stage</b> (m)</span>
+                    <span>⬆ <b className="text-amber-700">Rate of Rise</b> (m/h)</span>
                     <span>🔋 Battery + RSSI health</span>
                   </>)}
                   {selectedDeviceType === 'RAIN_GAUGE' && (<>
-                    <span>🌧 <b className="text-cyan-400">1h / 3h Rainfall</b> (mm)</span>
-                    <span>⚡ <b className="text-amber-400">Peak Intensity</b> (mm/h)</span>
+                    <span>🌧 <b className="text-blue-700">1h / 3h Rainfall</b> (mm)</span>
+                    <span>⚡ <b className="text-amber-700">Peak Intensity</b> (mm/h)</span>
                     <span>🪣 Tip Count (15m)</span>
                     <span>🔋 Battery + RSSI health</span>
                   </>)}
                   {selectedDeviceType === 'SOIL_TDR' && (<>
-                    <span>💧 <b className="text-cyan-400">Soil Saturation Index</b> Sᵣ</span>
-                    <span>💦 <b className="text-cyan-400">Volumetric Water</b> θ (%)</span>
-                    <span>🌡 <b className="text-amber-400">Pore Pressure</b> (kPa)</span>
+                    <span>💧 <b className="text-blue-700">Soil Saturation Index</b> Sᵣ</span>
+                    <span>💦 <b className="text-blue-700">Volumetric Water</b> θ (%)</span>
+                    <span>🌡 <b className="text-amber-700">Pore Pressure</b> (kPa)</span>
                     <span>📐 Sensor Depth + Soil Temp</span>
                   </>)}
                   {selectedDeviceType === 'LORAWAN_GATEWAY' && (<>
-                    <span>🎙 <b className="text-cyan-400">Geophone Vibration</b> (dB)</span>
-                    <span>🌊 <b className="text-amber-400">Culvert Backpressure</b> ratio</span>
+                    <span>🎙 <b className="text-purple-700">Geophone Vibration</b> (dB)</span>
+                    <span>🌊 <b className="text-amber-700">Culvert Backpressure</b> ratio</span>
                     <span>📡 Connected Nodes + RSSI</span>
                     <span>🔁 LoRaWAN Uplink Freq (Hz)</span>
                   </>)}
@@ -1068,16 +1068,16 @@ export default function DataIngestionWorkbenchPage() {
 
                 {/* ── JSON Payload Editor ── */}
                 <div>
-                  <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 mb-1.5">
-                    <span className="text-purple-300 font-bold">DEVICE JSON TELEMETRY PAYLOAD:</span>
-                    <span className="text-emerald-400">SCHEMA: v1.4-STRICT · HMAC-SHA256 SIGNED</span>
+                  <div className="flex justify-between items-center text-[10px] font-mono text-slate-600 mb-1.5 font-bold">
+                    <span className="text-purple-700">DEVICE JSON TELEMETRY PAYLOAD:</span>
+                    <span className="text-emerald-700">SCHEMA: v1.4-STRICT · HMAC-SHA256 SIGNED</span>
                   </div>
                   <textarea
                     rows={9}
                     value={devicePayloadJson}
                     onChange={(e) => setDevicePayloadJson(e.target.value)}
                     spellCheck={false}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 font-mono text-xs text-cyan-300 focus:border-purple-400 focus:outline-none focus:ring-1 focus:ring-purple-500/40 resize-none leading-relaxed"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-2xl p-3 font-mono text-xs text-slate-900 focus:border-purple-500 focus:bg-white focus:outline-none shadow-xs resize-none leading-relaxed"
                   />
                   <div className="text-[9px] font-mono text-slate-500 mt-1">
                     ✓ Edit values above · Click a sensor button to auto-load preset · POST → /api/v1/ingestion/telemetry
@@ -1086,16 +1086,16 @@ export default function DataIngestionWorkbenchPage() {
 
                 {/* ── Push Trigger Button ── */}
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-[11px] font-mono text-slate-400">
-                    <span className="text-purple-400">Physical bounds validator</span> active: auto-flags rate-of-rise &gt; 5.0 m/h · stage &gt; 7.0 m · vibration &gt; 60 dB
+                  <div className="text-[11px] font-mono text-slate-600 font-medium">
+                    <span className="text-purple-700 font-bold">Physical bounds validator</span> active: auto-flags rate-of-rise &gt; 5.0 m/h · stage &gt; 7.0 m · vibration &gt; 60 dB
                   </div>
                   <button
                     onClick={handlePushDeviceData}
                     disabled={isPushingDevice}
-                    className={`px-6 py-2.5 rounded-xl text-white font-mono text-xs font-black flex items-center gap-2 transition shadow-lg shrink-0 ${
+                    className={`px-6 py-2.5 rounded-xl text-white font-sans text-xs font-bold flex items-center gap-2 transition shadow-sm shrink-0 ${
                       isPushingDevice
-                        ? 'bg-purple-800 opacity-70 cursor-not-allowed'
-                        : 'bg-purple-600 hover:bg-purple-500 active:scale-95'
+                        ? 'bg-purple-400 cursor-not-allowed'
+                        : 'bg-purple-600 hover:bg-purple-700 active:scale-95'
                     }`}
                   >
                     {isPushingDevice ? (
@@ -1108,59 +1108,59 @@ export default function DataIngestionWorkbenchPage() {
 
                 {/* ── Error display ── */}
                 {devicePushError && (
-                  <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-500 text-rose-200 text-xs font-mono flex items-start gap-2">
-                    <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <div className="p-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-xs font-mono flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                     <span>{devicePushError}</span>
                   </div>
                 )}
 
                 {/* ── Live API Result Card ── */}
                 {devicePushResult && (
-                  <div className="p-4 rounded-2xl bg-purple-950/60 border border-purple-500/60 space-y-3">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-purple-300 space-y-3">
                     {/* Status header */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                        <span className="text-sm font-bold text-emerald-300 font-mono">TELEMETRY ACCEPTED</span>
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                        <span className="text-sm font-bold text-emerald-800 font-mono">TELEMETRY ACCEPTED</span>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-700">{devicePushResult.device_id}</span>
+                      <span className="text-[10px] font-mono text-slate-600 bg-white px-2 py-0.5 rounded-lg border border-slate-200 shadow-xs font-bold">{devicePushResult.device_id}</span>
                     </div>
 
                     {/* Risk score + alert */}
                     <div className="grid grid-cols-3 gap-2 font-mono text-xs">
-                      <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-center">
+                      <div className="p-2.5 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
                         <div className={`text-2xl font-black ${
-                          devicePushResult.composite_risk_score >= 75 ? 'text-rose-400' :
-                          devicePushResult.composite_risk_score >= 60 ? 'text-amber-400' : 'text-emerald-400'
+                          devicePushResult.composite_risk_score >= 75 ? 'text-red-600' :
+                          devicePushResult.composite_risk_score >= 60 ? 'text-amber-700' : 'text-emerald-700'
                         }`}>{devicePushResult.composite_risk_score?.toFixed(1) ?? '—'}</div>
-                        <div className="text-slate-400 text-[9px] mt-0.5">COMPOSITE RISK</div>
+                        <div className="text-slate-500 text-[9px] mt-0.5 font-bold">COMPOSITE RISK</div>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-center">
+                      <div className="p-2.5 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
                         <div className={`text-sm font-bold mt-1 ${
-                          (devicePushResult.alert_level || '').includes('4') ? 'text-rose-400' :
-                          (devicePushResult.alert_level || '').includes('3') ? 'text-amber-400' : 'text-emerald-400'
+                          (devicePushResult.alert_level || '').includes('4') ? 'text-red-600' :
+                          (devicePushResult.alert_level || '').includes('3') ? 'text-amber-700' : 'text-emerald-700'
                         }`}>{devicePushResult.alert_level ?? '—'}</div>
-                        <div className="text-slate-400 text-[9px] mt-0.5">ALERT LEVEL</div>
+                        <div className="text-slate-500 text-[9px] mt-0.5 font-bold">ALERT LEVEL</div>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-center">
-                        <div className="text-2xl font-black text-cyan-400">{devicePushResult.actionable_lead_time_minutes ?? '—'}</div>
-                        <div className="text-slate-400 text-[9px] mt-0.5">LEAD TIME (min)</div>
+                      <div className="p-2.5 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
+                        <div className="text-2xl font-black text-blue-700">{devicePushResult.actionable_lead_time_minutes ?? '—'}</div>
+                        <div className="text-slate-500 text-[9px] mt-0.5 font-bold">LEAD TIME (min)</div>
                       </div>
                     </div>
 
                     {/* Verification badges */}
                     <div className="flex flex-wrap gap-2 text-[10px] font-mono">
-                      <span className="px-2 py-0.5 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-800">
+                      <span className="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold">
                         🔒 {devicePushResult.signature_verification}
                       </span>
-                      <span className="px-2 py-0.5 rounded-lg bg-blue-950 text-blue-300 border border-blue-800">
+                      <span className="px-2 py-0.5 rounded-lg bg-blue-50 text-blue-800 border border-blue-300 font-bold">
                         ✓ {devicePushResult.physical_bounds_check}
                       </span>
-                      <span className="px-2 py-0.5 rounded-lg bg-purple-950 text-purple-300 border border-purple-800">
+                      <span className="px-2 py-0.5 rounded-lg bg-purple-50 text-purple-800 border border-purple-300 font-bold">
                         🧠 SOURCE: {devicePushResult.source_type_routed}
                       </span>
                       {devicePushResult.continuous_training_buffered && (
-                        <span className="px-2 py-0.5 rounded-lg bg-indigo-950 text-indigo-300 border border-indigo-800">
+                        <span className="px-2 py-0.5 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-300 font-bold">
                           📊 BUFFERED FOR RETRAINING
                         </span>
                       )}
@@ -1169,7 +1169,7 @@ export default function DataIngestionWorkbenchPage() {
                     {/* Dispatch summary */}
                     {devicePushResult.dispatches_triggered && (
                       <div>
-                        <div className="text-[9px] font-mono text-slate-500 mb-1.5">MULTI-AGENCY DISPATCH TRIGGERED:</div>
+                        <div className="text-[9px] font-mono text-slate-500 mb-1.5 font-bold">MULTI-AGENCY DISPATCH TRIGGERED:</div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[9px] font-mono">
                           {[
                             { key: 'oasis_cap_xml', label: '🏛 NDMA CAP XML' },
@@ -1182,9 +1182,9 @@ export default function DataIngestionWorkbenchPage() {
                             const d = devicePushResult.dispatches_triggered?.[key];
                             const status = d?.status || 'TRIGGERED';
                             return (
-                              <div key={key} className="flex items-center gap-1 px-1.5 py-1 bg-slate-900 rounded-lg border border-slate-800">
-                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${status.includes('GENERATED') || status.includes('SENT') || status.includes('ISSUED') || status.includes('TRIGGERED') || status.includes('OPERATIONAL') ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                                <span className="text-slate-300 truncate">{label}</span>
+                              <div key={key} className="flex items-center gap-1 px-1.5 py-1 bg-white rounded-lg border border-slate-200 shadow-xs">
+                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${status.includes('GENERATED') || status.includes('SENT') || status.includes('ISSUED') || status.includes('TRIGGERED') || status.includes('OPERATIONAL') ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                                <span className="text-slate-800 font-semibold truncate">{label}</span>
                               </div>
                             );
                           })}
@@ -1193,7 +1193,7 @@ export default function DataIngestionWorkbenchPage() {
                     )}
 
                     {devicePushResult._demo_note && (
-                      <div className="text-[9px] text-amber-500 font-mono border-t border-slate-800 pt-2">
+                      <div className="text-[9px] text-amber-700 font-mono border-t border-slate-200 pt-2 font-semibold">
                         ⚠ {devicePushResult._demo_note}
                       </div>
                     )}
@@ -1203,55 +1203,53 @@ export default function DataIngestionWorkbenchPage() {
             </div>
           )}
 
-
-
           {/* ── TAB 3: MANUAL VILLAGE STAFF GAUGE ── */}
           {activeIngestTab === 'MANUAL_GAUGE' && (
             <div className="space-y-4 animate-fade-in">
-              <div className="p-5 rounded-3xl bg-slate-900/80 border border-lime-500/40 shadow-2xl space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-white font-mono uppercase flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-lime-400" />
+                    <h3 className="text-sm font-bold text-slate-900 font-sans uppercase flex items-center gap-2">
+                      <Smartphone className="w-4 h-4 text-emerald-600" />
                       Offline / Remote Village Physical Staff Gauge Ingestion
                     </h3>
-                    <p className="text-xs text-slate-400 font-sans mt-0.5">
+                    <p className="text-xs text-slate-600 font-sans mt-0.5">
                       For village sarpanches &amp; grassroots operators to log visual river staff gauges when digital telemetry is offline.
                     </p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-xl bg-lime-950 text-lime-300 border border-lime-800 text-[10px] font-mono font-bold">
+                  <span className="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-mono font-bold">
                     ZERO-CONNECTIVITY READY
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
                   <div>
-                    <label className="text-slate-400 block mb-1">VILLAGE / PANCHAYAT NAME:</label>
+                    <label className="text-slate-700 block mb-1 font-semibold">VILLAGE / PANCHAYAT NAME:</label>
                     <input
                       type="text"
                       value={manualVillageName}
                       onChange={(e) => setManualVillageName(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="text-slate-400 block mb-1">RIVER WATER LEVEL READING (M):</label>
+                    <label className="text-slate-700 block mb-1 font-semibold">RIVER WATER LEVEL READING (M):</label>
                     <input
                       type="number"
                       step="0.05"
                       value={manualRiverStage}
                       onChange={(e) => setManualRiverStage(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-rose-400 font-bold"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-blue-700 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="text-slate-400 block mb-1">CURRENT RAINFALL INTENSITY:</label>
+                    <label className="text-slate-700 block mb-1 font-semibold">CURRENT RAINFALL INTENSITY:</label>
                     <select
                       value={manualRainTrend}
                       onChange={(e) => setManualRainTrend(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                     >
                       <option value="CLEAR_NO_RAIN">Clear / No Rain</option>
                       <option value="LIGHT_DRIZZLE">Light Drizzle (&lt; 5 mm/h)</option>
@@ -1261,37 +1259,37 @@ export default function DataIngestionWorkbenchPage() {
                   </div>
 
                   <div>
-                    <label className="text-slate-400 block mb-1">OPERATOR / SARPANCH SIGNATURE:</label>
+                    <label className="text-slate-700 block mb-1 font-semibold">OPERATOR / SARPANCH SIGNATURE:</label>
                     <input
                       type="text"
                       value={manualOperatorName}
                       onChange={(e) => setManualOperatorName(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 font-bold shadow-xs focus:border-blue-500 focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
-                  <label className="flex items-center gap-2 text-xs font-mono text-slate-300 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-mono text-slate-800 cursor-pointer font-medium">
                     <input
                       type="checkbox"
                       checked={manualDebrisFlow}
                       onChange={(e) => setManualDebrisFlow(e.target.checked)}
-                      className="accent-lime-400 w-4 h-4 rounded"
+                      className="accent-emerald-600 w-4 h-4 rounded"
                     />
                     <span>Visual Mud / Boulder Debris Flow Observed in River</span>
                   </label>
 
                   <button
                     onClick={handleSaveManualLog}
-                    className="px-6 py-2.5 rounded-xl bg-lime-600 hover:bg-lime-500 text-slate-950 font-mono text-xs font-black active:scale-95 transition shadow-lg"
+                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-sans text-xs font-bold active:scale-95 transition shadow-sm"
                   >
                     TRANSMIT VILLAGE READING
                   </button>
                 </div>
 
                 {manualLogStatus && (
-                  <div className="p-3 rounded-xl bg-lime-950/80 border border-lime-500 text-lime-200 text-xs font-mono">
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-mono font-bold">
                     {manualLogStatus}
                   </div>
                 )}
@@ -1302,14 +1300,14 @@ export default function DataIngestionWorkbenchPage() {
           {/* ── TAB 4: FILE UPLOAD PIPELINE ── */}
           {activeIngestTab === 'FILE_UPLOAD' && (
             <div className="space-y-4 animate-fade-in">
-              <div className="fp fp-operational rounded-3xl p-8 text-center space-y-4 shadow-2xl relative overflow-hidden border border-cyan-500/30">
-                <div className="w-16 h-16 rounded-3xl bg-cyan-950/80 border-2 border-dashed border-cyan-400 flex items-center justify-center mx-auto text-cyan-300 shadow-[0_0_25px_rgba(6,182,212,0.3)]">
-                  <UploadCloud className="w-8 h-8 animate-bounce" />
+              <div className="bg-white rounded-3xl p-8 text-center space-y-4 shadow-sm relative overflow-hidden border border-slate-200">
+                <div className="w-16 h-16 rounded-3xl bg-blue-50 border-2 border-dashed border-blue-400 flex items-center justify-center mx-auto text-blue-600 shadow-sm">
+                  <UploadCloud className="w-8 h-8" />
                 </div>
 
                 <div>
-                  <h3 className="text-base font-black text-white">Drag &amp; Drop Telemetry or GIS File</h3>
-                  <p className="text-xs text-slate-400 mt-1">Supports IMD AWS (.csv), CWC Stage (.json), GeoTIFF DEM (.tif), or GeoJSON vectors</p>
+                  <h3 className="text-base font-bold text-slate-900 font-sans">Drag &amp; Drop Telemetry or GIS File</h3>
+                  <p className="text-xs text-slate-600 mt-1 font-sans">Supports IMD AWS (.csv), CWC Stage (.json), GeoTIFF DEM (.tif), or GeoJSON vectors</p>
                 </div>
 
                 <div className="max-w-md mx-auto flex items-center justify-center gap-2">
@@ -1326,29 +1324,29 @@ export default function DataIngestionWorkbenchPage() {
                   />
                   <label
                     htmlFor="file-upload"
-                    className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono text-xs font-bold border border-slate-700 cursor-pointer transition"
+                    className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-sans text-xs font-bold border border-slate-300 cursor-pointer transition shadow-xs"
                   >
                     Select File on Computer
                   </label>
                   <button
                     onClick={handleSimulateUpload}
                     disabled={isProcessingFile}
-                    className="btn-primary px-5 py-2 rounded-xl text-white font-mono text-xs font-bold transition flex items-center gap-2"
+                    className="btn-primary px-5 py-2 rounded-xl text-white font-sans text-xs font-bold transition flex items-center gap-2 shadow-sm bg-blue-600 hover:bg-blue-700"
                   >
-                    {isProcessingFile ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+                    {isProcessingFile ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 text-yellow-300" />}
                     <span>Run Pipeline</span>
                   </button>
                 </div>
               </div>
 
               {/* 8-Stage Pipeline Visualizer */}
-              <div className="fp fp-operational rounded-3xl p-5 space-y-4 shadow-2xl border border-slate-800">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="bg-white rounded-3xl p-5 space-y-4 shadow-sm border border-slate-200">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                   <div className="flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
-                    <span className="text-xs font-mono font-bold text-white uppercase">8-Stage ETL Pipeline Execution</span>
+                    <Activity className="w-4 h-4 text-blue-600 animate-pulse" />
+                    <span className="text-xs font-mono font-bold text-slate-900 uppercase">8-Stage ETL Pipeline Execution</span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-400">File: {selectedFileName}</span>
+                  <span className="text-[10px] font-mono text-slate-500 font-semibold">File: {selectedFileName}</span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -1360,17 +1358,17 @@ export default function DataIngestionWorkbenchPage() {
                         key={st.id}
                         className={`p-3 rounded-2xl border transition-all ${
                           isDone
-                            ? 'bg-emerald-950/30 border-emerald-500/50 text-emerald-300'
+                            ? 'bg-emerald-50 border-emerald-300 text-emerald-800 shadow-xs'
                             : isCurr
-                            ? 'bg-cyan-950/50 border-cyan-400 text-white shadow-[0_0_15px_rgba(6,182,212,0.3)] animate-pulse'
-                            : 'bg-slate-950/40 border-slate-800 text-slate-600'
+                            ? 'bg-blue-50 border-blue-400 text-blue-900 shadow-sm'
+                            : 'bg-slate-50 border-slate-200 text-slate-500'
                         }`}
                       >
                         <div className="flex items-center justify-between text-[10px] font-mono font-bold">
                           <span>{idx + 1}. {st.name}</span>
-                          {isDone ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : isCurr ? <RefreshCw className="w-3.5 h-3.5 text-cyan-300 animate-spin" /> : null}
+                          {isDone ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : isCurr ? <RefreshCw className="w-3.5 h-3.5 text-blue-600 animate-spin" /> : null}
                         </div>
-                        <div className="text-[10px] text-slate-400 mt-1 line-clamp-1">{st.desc}</div>
+                        <div className="text-[10px] text-slate-600 mt-1 line-clamp-1 font-sans">{st.desc}</div>
                       </div>
                     );
                   })}

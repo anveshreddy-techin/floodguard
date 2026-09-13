@@ -115,9 +115,9 @@ export const DocumentList: React.FC = () => {
               key={cat.key}
               type="button"
               onClick={() => setSelectedCategory(cat.key)}
-              className={`px-3 py-1.5 rounded font-medium transition ${
+              className={`px-3 py-1.5 rounded-lg font-semibold font-sans transition ${
                 selectedCategory === cat.key
-                  ? 'bg-[#0f172a] text-white'
+                  ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -180,9 +180,9 @@ export const DocumentList: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleDownload(doc)}
-                  className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-3 py-2 rounded text-xs transition active:scale-95 shadow-xs"
+                  className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold font-sans px-3 py-2 rounded-lg text-xs transition active:scale-95 shadow-xs"
                 >
-                  <Download className="w-3.5 h-3.5 text-cyan-400" />
+                  <Download className="w-3.5 h-3.5 text-white" />
                   <span>Download {doc.fileFormat}</span>
                 </button>
               </div>

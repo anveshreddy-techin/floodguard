@@ -41,23 +41,23 @@ export default function SystemVitalsPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen select-none">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="LIVE" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="system" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="chip chip-live">DIAGNOSTICS & HEALTH</span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                  <HeartPulse className="w-5 h-5 text-emerald-400" />
-                  SYSTEM VITALS & SUBSYSTEM TELEMETRY MONITOR
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-semibold">DIAGNOSTICS &amp; HEALTH</span>
+                <h1 className="text-xl font-bold font-sans text-slate-900 flex items-center gap-2">
+                  <HeartPulse className="w-5 h-5 text-emerald-600" />
+                  SYSTEM VITALS &amp; SUBSYSTEM TELEMETRY MONITOR
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
+              <p className="text-sm text-slate-600 mt-1 font-sans">
                 Real-time health status across API, database, machine learning, telemetry ingestors, and alert dispatchers
               </p>
             </div>
@@ -66,21 +66,21 @@ export default function SystemVitalsPage() {
 
           {/* Top Quick KPI Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="fp p-5 rounded-2xl text-center space-y-1">
-              <div className="text-[10px] font-mono text-slate-400 uppercase">SYSTEM UPTIME</div>
-              <div className="text-2xl font-black text-emerald-400 font-mono">99.96%</div>
+            <div className="bg-white border border-slate-200 p-5 rounded-2xl text-center space-y-1 shadow-sm">
+              <div className="text-xs font-sans font-semibold text-slate-500 uppercase tracking-wide">SYSTEM UPTIME</div>
+              <div className="text-2xl font-black text-emerald-700 font-mono">99.96%</div>
             </div>
-            <div className="fp p-5 rounded-2xl text-center space-y-1">
-              <div className="text-[10px] font-mono text-slate-400 uppercase">P95 API LATENCY</div>
-              <div className="text-2xl font-black text-cyan-300 font-mono">18 ms</div>
+            <div className="bg-white border border-slate-200 p-5 rounded-2xl text-center space-y-1 shadow-sm">
+              <div className="text-xs font-sans font-semibold text-slate-500 uppercase tracking-wide">P95 API LATENCY</div>
+              <div className="text-2xl font-black text-blue-700 font-mono">18 ms</div>
             </div>
-            <div className="fp p-5 rounded-2xl text-center space-y-1">
-              <div className="text-[10px] font-mono text-slate-400 uppercase">UNIT TESTS PASS</div>
-              <div className="text-2xl font-black text-white font-mono">20 / 20</div>
+            <div className="bg-white border border-slate-200 p-5 rounded-2xl text-center space-y-1 shadow-sm">
+              <div className="text-xs font-sans font-semibold text-slate-500 uppercase tracking-wide">UNIT TESTS PASS</div>
+              <div className="text-2xl font-black text-slate-900 font-mono">20 / 20</div>
             </div>
-            <div className="fp p-5 rounded-2xl text-center space-y-1">
-              <div className="text-[10px] font-mono text-slate-400 uppercase">CRYPTOGRAPHIC SEALS</div>
-              <div className="text-2xl font-black text-purple-300 font-mono">100% VALID</div>
+            <div className="bg-white border border-slate-200 p-5 rounded-2xl text-center space-y-1 shadow-sm">
+              <div className="text-xs font-sans font-semibold text-slate-500 uppercase tracking-wide">CRYPTOGRAPHIC SEALS</div>
+              <div className="text-2xl font-black text-purple-700 font-mono">100% VALID</div>
             </div>
           </div>
 
@@ -92,29 +92,29 @@ export default function SystemVitalsPage() {
               return (
                 <div
                   key={sub.name}
-                  className={`fp p-6 rounded-3xl space-y-3 transition-all ${
-                    isDegraded ? 'fp-critical' : 'fp-operational'
+                  className={`bg-white border rounded-3xl p-6 space-y-3 shadow-sm transition-all ${
+                    isDegraded ? 'border-amber-300 bg-amber-50/20' : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400">
+                      <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700">
                         <Icon className="w-5 h-5" />
                       </div>
                       <div>
-                        <div className="font-bold text-white text-xs">{sub.name}</div>
-                        <div className="text-[10px] font-mono text-slate-400">Latency: {sub.latency} • Uptime: {sub.uptime}</div>
+                        <div className="font-bold text-slate-900 text-sm font-sans">{sub.name}</div>
+                        <div className="text-xs font-mono text-slate-500">Latency: {sub.latency} • Uptime: {sub.uptime}</div>
                       </div>
                     </div>
 
-                    <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-mono font-bold ${
-                      isDegraded ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                    <span className={`px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold ${
+                      isDegraded ? 'bg-amber-50 text-amber-800 border border-amber-300' : 'bg-emerald-50 text-emerald-800 border border-emerald-300'
                     }`}>
                       {sub.status}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                  <p className="text-xs text-slate-600 leading-relaxed font-sans">
                     {sub.detail}
                   </p>
                 </div>

@@ -522,14 +522,14 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
   ]);
 
   return (
-    <div className="relative w-full h-[520px] sm:h-[600px] rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950">
+    <div className="relative w-full h-[520px] sm:h-[600px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-950">
       {/* ── MAP CONTAINER ── */}
       <div ref={mapRef} className="w-full h-full" />
 
       {/* ── TOP-LEFT BADGE: Flood Risk Map (Location) ── */}
-      <div className="absolute top-4 left-4 z-[400] bg-[#0d2244]/90 border border-blue-400/40 rounded-full px-4 py-1.5 shadow-2xl backdrop-blur-md flex items-center gap-2.5 pointer-events-auto">
-        <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-        <span className="text-white text-xs sm:text-sm font-bold font-sans tracking-wide">
+      <div className="absolute top-4 left-4 z-[400] bg-white/95 border border-slate-200 rounded-full px-4 py-1.5 shadow-md backdrop-blur-md flex items-center gap-2.5 pointer-events-auto">
+        <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
+        <span className="text-slate-900 text-xs sm:text-sm font-bold font-sans tracking-wide">
           Flood Risk Map ({displayTitle})
         </span>
       </div>
@@ -598,13 +598,13 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
       </div>
 
       {/* ── BOTTOM-LEFT BASEMAP TOGGLE (SATELLITE / STREET) ── */}
-      <div className="absolute bottom-4 left-4 z-[400] flex items-center gap-1.5 bg-slate-950/85 border border-slate-700/80 rounded-xl p-1 backdrop-blur-md shadow-xl text-[11px] font-mono pointer-events-auto">
+      <div className="absolute bottom-4 left-4 z-[400] flex items-center gap-1.5 bg-white/95 border border-slate-200 rounded-xl p-1 backdrop-blur-md shadow-md text-xs font-sans pointer-events-auto">
         <button
           onClick={() => setBaseMapType('SATELLITE')}
           className={`px-2.5 py-1 rounded-lg font-bold transition ${
             baseMapType === 'SATELLITE'
-              ? 'bg-cyan-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
           }`}
         >
           🛰️ Satellite
@@ -613,8 +613,8 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
           onClick={() => setBaseMapType('STREET')}
           className={`px-2.5 py-1 rounded-lg font-bold transition ${
             baseMapType === 'STREET'
-              ? 'bg-cyan-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
           }`}
         >
           🗺️ Street

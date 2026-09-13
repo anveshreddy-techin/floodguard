@@ -33,10 +33,10 @@ const HyperLocalRealMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-full flex items-center justify-center bg-slate-950">
+      <div className="w-full h-full flex items-center justify-center bg-slate-100">
         <div className="text-center space-y-2">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-cyan-300 text-xs font-mono font-bold animate-pulse">LOADING REAL GIS SATELLITE MAP…</p>
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-blue-700 text-xs font-mono font-bold animate-pulse">LOADING REAL GIS SATELLITE MAP…</p>
           <p className="text-slate-500 text-[10px] font-mono">Fetching High-Res Satellite Tiles</p>
         </div>
       </div>
@@ -265,7 +265,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
             <span>River / Water Body</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-4 border-b-2 border-dashed border-cyan-500 shrink-0"></span>
+            <span className="w-4 border-b-2 border-dashed border-emerald-500 shrink-0"></span>
             <span>Evacuation Route</span>
           </div>
           <div className="flex items-center gap-2">
@@ -577,7 +577,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         {/* Rich Interactive Floating Tooltip on Marker Hover */}
         {hoveredNode && (
           <div 
-            className="absolute z-40 fp fp-operational rounded-2xl p-3.5 shadow-2xl text-xs space-y-2 pointer-events-none animate-scale-in"
+            className="absolute z-40 bg-white/95 border border-slate-200 rounded-2xl p-3.5 shadow-2xl backdrop-blur-xl text-xs space-y-2 pointer-events-none animate-scale-in text-slate-800"
             style={{
               left: `${Math.min(75, Math.max(15, (hoveredNode.x / 800) * 100))}%`,
               top: `${Math.min(70, Math.max(20, (hoveredNode.y / 500) * 100 - 15))}%`,
@@ -585,21 +585,21 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
               border: `1.5px solid ${hoveredNode.color}`
             }}
           >
-            <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-1.5">
-              <span className="font-bold text-white text-xs">{hoveredNode.name}</span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold" style={{ backgroundColor: `${hoveredNode.color}30`, color: hoveredNode.color }}>
+            <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-1.5">
+              <span className="font-bold text-slate-900 text-xs font-sans">{hoveredNode.name}</span>
+              <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold" style={{ backgroundColor: `${hoveredNode.color}20`, color: hoveredNode.color }}>
                 {hoveredNode.status}
               </span>
             </div>
-            <div className="flex items-center justify-between gap-4 font-mono text-[11px]">
-              <span className="text-slate-400">Live Reading:</span>
-              <span className="font-bold text-cyan-300">{hoveredNode.value}</span>
+            <div className="flex items-center justify-between gap-4 font-sans text-xs">
+              <span className="text-slate-500 font-medium">Live Reading:</span>
+              <span className="font-bold text-blue-700 font-mono">{hoveredNode.value}</span>
             </div>
-            <div className="flex items-center justify-between gap-4 font-mono text-[11px]">
-              <span className="text-slate-400">Risk Trend:</span>
-              <span className="font-bold" style={{ color: hoveredNode.color }}>{hoveredNode.trend}</span>
+            <div className="flex items-center justify-between gap-4 font-sans text-xs">
+              <span className="text-slate-500 font-medium">Risk Trend:</span>
+              <span className="font-bold font-mono" style={{ color: hoveredNode.color }}>{hoveredNode.trend}</span>
             </div>
-            <p className="text-[10px] text-slate-300 font-sans leading-tight max-w-[220px]">
+            <p className="text-xs text-slate-600 font-sans leading-snug max-w-[220px]">
               {hoveredNode.desc}
             </p>
           </div>
@@ -612,48 +612,43 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         {!legendOpen ? (
           <button
             onClick={() => setLegendOpen(true)}
-            className="px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-mono font-bold text-cyan-300 bg-slate-950/85 hover:bg-slate-900 border border-cyan-500/30 hover:border-cyan-400/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] backdrop-blur-xl flex items-center gap-1.5 transition active:scale-95 group"
+            className="px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-sans font-bold text-slate-800 bg-white/95 hover:bg-slate-50 border border-slate-200 shadow-md backdrop-blur-xl flex items-center gap-2 transition active:scale-95 group"
             title="Show GIS Map Legend & Layer Opacity"
           >
-            <Layers className="w-3.5 h-3.5 text-cyan-400 group-hover:animate-pulse shrink-0" />
+            <Layers className="w-3.5 h-3.5 text-blue-600 group-hover:scale-110 shrink-0 transition-transform" />
             <span>LEGEND & OPACITY</span>
-            <span className="px-1.5 py-0.2 rounded bg-cyan-950 text-[9px] text-cyan-400 border border-cyan-800/80">
+            <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-mono text-blue-700 border border-blue-200 font-bold">
               {layerOpacity}%
             </span>
-            <ChevronUp className="w-3.5 h-3.5 text-slate-400 group-hover:text-white" />
+            <ChevronUp className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700" />
           </button>
         ) : (
           <div 
-            className="rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8)] overflow-hidden text-xs transition-all duration-300 w-[260px] sm:w-[280px] max-w-[calc(100vw-24px)] animate-slide-up"
-            style={{
-              background: 'rgba(3, 7, 18, 0.92)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(6, 182, 212, 0.4)',
-            }}
+            className="rounded-2xl shadow-xl overflow-hidden text-xs transition-all duration-300 w-[260px] sm:w-[280px] max-w-[calc(100vw-24px)] animate-slide-up bg-white/95 backdrop-blur-xl border border-slate-200 text-slate-800"
           >
             <div
               onClick={() => setLegendOpen(false)}
-              className="px-3 py-2 border-b border-slate-800 flex items-center justify-between gap-2 cursor-pointer hover:bg-slate-900/80 transition"
+              className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between gap-2 cursor-pointer hover:bg-slate-50 transition bg-slate-50/70"
             >
-              <span className="font-mono font-bold text-cyan-300 text-[10px] sm:text-[11px] flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="font-sans font-bold text-slate-900 text-[11px] sm:text-xs flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-blue-600" />
                 GIS MAP OVERLAY & LEGEND
               </span>
               <button 
                 onClick={(e) => { e.stopPropagation(); setLegendOpen(false); }}
-                className="w-5 h-5 rounded-md bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition"
+                className="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition"
                 title="Collapse Legend"
               >
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="p-3 space-y-2.5 font-mono text-[10px] sm:text-[11px]">
+            <div className="p-3.5 space-y-3 font-sans text-xs">
               {/* Layer Transparency Control Slider */}
-              <div className="space-y-1 pb-2 border-b border-slate-800/80">
-                <div className="flex justify-between text-[10px]">
-                  <span className="text-slate-400">Layer Opacity:</span>
-                  <span className="text-cyan-300 font-bold">{layerOpacity}%</span>
+              <div className="space-y-1.5 pb-2.5 border-b border-slate-200">
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-slate-600 font-medium">Layer Opacity:</span>
+                  <span className="text-blue-700 font-bold font-mono">{layerOpacity}%</span>
                 </div>
                 <input
                   type="range"
@@ -661,35 +656,35 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
                   max="100"
                   value={layerOpacity}
                   onChange={(e) => setLayerOpacity(Number(e.target.value))}
-                  className="w-full accent-cyan-400 h-1 bg-slate-900 rounded-lg cursor-pointer"
+                  className="w-full accent-blue-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
                 />
               </div>
 
               {/* Compact Color-Coded Legend Items */}
-              <div className="grid grid-cols-1 gap-1 text-[10px]">
+              <div className="grid grid-cols-1 gap-1.5 text-[11px]">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(231,76,60,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.danger }} />
-                  <span className="text-slate-200">Danger Risk (&gt;75/100)</span>
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: SPEC_COLORS.risk.danger }} />
+                  <span className="text-slate-700">Danger Risk (&gt;75/100)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(230,126,34,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.caution }} />
-                  <span className="text-slate-200">Caution Risk (50-75/100)</span>
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: SPEC_COLORS.risk.caution }} />
+                  <span className="text-slate-700">Caution Risk (50-75/100)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(243,156,18,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.alert }} />
-                  <span className="text-slate-200">Alert Threshold (25-50/100)</span>
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: SPEC_COLORS.risk.alert }} />
+                  <span className="text-slate-700">Alert Threshold (25-50/100)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(46,204,113,0.8)]" style={{ backgroundColor: SPEC_COLORS.risk.safe }} />
-                  <span className="text-slate-200">Safe Assembly Area (&lt;25/100)</span>
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: SPEC_COLORS.risk.safe }} />
+                  <span className="text-slate-700">Safe Assembly Area (&lt;25/100)</span>
                 </div>
-                <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+                <div className="flex items-center gap-2 pt-1.5 border-t border-slate-200">
                   <span className="w-3.5 h-1 rounded shrink-0" style={{ backgroundColor: SPEC_COLORS.water.channel }} />
-                  <span className="text-slate-300">Active River Surge Channel</span>
+                  <span className="text-slate-700">Active River Surge Channel</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3.5 h-0.5 border-b-2 border-dashed shrink-0" style={{ borderColor: SPEC_COLORS.risk.safe }} />
-                  <span className="text-slate-300">Candidate Escape Route</span>
+                  <span className="text-slate-700">Candidate Escape Route</span>
                 </div>
               </div>
             </div>
@@ -698,7 +693,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
       </div>
 
       {/* Floating Coordinates & CRS Pill (Desktop Only to Avoid Mobile Clutter) */}
-      <div className="hidden md:block absolute bottom-4 right-4 z-20 glass-panel px-3 py-1 rounded-xl text-[10px] font-mono text-cyan-300/80 shadow-xl border border-cyan-500/20">
+      <div className="hidden md:block absolute bottom-4 right-4 z-20 bg-white/95 border border-slate-200 px-3 py-1.5 rounded-xl text-[10px] font-mono text-slate-600 shadow-md backdrop-blur-md">
         30.5050° N, 79.1550° E • WGS84 • EPSG:32644 (UTM Zone 44N)
       </div>
     </div>

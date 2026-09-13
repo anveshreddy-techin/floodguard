@@ -47,14 +47,14 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
       <div className="hidden md:flex absolute top-3 right-3 z-[500] animate-fade-in pointer-events-auto">
         <button
           onClick={() => setIsMinimized(false)}
-          className="px-3.5 py-2 rounded-2xl bg-slate-950/90 hover:bg-slate-900 border border-amber-500/60 shadow-[0_0_25px_rgba(245,158,11,0.3)] backdrop-blur-xl flex items-center gap-2.5 text-xs font-mono text-white transition active:scale-95 group"
+          className="px-3.5 py-2 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 shadow-lg backdrop-blur-xl flex items-center gap-2.5 text-xs font-mono text-slate-800 transition active:scale-95 group"
         >
           <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-ping" />
-          <span className="font-black tracking-wider text-amber-300">INTELLIGENCE HUD</span>
-          <span className="text-[10px] text-slate-400 font-bold bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700">
+          <span className="font-black tracking-wider text-orange-600">INTELLIGENCE HUD</span>
+          <span className="text-[10px] text-slate-500 font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
             {score} ({level})
           </span>
-          <span className="text-[10px] text-cyan-400 group-hover:text-cyan-200 transition font-bold">
+          <span className="text-[10px] text-blue-600 group-hover:text-blue-500 transition font-bold">
             ⛶ Expand
           </span>
         </button>
@@ -72,31 +72,31 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
       }}
     >
       <div 
-        className="pointer-events-auto w-full h-full max-h-[calc(100vh-130px)] bg-[#070e1e]/95 backdrop-blur-2xl border border-cyan-500/40 rounded-3xl p-3 flex flex-col shadow-[0_15px_50px_rgba(0,0,0,0.8),0_0_20px_rgba(6,182,212,0.2)] space-y-2.5 overflow-hidden overflow-x-hidden"
+        className="pointer-events-auto w-full h-full max-h-[calc(100vh-130px)] bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-3xl p-3 flex flex-col shadow-xl space-y-2.5 overflow-hidden overflow-x-hidden"
       >
         {/* Panel Header with Controls */}
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 shrink-0">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-2 shrink-0">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.9)]" />
+            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
             <div className="min-w-0">
-              <h3 className="text-xs font-mono font-black text-white uppercase tracking-wider truncate">
+              <h3 className="text-xs font-mono font-black text-slate-900 uppercase tracking-wider truncate">
                 INTELLIGENCE HUB
               </h3>
-              <div className="text-[10px] font-mono text-slate-400 truncate max-w-[180px]">{locationName}</div>
+              <div className="text-[10px] font-mono text-slate-500 truncate max-w-[180px]">{locationName}</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 text-slate-400 shrink-0">
+          <div className="flex items-center gap-1 text-slate-500 shrink-0">
             <button
               onClick={() => setIsDocked(!isDocked)}
-              className="p-1 rounded-lg hover:bg-slate-800 hover:text-white transition"
+              className="p-1 rounded-lg hover:bg-slate-100 hover:text-slate-800 transition"
               title={isDocked ? 'Wider View' : 'Compact Dock'}
             >
-              {isDocked ? <ExternalLink className="w-3.5 h-3.5" /> : <Layers className="w-3.5 h-3.5 text-cyan-400" />}
+              {isDocked ? <ExternalLink className="w-3.5 h-3.5" /> : <Layers className="w-3.5 h-3.5 text-blue-500" />}
             </button>
             <button
               onClick={() => setIsMinimized(true)}
-              className="p-1 rounded-lg hover:bg-slate-800 hover:text-white transition"
+              className="p-1 rounded-lg hover:bg-slate-100 hover:text-slate-800 transition"
               title="Minimize HUD to top pill"
             >
               <Minimize2 className="w-3.5 h-3.5" />
@@ -105,7 +105,7 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
         </div>
 
         {/* Scrollable Intelligence Content (Strictly bounded so it never overflows) */}
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden space-y-2.5 pr-1 scrollbar-thin scrollbar-thumb-slate-700">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden space-y-2.5 pr-1 scrollbar-thin scrollbar-thumb-slate-300">
           {/* Quick link to 4. Live Dashboard & Alerts */}
           <Link
             href="/dashboard"

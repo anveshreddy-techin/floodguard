@@ -64,13 +64,13 @@ export const NationalRiverRiskMap: React.FC<{
   const getRiskBadge = (category: string) => {
     switch (category) {
       case 'CRITICAL':
-        return 'bg-rose-950/80 text-rose-300 border-rose-700/80 shadow-[0_0_10px_rgba(244,63,94,0.4)]';
+        return 'bg-red-50 text-red-700 border-red-200 font-bold shadow-sm';
       case 'HIGH':
-        return 'bg-orange-950/80 text-orange-300 border-orange-700/80';
+        return 'bg-amber-50 text-amber-800 border-amber-200 font-bold';
       case 'MODERATE':
-        return 'bg-amber-950/80 text-amber-300 border-amber-700/80';
+        return 'bg-yellow-50 text-yellow-800 border-yellow-200 font-bold';
       default:
-        return 'bg-emerald-950/80 text-emerald-300 border-emerald-700/80';
+        return 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold';
     }
   };
 
@@ -119,35 +119,35 @@ export const NationalRiverRiskMap: React.FC<{
   };
 
   return (
-    <div className={`flex flex-col bg-[#030712] text-slate-100 rounded-3xl border border-slate-800/80 shadow-2xl overflow-y-auto lg:overflow-hidden font-sans ${className}`}>
+    <div className={`flex flex-col bg-white text-slate-900 rounded-2xl border border-slate-200 shadow-sm overflow-y-auto lg:overflow-hidden font-sans ${className}`}>
       
       {/* ── Top Header & Mode Tabs ── */}
-      <div className="p-3 sm:p-4 bg-slate-950/90 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
+      <div className="p-3 sm:p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-sm">
             <Waves className="w-4 h-4 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm sm:text-base font-black text-white tracking-wide uppercase font-mono">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-wide uppercase font-sans">
                 National Indian River Risk Map
               </h2>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-800 animate-pulse">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                 LIVE
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-mono hidden sm:block">
+            <p className="text-[11px] text-slate-600 font-medium hidden sm:block">
               37 National CWC Gauges · 9 Principal River Basins · Hydrodynamic Flow
             </p>
           </div>
         </div>
 
         {/* View Switcher Tabs & Mobile Stats Toggle */}
-        <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 p-1 rounded-xl">
+        <div className="flex items-center gap-1.5 bg-slate-200/80 border border-slate-300 p-1 rounded-xl">
           <button
             onClick={() => setViewMode('MAP')}
             className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-mono font-bold transition ${
-              viewMode === 'MAP' ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'
+              viewMode === 'MAP' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
             🗺️ MAP
@@ -155,7 +155,7 @@ export const NationalRiverRiskMap: React.FC<{
           <button
             onClick={() => setViewMode('DIAGRAM')}
             className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-mono font-bold transition ${
-              viewMode === 'DIAGRAM' ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'
+              viewMode === 'DIAGRAM' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
             📊 CASCADE
@@ -163,14 +163,14 @@ export const NationalRiverRiskMap: React.FC<{
           <button
             onClick={() => setViewMode('ANALYTICS')}
             className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-mono font-bold transition ${
-              viewMode === 'ANALYTICS' ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'
+              viewMode === 'ANALYTICS' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
             📈 BASINS
           </button>
           <button
             onClick={() => setStatsExpanded(!statsExpanded)}
-            className="sm:hidden px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-slate-800 border border-slate-700 text-cyan-300 flex items-center gap-0.5"
+            className="sm:hidden px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-white border border-slate-300 text-blue-700 flex items-center gap-0.5"
             title="Toggle stats cards"
           >
             {statsExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -180,41 +180,41 @@ export const NationalRiverRiskMap: React.FC<{
       </div>
 
       {/* ── National Metric Ribbon (Collapsible on Mobile, always on Desktop) ── */}
-      <div className={`${statsExpanded ? 'grid' : 'hidden'} sm:grid grid-cols-2 sm:grid-cols-4 gap-2 p-2 sm:p-3 bg-slate-900/40 border-b border-slate-800/60 text-xs font-mono animate-fade-in`}>
-        <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between">
+      <div className={`${statsExpanded ? 'grid' : 'hidden'} sm:grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-2.5 sm:p-3 bg-slate-100/70 border-b border-slate-200 text-xs font-mono animate-fade-in`}>
+        <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <span className="text-[10px] text-slate-400">NATIONAL AVG RISK</span>
-            <div className="text-xl font-black text-white">{nationalStats.avgRisk}%</div>
+            <span className="text-[10px] text-slate-500 font-semibold">NATIONAL AVG RISK</span>
+            <div className="text-xl font-black text-slate-900">{nationalStats.avgRisk}%</div>
           </div>
-          <span className="w-2.5 h-2.5 rounded-full bg-orange-400 shadow-[0_0_8px_#fb923c]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm" />
         </div>
 
-        <div className="p-2.5 rounded-xl bg-slate-950/60 border border-rose-900/40 flex items-center justify-between">
+        <div className="p-2.5 rounded-xl bg-white border border-red-200 shadow-sm flex items-center justify-between">
           <div>
-            <span className="text-[10px] text-rose-300">CRITICAL GAUGES (≥80%)</span>
-            <div className="text-xl font-black text-rose-400">{nationalStats.criticalCount} <span className="text-xs font-normal text-slate-500">/ {nationalStats.total}</span></div>
+            <span className="text-[10px] text-red-700 font-semibold">CRITICAL GAUGES (≥80%)</span>
+            <div className="text-xl font-black text-red-600">{nationalStats.criticalCount} <span className="text-xs font-normal text-slate-500">/ {nationalStats.total}</span></div>
           </div>
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
+          <AlertTriangle className="w-4 h-4 text-red-500" />
         </div>
 
-        <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between">
+        <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <span className="text-[10px] text-cyan-300">MAX DISCHARGE NODE</span>
-            <div className="text-sm font-bold text-white truncate max-w-[120px]">{nationalStats.maxDischargePoint.river}</div>
-            <div className="text-[10px] text-cyan-400">{nationalStats.maxDischargePoint.dischargeCumecs.toLocaleString()} m³/s</div>
+            <span className="text-[10px] text-blue-700 font-semibold">MAX DISCHARGE NODE</span>
+            <div className="text-sm font-bold text-slate-900 truncate max-w-[120px]">{nationalStats.maxDischargePoint.river}</div>
+            <div className="text-[10px] text-blue-600 font-bold">{nationalStats.maxDischargePoint.dischargeCumecs.toLocaleString()} m³/s</div>
           </div>
-          <Droplets className="w-4 h-4 text-cyan-400" />
+          <Droplets className="w-4 h-4 text-blue-600" />
         </div>
 
-        <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between">
+        <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <span className="text-[10px] text-emerald-400">FLOW SIMULATION</span>
-            <div className="text-xs font-bold text-slate-200">HYDRODYNAMIC</div>
-            <div className="text-[10px] text-slate-400">Continuous Vector Pulse</div>
+            <span className="text-[10px] text-emerald-700 font-semibold">FLOW SIMULATION</span>
+            <div className="text-xs font-bold text-slate-800">HYDRODYNAMIC</div>
+            <div className="text-[10px] text-slate-500">Continuous Vector Pulse</div>
           </div>
           <button
             onClick={() => setFlowAnimationSpeed(flowAnimationSpeed === 'NORMAL' ? 'FAST' : flowAnimationSpeed === 'FAST' ? 'PAUSED' : 'NORMAL')}
-            className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-cyan-300 font-bold border border-slate-700"
+            className="px-2 py-0.5 rounded bg-slate-100 text-[10px] text-blue-700 font-bold border border-slate-300 hover:bg-slate-200 transition"
           >
             {flowAnimationSpeed}
           </button>
@@ -222,18 +222,18 @@ export const NationalRiverRiskMap: React.FC<{
       </div>
 
       {/* ── Filter Controls Bar ── */}
-      <div className="p-2 sm:p-2.5 px-3 sm:px-4 bg-slate-950 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+      <div className="p-2 sm:p-2.5 px-3 sm:px-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
         {/* Basin Selector Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 flex-1">
-          <span className="text-slate-500 font-bold flex items-center gap-1 mr-1 shrink-0 text-[11px]">
-            <Filter className="w-3 h-3 text-cyan-400" /> BASIN:
+          <span className="text-slate-600 font-bold flex items-center gap-1 mr-1 shrink-0 text-[11px]">
+            <Filter className="w-3 h-3 text-blue-600" /> BASIN:
           </span>
           <button
             onClick={() => handleBasinSelect('ALL')}
             className={`px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition ${
               selectedBasin === 'ALL'
-                ? 'bg-cyan-500 text-slate-950 shadow'
-                : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-white text-slate-700 hover:text-slate-900 border border-slate-300 shadow-xs'
             }`}
           >
             ALL BASINS ({NATIONAL_RIVER_POINTS.length})
@@ -246,8 +246,8 @@ export const NationalRiverRiskMap: React.FC<{
                 onClick={() => handleBasinSelect(bId)}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition flex items-center gap-1.5 ${
                   selectedBasin === bId
-                    ? 'bg-cyan-500 text-slate-950 shadow'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-white text-slate-700 hover:text-slate-900 border border-slate-300 shadow-xs'
                 }`}
               >
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: meta.color }} />
@@ -259,11 +259,11 @@ export const NationalRiverRiskMap: React.FC<{
 
         {/* Severity Slider */}
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-slate-400 text-[11px]">MIN RISK:</span>
+          <span className="text-slate-600 text-[11px] font-semibold">MIN RISK:</span>
           <select
             value={minRiskFilter}
             onChange={(e) => setMinRiskFilter(Number(e.target.value))}
-            className="bg-slate-900 border border-slate-800 text-cyan-300 rounded-lg px-2 py-1 text-[11px] font-bold focus:outline-none cursor-pointer"
+            className="bg-white border border-slate-300 text-blue-700 rounded-lg px-2 py-1 text-[11px] font-bold focus:outline-none cursor-pointer shadow-xs"
           >
             <option value={0}>All Gauges (0%+)</option>
             <option value={60}>Moderate+ (60%+)</option>
@@ -288,49 +288,49 @@ export const NationalRiverRiskMap: React.FC<{
                 {inMapCardMinimized ? (
                   <button
                     onClick={() => setInMapCardMinimized(false)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950/95 border border-cyan-500/60 text-cyan-300 text-xs font-mono font-bold shadow-2xl backdrop-blur-md hover:bg-slate-900 transition active:scale-95"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/95 border border-blue-400 text-blue-700 text-xs font-mono font-bold shadow-xl backdrop-blur-md hover:bg-slate-50 transition active:scale-95"
                   >
-                    <Waves className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                    <Waves className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
                     <span>SHOW TELEMETRY: {selectedPoint.name.split(' at ')[0]} ({selectedPoint.riskPercentage}%)</span>
                     <ChevronDown className="w-3.5 h-3.5 ml-1" />
                   </button>
                 ) : (
-                  <div className="bg-slate-950/95 border border-cyan-500/40 rounded-2xl p-3 sm:p-3.5 backdrop-blur-xl shadow-[0_0_30px_rgba(0,0,0,0.85)] text-xs font-mono space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="bg-white/95 border border-slate-200 rounded-2xl p-3 sm:p-3.5 backdrop-blur-xl shadow-2xl text-xs font-mono space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200 text-slate-800">
                     {/* Header with basin badge, title, and action buttons */}
-                    <div className="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-2">
+                    <div className="flex items-start justify-between gap-2 border-b border-slate-200 pb-2">
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span
                             className="px-2 py-0.5 rounded-md text-[9px] font-bold text-white uppercase tracking-wider flex items-center gap-1 shadow-sm"
-                            style={{ backgroundColor: RIVER_BASINS_META[selectedPoint.basin]?.color || '#06b6d4' }}
+                            style={{ backgroundColor: RIVER_BASINS_META[selectedPoint.basin]?.color || '#0284c7' }}
                           >
                             <span>🌊 {selectedPoint.basinName}</span>
                           </span>
-                          <span className="text-[10px] text-slate-400 font-bold">
+                          <span className="text-[10px] text-slate-500 font-bold">
                             {selectedPoint.state}
                           </span>
                         </div>
-                        <h3 className="text-sm sm:text-base font-black text-white mt-1 leading-tight truncate">
+                        <h3 className="text-sm sm:text-base font-black text-slate-900 mt-1 leading-tight truncate">
                           {selectedPoint.name}
                         </h3>
-                        <div className="text-[10px] text-cyan-400 font-bold flex items-center gap-1 mt-0.5">
+                        <div className="text-[10px] text-blue-700 font-bold flex items-center gap-1 mt-0.5">
                           <span>{selectedPoint.river}</span>
-                          <span className="text-slate-600">·</span>
-                          <span className="text-slate-400">{selectedPoint.cwcStationCode}</span>
+                          <span className="text-slate-400">·</span>
+                          <span className="text-slate-500">{selectedPoint.cwcStationCode}</span>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-1 shrink-0">
                         <button
                           onClick={() => setInMapCardMinimized(true)}
-                          className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                          className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition"
                           title="Minimize Telemetry Card"
                         >
                           <ChevronUp className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setShowInMapCard(false)}
-                          className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                          className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition"
                           title="Close Card"
                         >
                           <X className="w-3.5 h-3.5" />
@@ -339,12 +339,12 @@ export const NationalRiverRiskMap: React.FC<{
                     </div>
 
                     {/* Risk Badge & Stage Alert */}
-                    <div className="flex items-center justify-between gap-2 bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                    <div className="flex items-center justify-between gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
                       <span className={`px-2 py-0.5 rounded-lg text-[10px] font-black border flex items-center gap-1 ${getRiskBadge(selectedPoint.riskCategory)}`}>
                         <AlertTriangle className="w-3 h-3" />
                         <span>{selectedPoint.riskPercentage}% {selectedPoint.riskCategory}</span>
                       </span>
-                      <span className="text-[10px] font-bold text-rose-400 animate-pulse flex items-center gap-1">
+                      <span className="text-[10px] font-bold text-red-600 animate-pulse flex items-center gap-1">
                         <Activity className="w-3 h-3" />
                         <span>{selectedPoint.trend.replace('_', ' ')}</span>
                       </span>
@@ -352,32 +352,32 @@ export const NationalRiverRiskMap: React.FC<{
 
                     {/* Key Telemetry Stats Grid */}
                     <div className="grid grid-cols-3 gap-1.5 text-center">
-                      <div className="p-1.5 rounded-xl bg-slate-900/90 border border-slate-800">
-                        <span className="text-[9px] text-slate-400 block">WATER STAGE</span>
-                        <span className="text-sm font-black text-white">{selectedPoint.currentStageM}m</span>
-                        <span className="text-[8px] text-rose-400 block font-bold">Danger: {selectedPoint.dangerLevelM}m</span>
+                      <div className="p-1.5 rounded-xl bg-slate-50 border border-slate-200">
+                        <span className="text-[9px] text-slate-500 block font-semibold">WATER STAGE</span>
+                        <span className="text-sm font-black text-slate-900">{selectedPoint.currentStageM}m</span>
+                        <span className="text-[8px] text-red-600 block font-bold">Danger: {selectedPoint.dangerLevelM}m</span>
                       </div>
-                      <div className="p-1.5 rounded-xl bg-slate-900/90 border border-slate-800">
-                        <span className="text-[9px] text-slate-400 block">DISCHARGE</span>
-                        <span className="text-sm font-black text-cyan-300">{selectedPoint.dischargeCumecs.toLocaleString()}</span>
-                        <span className="text-[8px] text-slate-400 block">m³/s</span>
+                      <div className="p-1.5 rounded-xl bg-slate-50 border border-slate-200">
+                        <span className="text-[9px] text-slate-500 block font-semibold">DISCHARGE</span>
+                        <span className="text-sm font-black text-blue-700">{selectedPoint.dischargeCumecs.toLocaleString()}</span>
+                        <span className="text-[8px] text-slate-500 block">m³/s</span>
                       </div>
-                      <div className="p-1.5 rounded-xl bg-slate-900/90 border border-slate-800">
-                        <span className="text-[9px] text-slate-400 block">3H RAIN</span>
-                        <span className="text-sm font-black text-emerald-300">{selectedPoint.rainfall3hMm}mm</span>
-                        <span className="text-[8px] text-slate-400 block">Vel: {selectedPoint.flowVelocityMs}m/s</span>
+                      <div className="p-1.5 rounded-xl bg-slate-50 border border-slate-200">
+                        <span className="text-[9px] text-slate-500 block font-semibold">3H RAIN</span>
+                        <span className="text-sm font-black text-emerald-700">{selectedPoint.rainfall3hMm}mm</span>
+                        <span className="text-[8px] text-slate-500 block">Vel: {selectedPoint.flowVelocityMs}m/s</span>
                       </div>
                     </div>
 
                     {/* Danger Ratio Bar */}
                     <div className="space-y-1">
-                      <div className="flex justify-between text-[9px] text-slate-400">
+                      <div className="flex justify-between text-[9px] text-slate-500 font-semibold">
                         <span>STAGE / DANGER RATIO</span>
-                        <span className="font-bold text-amber-300">
+                        <span className="font-bold text-amber-700">
                           {Math.round((selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%
                         </span>
                       </div>
-                      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
@@ -389,17 +389,17 @@ export const NationalRiverRiskMap: React.FC<{
                     </div>
 
                     {/* Threat & Directive */}
-                    <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-sans leading-tight">
-                      <div className="text-[9px] font-mono font-bold text-amber-400 flex items-center gap-1 mb-0.5">
-                        <ShieldAlert className="w-3 h-3" />
+                    <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-[11px] font-sans leading-tight">
+                      <div className="text-[9px] font-mono font-bold text-amber-700 flex items-center gap-1 mb-0.5">
+                        <ShieldAlert className="w-3 h-3 text-amber-600" />
                         <span>THREAT PROFILE</span>
                       </div>
-                      <p className="text-slate-200">{selectedPoint.primaryHazard}</p>
+                      <p className="text-slate-700">{selectedPoint.primaryHazard}</p>
                     </div>
 
                     {/* Quick Stations in this Basin */}
-                    <div className="pt-1 border-t border-slate-800/80">
-                      <span className="text-[9px] text-slate-400 block font-bold mb-1">
+                    <div className="pt-1 border-t border-slate-200">
+                      <span className="text-[9px] text-slate-500 block font-bold mb-1">
                         OTHER STATIONS IN {selectedPoint.basinName.toUpperCase()}:
                       </span>
                       <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
@@ -409,8 +409,8 @@ export const NationalRiverRiskMap: React.FC<{
                             onClick={() => handlePointClick(p)}
                             className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold shrink-0 transition ${
                               selectedPoint.id === p.id
-                                ? 'bg-cyan-500 text-slate-950 shadow'
-                                : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-800'
+                                ? 'bg-blue-600 text-white shadow-xs'
+                                : 'bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-300'
                             }`}
                           >
                             {p.name.split(' at ')[0].slice(0, 14)} ({p.riskPercentage}%)
@@ -426,32 +426,32 @@ export const NationalRiverRiskMap: React.FC<{
             {!showInMapCard && (
               <button
                 onClick={() => { setShowInMapCard(true); setInMapCardMinimized(false); }}
-                className="absolute top-2 left-2 z-10 bg-slate-950/90 border border-cyan-500/50 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-cyan-300 hover:bg-slate-900 flex items-center gap-1.5 shadow-xl transition"
+                className="absolute top-2 left-2 z-10 bg-white/95 border border-blue-400 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-blue-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-xl transition"
               >
-                <Waves className="w-3.5 h-3.5 text-cyan-400" />
+                <Waves className="w-3.5 h-3.5 text-blue-600" />
                 <span>OPEN IN-MAP TELEMETRY HUD</span>
               </button>
             )}
 
             {/* Quick Zoom Controls */}
-            <div className="absolute top-2 right-2 z-10 flex items-center gap-1 bg-slate-950/90 border border-slate-800 p-1 rounded-xl shadow-lg">
+            <div className="absolute top-2 right-2 z-10 flex items-center gap-1 bg-white/95 border border-slate-200 p-1 rounded-xl shadow-lg backdrop-blur-md">
               <button
                 onClick={() => setZoomLevel((z) => Math.min(2, z + 0.25))}
-                className="p-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 active:scale-95 transition"
+                className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-blue-600 active:scale-95 transition"
                 title="Zoom In"
               >
                 <ZoomIn className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setZoomLevel((z) => Math.max(0.75, z - 0.25))}
-                className="p-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 active:scale-95 transition"
+                className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-blue-600 active:scale-95 transition"
                 title="Zoom Out"
               >
                 <ZoomOut className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setZoomLevel(1)}
-                className="p-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white active:scale-95 transition"
+                className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 active:scale-95 transition"
                 title="Reset Zoom"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -640,19 +640,19 @@ export const NationalRiverRiskMap: React.FC<{
             </svg>
 
             {/* Quick Floating Legend (Bottom Left of Map) */}
-            <div className="absolute bottom-2 left-2 bg-slate-950/90 border border-slate-800/80 rounded-2xl p-2.5 backdrop-blur-md text-[10px] font-mono space-y-1 shadow-xl hidden sm:block">
-              <span className="text-slate-400 font-bold uppercase tracking-wider block">HYDROLOGICAL RISK SCALE</span>
+            <div className="absolute bottom-2 left-2 bg-white/95 border border-slate-200 rounded-2xl p-2.5 backdrop-blur-md text-[10px] font-mono space-y-1 shadow-lg hidden sm:block">
+              <span className="text-slate-500 font-bold uppercase tracking-wider block">HYDROLOGICAL RISK SCALE</span>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
-                <span className="text-rose-300 font-bold">≥ 85% CRITICAL</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
-                <span className="text-orange-300 font-bold">75-84% HIGH</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm" />
+                <span className="text-red-700 font-bold">≥ 85% CRITICAL</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <span className="text-amber-300 font-bold">60-74% MODERATE</span>
+                <span className="text-amber-800 font-bold">75-84% HIGH</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                <span className="text-yellow-800 font-bold">60-74% MODERATE</span>
               </div>
             </div>
           </div>
@@ -660,13 +660,13 @@ export const NationalRiverRiskMap: React.FC<{
 
         {/* VIEW 2: STEP-BY-STEP CASCADE SCHEMATIC DIAGRAM */}
         {viewMode === 'DIAGRAM' && (
-          <div className="flex-1 p-4 md:p-6 overflow-y-auto bg-[#030712] space-y-4 min-h-[450px]">
-            <div className="p-4 rounded-2xl bg-cyan-950/30 border border-cyan-500/40">
-              <h3 className="text-sm font-bold text-cyan-300 font-mono uppercase flex items-center gap-2 mb-1">
-                <Zap className="w-4 h-4 text-cyan-400" />
+          <div className="flex-1 p-4 md:p-6 overflow-y-auto bg-slate-50 space-y-4 min-h-[450px]">
+            <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+              <h3 className="text-sm font-bold text-blue-900 font-sans uppercase flex items-center gap-2 mb-1">
+                <Zap className="w-4 h-4 text-blue-600" />
                 National Upstream-to-Downstream Energy Cascade Model
               </h3>
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">
+              <p className="text-xs text-slate-700 leading-relaxed font-sans">
                 Floods in India follow a physical hydrodynamic chain: from high-altitude cloudbursts and glacial outbursts in the Himalayas/Western Ghats down through reservoir choke-points and into coastal deltas.
               </p>
             </div>
@@ -679,17 +679,17 @@ export const NationalRiverRiskMap: React.FC<{
                 { stage: '3. MIDSTREAM VALLEY CONVERGENCE', icon: '🌊', location: 'Haridwar, Guwahati, Bhadrachalam, Sangli, Patna', risk: '79-89%', desc: 'Tributaries merge into mainstem. River cross-sections widen, inundating low-lying agricultural floodplains.' },
                 { stage: '4. COASTAL DELTA & TIDAL TRAP', icon: '🏝️', location: 'Kolkata (Hooghly), Rajahmundry, Cuttack, Surat, Aluva (Kochi)', risk: '70-91%', desc: 'High tide blocks river outflow into the sea, causing severe backwater stagnation and urban waterlogging.' },
               ].map((step, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 flex items-start gap-4">
-                  <div className="text-2xl p-2.5 rounded-2xl bg-slate-800 border border-slate-700">{step.icon}</div>
+                <div key={idx} className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4">
+                  <div className="text-2xl p-2.5 rounded-2xl bg-slate-100 border border-slate-200">{step.icon}</div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold text-cyan-300 font-mono uppercase">{step.stage}</h4>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800">
+                      <h4 className="text-xs font-bold text-blue-900 font-sans uppercase">{step.stage}</h4>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-red-50 text-red-700 border border-red-200">
                         Risk: {step.risk}
                       </span>
                     </div>
-                    <p className="text-xs text-white font-bold mt-0.5">{step.location}</p>
-                    <p className="text-xs text-slate-400 mt-1 font-sans">{step.desc}</p>
+                    <p className="text-xs text-slate-900 font-bold mt-0.5">{step.location}</p>
+                    <p className="text-xs text-slate-600 mt-1 font-sans">{step.desc}</p>
                   </div>
                 </div>
               ))}
@@ -699,16 +699,16 @@ export const NationalRiverRiskMap: React.FC<{
 
         {/* VIEW 3: BASIN-BY-BASIN ANALYTICS TABLE */}
         {viewMode === 'ANALYTICS' && (
-          <div className="flex-1 p-4 md:p-6 overflow-y-auto bg-[#030712] space-y-4 min-h-[450px]">
-            <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+          <div className="flex-1 p-4 md:p-6 overflow-y-auto bg-slate-50 space-y-4 min-h-[450px]">
+            <h3 className="text-sm font-bold text-slate-900 font-sans uppercase tracking-wider flex items-center gap-2">
+              <Activity className="w-4 h-4 text-blue-600" />
               National Basin Vulnerability Comparison Matrix
             </h3>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto bg-white rounded-2xl border border-slate-200 shadow-sm">
               <table className="w-full text-left text-xs font-mono border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/60">
+                  <tr className="border-b border-slate-200 text-slate-600 bg-slate-100/70 font-bold">
                     <th className="p-3">Basin Name</th>
                     <th className="p-3">Gauges Monitored</th>
                     <th className="p-3">Average Risk %</th>
@@ -716,7 +716,7 @@ export const NationalRiverRiskMap: React.FC<{
                     <th className="p-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-100 text-slate-700">
                   {(Object.keys(RIVER_BASINS_META) as RiverBasinId[]).map((bId) => {
                     const meta = RIVER_BASINS_META[bId];
                     const basinPoints = NATIONAL_RIVER_POINTS.filter((p) => p.basin === bId);
@@ -725,21 +725,21 @@ export const NationalRiverRiskMap: React.FC<{
                       <tr
                         key={bId}
                         onClick={() => { handleBasinSelect(bId); setViewMode('MAP'); }}
-                        className="hover:bg-slate-900/70 transition cursor-pointer active:scale-[0.99]"
+                        className="hover:bg-slate-50 transition cursor-pointer active:scale-[0.99]"
                         title="Click to view on National River Map"
                       >
-                        <td className="p-3 font-bold text-white flex items-center gap-2">
+                        <td className="p-3 font-bold text-slate-900 flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: meta.color }} />
                           {meta.name}
                         </td>
                         <td className="p-3">{basinPoints.length} Stations</td>
                         <td className="p-3">
-                          <span className="font-bold text-cyan-300">{meta.avgRisk}%</span>
+                          <span className="font-bold text-blue-700">{meta.avgRisk}%</span>
                         </td>
-                        <td className="p-3 text-slate-400">{peakDischarge.toLocaleString()} m³/s</td>
+                        <td className="p-3 text-slate-600">{peakDischarge.toLocaleString()} m³/s</td>
                         <td className="p-3">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            meta.avgRisk >= 80 ? 'bg-rose-950 text-rose-300 border border-rose-800' : 'bg-orange-950 text-orange-300'
+                            meta.avgRisk >= 80 ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
                           }`}>
                             {meta.avgRisk >= 80 ? 'CRITICAL' : 'ELEVATED'}
                           </span>
@@ -756,17 +756,17 @@ export const NationalRiverRiskMap: React.FC<{
         {/* ── Right River Point Inspector Card (Scroll-linked on Mobile) ── */}
         <div
           id="gauge-inspector-card"
-          className="w-full lg:w-96 bg-slate-950/95 border-t lg:border-t-0 lg:border-l border-slate-800/80 p-4 md:p-5 flex flex-col justify-between overflow-y-auto space-y-4 shadow-2xl backdrop-blur-xl shrink-0"
+          className="w-full lg:w-96 bg-slate-50/95 border-t lg:border-t-0 lg:border-l border-slate-200 p-4 md:p-5 flex flex-col justify-between overflow-y-auto space-y-4 shadow-sm shrink-0 text-slate-800"
         >
           <div className="space-y-4">
             
             {/* Inspector Header */}
-            <div className="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-3">
+            <div className="flex items-start justify-between gap-2 border-b border-slate-200 pb-3">
               <div>
-                <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-wider block">
+                <span className="text-[10px] font-mono text-blue-700 font-bold uppercase tracking-wider block">
                   {selectedPoint.basinName} · {selectedPoint.state}
                 </span>
-                <h3 className="text-base font-black text-white leading-tight font-mono mt-0.5">
+                <h3 className="text-base font-black text-slate-900 leading-tight font-sans mt-0.5">
                   {selectedPoint.name}
                 </h3>
                 <span className="text-[10px] font-mono text-slate-500">
@@ -778,7 +778,7 @@ export const NationalRiverRiskMap: React.FC<{
                 <span className={`px-2.5 py-1 rounded-xl text-xs font-mono font-black border block ${getRiskBadge(selectedPoint.riskCategory)}`}>
                   {selectedPoint.riskPercentage}% RISK
                 </span>
-                <span className="text-[9px] font-mono text-rose-400 font-bold mt-1 block">
+                <span className="text-[9px] font-mono text-red-600 font-bold mt-1 block">
                   {selectedPoint.trend.replace('_', ' ')}
                 </span>
               </div>
@@ -786,34 +786,34 @@ export const NationalRiverRiskMap: React.FC<{
 
             {/* Gauge Dial & Hydrodynamics */}
             <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800">
-                <span className="text-[10px] text-slate-400 block">CURRENT STAGE</span>
-                <div className="text-xl font-black text-white mt-0.5 font-mono">
-                  {selectedPoint.currentStageM} <span className="text-xs font-normal text-slate-400">m</span>
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                <span className="text-[10px] text-slate-500 block font-semibold">CURRENT STAGE</span>
+                <div className="text-xl font-black text-slate-900 mt-0.5 font-mono">
+                  {selectedPoint.currentStageM} <span className="text-xs font-normal text-slate-500">m</span>
                 </div>
-                <span className="text-[10px] text-rose-400 font-bold">
+                <span className="text-[10px] text-red-600 font-bold">
                   Danger: {selectedPoint.dangerLevelM} m
                 </span>
               </div>
 
-              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800">
-                <span className="text-[10px] text-slate-400 block">DISCHARGE FLOW</span>
-                <div className="text-lg font-black text-cyan-300 mt-0.5 font-mono">
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                <span className="text-[10px] text-slate-500 block font-semibold">DISCHARGE FLOW</span>
+                <div className="text-lg font-black text-blue-700 mt-0.5 font-mono">
                   {selectedPoint.dischargeCumecs.toLocaleString()}
                 </div>
-                <span className="text-[10px] text-slate-400">m³/s (cumecs)</span>
+                <span className="text-[10px] text-slate-500">m³/s (cumecs)</span>
               </div>
             </div>
 
             {/* Stage Progress Bar relative to Danger Level */}
-            <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-1.5 text-xs font-mono">
+            <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5 text-xs font-mono">
               <div className="flex justify-between items-center text-[10px]">
-                <span className="text-slate-400">STAGE TO DANGER RATIO</span>
-                <span className="font-bold text-amber-300">
+                <span className="text-slate-500 font-semibold">STAGE TO DANGER RATIO</span>
+                <span className="font-bold text-amber-700">
                   {Math.round((selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%
                 </span>
               </div>
-              <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{
@@ -822,38 +822,38 @@ export const NationalRiverRiskMap: React.FC<{
                   }}
                 />
               </div>
-              <div className="flex justify-between text-[9px] text-slate-500">
+              <div className="flex justify-between text-[9px] text-slate-500 font-semibold">
                 <span>Warning: {selectedPoint.warningLevelM}m</span>
                 <span>Danger: {selectedPoint.dangerLevelM}m</span>
               </div>
             </div>
 
             {/* Primary Hazard & Model Evidence */}
-            <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1.5">
-              <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider block flex items-center gap-1">
-                <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+            <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5">
+              <span className="text-[10px] font-mono font-bold text-amber-700 uppercase tracking-wider block flex items-center gap-1">
+                <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
                 PRIMARY HYDROLOGICAL THREAT
               </span>
-              <p className="text-xs text-slate-200 font-sans leading-relaxed">
+              <p className="text-xs text-slate-700 font-sans leading-relaxed">
                 {selectedPoint.primaryHazard}
               </p>
             </div>
 
             {/* Cascade Flow Connections */}
-            <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs font-mono space-y-2">
-              <span className="text-[10px] text-slate-400 uppercase font-bold block">
+            <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm text-xs font-mono space-y-2">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">
                 HYDRODYNAMIC CASCADE LINKAGES
               </span>
               {selectedPoint.upstreamNodeId && (
                 <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400">↑ Upstream Gauge:</span>
-                  <span className="text-cyan-300 font-bold">{selectedPoint.upstreamNodeId}</span>
+                  <span className="text-slate-500">↑ Upstream Gauge:</span>
+                  <span className="text-blue-700 font-bold">{selectedPoint.upstreamNodeId}</span>
                 </div>
               )}
               {selectedPoint.downstreamNodeId && (
                 <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400">↓ Downstream Gauge:</span>
-                  <span className="text-emerald-300 font-bold">{selectedPoint.downstreamNodeId}</span>
+                  <span className="text-slate-500">↓ Downstream Gauge:</span>
+                  <span className="text-emerald-700 font-bold">{selectedPoint.downstreamNodeId}</span>
                 </div>
               )}
             </div>
@@ -864,9 +864,9 @@ export const NationalRiverRiskMap: React.FC<{
           <div className="pt-2 flex flex-col gap-2">
             <Link
               href="/safety"
-              className="w-full py-2.5 rounded-xl btn-primary text-white text-xs font-mono font-bold text-center flex items-center justify-center gap-2 shadow-lg active:scale-95 transition"
+              className="w-full py-2.5 rounded-xl btn-primary text-white text-xs font-sans font-bold text-center flex items-center justify-center gap-2 shadow-sm active:scale-95 transition"
             >
-              <Compass className="w-4 h-4 text-cyan-300" />
+              <Compass className="w-4 h-4 text-white" />
               <span>EVACUATION GUIDANCE FOR {selectedPoint.state.toUpperCase()}</span>
             </Link>
           </div>

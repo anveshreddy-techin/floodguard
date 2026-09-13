@@ -185,10 +185,10 @@ export default function PublicPreparednessPage() {
         </div>
         <Link
           href="/portal/shelters"
-          className="inline-flex items-center gap-1.5 bg-[#0f172a] hover:bg-slate-800 text-white font-bold px-4 py-2 rounded text-xs transition whitespace-nowrap active:scale-95"
+          className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-lg text-xs transition whitespace-nowrap active:scale-95 shadow-sm"
         >
           <span>Find Nearby Shelters</span>
-          <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+          <ArrowRight className="w-3.5 h-3.5 text-white" />
         </Link>
       </div>
     </div>

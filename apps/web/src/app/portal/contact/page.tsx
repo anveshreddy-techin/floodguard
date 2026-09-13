@@ -225,9 +225,9 @@ export default function PublicContactPage() {
             <button
               type="submit"
               disabled={submitted}
-              className="inline-flex items-center gap-1.5 bg-[#0f172a] hover:bg-slate-800 text-white font-bold px-5 py-2 rounded text-xs transition active:scale-95 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-lg text-xs transition active:scale-95 disabled:opacity-50 shadow-sm"
             >
-              <Send className="w-3.5 h-3.5 text-cyan-400" />
+              <Send className="w-3.5 h-3.5 text-white" />
               <span>{submitted ? 'Submitting...' : 'Send Inquiry'}</span>
             </button>
           </div>

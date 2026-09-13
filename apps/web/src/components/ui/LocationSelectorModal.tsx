@@ -238,34 +238,34 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
       {/* Dark Backdrop */}
       <div 
         onClick={onClose} 
-        className="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity animate-fade-in" 
+        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-fade-in" 
       />
 
       {/* Main Dialog Modal */}
-      <div className="relative w-full max-w-4xl max-h-[92vh] bg-gradient-to-b from-[#0c1836] via-[#081229] to-[#040a18] border border-cyan-500/40 rounded-3xl flex flex-col z-[10000] shadow-[0_0_60px_rgba(6,182,212,0.3)] overflow-hidden animate-slide-up">
+      <div className="relative w-full max-w-4xl max-h-[92vh] bg-white border border-slate-200 rounded-3xl flex flex-col z-[10000] shadow-2xl overflow-hidden animate-slide-up text-slate-900 font-sans">
         
         {/* ── Modal Header ── */}
-        <div className="p-4 sm:p-5 border-b border-cyan-500/20 bg-[#0c1836]/90 backdrop-blur-xl flex items-center justify-between shrink-0">
+        <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-950/80 border border-cyan-500/50 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.4)] shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-sm shrink-0">
               <MapPin className="w-5 h-5 animate-pulse" />
             </div>
             <div className="min-w-0">
-              <div className="text-sm sm:text-base font-black text-white font-sans tracking-wide flex items-center gap-2 flex-wrap">
+              <div className="text-sm sm:text-base font-bold text-slate-900 font-sans tracking-wide flex items-center gap-2 flex-wrap">
                 <span>SELECT MONITORED DISASTER SECTOR</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shrink-0">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-blue-100 text-blue-800 border border-blue-200 shrink-0">
                   {LOCATIONS.length} PAN-INDIA SECTORS
                 </span>
               </div>
-              <div className="text-[10px] sm:text-xs font-mono text-slate-400 truncate">
-                Current: <span className="text-cyan-300 font-bold">{hierarchy.state}</span> • <span className="text-white">{hierarchy.district}</span> ({hierarchy.basin})
+              <div className="text-[11px] sm:text-xs font-sans text-slate-500 truncate">
+                Current: <span className="text-blue-700 font-bold">{hierarchy.state}</span> • <span className="text-slate-800 font-medium">{hierarchy.district}</span> ({hierarchy.basin})
               </div>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-2xl bg-slate-900/90 border border-cyan-500/30 flex items-center justify-center text-cyan-300 hover:text-white active:scale-95 transition shadow-sm shrink-0 ml-2"
+            className="w-9 h-9 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-800 active:scale-95 transition shadow-sm shrink-0 ml-2"
             aria-label="Close Location Selector"
           >
             <X className="w-4 h-4" />
@@ -276,19 +276,19 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
 
           {/* 1. HERO: GPS AUTO-DETECTION ACCORDING TO USER'S LOCATION */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-cyan-950/80 via-sky-950/70 to-indigo-950/80 border-2 border-cyan-400/50 shadow-[0_0_30px_rgba(6,182,212,0.25)] space-y-3">
+          <div className="p-4 sm:p-5 rounded-2xl bg-blue-50/70 border border-blue-200 shadow-sm space-y-3">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <LocateFixed className="w-4 h-4 text-cyan-400" />
-                  <h4 className="text-xs sm:text-sm font-bold font-mono text-white uppercase tracking-wider">
+                  <LocateFixed className="w-4 h-4 text-blue-600" />
+                  <h4 className="text-xs sm:text-sm font-bold font-sans text-slate-900 uppercase tracking-wider">
                     LOCATION ACCORDING TO YOUR GPS
                   </h4>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 font-black">
+                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200 font-bold">
                     INSTANT LOCK
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 font-sans">
+                <p className="text-xs text-slate-600 font-sans">
                   Query device sensors to automatically select your closest river basin, alert zone, and hydrological station across India.
                 </p>
               </div>
@@ -296,7 +296,7 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
               <button
                 onClick={handleDetectGPS}
                 disabled={isLocating}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-mono text-xs font-black flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(6,182,212,0.5)] active:scale-95 transition shrink-0 disabled:opacity-50"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-sans text-xs font-bold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition shrink-0 disabled:opacity-50"
               >
                 {isLocating ? (
                   <>
@@ -314,17 +314,17 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
 
             {/* GPS Feedback Result Banner */}
             {gpsInfo && (
-              <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-mono text-emerald-200">
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-sans text-emerald-900">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <div>
                     <span>📍 GPS FIX LOCKED: </span>
-                    <strong className="text-white">{gpsInfo.lat.toFixed(4)}°N, {gpsInfo.lon.toFixed(4)}°E</strong>
-                    <span className="text-emerald-300"> ({gpsInfo.resolvedState})</span>
-                    <span className="text-slate-400 text-[11px] block sm:inline sm:ml-2">Accuracy: ±{gpsInfo.accuracy}m</span>
+                    <strong className="text-emerald-950 font-mono">{gpsInfo.lat.toFixed(4)}°N, {gpsInfo.lon.toFixed(4)}°E</strong>
+                    <span className="text-emerald-800 font-medium"> ({gpsInfo.resolvedState})</span>
+                    <span className="text-slate-500 text-[11px] block sm:inline sm:ml-2">Accuracy: ±{gpsInfo.accuracy}m</span>
                   </div>
                 </div>
-                <div className="px-2.5 py-1 rounded-lg bg-emerald-900/60 border border-emerald-400/40 text-[11px] text-white font-bold">
+                <div className="px-2.5 py-1 rounded-lg bg-emerald-100 border border-emerald-300 text-xs text-emerald-800 font-bold">
                   Nearest: {gpsInfo.nearestName} ({gpsInfo.distanceKm} km)
                 </div>
               </div>
@@ -332,49 +332,49 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
 
             {/* Error Message */}
             {locationError && (
-              <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-500/50 flex items-center gap-2 text-xs font-mono text-rose-200">
-                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-2 text-xs font-sans text-red-700">
+                <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
                 <span>{locationError}</span>
               </div>
             )}
           </div>
 
           {/* 1B. GLOBAL ADAPTIVE COORDINATES: ANY LATITUDE / LONGITUDE INPUT */}
-          <div className="p-4 rounded-2xl bg-slate-900/80 border border-cyan-500/30 space-y-3">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Compass className="w-4 h-4 text-cyan-400" />
-                <span className="text-xs font-bold font-mono text-white tracking-wider">
-                  ENTER ANY LATITUDE & LONGITUDE (GLOBAL ADAPTIVE RESOLUTION)
+                <Compass className="w-4 h-4 text-blue-600" />
+                <span className="text-xs font-bold font-sans text-slate-800 tracking-wider">
+                  ENTER ANY LATITUDE &amp; LONGITUDE (GLOBAL ADAPTIVE RESOLUTION)
                 </span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold">
+              <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-slate-200 text-slate-700 border border-slate-300 font-bold">
                 NO HARDCODED BOUNDS
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <div>
-                <label className="block text-[10px] font-mono text-slate-400 mb-1">LATITUDE (-90 to 90)</label>
+                <label className="block text-[10px] font-sans font-bold text-slate-600 mb-1">LATITUDE (-90 to 90)</label>
                 <input
                   type="number"
                   step="0.0001"
                   value={customLat}
                   onChange={(e) => setCustomLat(e.target.value)}
                   placeholder="e.g. 30.4850"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-500 shadow-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-mono text-slate-400 mb-1">LONGITUDE (-180 to 180)</label>
+                <label className="block text-[10px] font-sans font-bold text-slate-600 mb-1">LONGITUDE (-180 to 180)</label>
                 <input
                   type="number"
                   step="0.0001"
                   value={customLon}
                   onChange={(e) => setCustomLon(e.target.value)}
                   placeholder="e.g. 79.6920"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-500 shadow-sm"
                 />
               </div>
 
@@ -382,7 +382,7 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                 <button
                   onClick={handleResolveCustomCoordinates}
                   disabled={isResolvingCoords}
-                  className="w-full py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-mono text-xs font-black flex items-center justify-center gap-1.5 transition active:scale-95 disabled:opacity-50"
+                  className="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-sans text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 disabled:opacity-50 shadow-sm"
                 >
                   {isResolvingCoords ? (
                     <>
@@ -392,7 +392,7 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                   ) : (
                     <>
                       <Compass className="w-3.5 h-3.5" />
-                      <span>RESOLVE & MONITOR</span>
+                      <span>RESOLVE &amp; MONITOR</span>
                     </>
                   )}
                 </button>
@@ -401,12 +401,12 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
 
             {/* Resolved Profile Preview Card */}
             {resolvedProfile && (
-              <div className="p-3.5 rounded-xl bg-[#06132b] border border-cyan-500/50 space-y-2 text-xs font-mono">
-                <div className="flex items-center justify-between flex-wrap gap-2 border-b border-slate-800 pb-2">
+              <div className="p-3.5 rounded-xl bg-white border border-slate-200 space-y-2 text-xs font-sans shadow-sm">
+                <div className="flex items-center justify-between flex-wrap gap-2 border-b border-slate-200 pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-cyan-400 font-bold">📍 {resolvedProfile.hierarchy?.state}</span>
-                    <span className="text-slate-400">• {resolvedProfile.hierarchy?.district}</span>
-                    <span className="text-slate-500 font-bold">({resolvedProfile.hierarchy?.basin})</span>
+                    <span className="text-blue-700 font-bold">📍 {resolvedProfile.hierarchy?.state}</span>
+                    <span className="text-slate-600">• {resolvedProfile.hierarchy?.district}</span>
+                    <span className="text-slate-500 font-semibold">({resolvedProfile.hierarchy?.basin})</span>
                   </div>
                   <div className="flex items-center gap-1 flex-wrap">
                     {resolvedProfile.location_prediction_eligibility?.statuses?.map((st: string, idx: number) => (
@@ -414,10 +414,10 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                         key={idx}
                         className={`text-[9px] px-1.5 py-0.5 rounded font-bold border ${
                           st === 'VALIDATED_LOCATION'
-                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                             : st === 'PREDICTION_ELIGIBLE_LOCATION'
-                            ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
-                            : 'bg-slate-800 text-slate-300 border-slate-700'
+                            ? 'bg-blue-50 text-blue-700 border-blue-200'
+                            : 'bg-slate-100 text-slate-600 border-slate-200'
                         }`}
                       >
                         {st}
@@ -427,21 +427,21 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
-                  <div className="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                    <div className="text-slate-500 text-[9px]">DATA COVERAGE</div>
-                    <div className="text-cyan-300 font-bold">{resolvedProfile.location_coverage_score}%</div>
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                    <div className="text-slate-500 text-[9px] font-medium">DATA COVERAGE</div>
+                    <div className="text-blue-700 font-bold">{resolvedProfile.location_coverage_score}%</div>
                   </div>
-                  <div className="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                    <div className="text-slate-500 text-[9px]">FEATURE COMPLETENESS</div>
-                    <div className="text-emerald-300 font-bold">{resolvedProfile.location_data_profile?.feature_completeness_pct}%</div>
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                    <div className="text-slate-500 text-[9px] font-medium">FEATURE COMPLETENESS</div>
+                    <div className="text-emerald-700 font-bold">{resolvedProfile.location_data_profile?.feature_completeness_pct}%</div>
                   </div>
-                  <div className="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                    <div className="text-slate-500 text-[9px]">DATA GAPS</div>
-                    <div className="text-amber-400 font-bold">{resolvedProfile.location_data_profile?.data_gaps_count} variables</div>
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                    <div className="text-slate-500 text-[9px] font-medium">DATA GAPS</div>
+                    <div className="text-amber-700 font-bold">{resolvedProfile.location_data_profile?.data_gaps_count} variables</div>
                   </div>
-                  <div className="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                    <div className="text-slate-500 text-[9px]">MODEL ROUTING</div>
-                    <div className="text-white font-bold truncate">{resolvedProfile.regional_model_selected?.model_family}</div>
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                    <div className="text-slate-500 text-[9px] font-medium">MODEL ROUTING</div>
+                    <div className="text-slate-900 font-bold truncate">{resolvedProfile.regional_model_selected?.model_family}</div>
                   </div>
                 </div>
 
@@ -449,22 +449,22 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                   <div className={`p-2 rounded-lg border text-[11px] flex items-center justify-between ${
                     resolvedProfile.location_readiness?.sufficient_real_data_exists
-                      ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
-                      : 'bg-rose-950/30 border-rose-500/40 text-rose-300'
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-red-50 border-red-200 text-red-700'
                   }`}>
                     <span>REAL DATA SUFFICIENCY:</span>
-                    <strong className="font-bold font-mono">
+                    <strong className="font-bold font-sans">
                       {resolvedProfile.location_readiness?.sufficient_real_data_exists ? '✓ SUFFICIENT' : '✗ INSUFFICIENT'}
                     </strong>
                   </div>
 
                   <div className={`p-2 rounded-lg border text-[11px] flex items-center justify-between ${
                     resolvedProfile.location_readiness?.sufficient_model_validation_exists
-                      ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
-                      : 'bg-amber-950/30 border-amber-500/40 text-amber-300'
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-amber-50 border-amber-200 text-amber-800'
                   }`}>
                     <span>MODEL VALIDATION:</span>
-                    <strong className="font-bold font-mono">
+                    <strong className="font-bold font-sans">
                       {resolvedProfile.location_readiness?.sufficient_model_validation_exists ? '✓ BENCHMARK_VALIDATED' : '⚠ LIMITED_VALIDATION'}
                     </strong>
                   </div>
@@ -472,25 +472,25 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
 
                 {/* Uncertainty-Aware Risk Estimate Section */}
                 {resolvedProfile.risk_inference?.status === 'ESTIMATE_ISSUED' && (
-                  <div className="p-3 rounded-xl bg-slate-950/80 border border-cyan-500/40 space-y-2">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         <span className={`text-[10px] px-2 py-0.5 rounded font-black ${
                           resolvedProfile.risk_inference.alert_stage === 'RED'
-                            ? 'bg-red-500 text-white animate-pulse'
+                            ? 'bg-red-600 text-white animate-pulse'
                             : resolvedProfile.risk_inference.alert_stage === 'ORANGE'
                             ? 'bg-orange-500 text-white'
                             : resolvedProfile.risk_inference.alert_stage === 'YELLOW'
-                            ? 'bg-yellow-500 text-slate-950'
-                            : 'bg-green-500 text-slate-950'
+                            ? 'bg-amber-400 text-slate-900'
+                            : 'bg-emerald-600 text-white'
                         }`}>
                           STAGE: {resolvedProfile.risk_inference.alert_stage}
                         </span>
-                        <span className="text-white font-bold text-sm">
+                        <span className="text-slate-900 font-bold text-sm">
                           {resolvedProfile.risk_inference.interval_label}
                         </span>
                       </div>
-                      <div className="text-[10px] font-mono text-cyan-400">
+                      <div className="text-[10px] font-mono text-blue-700 font-bold">
                         90% CI: [{resolvedProfile.risk_inference.confidence_interval_90[0]}, {resolvedProfile.risk_inference.confidence_interval_90[1]}]
                       </div>
                     </div>
@@ -498,19 +498,19 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[10px] pt-1">
                       <div>
                         <span className="text-slate-500">Conservative Upper (Life Safety):</span>
-                        <div className="text-amber-300 font-bold font-mono">{resolvedProfile.risk_inference.conservative_upper_bound} / 100</div>
+                        <div className="text-amber-700 font-bold font-mono">{resolvedProfile.risk_inference.conservative_upper_bound} / 100</div>
                       </div>
                       <div>
                         <span className="text-slate-500">Epistemic Uncertainty:</span>
-                        <div className="text-cyan-300 font-bold font-mono">{resolvedProfile.risk_inference.epistemic_uncertainty_score}%</div>
+                        <div className="text-blue-700 font-bold font-mono">{resolvedProfile.risk_inference.epistemic_uncertainty_score}%</div>
                       </div>
                       <div>
                         <span className="text-slate-500">Lead Time:</span>
-                        <div className="text-emerald-300 font-bold font-mono">{resolvedProfile.risk_inference.lead_time_minutes} min</div>
+                        <div className="text-emerald-700 font-bold font-mono">{resolvedProfile.risk_inference.lead_time_minutes} min</div>
                       </div>
                     </div>
 
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 text-[10px] text-slate-300">
+                    <div className="p-2 rounded bg-white border border-slate-200 text-xs text-slate-700">
                       <strong>Directive: </strong>{resolvedProfile.risk_inference.ndrf_action}
                     </div>
                   </div>
@@ -518,22 +518,22 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
 
                 {/* If Prediction is Withheld */}
                 {resolvedProfile.risk_inference?.status === 'PREDICTION_WITHHELD' && (
-                  <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-500/50 space-y-1.5">
-                    <div className="flex items-center gap-2 text-rose-400 font-bold">
+                  <div className="p-3 rounded-xl bg-red-50 border border-red-200 space-y-1.5">
+                    <div className="flex items-center gap-2 text-red-700 font-bold">
                       <AlertTriangle className="w-4 h-4 shrink-0" />
                       <span>PREDICTION WITHHELD: INSUFFICIENT DATA / ENVELOPE BREACH</span>
                     </div>
-                    <p className="text-[11px] text-rose-200">
+                    <p className="text-[11px] text-red-800">
                       {resolvedProfile.risk_inference.reason}
                     </p>
-                    <div className="text-[10px] text-slate-400 font-mono">
+                    <div className="text-[10px] text-slate-600 font-mono">
                       <strong>Action: </strong>{resolvedProfile.risk_inference.required_action}
                     </div>
                   </div>
                 )}
 
                 {resolvedProfile.location_data_profile?.data_gaps?.length > 0 && (
-                  <div className="p-2 rounded bg-amber-950/40 border border-amber-500/30 text-[10px] text-amber-200">
+                  <div className="p-2 rounded bg-amber-50 border border-amber-200 text-[10px] text-amber-800">
                     <span className="font-bold">DATA_GAP: </span>
                     {resolvedProfile.location_data_profile.data_gaps.map((g: any, i: number) => (
                       <span key={i} className="mr-2">[{g.missing_variable}: {g.prediction_impact.split(' — ')[0]}]</span>
@@ -555,12 +555,12 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search any state, district, river basin, or city (e.g. Kerala, Delhi, Kosi, Wayanad)..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-cyan-400 text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none transition shadow-inner"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-500 text-xs font-sans text-slate-900 placeholder-slate-400 focus:outline-none transition shadow-sm"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -576,13 +576,13 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                     setStateFilter(e.target.value);
                   }
                 }}
-                className="bg-slate-900/90 border border-cyan-500/40 rounded-xl px-3.5 py-2.5 text-xs font-mono text-cyan-300 font-bold focus:outline-none focus:border-cyan-400 cursor-pointer shrink-0"
+                className="bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-sans text-slate-800 font-bold focus:outline-none focus:border-blue-500 cursor-pointer shrink-0 shadow-sm"
               >
-                <option value="ALL" className="bg-slate-950 text-slate-200">
-                  🌐 All 36 States & UTs
+                <option value="ALL" className="bg-white text-slate-800">
+                  🌐 All 36 States &amp; UTs
                 </option>
                 {INDIAN_STATES.map((st) => (
-                  <option key={st.id} value={st.name} className="bg-slate-950 text-slate-200">
+                  <option key={st.id} value={st.name} className="bg-white text-slate-800">
                     {st.isUT ? '🏛️ [UT] ' : '📍 '}{st.name} ({st.rivers[0]} Basin)
                   </option>
                 ))}
@@ -595,10 +595,10 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                 <button
                   key={z.id}
                   onClick={() => setSelectedZone(z.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap shrink-0 transition active:scale-95 ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-sans font-bold whitespace-nowrap shrink-0 transition active:scale-95 ${
                     selectedZone === z.id
-                      ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-500/60 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-slate-800'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 bg-white'
                   }`}
                 >
                   {z.label}
@@ -607,10 +607,10 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
               {gpsInfo && (
                 <button
                   onClick={() => setSortByDistance(!sortByDistance)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap shrink-0 transition active:scale-95 flex items-center gap-1 ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-sans font-bold whitespace-nowrap shrink-0 transition active:scale-95 flex items-center gap-1 ${
                     sortByDistance
-                      ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/60'
-                      : 'text-slate-400 hover:text-slate-200 border border-slate-800'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 border border-slate-200 bg-white'
                   }`}
                 >
                   <Navigation className="w-3 h-3" />
@@ -622,11 +622,11 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
 
           {/* 3. LOCATION CARDS GRID */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 px-1">
+            <div className="flex items-center justify-between text-[11px] font-sans text-slate-500 px-1 font-medium">
               <span>SHOWING {displayedLocations.length} SECTORS</span>
               {selectedLocation && (
                 <span className="truncate max-w-[240px] sm:max-w-none">
-                  Active: <strong className="text-cyan-300">{selectedLocation.name}</strong>
+                  Active: <strong className="text-blue-700 font-bold">{selectedLocation.name}</strong>
                 </span>
               )}
             </div>
@@ -641,13 +641,13 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                 const getRiskColor = (level: string) => {
                   switch (level) {
                     case 'EXTREME':
-                      return 'bg-rose-500/20 text-rose-300 border-rose-500/50';
+                      return 'bg-red-50 text-red-700 border-red-200';
                     case 'HIGH':
-                      return 'bg-orange-500/20 text-orange-300 border-orange-500/50';
+                      return 'bg-orange-50 text-orange-700 border-orange-200';
                     case 'MODERATE':
-                      return 'bg-amber-500/20 text-amber-300 border-amber-500/50';
+                      return 'bg-amber-50 text-amber-700 border-amber-200';
                     default:
-                      return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50';
+                      return 'bg-emerald-50 text-emerald-700 border-emerald-200';
                   }
                 };
 
@@ -657,30 +657,30 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                     onClick={() => handleSelectLocation(loc)}
                     className={`p-4 rounded-2xl border transition text-left cursor-pointer active:scale-98 relative group flex flex-col justify-between ${
                       isCurrent
-                        ? 'bg-cyan-950/50 border-cyan-400 shadow-[0_0_25px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400/50'
-                        : 'bg-slate-900/60 hover:bg-slate-900 border-slate-800/90 hover:border-cyan-500/40 shadow-md'
+                        ? 'bg-blue-50/60 border-blue-500 shadow-md ring-1 ring-blue-500'
+                        : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-blue-300 shadow-sm'
                     }`}
                   >
                     <div className="space-y-2">
                       {/* Top Row: State & Risk Badge */}
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <div className="text-[10px] font-mono font-bold text-cyan-400 flex items-center gap-1.5 uppercase truncate">
+                          <div className="text-[10px] font-sans font-bold text-blue-700 flex items-center gap-1.5 uppercase truncate">
                             <span>{loc.state}</span>
                             <span>•</span>
-                            <span className="text-slate-400 truncate">{loc.region.split(' (')[0]}</span>
+                            <span className="text-slate-500 truncate">{loc.region.split(' (')[0]}</span>
                           </div>
-                          <h5 className="font-sans font-bold text-sm text-white group-hover:text-cyan-200 transition">
+                          <h5 className="font-sans font-bold text-sm text-slate-900 group-hover:text-blue-700 transition">
                             {loc.name}
                           </h5>
                         </div>
 
                         <div className="flex flex-col items-end gap-1 shrink-0">
-                          <span className={`px-2 py-0.5 rounded-lg text-[9px] font-mono font-bold border ${getRiskColor(loc.riskLevel)}`}>
+                          <span className={`px-2 py-0.5 rounded-lg text-[9px] font-sans font-bold border ${getRiskColor(loc.riskLevel)}`}>
                             {loc.riskLevel} {loc.riskScore}/100
                           </span>
                           {isCurrent && (
-                            <span className="text-[9px] font-mono font-bold text-cyan-300 bg-cyan-950 px-1.5 py-0.2 rounded border border-cyan-700">
+                            <span className="text-[9px] font-sans font-bold text-blue-700 bg-blue-100 px-1.5 py-0.2 rounded border border-blue-300">
                               ACTIVE
                             </span>
                           )}
@@ -688,33 +688,33 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                       </div>
 
                       {/* Primary Hazard Description */}
-                      <p className="text-xs text-slate-300 font-sans line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-slate-600 font-sans line-clamp-2 leading-relaxed">
                         {loc.primaryHazard}
                       </p>
 
                       {/* Key Hydro Metrics */}
-                      <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-800/80 text-[10px] font-mono text-slate-400">
-                        <div className="bg-slate-950/60 p-1.5 rounded-lg border border-slate-800">
-                          <span className="block text-slate-500 text-[9px]">RAIN (3H)</span>
-                          <span className="text-white font-bold">{loc.rainfall3h}</span>
+                      <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-100 text-[10px] font-sans text-slate-600">
+                        <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                          <span className="block text-slate-500 text-[9px] font-medium">RAIN (3H)</span>
+                          <span className="text-slate-900 font-bold">{loc.rainfall3h}</span>
                         </div>
-                        <div className="bg-slate-950/60 p-1.5 rounded-lg border border-slate-800">
-                          <span className="block text-slate-500 text-[9px]">RIVER</span>
-                          <span className="text-cyan-300 font-bold truncate block">{loc.riverStage.split(' (')[0]}</span>
+                        <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                          <span className="block text-slate-500 text-[9px] font-medium">RIVER</span>
+                          <span className="text-blue-700 font-bold truncate block">{loc.riverStage.split(' (')[0]}</span>
                         </div>
-                        <div className="bg-slate-950/60 p-1.5 rounded-lg border border-slate-800">
-                          <span className="block text-slate-500 text-[9px]">LEAD TIME</span>
-                          <span className="text-amber-300 font-bold">{loc.leadTimeMinutes} min</span>
+                        <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                          <span className="block text-slate-500 text-[9px] font-medium">LEAD TIME</span>
+                          <span className="text-amber-700 font-bold">{loc.leadTimeMinutes} min</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Bottom Action Strip */}
-                    <div className="pt-3 mt-3 border-t border-slate-800/60 flex items-center justify-between text-[10px] font-mono">
-                      <div className="flex items-center gap-1.5 text-slate-400">
+                    <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-sans">
+                      <div className="flex items-center gap-1.5 text-slate-500">
                         {distance ? (
-                          <span className="text-emerald-300 font-bold flex items-center gap-1">
-                            <Navigation className="w-3 h-3 text-emerald-400" />
+                          <span className="text-emerald-700 font-bold flex items-center gap-1">
+                            <Navigation className="w-3 h-3 text-emerald-600" />
                             {distance} km away from your GPS
                           </span>
                         ) : (
@@ -729,8 +729,8 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                         }}
                         className={`px-3 py-1 rounded-lg font-bold flex items-center gap-1 transition ${
                           isCurrent
-                            ? 'bg-cyan-500 text-slate-950 font-black'
-                            : 'bg-slate-800 hover:bg-cyan-600 hover:text-white text-slate-300'
+                            ? 'bg-blue-600 text-white font-bold'
+                            : 'bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200'
                         }`}
                       >
                         <span>{isCurrent ? 'SELECTED' : 'SELECT'}</span>
@@ -743,9 +743,9 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
             </div>
 
             {displayedLocations.length === 0 && (
-              <div className="p-8 rounded-2xl bg-slate-900/40 border border-slate-800 text-center space-y-2">
-                <MapPin className="w-8 h-8 text-slate-600 mx-auto" />
-                <h5 className="text-sm font-mono font-bold text-slate-300">No matching sectors found</h5>
+              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-2">
+                <MapPin className="w-8 h-8 text-slate-400 mx-auto" />
+                <h5 className="text-sm font-sans font-bold text-slate-700">No matching sectors found</h5>
                 <p className="text-xs text-slate-500 font-sans">
                   Try searching for another Indian state, major river basin, or clear the active filter.
                 </p>
@@ -755,7 +755,7 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
                     setSelectedZone('ALL');
                     setSelectedState('ALL');
                   }}
-                  className="mt-2 px-4 py-1.5 rounded-xl bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-300 text-xs font-mono font-bold border border-cyan-500/40"
+                  className="mt-2 px-4 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-sans font-bold border border-blue-200"
                 >
                   Reset All Filters
                 </button>
@@ -766,15 +766,15 @@ export const LocationSelectorModal: React.FC<LocationSelectorModalProps> = ({ is
         </div>
 
         {/* ── Modal Footer ── */}
-        <div className="p-3.5 border-t border-cyan-500/20 bg-[#070f24]/95 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs font-mono shrink-0">
-          <div className="text-slate-400 text-center sm:text-left text-[11px]">
+        <div className="p-3.5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs font-sans shrink-0">
+          <div className="text-slate-500 text-center sm:text-left text-[11px]">
             <span>SIH26192 Pan-India Disaster Early Warning Network • </span>
-            <span className="text-cyan-400 font-bold">{LOCATIONS.length} Real-Time Calibrated Basins</span>
+            <span className="text-blue-700 font-bold">{LOCATIONS.length} Real-Time Calibrated Basins</span>
           </div>
 
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition active:scale-95"
+            className="w-full sm:w-auto px-5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold transition active:scale-95 shadow-sm"
           >
             DONE / CLOSE
           </button>

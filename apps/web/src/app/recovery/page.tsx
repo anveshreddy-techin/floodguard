@@ -59,9 +59,9 @@ const LESSONS = [
 ];
 
 const STATUS_STYLES: Record<string, string> = {
-  COMPLETED: 'text-green-400 bg-green-500/10',
-  IN_PROGRESS: 'text-blue-400 bg-blue-500/10',
-  PENDING: 'text-gray-400 bg-gray-800',
+  COMPLETED: 'text-emerald-700 bg-emerald-50 border border-emerald-200',
+  IN_PROGRESS: 'text-blue-700 bg-blue-50 border border-blue-200',
+  PENDING: 'text-slate-600 bg-slate-100 border border-slate-200',
 };
 
 export default function RecoveryPage() {
@@ -69,45 +69,46 @@ export default function RecoveryPage() {
   const tasks = TASKS_BY_PHASE[activePhase];
 
   return (
-    <div className="flex h-screen bg-[#0a0f1e] text-white overflow-hidden">
+    <div className="flex h-screen bg-[#F0F4F8] text-slate-900 overflow-hidden font-sans">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 space-y-4">
+        <main className="flex-1 overflow-y-auto p-6 space-y-6">
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <RefreshCw className="w-6 h-6 text-green-400" />
-                Recovery Dashboard
+              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5 font-sans">
+                <RefreshCw className="w-7 h-7 text-emerald-600" />
+                Recovery & Rehabilitation Dashboard
               </h1>
-              <p className="text-gray-400 text-sm mt-1">
-                Recovery phase tracking, damage assessment, task management, and lessons learned.
+              <p className="text-slate-600 text-sm mt-1 font-sans">
+                Post-disaster recovery phase tracking, damage assessment, inter-agency task management, and institutional lessons learned.
               </p>
             </div>
             <DataModeBadge mode="DEMO" />
           </div>
 
           {/* Damage summary */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
             {DAMAGE_SUMMARY.map(d => (
-              <div key={d.label} className="bg-gray-900 border border-gray-800 rounded-lg p-3">
-                <p className={`text-xl font-bold ${d.color}`}>{d.value}</p>
-                <p className="text-gray-500 text-xs">{d.label}</p>
+              <div key={d.label} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                <p className={`text-lg font-bold font-sans ${d.color.replace('-400', '-600')}`}>{d.value}</p>
+                <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider mt-1 font-sans">{d.label}</p>
               </div>
             ))}
           </div>
 
           {/* Phase selector */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap items-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 mr-2">Disaster Phase:</span>
             {PHASES.map(phase => (
               <button
                 key={phase}
                 onClick={() => setActivePhase(phase)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${
                   activePhase === phase
-                    ? 'bg-green-600/20 border-green-500/50 text-green-300'
-                    : 'bg-gray-900 border-gray-700 text-gray-400 hover:bg-gray-800'
+                    ? 'bg-emerald-700 text-white'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
                 {PHASE_LABELS[phase]}
@@ -116,15 +117,15 @@ export default function RecoveryPage() {
           </div>
 
           {/* Tasks */}
-          <div className="bg-gray-900 border border-gray-800 rounded-lg divide-y divide-gray-800">
+          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm overflow-hidden">
             {tasks.map(task => (
-              <div key={task.id} className="flex items-center gap-3 p-3">
-                <div className={`flex-shrink-0 w-2 h-2 rounded-full ${task.status === 'COMPLETED' ? 'bg-green-400' : task.status === 'IN_PROGRESS' ? 'bg-blue-400 animate-pulse' : 'bg-gray-600'}`} />
+              <div key={task.id} className="flex items-center gap-3.5 p-4 transition-colors hover:bg-slate-50/70">
+                <div className={`flex-shrink-0 w-2.5 h-2.5 rounded-full ${task.status === 'COMPLETED' ? 'bg-emerald-500' : task.status === 'IN_PROGRESS' ? 'bg-blue-600 animate-pulse' : 'bg-slate-300'}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium">{task.task}</p>
-                  <p className="text-gray-500 text-xs">{task.category} · {task.owner}</p>
+                  <p className="text-slate-900 text-sm font-semibold font-sans">{task.task}</p>
+                  <p className="text-slate-500 text-xs font-medium font-sans mt-0.5">{task.category} · <span className="text-slate-700">{task.owner}</span></p>
                 </div>
-                <span className={`text-xs px-2 py-0.5 rounded font-medium flex-shrink-0 ${STATUS_STYLES[task.status]}`}>
+                <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold font-sans flex-shrink-0 shadow-sm ${STATUS_STYLES[task.status]}`}>
                   {task.status.replace('_', ' ')}
                 </span>
               </div>
@@ -132,30 +133,30 @@ export default function RecoveryPage() {
           </div>
 
           {/* Lessons learned */}
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-            <h2 className="text-white font-semibold flex items-center gap-2 mb-3">
-              <ClipboardList className="w-4 h-4 text-amber-400" />
-              Lessons Learned
+          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+            <h2 className="text-slate-900 font-bold font-sans flex items-center gap-2 text-base">
+              <ClipboardList className="w-5 h-5 text-amber-600" />
+              Institutional Lessons Learned & Action Items
             </h2>
             <div className="space-y-3">
               {LESSONS.map(l => (
-                <div key={l.id} className="bg-gray-800/50 rounded p-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-white text-sm font-medium">{l.title}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded font-medium ${l.priority === 'HIGH' ? 'text-red-400 bg-red-500/10' : 'text-amber-400 bg-amber-500/10'}`}>
-                      {l.priority}
+                <div key={l.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-1.5 gap-2">
+                    <p className="text-slate-900 text-sm font-bold font-sans">{l.title}</p>
+                    <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold font-sans shadow-sm ${l.priority === 'HIGH' ? 'text-red-700 bg-red-50 border border-red-200' : 'text-amber-800 bg-amber-50 border border-amber-200'}`}>
+                      {l.priority} PRIORITY
                     </span>
                   </div>
-                  <p className="text-gray-400 text-xs">{l.detail}</p>
+                  <p className="text-slate-600 text-xs font-sans leading-relaxed">{l.detail}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Export */}
-          <button className="w-full flex items-center justify-center gap-2 py-2.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-gray-300 text-sm transition-colors">
-            <FileText className="w-4 h-4" />
-            Export Incident & Recovery Report (DEMO)
+          <button className="w-full flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-semibold text-sm shadow-sm transition-all active:scale-[0.99]">
+            <FileText className="w-4 h-4 text-blue-600" />
+            Export Incident & Recovery Report (PDF / DOCX Demo)
           </button>
 
         </main>

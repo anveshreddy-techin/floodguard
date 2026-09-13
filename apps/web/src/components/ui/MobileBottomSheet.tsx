@@ -72,10 +72,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
       }`}
     >
       <div 
-        className="w-full h-full bg-gradient-to-b from-[#0c1a3a]/98 via-[#09152e]/98 to-[#050d20]/98 backdrop-blur-2xl border-t-2 border-cyan-400/50 rounded-t-3xl shadow-[0_-12px_40px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden"
-        style={{
-          boxShadow: '0 -10px 35px rgba(6, 182, 212, 0.25), inset 0 1px 0 rgba(255,255,255,0.15)'
-        }}
+        className="w-full h-full bg-white border-t-2 border-blue-500/40 rounded-t-3xl shadow-2xl flex flex-col overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -83,40 +80,40 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
         {/* Drag Handle Bar (Always visible & tap-friendly) */}
         <div 
           onClick={onToggle}
-          className="h-12 px-4 flex items-center justify-between cursor-pointer shrink-0 border-b border-cyan-500/20 bg-gradient-to-r from-slate-900/60 via-cyan-950/30 to-slate-900/60 active:bg-cyan-900/30 transition"
+          className="h-12 px-4 flex items-center justify-between cursor-pointer shrink-0 border-b border-slate-200 bg-white active:bg-slate-50 transition"
         >
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping shadow-[0_0_10px_rgba(244,63,94,1)]" />
-            <span className="text-xs font-mono font-black text-white uppercase tracking-tight flex items-center gap-1.5">
-              <span className="text-rose-400">Risk: {score}</span>
-              <span className="px-1.5 py-0.2 rounded bg-rose-950/80 border border-rose-600/50 text-[10px] text-rose-300 font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+            <span className="text-xs font-mono font-black text-slate-900 uppercase tracking-tight flex items-center gap-1.5">
+              <span className="text-rose-600">Risk: {score}</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-red-100 border border-red-300 text-[10px] text-red-700 font-bold">
                 {level}
               </span>
-              <span className="text-[10px] text-cyan-300 font-normal hidden xs:inline">• {rainfall}mm/3h</span>
+              <span className="text-[10px] text-blue-600 font-normal hidden xs:inline">• {rainfall}mm/3h</span>
             </span>
           </div>
 
           {/* Center Drag Pill Indicator */}
-          <div className="w-12 h-1.5 rounded-full bg-cyan-400/60 shadow-[0_0_8px_rgba(6,182,212,0.6)] my-auto" />
+          <div className="w-12 h-1.5 rounded-full bg-slate-300 my-auto" />
 
           {/* Right Action Trigger */}
-          <div className="flex items-center gap-1.5 text-xs font-mono text-cyan-300 font-bold bg-cyan-950/80 border border-cyan-500/40 px-2 py-0.5 rounded-lg shadow-sm">
+          <div className="flex items-center gap-1.5 text-xs font-mono text-blue-700 font-bold bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg shadow-sm">
             <span>{isOpen ? 'Minimize' : 'Intel HUB'}</span>
-            {isOpen ? <ChevronDown className="w-4 h-4 text-cyan-400" /> : <ChevronUp className="w-4 h-4 text-cyan-400 animate-bounce" />}
+            {isOpen ? <ChevronDown className="w-4 h-4 text-blue-500" /> : <ChevronUp className="w-4 h-4 text-blue-500 animate-bounce" />}
           </div>
         </div>
 
         {/* Expandable Content Area (Visible when open) */}
         {isOpen && (
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs pb-6 bg-[#081228]/80">
-            <div className="flex items-center justify-between pb-1 border-b border-cyan-500/20">
-              <span className="text-[10px] font-mono text-cyan-300 uppercase font-black tracking-wider flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs pb-6 bg-[#F0F4F8]">
+            <div className="flex items-center justify-between pb-1 border-b border-slate-300">
+              <span className="text-[10px] font-mono text-slate-700 uppercase font-black tracking-wider flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-orange-500" />
                 ACTIVE DISASTER INTELLIGENCE
               </span>
               <button
                 onClick={onClose}
-                className="text-[11px] font-mono text-cyan-300 hover:text-white bg-slate-900/90 px-2.5 py-0.5 rounded-lg border border-cyan-500/40 shadow-sm"
+                className="text-[11px] font-mono text-slate-600 hover:text-slate-900 bg-white px-2.5 py-0.5 rounded-lg border border-slate-300 shadow-sm"
               >
                 ✕ Hide
               </button>

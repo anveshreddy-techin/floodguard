@@ -320,9 +320,9 @@ export const ReportIncidentForm: React.FC = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded text-xs transition active:scale-95 disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold font-sans px-6 py-2.5 rounded-xl text-xs transition active:scale-95 disabled:opacity-50 shadow-sm"
           >
-            <Send className="w-3.5 h-3.5 text-cyan-400" />
+            <Send className="w-3.5 h-3.5 text-white" />
             <span>{submitting ? 'Submitting to Queue...' : 'Submit Incident Report'}</span>
           </button>
         </div>

@@ -74,30 +74,30 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
   const needleAngle = -90 + (summary.riskPercent / 100) * 180;
 
   return (
-    <div className="w-full h-full bg-[#050e1f] text-white flex flex-col overflow-y-auto select-none rounded-2xl border border-cyan-500/30 shadow-2xl p-2 sm:p-4 font-sans">
+    <div className="w-full h-full bg-[#F0F4F8] text-slate-900 flex flex-col overflow-y-auto select-none rounded-2xl border border-slate-200 shadow-sm p-2 sm:p-4 font-sans">
       {/* ── TOP HEADER: 4. LIVE DASHBOARD & ALERTS ── */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-3 px-1">
         <div className="flex items-center gap-2.5">
-          <div className="w-3 h-3 rounded-full bg-rose-500 animate-ping shrink-0" />
-          <h1 className="text-base sm:text-lg md:text-xl font-black font-mono tracking-wider text-white uppercase flex items-center gap-2">
-            <span className="text-cyan-400">4.</span> LIVE DASHBOARD &amp; ALERTS
+          <div className="w-3 h-3 rounded-full bg-red-600 animate-ping shrink-0" />
+          <h1 className="text-base sm:text-lg md:text-xl font-black font-mono tracking-wider text-slate-900 uppercase flex items-center gap-2">
+            <span className="text-blue-600">4.</span> LIVE DASHBOARD &amp; ALERTS
           </h1>
           {loc && (
-            <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-800">
+            <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
               {loc.name.split('/')[0].trim()} ({loc.state})
             </span>
           )}
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-[11px] font-mono text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-lg border border-emerald-800">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="flex items-center gap-1 text-[11px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
             <span>REAL-TIME STREAM</span>
           </div>
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+              className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition border border-slate-200"
               title="Close Dashboard"
             >
               ✕
@@ -113,13 +113,13 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
         <div className="lg:col-span-3 flex flex-col gap-3">
           
           {/* Card 1: OVERALL RISK & SPEEDOMETER GAUGE */}
-          <div className="bg-[#0b1b36]/90 border border-cyan-500/30 rounded-2xl p-3.5 shadow-xl flex flex-col items-center text-center">
-            <span className="text-[11px] font-mono text-slate-300 font-bold tracking-wider uppercase mb-2 self-start">
+          <div className="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-sm flex flex-col items-center text-center">
+            <span className="text-[11px] font-mono text-slate-500 font-bold tracking-wider uppercase mb-2 self-start">
               OVERALL RISK
             </span>
 
             {/* Red Pill Banner */}
-            <div className="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-700 border border-rose-500 text-white font-black font-sans flex items-center justify-between shadow-lg mb-3">
+            <div className="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-700 border border-red-500 text-white font-black font-sans flex items-center justify-between shadow-sm mb-3">
               <span className="text-xs sm:text-sm tracking-wider">HIGH RISK</span>
               <span className="text-sm sm:text-base font-mono">{summary.riskPercent}%</span>
             </div>
@@ -187,41 +187,41 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
 
             {/* Dial Label */}
             <div className="flex flex-col items-center -mt-2">
-              <span className="text-2xl font-black font-mono text-red-500 leading-tight">
+              <span className="text-2xl font-black font-mono text-red-600 leading-tight">
                 {summary.riskPercent}%
               </span>
-              <span className="text-[11px] font-black text-red-400 font-sans tracking-wider">
+              <span className="text-[11px] font-black text-red-600 font-sans tracking-wider">
                 HIGH RISK
               </span>
             </div>
           </div>
 
           {/* Card 2: CONFIDENCE LEVEL */}
-          <div className="bg-[#0b1b36]/90 border border-cyan-500/30 rounded-2xl p-3.5 shadow-xl">
-            <span className="text-[11px] font-mono text-slate-300 font-bold tracking-wider uppercase">
+          <div className="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-sm">
+            <span className="text-[11px] font-mono text-slate-500 font-bold tracking-wider uppercase">
               CONFIDENCE LEVEL
             </span>
-            <div className="text-2xl font-black font-mono text-white mt-1">
+            <div className="text-2xl font-black font-mono text-slate-900 mt-1">
               {summary.confidencePercent}%
             </div>
-            {/* Glowing cyan progress bar */}
-            <div className="w-full bg-slate-900 rounded-full h-3 mt-2 overflow-hidden border border-slate-700/60 p-0.5">
+            {/* Clean blue progress bar */}
+            <div className="w-full bg-slate-100 rounded-full h-3 mt-2 overflow-hidden border border-slate-200 p-0.5">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-cyan-300 rounded-full shadow-[0_0_12px_rgba(6,182,212,0.8)] transition-all duration-700"
+                className="h-full bg-blue-600 rounded-full transition-all duration-700"
                 style={{ width: `${summary.confidencePercent}%` }}
               />
             </div>
           </div>
 
           {/* Card 3: TREND */}
-          <div className="bg-[#0b1b36]/90 border border-cyan-500/30 rounded-2xl p-3.5 shadow-xl flex-1 flex flex-col justify-between">
+          <div className="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-sm flex-1 flex flex-col justify-between">
             <div>
-              <span className="text-[11px] font-mono text-slate-300 font-bold tracking-wider uppercase">
+              <span className="text-[11px] font-mono text-slate-500 font-bold tracking-wider uppercase">
                 TREND
               </span>
-              <div className="text-sm font-black font-sans text-rose-400 mt-1 flex items-center gap-1.5">
+              <div className="text-sm font-black font-sans text-red-600 mt-1 flex items-center gap-1.5">
                 <span>INCREASING</span>
-                <span className="text-xs px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 font-mono">
+                <span className="text-xs px-1.5 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 font-mono font-bold">
                   +14% / 3h
                 </span>
               </div>
@@ -232,7 +232,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
               <svg viewBox="0 0 160 50" className="w-full h-full overflow-visible">
                 <defs>
                   <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#ef4444" stopOpacity="0.4" />
+                    <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
                     <stop offset="100%" stopColor="#ef4444" stopOpacity="0.0" />
                   </linearGradient>
                 </defs>
@@ -261,17 +261,17 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
         <div className="lg:col-span-6 flex flex-col gap-3">
           
           {/* MAP CONTAINER */}
-          <div className="relative flex-1 min-h-[300px] sm:min-h-[360px] bg-[#071326] border border-cyan-500/40 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <div className="relative flex-1 min-h-[300px] sm:min-h-[360px] bg-slate-900 border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col">
             
             {/* Top Layer Control Bar */}
             <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between gap-1 overflow-x-auto pb-1 pointer-events-auto">
-              <div className="flex items-center gap-1.5 bg-slate-950/85 backdrop-blur-md p-1 rounded-xl border border-slate-700/80 shadow-xl">
+              <div className="flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200 shadow-md">
                 <button
                   onClick={() => setActiveLayer('RISK')}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                     activeLayer === 'RISK'
-                      ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
                   <span>Risk Map</span>
@@ -280,44 +280,44 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
                   onClick={() => setActiveLayer('RAINFALL')}
                   className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                     activeLayer === 'RAINFALL'
-                      ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <CloudRain className="w-3 h-3 text-cyan-400" />
+                  <CloudRain className="w-3 h-3 text-blue-600" />
                   <span>Rainfall</span>
                 </button>
                 <button
                   onClick={() => setActiveLayer('RIVER')}
                   className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                     activeLayer === 'RIVER'
-                      ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Waves className="w-3 h-3 text-blue-400" />
+                  <Waves className="w-3 h-3 text-teal-600" />
                   <span>River Levels</span>
                 </button>
                 <button
                   onClick={() => setActiveLayer('SOIL')}
                   className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                     activeLayer === 'SOIL'
-                      ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Droplets className="w-3 h-3 text-amber-400" />
+                  <Droplets className="w-3 h-3 text-amber-600" />
                   <span>Soil Moisture</span>
                 </button>
                 <button
                   onClick={() => setActiveLayer('LAYERS')}
                   className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                     activeLayer === 'LAYERS'
-                      ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Layers className="w-3 h-3 text-slate-300" />
+                  <Layers className="w-3 h-3 text-slate-500" />
                   <span>Layers</span>
                 </button>
               </div>
@@ -529,11 +529,11 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
               </svg>
 
               {/* Map Floating Badges Overlay */}
-              <div className="absolute bottom-2 left-3 bg-slate-950/80 px-2.5 py-1 rounded-lg border border-slate-700 text-[10px] font-mono text-slate-300 backdrop-blur-md flex items-center gap-3">
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-red-600 inline-block"/> High</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-orange-500 inline-block"/> Medium</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-yellow-400 inline-block"/> Low</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"/> Safe</span>
+              <div className="absolute bottom-2 left-3 bg-white/90 px-2.5 py-1 rounded-lg border border-slate-300 text-[10px] font-mono text-slate-800 backdrop-blur-md flex items-center gap-3 shadow-sm">
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-red-600 inline-block"/> High</span>
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-orange-500 inline-block"/> Medium</span>
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-yellow-400 inline-block"/> Low</span>
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"/> Safe</span>
               </div>
             </div>
           </div>
@@ -542,17 +542,17 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
             
             {/* Left Box: EXPLANATION (WHY RISK IS HIGH) */}
-            <div className="md:col-span-7 bg-[#0b1c38]/95 border border-cyan-500/40 rounded-2xl p-3 sm:p-3.5 shadow-xl flex flex-col justify-center">
-              <span className="text-[11px] font-mono text-cyan-300 font-bold tracking-wider uppercase mb-1 flex items-center gap-1.5">
+            <div className="md:col-span-7 bg-white border border-slate-200 rounded-2xl p-3 sm:p-3.5 shadow-sm flex flex-col justify-center">
+              <span className="text-[11px] font-mono text-blue-700 font-bold tracking-wider uppercase mb-1 flex items-center gap-1.5">
                 <span>EXPLANATION (WHY RISK IS HIGH)</span>
               </span>
-              <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed font-sans">
+              <p className="text-xs sm:text-[13px] text-slate-700 leading-relaxed font-sans font-medium">
                 {summary.explanation}
               </p>
             </div>
 
             {/* Right Box: ALERT (SOLID RED CARD) */}
-            <div className="md:col-span-5 bg-gradient-to-br from-red-600 via-rose-600 to-red-700 text-white rounded-2xl p-3 sm:p-3.5 shadow-2xl flex items-center justify-between gap-2.5 border border-red-400/50">
+            <div className="md:col-span-5 bg-gradient-to-br from-red-600 via-rose-600 to-red-700 text-white rounded-2xl p-3 sm:p-3.5 shadow-md flex items-center justify-between gap-2.5 border border-red-500">
               <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0">
                 <AlertTriangle className="w-5 h-5 text-white" />
               </div>
@@ -575,76 +575,76 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
 
         {/* ── RIGHT COLUMN (AFFECTED SUMMARY) ── */}
         <div className="lg:col-span-3 flex flex-col">
-          <div className="bg-[#0b1b36]/90 border border-cyan-500/30 rounded-2xl p-3.5 sm:p-4 shadow-xl flex-1 flex flex-col justify-between">
+          <div className="bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-4 shadow-sm flex-1 flex flex-col justify-between">
             <div>
-              <span className="text-xs sm:text-sm font-mono text-white font-black tracking-wider uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-mono text-slate-900 font-black tracking-wider uppercase border-b border-slate-200 pb-2 flex items-center justify-between">
                 <span>AFFECTED SUMMARY</span>
-                <span className="text-[10px] text-cyan-400 font-mono">SIMULATION</span>
+                <span className="text-[10px] text-blue-700 font-mono font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">SIMULATION</span>
               </span>
 
               {/* Metrics List matching media_1788886962051.png */}
-              <div className="space-y-3.5 mt-4 text-xs sm:text-sm font-sans font-medium">
+              <div className="space-y-3 mt-4 text-xs sm:text-sm font-sans font-medium">
                 {/* 1. Villages at Risk */}
-                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <div className="flex items-center gap-2.5 text-slate-300">
-                    <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="flex items-center gap-2.5 text-slate-700">
+                    <div className="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700 shrink-0 font-bold">
                       <Home className="w-4 h-4" />
                     </div>
                     <span>Villages at Risk</span>
                   </div>
-                  <span className="font-mono font-black text-white text-base sm:text-lg">
+                  <span className="font-mono font-black text-slate-900 text-base sm:text-lg">
                     {summary.villagesAtRisk}
                   </span>
                 </div>
 
                 {/* 2. Roads at Risk */}
-                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <div className="flex items-center gap-2.5 text-slate-300">
-                    <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0 font-mono text-xs font-bold">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="flex items-center gap-2.5 text-slate-700">
+                    <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 shrink-0 font-mono text-xs font-bold">
                       🛣️
                     </div>
                     <span>Roads at Risk</span>
                   </div>
-                  <span className="font-mono font-black text-white text-base sm:text-lg">
+                  <span className="font-mono font-black text-slate-900 text-base sm:text-lg">
                     {summary.roadsAtRisk}
                   </span>
                 </div>
 
                 {/* 3. Bridges at Risk */}
-                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <div className="flex items-center gap-2.5 text-slate-300">
-                    <div className="w-7 h-7 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0 font-mono text-xs font-bold">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="flex items-center gap-2.5 text-slate-700">
+                    <div className="w-7 h-7 rounded-lg bg-teal-100 flex items-center justify-center text-teal-700 shrink-0 font-mono text-xs font-bold">
                       🌉
                     </div>
                     <span>Bridges at Risk</span>
                   </div>
-                  <span className="font-mono font-black text-white text-base sm:text-lg">
+                  <span className="font-mono font-black text-slate-900 text-base sm:text-lg">
                     {summary.bridgesAtRisk}
                   </span>
                 </div>
 
                 {/* 4. People Exposed */}
-                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <div className="flex items-center gap-2.5 text-slate-300">
-                    <div className="w-7 h-7 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="flex items-center gap-2.5 text-slate-700">
+                    <div className="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center text-rose-700 shrink-0">
                       <Users className="w-4 h-4" />
                     </div>
                     <span>People Exposed</span>
                   </div>
-                  <span className="font-mono font-black text-white text-base sm:text-lg">
+                  <span className="font-mono font-black text-slate-900 text-base sm:text-lg">
                     {summary.peopleExposed}
                   </span>
                 </div>
 
                 {/* 5. Nearest Shelters */}
-                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <div className="flex items-center gap-2.5 text-slate-300">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 font-mono text-xs font-bold">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="flex items-center gap-2.5 text-slate-700">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 font-mono text-xs font-bold">
                       🏕️
                     </div>
                     <span>Nearest Shelters</span>
                   </div>
-                  <span className="font-mono font-black text-white text-base sm:text-lg">
+                  <span className="font-mono font-black text-slate-900 text-base sm:text-lg">
                     {summary.nearestShelters}
                   </span>
                 </div>
@@ -652,10 +652,10 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
             </div>
 
             {/* Quick Action Link */}
-            <div className="pt-3 border-t border-slate-800/80 mt-3">
+            <div className="pt-3 border-t border-slate-200 mt-3">
               <a
                 href="/safety"
-                className="w-full py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-lg transition active:scale-95"
+                className="btn-warning w-full py-2 px-3 rounded-xl font-mono text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-slate-950"
               >
                 <Compass className="w-3.5 h-3.5" /> VIEW EVACUATION CORRIDORS
               </a>

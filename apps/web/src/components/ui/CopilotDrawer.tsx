@@ -609,19 +609,19 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-[850] w-full sm:w-[480px] lg:w-[540px] bg-[#060c1e]/95 backdrop-blur-2xl border-l-2 border-cyan-500/40 shadow-[-10px_0_40px_rgba(0,0,0,0.8)] flex flex-col text-slate-100 select-none animate-slide-right">
+    <div className="fixed inset-y-0 right-0 z-[850] w-full sm:w-[480px] lg:w-[540px] bg-white border-l-2 border-blue-500/40 shadow-2xl flex flex-col text-slate-900 select-none animate-slide-right">
       {/* Header */}
-      <div className="p-3.5 sm:p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/90 shrink-0 gap-2">
+      <div className="p-3.5 sm:p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 shrink-0 gap-2">
         <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-cyan-950/80 border border-cyan-500/50 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.4)] shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-blue-100 border border-blue-300 flex items-center justify-center text-blue-600 shrink-0">
             <Bot className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
           </div>
           <div className="min-w-0">
-            <h3 className="font-mono text-xs sm:text-sm font-black text-white flex items-center gap-1.5 truncate">
+            <h3 className="font-mono text-xs sm:text-sm font-black text-slate-900 flex items-center gap-1.5 truncate">
               <span>FLOODGUARD AI VOICE COPILOT</span>
             </h3>
-            <div className="text-[9px] sm:text-[10px] font-mono text-cyan-400 flex items-center gap-1 truncate">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            <div className="text-[9px] sm:text-[10px] font-mono text-emerald-600 flex items-center gap-1 truncate">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" />
               <span className="truncate">VOICE DIALOGUE & KNOWLEDGE ENGINE ACTIVE</span>
             </div>
           </div>
@@ -636,18 +636,18 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
             }}
             className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1 border transition active:scale-95 ${
               autoSpeak
-                ? 'bg-cyan-950/80 border-cyan-500/50 text-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.3)]'
-                : 'bg-slate-900 border-slate-800 text-slate-500'
+                ? 'bg-blue-50 border-blue-300 text-blue-700 shadow-sm'
+                : 'bg-slate-100 border-slate-200 text-slate-500'
             }`}
             title={autoSpeak ? 'Auto-Voice Enabled: AI will speak responses' : 'Auto-Voice Muted'}
           >
-            {autoSpeak ? <Volume2 className="w-3.5 h-3.5 text-cyan-400" /> : <VolumeX className="w-3.5 h-3.5 text-slate-500" />}
+            {autoSpeak ? <Volume2 className="w-3.5 h-3.5 text-blue-500" /> : <VolumeX className="w-3.5 h-3.5 text-slate-400" />}
             <span className="hidden xs:inline sm:inline">{autoSpeak ? 'VOICE ON' : 'MUTED'}</span>
           </button>
 
           <button
             onClick={onClose}
-            className="p-1.5 sm:p-2 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition active:scale-95 border border-slate-800"
+            className="p-1.5 sm:p-2 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition active:scale-95 border border-slate-200"
             title="Close AI Assistant"
           >
             <X className="w-4 h-4" />
@@ -657,22 +657,22 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
 
       {/* Speech Error Banner */}
       {speechError && (
-        <div className="bg-amber-950/90 border-b border-amber-800/80 px-4 py-2 text-xs font-mono text-amber-200 flex items-center gap-2 animate-slide-up shrink-0">
-          <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs font-mono text-amber-700 flex items-center gap-2 animate-slide-up shrink-0">
+          <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
           <span>{speechError}</span>
         </div>
       )}
 
-      {/* Preset Category Switcher Pills — shrink-0 ensures pills never compress and overlap on mobile */}
-      <div className="px-3 py-2.5 border-b border-slate-800/80 bg-slate-950/70 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 touch-pan-x">
+      {/* Preset Category Switcher Pills */}
+      <div className="px-3 py-2.5 border-b border-slate-200 bg-white flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 touch-pan-x">
         {knowledgeCategories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
             className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap shrink-0 transition active:scale-95 flex items-center gap-1.5 ${
               activeCategory === cat.id
-                ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-500/60 shadow-[0_0_12px_rgba(6,182,212,0.25)]'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-slate-800/80 bg-slate-900/40'
+                ? 'bg-blue-600 text-white border border-blue-700 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 bg-white'
             }`}
           >
             {cat.label}
@@ -681,33 +681,33 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       </div>
 
       {/* Chat Messages Feed */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-sans">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-sans bg-slate-50">
         {messages.map((m, i) => (
           <div key={i} className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}>
             {m.sender === 'user' ? (
-              <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-mono p-3 rounded-2xl max-w-[85%] shadow-lg border border-cyan-400/30 text-xs flex items-center gap-2">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-mono p-3 rounded-2xl max-w-[85%] shadow-lg border border-blue-500/30 text-xs flex items-center gap-2">
                 <span>{typeof m.content === 'string' ? m.content : (m.content.summary || JSON.stringify(m.content))}</span>
               </div>
             ) : typeof m.content === 'string' ? (
-              <div className="fp fp-operational p-4 sm:p-5 rounded-3xl max-w-[95%] space-y-3.5 shadow-2xl border border-cyan-500/30">
+              <div className="bg-white border border-slate-200 p-4 sm:p-5 rounded-3xl max-w-[95%] space-y-3.5 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                  <span className="text-[10px] font-mono font-bold text-blue-600 uppercase flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-blue-500" />
                     COPILOT RESPONSE
                   </span>
                   <button
                     onClick={() => speakText(m.content, i)}
                     className={`p-1.5 rounded-lg border transition active:scale-95 flex items-center gap-1 text-[10px] font-mono ${
                       isSpeaking && speakingIndex === i
-                        ? 'bg-cyan-950 border-cyan-400 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
-                        : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-cyan-300'
+                        ? 'bg-blue-50 border-blue-300 text-blue-600 shadow-sm'
+                        : 'bg-slate-100 border-slate-200 text-slate-500 hover:text-blue-600'
                     }`}
                     title="Vocalize this response"
                   >
                     {isSpeaking && speakingIndex === i ? (
                       <>
-                        <VolumeX className="w-3 h-3 text-cyan-400 animate-pulse" />
-                        <span className="text-cyan-400 font-bold">STOP</span>
+                        <VolumeX className="w-3 h-3 text-blue-500 animate-pulse" />
+                        <span className="text-blue-600 font-bold">STOP</span>
                       </>
                     ) : (
                       <>
@@ -717,17 +717,17 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
                     )}
                   </button>
                 </div>
-                <div className="text-white text-xs leading-relaxed font-sans whitespace-pre-line">
+                <div className="text-slate-800 text-xs leading-relaxed font-sans whitespace-pre-line">
                   {m.content}
                 </div>
               </div>
             ) : (
-              <div className="fp fp-operational p-4 sm:p-5 rounded-3xl max-w-[95%] space-y-3.5 shadow-2xl border border-cyan-500/30">
+              <div className="bg-white border border-slate-200 p-4 sm:p-5 rounded-3xl max-w-[95%] space-y-3.5 shadow-sm">
                 {/* Summary Header + Speaker Button */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                    <span className="text-[10px] font-mono font-bold text-blue-600 uppercase flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-blue-500" />
                       INTELLIGENCE SUMMARY
                     </span>
                     <div className="flex items-center gap-1.5">
@@ -739,15 +739,15 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
                         onClick={() => speakText(m.content.summary || '', i)}
                         className={`p-1.5 rounded-lg border transition active:scale-95 flex items-center gap-1 text-[10px] font-mono ${
                           isSpeaking && speakingIndex === i
-                            ? 'bg-cyan-950 border-cyan-400 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
-                            : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-cyan-300'
+                            ? 'bg-blue-50 border-blue-300 text-blue-600 shadow-sm'
+                            : 'bg-slate-100 border-slate-200 text-slate-500 hover:text-blue-600'
                         }`}
                         title="Vocalize this response"
                       >
                         {isSpeaking && speakingIndex === i ? (
                           <>
-                            <VolumeX className="w-3 h-3 text-cyan-400 animate-pulse" />
-                            <span className="text-cyan-400 font-bold">STOP</span>
+                            <VolumeX className="w-3 h-3 text-blue-500 animate-pulse" />
+                            <span className="text-blue-600 font-bold">STOP</span>
                           </>
                         ) : (
                           <>
@@ -758,20 +758,20 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
                       </button>
                     </div>
                   </div>
-                  <p className="text-white text-xs leading-relaxed font-sans whitespace-pre-line">{m.content.summary}</p>
+                  <p className="text-slate-800 text-xs leading-relaxed font-sans whitespace-pre-line">{m.content.summary}</p>
                 </div>
 
                 {/* Observed Facts */}
                 {m.content.observed_facts && m.content.observed_facts.length > 0 && (
-                  <div className="space-y-1.5 pt-2 border-t border-slate-800">
-                    <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase flex items-center gap-1">
+                  <div className="space-y-1.5 pt-2 border-t border-slate-200">
+                    <span className="text-[10px] font-mono text-emerald-700 font-bold uppercase flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       OBSERVED GROUND TRUTH & DATA
                     </span>
-                    <ul className="space-y-1 text-[11px] font-mono text-slate-300">
+                    <ul className="space-y-1 text-[11px] font-mono text-slate-700">
                       {m.content.observed_facts.map((fact: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-1.5 bg-slate-950/60 p-2 rounded-xl border border-slate-800/80">
-                          <span className="text-cyan-400 font-bold">•</span>
+                        <li key={idx} className="flex items-start gap-1.5 bg-emerald-50 p-2 rounded-xl border border-emerald-200">
+                          <span className="text-emerald-600 font-bold">•</span>
                           <span>{fact}</span>
                         </li>
                       ))}
@@ -781,12 +781,12 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
 
                 {/* Model Interpretation */}
                 {m.content.model_interpretation && (
-                  <div className="space-y-1 pt-2 border-t border-slate-800">
-                    <span className="text-[10px] font-mono text-purple-400 font-bold uppercase flex items-center gap-1">
+                  <div className="space-y-1 pt-2 border-t border-slate-200">
+                    <span className="text-[10px] font-mono text-purple-700 font-bold uppercase flex items-center gap-1">
                       <Cpu className="w-3.5 h-3.5" />
                       PHYSICAL & HYDROLOGICAL INTERPRETATION
                     </span>
-                    <p className="text-slate-200 text-[11px] leading-relaxed bg-purple-950/20 p-2.5 rounded-xl border border-purple-800/40 whitespace-pre-line">
+                    <p className="text-slate-700 text-[11px] leading-relaxed bg-purple-50 p-2.5 rounded-xl border border-purple-200 whitespace-pre-line">
                       {m.content.model_interpretation}
                     </p>
                   </div>
@@ -794,15 +794,15 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
 
                 {/* Recommended Operator Actions */}
                 {m.content.potential_operator_actions && m.content.potential_operator_actions.length > 0 && (
-                  <div className="space-y-1.5 pt-2 border-t border-slate-800">
-                    <span className="text-[10px] font-mono text-amber-400 font-bold uppercase flex items-center gap-1">
+                  <div className="space-y-1.5 pt-2 border-t border-slate-200">
+                    <span className="text-[10px] font-mono text-amber-700 font-bold uppercase flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5" />
                       ACTIONABLE OPERATOR DIRECTIVES
                     </span>
                     <div className="space-y-1">
                       {m.content.potential_operator_actions.map((act: string, idx: number) => (
-                        <div key={idx} className="flex items-center gap-2 text-[11px] font-mono text-slate-200 bg-amber-950/20 p-2 rounded-xl border border-amber-800/40">
-                          <ChevronRight className="w-3 h-3 text-amber-400 shrink-0" />
+                        <div key={idx} className="flex items-center gap-2 text-[11px] font-mono text-slate-700 bg-amber-50 p-2 rounded-xl border border-amber-200">
+                          <ChevronRight className="w-3 h-3 text-amber-600 shrink-0" />
                           <span>{act}</span>
                         </div>
                       ))}
@@ -812,7 +812,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
 
                 {/* Authoritative Sources */}
                 {m.content.authoritative_sources && (
-                  <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                  <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] font-mono text-slate-500">
                     <span>SOURCES: {m.content.authoritative_sources.join(', ')}</span>
                   </div>
                 )}
@@ -822,16 +822,16 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
         ))}
 
         {loading && (
-          <div className="fp p-4 rounded-2xl flex items-center gap-3 text-xs font-mono text-cyan-300 animate-pulse">
-            <Bot className="w-4 h-4 animate-spin text-cyan-400" />
+          <div className="bg-white border border-slate-200 p-4 rounded-2xl flex items-center gap-3 text-xs font-mono text-blue-600 animate-pulse shadow-sm">
+            <Bot className="w-4 h-4 animate-spin text-blue-500" />
             <span>Consulting physical equations and multi-sensor telemetry...</span>
           </div>
         )}
       </div>
 
       {/* Suggested Query Chips */}
-      <div className="p-3 border-t border-slate-800 bg-slate-950/80 space-y-2 shrink-0">
-        <span className="text-[10px] font-mono text-slate-400 uppercase font-bold tracking-wider block">
+      <div className="p-3 border-t border-slate-200 bg-white space-y-2 shrink-0">
+        <span className="text-[10px] font-mono text-slate-500 uppercase font-bold tracking-wider block">
           SUGGESTED GROUNDED INQUIRIES ({activeCategory})
         </span>
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 touch-pan-x">
@@ -839,7 +839,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
             <button
               key={idx}
               onClick={() => handleSend(pq)}
-              className="text-xs font-mono bg-slate-900/90 hover:bg-slate-800 hover:text-cyan-300 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-800 whitespace-nowrap transition active:scale-95 text-left shrink-0 max-w-[300px] truncate"
+              className="text-xs font-mono bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-600 px-3 py-1.5 rounded-xl border border-slate-200 whitespace-nowrap transition active:scale-95 text-left shrink-0 max-w-[300px] truncate"
               title={pq}
             >
               {pq}
@@ -849,14 +849,14 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
       </div>
 
       {/* Input Bar with Microphone Voice Trigger */}
-      <div className="p-3 sm:p-3.5 pb-6 sm:pb-3.5 border-t border-slate-800 bg-slate-950 flex items-center gap-2 shrink-0">
+      <div className="p-3 sm:p-3.5 pb-6 sm:pb-3.5 border-t border-slate-200 bg-white flex items-center gap-2 shrink-0">
         {/* Voice Input Button */}
         <button
           onClick={toggleListening}
-          className={`p-2.5 sm:p-3 rounded-xl transition active:scale-95 border shadow-lg flex items-center justify-center shrink-0 ${
+          className={`p-2.5 sm:p-3 rounded-xl transition active:scale-95 border shadow-sm flex items-center justify-center shrink-0 ${
             isListening
-              ? 'bg-rose-600 border-rose-400 text-white animate-pulse shadow-[0_0_20px_rgba(225,29,72,0.6)]'
-              : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-cyan-300 hover:border-cyan-500/50'
+              ? 'bg-rose-600 border-rose-400 text-white animate-pulse'
+              : 'bg-slate-100 border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300'
           }`}
           title={isListening ? 'Listening... (Click to stop)' : 'Click to Speak via Microphone'}
         >
@@ -869,15 +869,15 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ isOpen, onClose })
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend(query)}
           placeholder={isListening ? 'Listening to your voice...' : 'Speak or type any question...'}
-          className={`flex-1 min-w-0 bg-slate-900 border rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 font-mono focus:outline-none transition ${
-            isListening ? 'border-rose-500 ring-2 ring-rose-500/30' : 'border-slate-700/80 focus:border-cyan-400'
+          className={`flex-1 min-w-0 bg-white border rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 font-mono focus:outline-none transition ${
+            isListening ? 'border-rose-400 ring-2 ring-rose-200' : 'border-slate-300 focus:border-blue-400 focus:ring-2 focus:ring-blue-100'
           }`}
         />
 
         <button
           onClick={() => handleSend(query)}
           disabled={!query.trim() || loading}
-          className="btn-primary p-2.5 sm:p-3 rounded-xl text-white disabled:opacity-40 transition active:scale-95 shadow-lg shrink-0"
+          className="btn-primary p-2.5 sm:p-3 rounded-xl text-white disabled:opacity-40 transition active:scale-95 shadow-sm shrink-0"
           title="Send query"
         >
           <Send className="w-4 h-4" />

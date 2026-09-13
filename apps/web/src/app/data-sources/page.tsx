@@ -124,21 +124,21 @@ const PROVIDERS = [
 
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    OPERATIONAL: 'bg-green-500/20 text-green-300 border border-green-500/30',
-    CONFIGURED: 'bg-green-500/20 text-green-300 border border-green-500/30',
-    NOT_CONFIGURED: 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
-    SIMULATION_ONLY: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
-    DEGRADED: 'bg-red-500/20 text-red-300 border border-red-500/30',
+    OPERATIONAL: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    CONFIGURED: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    NOT_CONFIGURED: 'bg-amber-50 text-amber-800 border border-amber-200',
+    SIMULATION_ONLY: 'bg-blue-50 text-blue-700 border border-blue-200',
+    DEGRADED: 'bg-red-50 text-red-700 border border-red-200',
   };
   const icons: Record<string, React.ReactNode> = {
-    OPERATIONAL: <CheckCircle2 className="w-3 h-3" />,
-    CONFIGURED: <CheckCircle2 className="w-3 h-3" />,
-    NOT_CONFIGURED: <WifiOff className="w-3 h-3" />,
-    SIMULATION_ONLY: <Activity className="w-3 h-3" />,
-    DEGRADED: <AlertTriangle className="w-3 h-3" />,
+    OPERATIONAL: <CheckCircle2 className="w-3.5 h-3.5" />,
+    CONFIGURED: <CheckCircle2 className="w-3.5 h-3.5" />,
+    NOT_CONFIGURED: <WifiOff className="w-3.5 h-3.5" />,
+    SIMULATION_ONLY: <Activity className="w-3.5 h-3.5" />,
+    DEGRADED: <AlertTriangle className="w-3.5 h-3.5" />,
   };
   return (
-    <span className={`flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${colors[status] || 'bg-gray-600 text-gray-300'}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold font-sans shadow-sm ${colors[status] || 'bg-slate-100 text-slate-700 border border-slate-200'}`}>
       {icons[status]} {status.replace('_', ' ')}
     </span>
   );
@@ -156,63 +156,64 @@ export default function DataSourcesPage() {
   const simulation = PROVIDERS.filter(p => p.status === 'SIMULATION_ONLY').length;
 
   return (
-    <div className="flex h-screen bg-[#0a0f1e] text-white overflow-hidden">
+    <div className="flex h-screen bg-[#F0F4F8] text-slate-900 overflow-hidden font-sans">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 space-y-4">
+        <main className="flex-1 overflow-y-auto p-6 space-y-6">
 
           {/* Title */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Database className="w-6 h-6 text-blue-400" />
+              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5 font-sans">
+                <Database className="w-7 h-7 text-blue-600" />
                 National Data Source Registry
               </h1>
-              <p className="text-gray-400 text-sm mt-1">
-                All data providers for FloodGuard AI — honest status, boundary documentation, and configuration requirements.
+              <p className="text-slate-600 text-sm mt-1 font-sans">
+                All data providers for FloodGuard AI — honest operational status, boundary documentation, and credentials policy.
               </p>
             </div>
             <DataModeBadge mode="DEMO" />
           </div>
 
           {/* Transparency Notice */}
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 flex items-start gap-3">
-            <Shield className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+          <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-4 flex items-start gap-3.5 shadow-sm">
+            <Shield className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
             <div className="text-sm">
-              <p className="text-amber-300 font-semibold">Transparency — Provider Status</p>
-              <p className="text-amber-200/80 mt-0.5">
-                FloodGuard AI reports exact integration status for every data provider. <strong>NOT_CONFIGURED</strong> means the
-                technical boundary (adapter, retry logic, normalization) is implemented, but institutional credentials or authorization
-                are not yet provided. No live data is fabricated.
+              <p className="text-amber-900 font-bold font-sans">Transparency Policy — Operational Provider Status</p>
+              <p className="text-amber-800/90 mt-1 font-sans leading-relaxed">
+                FloodGuard AI reports exact integration status for every data provider. <strong className="text-amber-900 font-semibold">NOT_CONFIGURED</strong> means the
+                technical boundary (adapter, retry policy, schema normalization) is fully implemented, but formal institutional credentials or authorization
+                agreements are required. No live operational data is ever synthesized or fabricated.
               </p>
             </div>
           </div>
 
           {/* Summary cards */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { label: 'Configured / Active', value: configured, color: 'text-green-400', bg: 'bg-green-500/10 border-green-500/20' },
-              { label: 'Not Configured', value: notConfigured, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
-              { label: 'Simulation Only', value: simulation, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
+              { label: 'Configured / Active', value: configured, color: 'text-emerald-700', bg: 'bg-white border-slate-200' },
+              { label: 'Not Configured (MoU Needed)', value: notConfigured, color: 'text-amber-700', bg: 'bg-white border-slate-200' },
+              { label: 'Simulation / Internal Only', value: simulation, color: 'text-blue-700', bg: 'bg-white border-slate-200' },
             ].map(c => (
-              <div key={c.label} className={`rounded-lg border p-4 ${c.bg}`}>
-                <p className={`text-2xl font-bold ${c.color}`}>{c.value}</p>
-                <p className="text-gray-400 text-sm">{c.label}</p>
+              <div key={c.label} className={`rounded-xl border p-5 shadow-sm bg-white ${c.bg}`}>
+                <p className={`text-3xl font-bold font-sans ${c.color}`}>{c.value}</p>
+                <p className="text-slate-600 text-sm font-medium mt-1 font-sans">{c.label}</p>
               </div>
             ))}
           </div>
 
           {/* Filter */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap items-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 mr-2">Filter Providers:</span>
             {['ALL', 'CONFIGURED', 'OPERATIONAL', 'NOT_CONFIGURED', 'SIMULATION_ONLY'].map(f => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${
                   filter === f
                     ? 'bg-blue-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
                 {f.replace('_', ' ')}
@@ -220,62 +221,68 @@ export default function DataSourcesPage() {
             ))}
           </div>
 
-          {/* Provider table */}
-          <div className="space-y-3">
+          {/* Provider cards */}
+          <div className="space-y-4">
             {filtered.map(p => (
-              <div key={p.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div className="flex items-start justify-between gap-3">
+              <div key={p.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm transition-all hover:shadow-md">
+                <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-white font-semibold">{p.name}</h3>
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <h3 className="text-slate-900 font-bold font-sans text-base">{p.name}</h3>
                       <StatusBadge status={p.status} />
-                      <span className="text-xs text-gray-500 px-2 py-0.5 bg-gray-800 rounded">{p.data_mode}</span>
+                      <span className="text-xs font-semibold text-slate-600 px-2 py-0.5 bg-slate-100 border border-slate-200 rounded-md">{p.data_mode}</span>
                     </div>
-                    <p className="text-gray-400 text-xs mt-0.5">{p.agency}</p>
+                    <p className="text-slate-500 text-xs font-medium mt-1 font-sans">{p.agency}</p>
                   </div>
                   {p.link && (
-                    <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
-                      <ExternalLink className="w-4 h-4" />
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md transition-colors"
+                    >
+                      <span>Portal</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
                 </div>
 
-                <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm border-t border-slate-100 pt-3">
                   <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">Data Products</p>
-                    <div className="flex flex-wrap gap-1">
+                    <p className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-sans">Data Products</p>
+                    <div className="flex flex-wrap gap-1.5">
                       {p.products.map(prod => (
-                        <span key={prod} className="text-xs px-1.5 py-0.5 bg-gray-800 text-gray-300 rounded">{prod}</span>
+                        <span key={prod} className="text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-md">{prod}</span>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">Coverage</p>
-                    <p className="text-gray-300">{p.coverage}</p>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1 font-sans">Coverage</p>
+                    <p className="text-slate-800 font-medium font-sans">{p.coverage}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">Update Frequency</p>
-                    <p className="text-gray-300">{p.update_frequency}</p>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1 font-sans">Update Frequency</p>
+                    <p className="text-slate-800 font-medium font-sans">{p.update_frequency}</p>
                   </div>
                 </div>
 
-                <div className="mt-2 flex items-start gap-2 bg-gray-800/50 rounded p-2">
-                  <AlertTriangle className="w-3.5 h-3.5 text-gray-500 mt-0.5 flex-shrink-0" />
-                  <p className="text-gray-400 text-xs">{p.integration_note}</p>
+                <div className="mt-3.5 flex items-start gap-2.5 bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-slate-700 text-xs leading-relaxed font-sans">{p.integration_note}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Upload Fallback Notice */}
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 flex items-start gap-3">
-            <FileText className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+          <div className="bg-blue-50/90 border border-blue-200 rounded-xl p-4 flex items-start gap-3.5 shadow-sm">
+            <FileText className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
             <div className="text-sm">
-              <p className="text-blue-300 font-semibold">Upload Fallback Available</p>
-              <p className="text-blue-200/70 mt-0.5">
-                For all NOT_CONFIGURED providers, users can upload data using standardized CSV/GeoJSON templates via the{' '}
-                <Link href="/upload" className="text-blue-400 underline">Data Upload Center</Link>.
-                Templates and sample files are available for download.
+              <p className="text-blue-900 font-bold font-sans">Standardized Upload Fallback Available</p>
+              <p className="text-blue-800/90 mt-1 font-sans leading-relaxed">
+                For all NOT_CONFIGURED providers, field personnel and analysts can ingest telemetry data using standardized CSV/GeoJSON templates via the{' '}
+                <Link href="/upload" className="text-blue-700 font-semibold underline hover:text-blue-900">Data Upload Center</Link>.
+                Pre-formatted templates and historical disaster datasets are provided with full schema validation.
               </p>
             </div>
           </div>

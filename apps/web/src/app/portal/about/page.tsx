@@ -18,19 +18,19 @@ export default function PublicAboutPage() {
   return (
     <div className="space-y-8 text-slate-800 text-xs">
       {/* 1. Header Overview */}
-      <div className="bg-white border border-slate-300 rounded p-6 shadow-xs space-y-3">
-        <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
-          <div className="w-12 h-12 rounded bg-[#0f172a] text-white flex items-center justify-center flex-shrink-0">
-            <Shield className="w-6 h-6 text-cyan-400" />
+      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-3">
+        <div className="flex items-center gap-3.5 border-b border-slate-100 pb-3">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center flex-shrink-0 shadow-2xs">
+            <Shield className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <span className="text-[10px] font-mono uppercase bg-blue-100 text-blue-900 border border-blue-300 px-2 py-0.5 rounded font-bold">
+            <span className="text-xs font-sans uppercase bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-0.5 rounded-full font-bold">
               SIH26192 Research Project
             </span>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif mt-1">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-sans mt-1">
               About FloodGuard AI Platform
             </h2>
-            <p className="text-slate-600 text-xs">
+            <p className="text-slate-600 text-xs font-sans mt-0.5">
               Hyper-Local Multi-Source Flash-Flood Intelligence & Multi-Hazard Decision Support
             </p>
           </div>
@@ -151,14 +151,14 @@ export default function PublicAboutPage() {
             </div>
           </div>
 
-          <div className="p-4 bg-slate-900 text-white rounded space-y-2 border border-slate-800">
-            <span className="font-bold text-cyan-300 text-sm">Authorized Command Center</span>
-            <p className="text-slate-300 leading-relaxed text-[11px]">
-              Tactical spatial dashboard featuring dark-mode multi-layer vector cartography, live IoT telemetry streams, hindcast time machines, black-box audit ledgers, scenario simulation lab, and ML drift monitors for authorized operators.
+          <div className="p-4 bg-white border border-slate-200 rounded-xl space-y-2 shadow-sm">
+            <span className="font-bold text-blue-700 text-sm font-sans">Authorized Tactical Command Center</span>
+            <p className="text-slate-600 leading-relaxed text-[11px] font-sans">
+              High-readiness tactical spatial dashboard featuring GIS multi-layer vector cartography, live IoT telemetry streams, hindcast time machines, black-box audit ledgers, scenario simulation lab, and ML drift monitors for authorized operators.
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 text-xs text-cyan-400 font-bold hover:underline"
+              className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold hover:text-blue-800 transition pt-1"
             >
               <span>Launch Command Center</span>
               <ArrowRight className="w-3.5 h-3.5" />

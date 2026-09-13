@@ -10,7 +10,7 @@ import { ArrowLeft, ShieldAlert, Cpu, Layers } from 'lucide-react';
 
 export default function DataFlowPage() {
   return (
-    <div className="min-h-screen bg-[#071322] text-slate-100 flex flex-col font-sans select-none">
+    <div className="min-h-screen bg-[#F0F4F8] text-slate-900 flex flex-col font-sans select-none">
       {/* Top Government Institutional Header */}
       <PublicHeader />
       <PublicNavigation />
@@ -19,26 +19,26 @@ export default function DataFlowPage() {
       <main className="flex-1 w-full max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-            <Link href="/portal" className="hover:text-cyan-400 transition flex items-center gap-1">
+          <div className="flex items-center gap-2 text-xs font-sans text-slate-500">
+            <Link href="/portal" className="hover:text-blue-700 transition flex items-center gap-1 font-medium">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Public Portal</span>
             </Link>
             <span>/</span>
-            <span className="text-cyan-400 font-bold">Data Architecture &amp; Ingestion Flow</span>
+            <span className="text-blue-700 font-bold">Data Architecture &amp; Ingestion Flow</span>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
               href="/ingestion"
-              className="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1"
+              className="text-xs font-sans text-blue-700 hover:underline flex items-center gap-1 font-bold"
             >
               <span>Live Ingestion Pipeline</span>
               <span>→</span>
             </Link>
             <Link
               href="/data-sources"
-              className="text-xs font-mono text-slate-400 hover:text-white transition"
+              className="text-xs font-sans text-slate-600 hover:text-slate-900 transition font-medium"
             >
               Provider Registry
             </Link>

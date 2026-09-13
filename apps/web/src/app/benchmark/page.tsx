@@ -287,72 +287,72 @@ export default function EventBenchmarkPage() {
   }, [searchQuery, selectedEra]);
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#020714] text-slate-100">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="HINDCAST" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="benchmark" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6 overflow-y-auto">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-cyan-500/20 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="chip chip-hist">SCIENTIFIC VALIDATION</span>
-                <h1 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-purple-400" />
+                <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-300 text-xs font-semibold">SCIENTIFIC VALIDATION</span>
+                <h1 className="text-xl sm:text-2xl font-bold font-sans text-slate-900 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-purple-600" />
                   LEAVE-ONE-OUT CROSS-VALIDATION (LOOCV) BENCHMARK MATRIX (2000 – 2026)
                 </h1>
               </div>
-              <p className="text-xs text-slate-300 mt-1 font-sans">
-                Rigorous empirical evaluation proving generalization across 18 major Indian & Himalayan disasters with zero lookahead bias
+              <p className="text-sm text-slate-600 mt-1 font-sans">
+                Rigorous empirical evaluation proving generalization across 18 major Indian &amp; Himalayan disasters with zero lookahead bias
               </p>
             </div>
             <DataModeBadge mode="HINDCAST" />
           </div>
 
           {/* ── Summary Metrics Bar ── */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-            <div className="fp fp-operational p-4 rounded-2xl text-center">
-              <div className="text-slate-400 text-[10px] uppercase font-bold">Total Evaluated Disasters</div>
-              <div className="text-2xl font-black text-cyan-300 mt-1">18 Events</div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-sans">
+            <div className="bg-white border border-slate-200 shadow-sm p-4 rounded-2xl text-center">
+              <div className="text-slate-500 text-xs uppercase font-semibold">Total Evaluated Disasters</div>
+              <div className="text-2xl font-black text-blue-700 font-mono mt-1">18 Events</div>
             </div>
-            <div className="fp fp-operational p-4 rounded-2xl text-center">
-              <div className="text-slate-400 text-[10px] uppercase font-bold">LOOCV Detection Rate</div>
-              <div className="text-2xl font-black text-emerald-400 mt-1">100% (18/18)</div>
+            <div className="bg-white border border-slate-200 shadow-sm p-4 rounded-2xl text-center">
+              <div className="text-slate-500 text-xs uppercase font-semibold">LOOCV Detection Rate</div>
+              <div className="text-2xl font-black text-emerald-700 font-mono mt-1">100% (18/18)</div>
             </div>
-            <div className="fp fp-operational p-4 rounded-2xl text-center">
-              <div className="text-slate-400 text-[10px] uppercase font-bold">Mean Early Lead Time</div>
-              <div className="text-2xl font-black text-purple-300 mt-1">40.3 Minutes</div>
+            <div className="bg-white border border-slate-200 shadow-sm p-4 rounded-2xl text-center">
+              <div className="text-slate-500 text-xs uppercase font-semibold">Mean Early Lead Time</div>
+              <div className="text-2xl font-black text-purple-700 font-mono mt-1">40.3 Minutes</div>
             </div>
-            <div className="fp fp-operational p-4 rounded-2xl text-center">
-              <div className="text-slate-400 text-[10px] uppercase font-bold">False Alarm Rate</div>
-              <div className="text-2xl font-black text-white mt-1">0.0%</div>
+            <div className="bg-white border border-slate-200 shadow-sm p-4 rounded-2xl text-center">
+              <div className="text-slate-500 text-xs uppercase font-semibold">False Alarm Rate</div>
+              <div className="text-2xl font-black text-slate-900 font-mono mt-1">0.0%</div>
             </div>
           </div>
 
           {/* ── Search & Filter Controls ── */}
-          <div className="fp fp-historical p-3.5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono">
+          <div className="bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-sans">
             <div className="relative w-full sm:w-72">
-              <Search className="w-4 h-4 text-purple-400 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-purple-600 absolute left-3 top-2.5" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search event, year, mechanism..."
-                className="w-full pl-9 pr-3 py-1.5 bg-[#060e22] border border-purple-500/30 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-purple-400"
+                className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
               />
             </div>
 
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-slate-400 text-[10px] uppercase font-bold mr-1">Period:</span>
+              <span className="text-slate-600 text-xs font-bold mr-1">Period:</span>
               {['ALL', '2000-2010', '2011-2018', '2019-2026'].map((era) => (
                 <button
                   key={era}
                   onClick={() => setSelectedEra(era)}
-                  className={`px-2.5 py-1 rounded-xl text-[11px] transition active:scale-95 ${
+                  className={`px-3 py-1 rounded-xl text-xs transition active:scale-95 font-medium ${
                     selectedEra === era
-                      ? 'bg-purple-600 text-white font-bold shadow-md'
-                      : 'bg-slate-900/90 text-slate-400 hover:text-white border border-slate-800'
+                      ? 'bg-blue-600 text-white font-bold shadow-sm'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                   }`}
                 >
                   {era}
@@ -362,41 +362,41 @@ export default function EventBenchmarkPage() {
           </div>
 
           {/* ── Master LOOCV Table Card ── */}
-          <div className="fp fp-historical rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 overflow-x-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+          <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-5 sm:p-6 space-y-4 overflow-x-auto">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <span className="text-xs font-sans font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 LOOCV GENERALIZATION MATRIX ({filteredBenchmarks.length} HISTORICAL DISASTERS SHOWN)
               </span>
-              <span className="text-xs font-mono text-emerald-400 font-bold">100% DETECTION RATE</span>
+              <span className="text-xs font-mono text-emerald-700 font-bold">100% DETECTION RATE</span>
             </div>
 
-            <table className="w-full text-left text-xs font-mono">
+            <table className="w-full text-left text-xs font-sans">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 text-[10px] uppercase">
-                  <th className="pb-3">Historical Event</th>
-                  <th className="pb-3">Year / State</th>
-                  <th className="pb-3">Causal Mechanism</th>
-                  <th className="pb-3">Detected</th>
-                  <th className="pb-3">Lead Time</th>
-                  <th className="pb-3">Completeness</th>
-                  <th className="pb-3">Validation Evidence</th>
+                <tr className="border-b border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold uppercase">
+                  <th className="py-2.5 px-3">Historical Event</th>
+                  <th className="py-2.5 px-3">Year / State</th>
+                  <th className="py-2.5 px-3">Causal Mechanism</th>
+                  <th className="py-2.5 px-3">Detected</th>
+                  <th className="py-2.5 px-3">Lead Time</th>
+                  <th className="py-2.5 px-3">Completeness</th>
+                  <th className="py-2.5 px-3">Validation Evidence</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-200">
                 {filteredBenchmarks.map((b, i) => (
-                  <tr key={i} className="hover:bg-slate-900/60 transition">
-                    <td className="py-3 font-bold text-white text-xs">{b.event}</td>
-                    <td className="py-3 text-cyan-300 text-[11px]">{b.year} • {b.state}</td>
-                    <td className="py-3 text-slate-300 text-[11px] max-w-xs">{b.mechanism}</td>
-                    <td className="py-3">
-                      <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold text-[10px] flex items-center gap-1 w-fit">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-400" /> YES
+                  <tr key={i} className="hover:bg-slate-50/50 transition">
+                    <td className="py-3 px-3 font-bold text-slate-900 text-xs font-sans">{b.event}</td>
+                    <td className="py-3 px-3 text-blue-700 text-xs font-sans">{b.year} • {b.state}</td>
+                    <td className="py-3 px-3 text-slate-600 text-xs max-w-xs font-sans">{b.mechanism}</td>
+                    <td className="py-3 px-3">
+                      <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center gap-1 w-fit">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" /> YES
                       </span>
                     </td>
-                    <td className="py-3 font-bold text-cyan-300">{b.leadTime}</td>
-                    <td className="py-3 text-amber-300">{b.completeness}</td>
-                    <td className="py-3 text-slate-400 text-[11px] max-w-sm">{b.notes}</td>
+                    <td className="py-3 px-3 font-bold font-mono text-blue-700">{b.leadTime}</td>
+                    <td className="py-3 px-3 text-amber-800 font-mono font-medium">{b.completeness}</td>
+                    <td className="py-3 px-3 text-slate-600 text-xs max-w-sm font-sans">{b.notes}</td>
                   </tr>
                 ))}
               </tbody>
@@ -404,16 +404,16 @@ export default function EventBenchmarkPage() {
           </div>
 
           {/* ── Scientific Methodology Summary ── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-            <div className="fp p-5 rounded-2xl space-y-2">
-              <div className="text-cyan-300 font-bold uppercase text-[11px]">WHAT IS LEAVE-ONE-OUT CROSS-VALIDATION?</div>
-              <p className="text-slate-300 leading-relaxed font-sans text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
+            <div className="bg-white border border-slate-200 shadow-sm p-5 rounded-2xl space-y-2">
+              <div className="text-blue-700 font-bold uppercase text-xs">WHAT IS LEAVE-ONE-OUT CROSS-VALIDATION?</div>
+              <p className="text-slate-600 leading-relaxed font-sans text-xs">
                 To prove FloodGuard AI is not merely curve-fitted to known disasters, we iteratively withhold one entire historical disaster, train the model on the remaining 17 events, and evaluate whether it detects the withheld event in real-time.
               </p>
             </div>
-            <div className="fp p-5 rounded-2xl space-y-2">
-              <div className="text-emerald-400 font-bold uppercase text-[11px]">GENERALIZATION GUARANTEE</div>
-              <p className="text-slate-300 leading-relaxed font-sans text-xs">
+            <div className="bg-white border border-slate-200 shadow-sm p-5 rounded-2xl space-y-2">
+              <div className="text-emerald-700 font-bold uppercase text-xs">GENERALIZATION GUARANTEE</div>
+              <p className="text-slate-600 leading-relaxed font-sans text-xs">
                 The model achieved 15–60 minutes of operational lead time across all 18 historical events from 2000 through 2026, without requiring rainfall for dry cryospheric disasters (Chamoli) or future knowledge.
               </p>
             </div>

@@ -871,7 +871,7 @@ export default function PublicPortalDashboardPage() {
                           onClick={() => setAlertFilter(lvl)}
                           className={`px-1.5 py-0.5 rounded transition cursor-pointer font-bold ${
                             alertFilter === lvl
-                              ? 'bg-slate-900 text-white shadow-xs'
+                              ? 'bg-blue-600 text-white shadow-xs'
                               : 'text-slate-500 hover:bg-slate-100'
                           }`}
                         >
@@ -1546,13 +1546,13 @@ export default function PublicPortalDashboardPage() {
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
               <Link
                 href="/safety"
-                className="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-xs"
+                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs"
               >
                 VIEW ESCAPE ROUTE →
               </Link>
               <button
                 onClick={() => setSelectedAlert(null)}
-                className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs"
+                className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs"
               >
                 Close
               </button>

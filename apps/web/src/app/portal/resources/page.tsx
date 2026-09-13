@@ -136,9 +136,9 @@ export default function PublicResourcesPage() {
                 <button
                   type="button"
                   onClick={() => downloadTemplate(tmpl)}
-                  className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-3 py-1.5 rounded transition active:scale-95 text-xs"
+                  className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-1.5 rounded-lg transition active:scale-95 text-xs shadow-xs"
                 >
-                  <Download className="w-3.5 h-3.5 text-cyan-400" />
+                  <Download className="w-3.5 h-3.5 text-white" />
                   <span>Download Sample</span>
                 </button>
               </div>
@@ -194,17 +194,17 @@ export default function PublicResourcesPage() {
         </p>
 
         <div className="space-y-2 font-mono text-[11px]">
-          <div className="p-2 bg-slate-900 text-slate-200 rounded flex items-center justify-between">
+          <div className="p-2 bg-slate-100 text-slate-800 border border-slate-300 rounded flex items-center justify-between">
             <span>GET /api/v1/hazard/risk-summary?state=Uttarakhand&district=Chamoli</span>
-            <span className="text-emerald-400 font-bold">200 OK</span>
+            <span className="text-emerald-700 font-bold">200 OK</span>
           </div>
-          <div className="p-2 bg-slate-900 text-slate-200 rounded flex items-center justify-between">
+          <div className="p-2 bg-slate-100 text-slate-800 border border-slate-300 rounded flex items-center justify-between">
             <span>GET /api/v1/providers/health</span>
-            <span className="text-cyan-400 font-bold">REGISTRY</span>
+            <span className="text-blue-700 font-bold">REGISTRY</span>
           </div>
-          <div className="p-2 bg-slate-900 text-slate-200 rounded flex items-center justify-between">
+          <div className="p-2 bg-slate-100 text-slate-800 border border-slate-300 rounded flex items-center justify-between">
             <span>POST /api/v1/ingestion/jobs</span>
-            <span className="text-amber-400 font-bold">AUTH REQ</span>
+            <span className="text-amber-700 font-bold">AUTH REQ</span>
           </div>
         </div>
 

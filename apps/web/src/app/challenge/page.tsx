@@ -88,22 +88,22 @@ export default function JudgeChallengeModePage() {
   const current = challenges[selectedChallenge];
 
   return (
-    <div className="flex flex-col min-h-screen select-none">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900 font-sans">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="challenge" />
 
-        <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 pb-24 md:pb-6 overflow-y-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="chip chip-demo">EVALUATION ARENA</span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                  <HelpCircle className="w-5 h-5 text-amber-400" />
-                  SIH JUDGE CHALLENGE MODE ARENA
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">EVALUATION ARENA</span>
+                <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5 font-sans">
+                  <HelpCircle className="w-6 h-6 text-amber-600" />
+                  SIH Technical Defense & Evaluator Arena
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
+              <p className="text-slate-600 text-sm mt-1 font-sans">
                 Direct stress-test prompts answering critical evaluator questions with live working proofs
               </p>
             </div>
@@ -119,20 +119,22 @@ export default function JudgeChallengeModePage() {
                   <button
                     key={ch.id}
                     onClick={() => setSelectedChallenge(idx)}
-                    className={`w-full p-4 rounded-2xl text-left transition-all duration-300 flex items-start gap-3.5 ${
+                    className={`w-full p-4 rounded-xl text-left transition-all duration-200 flex items-start gap-3.5 shadow-sm ${
                       isSelected
-                        ? 'fp-operational ring-2 ring-amber-400 shadow-xl scale-[1.01]'
-                        : 'fp hover:bg-slate-900/60'
+                        ? 'bg-white border-2 border-blue-600 shadow-md ring-2 ring-blue-500/20'
+                        : 'bg-white hover:bg-slate-50 border border-slate-200'
                     }`}
                   >
-                    <span className="font-mono text-xs font-black text-amber-400 bg-amber-950/80 px-2 py-1 rounded-lg border border-amber-800/80 shrink-0">
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 font-mono shadow-xs ${
+                      isSelected ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-700 border border-slate-200'
+                    }`}>
                       {ch.id}
                     </span>
-                    <div className="space-y-0.5 min-w-0">
-                      <div className="text-xs font-bold text-white group-hover:text-amber-300 transition leading-snug">
+                    <div className="space-y-1 min-w-0">
+                      <div className="text-sm font-bold text-slate-900 transition leading-snug font-sans">
                         {ch.question}
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono">{ch.subtitle}</div>
+                      <div className="text-xs text-slate-500 font-medium font-sans">{ch.subtitle}</div>
                     </div>
                   </button>
                 );
@@ -140,30 +142,30 @@ export default function JudgeChallengeModePage() {
             </div>
 
             {/* Answer & Live Interactive Demonstration (7 Cols) */}
-            <div className="lg:col-span-7 fp fp-operational rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl animate-slide-up">
-              <div className="border-b border-slate-800 pb-4">
-                <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">
-                  CHALLENGE PROMPT {current.id} • {current.subtitle}
+            <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="border-b border-slate-200 pb-4">
+                <span className="text-xs font-bold text-amber-700 uppercase tracking-wider font-sans">
+                  Challenge Prompt {current.id} • {current.subtitle}
                 </span>
-                <h2 className="text-xl font-black text-white mt-1 leading-snug">{current.question}</h2>
+                <h2 className="text-xl font-bold text-slate-900 mt-1.5 leading-snug font-sans">{current.question}</h2>
               </div>
 
               {/* Comprehensive System Answer */}
               <div className="space-y-2">
-                <span className="text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-wider block">
-                  SYSTEM DEFENSE & ARCHITECTURAL SOLUTION
+                <span className="text-xs font-bold text-blue-700 uppercase tracking-wider block font-sans">
+                  System Architecture & Physical Proof
                 </span>
-                <p className="text-sm text-slate-200 leading-relaxed font-sans font-medium">
+                <p className="text-sm text-slate-700 leading-relaxed font-sans">
                   {current.answer}
                 </p>
               </div>
 
               {/* Verified Proof */}
-              <div className="fp p-4 rounded-2xl flex items-center gap-3 text-xs font-mono">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center gap-3.5 text-xs shadow-sm">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                 <div>
-                  <div className="text-slate-400 text-[10px]">Empirical Proof:</div>
-                  <div className="text-emerald-300 font-bold">{current.verifiedProof}</div>
+                  <div className="text-slate-500 text-xs font-semibold font-sans">Empirical Proof:</div>
+                  <div className="text-emerald-800 font-bold font-mono text-xs mt-0.5">{current.verifiedProof}</div>
                 </div>
               </div>
 
@@ -171,7 +173,7 @@ export default function JudgeChallengeModePage() {
               <div className="pt-2">
                 <Link
                   href={current.actionHref}
-                  className="btn-primary w-full py-3.5 rounded-xl text-center text-xs font-black font-mono text-white flex items-center justify-center gap-2 shadow-xl"
+                  className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-center text-xs font-bold font-sans text-white flex items-center justify-center gap-2 shadow-sm transition-all"
                 >
                   <span>{current.actionLabel}</span>
                   <ArrowRight className="w-4 h-4" />

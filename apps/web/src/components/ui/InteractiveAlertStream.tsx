@@ -37,15 +37,15 @@ export const InteractiveAlertStream: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel-glow rounded-2xl p-3.5 space-y-2.5 shadow-2xl text-xs overflow-hidden">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-2 gap-2">
+    <div className="bg-white border border-slate-200 rounded-2xl p-3.5 space-y-2.5 shadow-sm text-xs overflow-hidden">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-2 gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <Bell className="w-3.5 h-3.5 text-orange-400 animate-bounce shrink-0" />
-          <span className="font-mono font-black text-slate-100 text-xs uppercase tracking-wider truncate">
+          <Bell className="w-3.5 h-3.5 text-orange-500 animate-bounce shrink-0" />
+          <span className="font-mono font-black text-slate-900 text-xs uppercase tracking-wider truncate">
             ACTIVE ALERTS
           </span>
         </div>
-        <span className="text-[10px] font-mono bg-orange-950 text-orange-300 px-2 py-0.5 rounded-lg border border-orange-800 font-bold shadow-[0_0_10px_rgba(249,115,22,0.4)] shrink-0">
+        <span className="text-[10px] font-mono bg-red-50 text-red-700 px-2 py-0.5 rounded-lg border border-red-200 font-bold shrink-0">
           2 ACTIVE
         </span>
       </div>
@@ -56,42 +56,42 @@ export const InteractiveAlertStream: React.FC = () => {
             key={a.id}
             className={`p-3 rounded-xl border text-xs space-y-2 transition-all ${
               a.acknowledged
-                ? 'bg-slate-900/50 border-slate-800 opacity-60'
+                ? 'bg-slate-50 border-slate-200 opacity-60'
                 : a.severity === 'EXTREME'
-                ? 'bg-rose-950/40 border-rose-600/80 shadow-[0_0_20px_rgba(244,63,94,0.3)] ring-1 ring-rose-500/50'
-                : 'bg-orange-950/30 border-orange-600/80 shadow-[0_0_15px_rgba(249,115,22,0.25)] ring-1 ring-orange-500/40'
+                ? 'bg-red-50 border-red-400 ring-1 ring-red-300'
+                : 'bg-orange-50 border-orange-400 ring-1 ring-orange-200'
             }`}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="font-bold text-slate-100 text-xs truncate min-w-0">{a.title}</span>
+              <span className="font-bold text-slate-900 text-xs truncate min-w-0">{a.title}</span>
               <SeverityBadge severity={a.severity} />
             </div>
 
-            <div className="text-[11px] text-slate-300 leading-snug break-words">{a.reason}</div>
+            <div className="text-[11px] text-slate-700 leading-snug break-words">{a.reason}</div>
 
-            <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1 border-t border-slate-800/80">
+            <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-200">
               <span className="truncate">{a.time} • {a.source}</span>
             </div>
 
             <div className="flex items-center flex-wrap gap-1.5 pt-1 text-[10px]">
               <Link
                 href="/safety"
-                className="btn-glow-cyan px-2 py-1 text-white rounded-lg font-bold flex items-center gap-1 transition"
+                className="px-2 py-1 bg-amber-500 hover:bg-amber-400 text-white rounded-lg font-bold flex items-center gap-1 transition"
               >
                 <Compass className="w-3 h-3" /> GUIDANCE
               </Link>
               <Link
                 href="/flight-recorder"
-                className="px-2 py-1 bg-slate-900/90 hover:bg-slate-800 text-cyan-300 border border-slate-700 rounded-lg font-mono font-medium flex items-center gap-1 transition"
+                className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg font-mono font-medium flex items-center gap-1 transition"
               >
                 <Radio className="w-3 h-3" /> TRACE
               </Link>
               {!a.acknowledged && (
                 <button
                   onClick={() => handleAcknowledge(a.id)}
-                  className="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded-lg font-medium ml-auto flex items-center gap-1 transition active:scale-95"
+                  className="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-lg font-medium ml-auto flex items-center gap-1 transition active:scale-95"
                 >
-                  <Check className="w-3 h-3 text-emerald-400" /> ACK
+                  <Check className="w-3 h-3 text-emerald-600" /> ACK
                 </button>
               )}
             </div>

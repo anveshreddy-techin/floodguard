@@ -74,7 +74,7 @@ export default function IncidentCommandPage() {
   const stageColor = STAGE_DATA[incident.stage]?.color || '#6b7280';
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8]">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="incidents" />
@@ -84,13 +84,13 @@ export default function IncidentCommandPage() {
           <div className="flex items-center justify-between mb-5">
             <div>
               <div className="flex items-center gap-2.5 mb-1">
-                <span className="chip chip-live">ACTIVE COMMAND</span>
-                <h1 className="text-xl font-black text-gradient-cyan flex items-center gap-2">
-                  <ShieldAlert className="w-5 h-5 text-rose-400" />
+                <span className="px-2.5 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-300 text-[10px] font-mono font-bold">ACTIVE COMMAND</span>
+                <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                  <ShieldAlert className="w-5 h-5 text-red-600" />
                   INCIDENT COMMAND BOARD
                 </h1>
               </div>
-              <p className="text-xs text-slate-400">Multi-agency coordination, lifecycle staging, and task dispatch</p>
+              <p className="text-xs text-slate-600 font-medium">Multi-agency coordination, lifecycle staging, and task dispatch</p>
             </div>
             <DataModeBadge mode="DEMO" />
           </div>
@@ -103,25 +103,25 @@ export default function IncidentCommandPage() {
                 <button
                   key={inc.id}
                   onClick={() => setSelectedId(inc.id)}
-                  className={`w-full text-left p-4 rounded-2xl fp transition-all animate-slide-up ${
-                    selectedId === inc.id ? 'fp-operational ring-1 ring-cyan-500/40' : ''
+                  className={`w-full text-left p-4 rounded-2xl bg-white border transition-all shadow-sm ${
+                    selectedId === inc.id ? 'border-2 border-blue-600 bg-blue-50/50 shadow-md' : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono text-xs text-cyan-400 font-bold">{inc.id}</span>
+                    <span className="font-mono text-xs text-blue-700 font-bold">{inc.id}</span>
                     <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
-                      inc.severity === 'EXTREME' ? 'bg-red-950 text-red-300 border border-red-800' : 'bg-orange-950 text-orange-300 border border-orange-800'
+                      inc.severity === 'EXTREME' ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-amber-100 text-amber-800 border border-amber-300'
                     }`}>{inc.severity}</span>
                   </div>
-                  <div className="text-sm font-bold text-slate-100 leading-snug">{inc.title}</div>
-                  <div className="flex items-center gap-1.5 mt-2 text-[11px] text-slate-400 font-mono">
+                  <div className="text-sm font-bold text-slate-900 leading-snug">{inc.title}</div>
+                  <div className="flex items-center gap-1.5 mt-2 text-[11px] text-slate-500 font-mono">
                     <Clock className="w-3 h-3" /> {inc.time}
                   </div>
                   {/* Mini stage progress */}
                   <div className="flex items-center gap-1 mt-2.5">
                     {STAGE_DATA.map((s, i) => (
-                      <div key={i} className="flex-1 h-1 rounded-full" style={{
-                        background: i <= inc.stage ? s.color : 'rgba(255,255,255,0.06)'
+                      <div key={i} className="flex-1 h-1.5 rounded-full" style={{
+                        background: i <= inc.stage ? s.color : '#e2e8f0'
                       }} />
                     ))}
                   </div>
@@ -133,8 +133,8 @@ export default function IncidentCommandPage() {
             <div className="lg:col-span-8 space-y-4">
 
               {/* Stage Pipeline — visual hero */}
-              <div className="fp fp-operational rounded-2xl p-5 animate-slide-up">
-                <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest mb-4 font-bold">
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div className="text-[10px] font-mono text-blue-700 uppercase tracking-widest mb-4 font-bold">
                   INCIDENT LIFECYCLE PIPELINE
                 </div>
                 <div className="flex items-center gap-2 overflow-x-auto pb-2">
@@ -147,13 +147,12 @@ export default function IncidentCommandPage() {
                           <div className="relative">
                             <div
                               className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold font-mono border-2 transition-all ${
-                                isActive ? 'scale-110' : ''
+                                isActive ? 'scale-110 shadow-md' : ''
                               }`}
                               style={{
-                                borderColor: isPast || isActive ? s.color : 'rgba(255,255,255,0.08)',
-                                backgroundColor: isPast ? `${s.color}30` : isActive ? `${s.color}40` : 'rgba(255,255,255,0.03)',
-                                color: isPast || isActive ? s.color : '#64748b',
-                                boxShadow: isActive ? `0 0 20px ${s.color}60` : 'none',
+                                borderColor: isPast || isActive ? s.color : '#cbd5e1',
+                                backgroundColor: isPast ? `${s.color}20` : isActive ? `${s.color}` : '#f8fafc',
+                                color: isActive ? '#ffffff' : isPast ? s.color : '#64748b',
                               }}
                             >
                               {isPast ? '✓' : i + 1}
@@ -164,77 +163,77 @@ export default function IncidentCommandPage() {
                             )}
                           </div>
                           <div className={`text-[10px] font-mono font-bold text-center leading-tight ${
-                            isActive ? 'text-white' : isPast ? 'text-slate-400' : 'text-slate-600'
+                            isActive ? 'text-slate-900 font-black' : isPast ? 'text-slate-600' : 'text-slate-400'
                           }`}>{s.id}</div>
                         </div>
                         {i < STAGE_DATA.length - 1 && (
-                          <ChevronRight className="w-4 h-4 shrink-0 text-slate-700" />
+                          <ChevronRight className="w-4 h-4 shrink-0 text-slate-300" />
                         )}
                       </React.Fragment>
                     );
                   })}
                 </div>
-                <p className="text-xs text-slate-400 mt-3 font-mono">
+                <p className="text-xs text-slate-600 mt-3 font-mono">
                   {STAGE_DATA[incident.stage]?.desc}
                 </p>
               </div>
 
               {/* Incident details + tasks */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="fp rounded-2xl p-4 space-y-3 animate-slide-up">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">ACTIVE RESPONSE TEAMS</div>
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-3 shadow-sm">
+                  <div className="text-[10px] font-mono text-slate-500 uppercase tracking-wider font-bold">ACTIVE RESPONSE TEAMS</div>
                   {incident.teams.map((t, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-slate-300">
-                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <div key={i} className="flex items-center gap-2 text-xs text-slate-800 font-medium">
+                      <div className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
                       {t}
                     </div>
                   ))}
-                  <div className="border-t border-slate-800 pt-3 text-[11px] font-mono">
-                    <div className="flex justify-between text-slate-400">
+                  <div className="border-t border-slate-200 pt-3 text-[11px] font-mono">
+                    <div className="flex justify-between text-slate-600">
                       <span>Location:</span>
-                      <span className="text-cyan-300 font-bold">{incident.location}</span>
+                      <span className="text-blue-700 font-bold">{incident.location}</span>
                     </div>
-                    <div className="flex justify-between text-slate-400 mt-1">
+                    <div className="flex justify-between text-slate-600 mt-1">
                       <span>Lead Time Advantage:</span>
-                      <span className="text-emerald-400 font-bold">{incident.leadTime}</span>
+                      <span className="text-emerald-700 font-bold">{incident.leadTime}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="fp fp-operational rounded-2xl p-4 space-y-2.5 animate-slide-up">
-                  <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider font-bold flex items-center justify-between">
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2.5 shadow-sm">
+                  <div className="text-[10px] font-mono text-blue-700 uppercase tracking-wider font-bold flex items-center justify-between">
                     <span>TASK CHECKLIST (INTERACTIVE)</span>
-                    <span className="text-slate-400">{incident.tasks.filter(t=>t.done).length}/{incident.tasks.length} done</span>
+                    <span className="text-slate-500 font-semibold">{incident.tasks.filter(t=>t.done).length}/{incident.tasks.length} done</span>
                   </div>
                   {incident.tasks.map((task, i) => (
                     <button
                       key={i}
                       onClick={() => toggleTask(incident.id, i)}
                       className={`flex items-center gap-2.5 text-xs p-2.5 rounded-xl w-full text-left transition active:scale-98 cursor-pointer ${
-                        task.done ? 'bg-emerald-950/20 text-emerald-300 border border-emerald-800/40' : 'bg-slate-900/60 text-slate-200 hover:text-white hover:bg-slate-800/60 border border-slate-800'
+                        task.done ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-slate-50 text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
                       }`}
                     >
                       <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                        task.done ? 'border-emerald-500 bg-emerald-900/60' : 'border-slate-600 bg-slate-800'
+                        task.done ? 'border-emerald-600 bg-emerald-600 text-white' : 'border-slate-300 bg-white'
                       }`}>
-                        {task.done && <CheckCircle2 className="w-3 h-3 text-emerald-400" />}
+                        {task.done && <CheckCircle2 className="w-3 h-3 text-white" />}
                       </div>
-                      <span className={task.done ? 'line-through opacity-70' : 'font-medium'}>{task.label}</span>
+                      <span className={task.done ? 'line-through opacity-80' : 'font-medium'}>{task.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Action bar with Stage Progression Buttons */}
-              <div className="fp rounded-2xl p-4 flex flex-wrap items-center gap-3">
-                <Link href="/safety" className="btn-danger px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-lg active:scale-95">
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-wrap items-center gap-3 shadow-sm">
+                <Link href="/safety" className="btn-danger px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-sm active:scale-95">
                   <ShieldAlert className="w-3.5 h-3.5" /> CITIZEN GUIDANCE HUD
                 </Link>
-                <Link href="/ledger" className="btn-primary px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-lg active:scale-95">
+                <Link href="/ledger" className="btn-primary px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-sm active:scale-95">
                   <FileText className="w-3.5 h-3.5" /> AUDIT TRAIL
                 </Link>
-                <Link href="/flight-recorder" className="btn-ghost px-4 py-2 rounded-xl text-slate-300 text-xs font-bold font-mono flex items-center gap-2 hover:text-white active:scale-95">
-                  <Radio className="w-3.5 h-3.5 text-cyan-400" /> FLIGHT RECORDER
+                <Link href="/flight-recorder" className="px-4 py-2 rounded-xl text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-xs font-bold font-mono flex items-center gap-2 active:scale-95">
+                  <Radio className="w-3.5 h-3.5 text-blue-600" /> FLIGHT RECORDER
                 </Link>
 
                 {incident.stage < 5 && (
@@ -242,7 +241,7 @@ export default function IncidentCommandPage() {
                     onClick={() => setIncidents(prev => prev.map(inc =>
                       inc.id !== selectedId ? inc : { ...inc, stage: Math.min(5, inc.stage + 1) }
                     ))}
-                    className="ml-auto btn-primary px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-lg active:scale-95 transition"
+                    className="ml-auto btn-success px-4 py-2 rounded-xl text-white text-xs font-bold font-mono flex items-center gap-2 shadow-sm active:scale-95 transition"
                   >
                     <ArrowRight className="w-3.5 h-3.5" /> ADVANCE STAGE
                   </button>
@@ -252,7 +251,7 @@ export default function IncidentCommandPage() {
                     onClick={() => setIncidents(prev => prev.map(inc =>
                       inc.id !== selectedId ? inc : { ...inc, stage: Math.max(0, inc.stage - 1) }
                     ))}
-                    className={`fp px-3 py-2 rounded-xl text-slate-400 text-xs font-bold font-mono flex items-center gap-2 active:scale-95 transition hover:text-slate-200 ${incident.stage >= 5 ? 'ml-auto' : ''}`}
+                    className={`px-3 py-2 rounded-xl bg-slate-100 border border-slate-300 text-slate-700 text-xs font-bold font-mono flex items-center gap-2 active:scale-95 transition hover:text-slate-900 ${incident.stage >= 5 ? 'ml-auto' : ''}`}
                   >
                     PREV STAGE
                   </button>

@@ -78,7 +78,7 @@ export const NdrfDeploymentCard: React.FC = () => {
   return (
     <div className="bg-white border border-slate-300 rounded shadow-xs overflow-hidden text-slate-900 mb-6">
       {/* ── HEADER ── */}
-      <div className="bg-slate-900 text-white px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="bg-slate-800 text-white px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded bg-red-600 text-white flex items-center justify-center font-black text-xs shrink-0 shadow-xs">
             NDRF
@@ -99,7 +99,7 @@ export const NdrfDeploymentCard: React.FC = () => {
         </div>
 
         {/* Battalion Toggle */}
-        <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded border border-slate-700 text-xs">
+        <div className="flex items-center gap-1.5 bg-slate-700 p-1 rounded border border-slate-600 text-xs">
           {battalions.map((b) => (
             <button
               key={b.id}
@@ -108,7 +108,7 @@ export const NdrfDeploymentCard: React.FC = () => {
               className={`px-2.5 py-1 rounded font-mono font-bold transition cursor-pointer ${
                 selectedBattalion === b.id
                   ? 'bg-red-600 text-white shadow-xs'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-slate-300 hover:text-white'
               }`}
             >
               {b.id}

@@ -137,8 +137,8 @@ export default function PublicAlertsPage() {
               <button
                 type="button"
                 onClick={() => setViewMode('LIST')}
-                className={`px-3 py-1.5 font-semibold flex items-center gap-1.5 transition cursor-pointer ${
-                  viewMode === 'LIST' ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-700 hover:bg-slate-100'
+                className={`px-3.5 py-1.5 font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                  viewMode === 'LIST' ? 'bg-blue-600 text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 <List className="w-3.5 h-3.5" />
@@ -147,8 +147,8 @@ export default function PublicAlertsPage() {
               <button
                 type="button"
                 onClick={() => setViewMode('MAP_VIEW')}
-                className={`px-3 py-1.5 font-semibold flex items-center gap-1.5 border-l border-slate-300 transition cursor-pointer ${
-                  viewMode === 'MAP_VIEW' ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-700 hover:bg-slate-100'
+                className={`px-3.5 py-1.5 font-bold flex items-center gap-1.5 border-l border-slate-300 transition cursor-pointer ${
+                  viewMode === 'MAP_VIEW' ? 'bg-blue-600 text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 <Map className="w-3.5 h-3.5" />

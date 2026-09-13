@@ -41,23 +41,23 @@ export default function AuditPage() {
   const active = CHAIN_NODES.find(n => n.id === selectedNode);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="audit" />
         <main className="flex-1 p-3.5 sm:p-5 max-w-7xl mx-auto w-full pb-24 md:pb-6 overflow-y-auto">
 
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
             <div>
               <div className="flex items-center gap-2.5 mb-1">
-                <span className="chip chip-demo">AUDIT & PROVENANCE</span>
-                <h1 className="text-xl font-black text-gradient-cyan flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-amber-400" />
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-300 text-xs font-semibold">AUDIT &amp; PROVENANCE</span>
+                <h1 className="text-xl font-bold font-sans text-slate-900 flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-blue-600" />
                   CAUSAL EVIDENCE GRAPH EXPLORER
                 </h1>
               </div>
-              <p className="text-xs text-slate-400">Click any node to inspect its evidence inputs and cryptographic seals</p>
+              <p className="text-sm text-slate-600 font-sans">Click any node to inspect its evidence inputs and cryptographic seals</p>
             </div>
           </div>
 
@@ -65,8 +65,8 @@ export default function AuditPage() {
 
             {/* ── Main: Animated causal chain ── */}
             <div className="xl:col-span-7">
-              <div className="fp fp-operational rounded-3xl p-6 space-y-1">
-                <div className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold mb-4">
+              <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 space-y-1">
+                <div className="text-xs font-sans text-slate-800 uppercase tracking-wider font-bold mb-4">
                   CAUSAL CHAIN: SOURCE → ACTION
                 </div>
 
@@ -79,11 +79,11 @@ export default function AuditPage() {
                     <div key={node.id}>
                       <button
                         onClick={() => setSelectedNode(isSelected ? null : node.id)}
-                        className={`w-full flex items-center gap-4 p-3.5 rounded-2xl text-left transition-all duration-300 group ${
+                        className={`w-full flex items-center gap-4 p-3.5 rounded-2xl text-left transition-all duration-300 group border ${
                           isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                         } ${isSelected
-                            ? 'fp-operational ring-1 ring-cyan-500/50 scale-[1.01]'
-                            : 'hover:bg-white/5'
+                            ? 'bg-blue-50/60 border-blue-300 shadow-sm scale-[1.01]'
+                            : 'border-transparent hover:bg-slate-50'
                         }`}
                         style={{ transitionDelay: `${i * 60}ms` }}
                       >
@@ -91,9 +91,8 @@ export default function AuditPage() {
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all"
                           style={{
-                            backgroundColor: `${node.color}20`,
+                            backgroundColor: `${node.color}15`,
                             border: `1.5px solid ${node.color}50`,
-                            boxShadow: isSelected ? `0 0 16px ${node.color}40` : 'none',
                           }}
                         >
                           <Icon className="w-4 h-4" style={{ color: node.color }} />
@@ -101,14 +100,14 @@ export default function AuditPage() {
 
                         {/* Label + desc */}
                         <div className="flex-1 min-w-0">
-                          <div className="text-[10px] font-mono font-bold" style={{ color: node.color }}>
+                          <div className="text-xs font-sans font-bold" style={{ color: node.color }}>
                             {String(i + 1).padStart(2, '0')} · {node.label}
                           </div>
-                          <div className="text-xs text-slate-300 mt-0.5 truncate">{node.desc}</div>
+                          <div className="text-xs text-slate-600 mt-0.5 font-sans truncate">{node.desc}</div>
                         </div>
 
                         <ChevronRight
-                          className={`w-4 h-4 shrink-0 transition-transform ${isSelected ? 'rotate-90 text-cyan-400' : 'text-slate-600'}`}
+                          className={`w-4 h-4 shrink-0 transition-transform ${isSelected ? 'rotate-90 text-blue-600' : 'text-slate-400'}`}
                         />
                       </button>
 
@@ -119,7 +118,7 @@ export default function AuditPage() {
                             style={{ backgroundImage: `linear-gradient(to bottom, ${node.color}60, ${CHAIN_NODES[i+1].color}60)` }}
                           />
                           <svg viewBox="0 0 8 6" className="w-2 h-1.5 ml-[-1px]">
-                            <polyline points="0,0 4,3 0,6" fill="none" stroke={CHAIN_NODES[i+1].color} strokeWidth="1.5" opacity="0.5" />
+                            <polyline points="0,0 4,3 0,6" fill="none" stroke={CHAIN_NODES[i+1].color} strokeWidth="1.5" opacity="0.6" />
                           </svg>
                         </div>
                       )}
@@ -132,57 +131,57 @@ export default function AuditPage() {
             {/* ── RIGHT: Evidence Detail Panel ── */}
             <div className="xl:col-span-5">
               {active ? (
-                <div className="fp fp-operational rounded-3xl p-6 space-y-4 animate-slide-up">
+                <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 space-y-4 animate-slide-up">
                   <div>
-                    <div className="text-[10px] font-mono font-bold uppercase tracking-wider" style={{ color: active.color }}>
+                    <div className="text-xs font-sans font-bold uppercase tracking-wider" style={{ color: active.color }}>
                       NODE DETAIL: {active.label}
                     </div>
-                    <p className="text-sm text-slate-200 mt-2 leading-relaxed">{active.desc}</p>
+                    <p className="text-sm text-slate-700 mt-2 leading-relaxed font-sans">{active.desc}</p>
                   </div>
 
-                  <div className="space-y-2 text-xs font-mono">
-                    <div className="fp rounded-xl p-3 space-y-1.5">
-                      <div className="text-slate-400 text-[10px] uppercase font-bold">EVIDENCE INPUTS</div>
-                      <div className="text-slate-300">IMD AWS-001 Station: 48.0mm/3h confirmed</div>
-                      <div className="text-slate-300">CWC Radar Gauge #1: Stage 3.80m Rising</div>
-                      <div className="text-slate-300">Soil Saturation Model API: TWI 8.7 (Critical)</div>
+                  <div className="space-y-2 text-xs">
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 font-sans">
+                      <div className="text-slate-500 text-xs uppercase font-bold">EVIDENCE INPUTS</div>
+                      <div className="text-slate-800">IMD AWS-001 Station: 48.0mm/3h confirmed</div>
+                      <div className="text-slate-800">CWC Radar Gauge #1: Stage 3.80m Rising</div>
+                      <div className="text-slate-800">Soil Saturation Model API: TWI 8.7 (Critical)</div>
                     </div>
 
-                    <div className="fp rounded-xl p-3 flex items-center gap-2.5 text-[11px]">
-                      <Fingerprint className="w-4 h-4 text-purple-400" />
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center gap-2.5 text-xs font-sans">
+                      <Fingerprint className="w-4 h-4 text-purple-600" />
                       <div>
-                        <div className="text-slate-400 text-[10px]">Cryptographic Digest</div>
-                        <div className="text-purple-300 font-bold">sha256:4a8c9b...1f2d</div>
+                        <div className="text-slate-500 text-[10px] font-sans">Cryptographic Digest</div>
+                        <div className="text-purple-800 font-mono font-bold">sha256:4a8c9b...1f2d</div>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex gap-2 pt-1">
-                    <Link href="/ledger" className="btn-primary flex-1 py-2 rounded-xl text-center text-xs font-bold font-mono text-white flex items-center justify-center gap-1.5">
+                    <Link href="/ledger" className="btn-primary flex-1 py-2 rounded-xl text-center text-xs font-bold font-sans text-white flex items-center justify-center gap-1.5 shadow-sm">
                       <span>LEDGER ENTRY</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
-                    <Link href="/flight-recorder" className="btn-ghost flex-1 py-2 rounded-xl text-center text-xs font-bold font-mono text-slate-300 flex items-center justify-center gap-1.5">
+                    <Link href="/flight-recorder" className="bg-slate-100 hover:bg-slate-200 border border-slate-200 flex-1 py-2 rounded-xl text-center text-xs font-bold font-sans text-slate-700 flex items-center justify-center gap-1.5 shadow-sm transition">
                       <span>BLACK BOX</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
               ) : (
-                <div className="fp rounded-3xl p-8 flex flex-col items-center justify-center text-center gap-3 min-h-[300px]">
-                  <ShieldCheck className="w-10 h-10 text-slate-700" />
-                  <div className="text-sm text-slate-500 font-mono">
+                <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-8 flex flex-col items-center justify-center text-center gap-3 min-h-[300px]">
+                  <ShieldCheck className="w-10 h-10 text-slate-400" />
+                  <div className="text-sm text-slate-600 font-sans">
                     Select a causal node to inspect<br />its evidence and cryptographic seal
                   </div>
                 </div>
               )}
 
               {/* Legend */}
-              <div className="fp rounded-2xl p-4 mt-4 space-y-2">
-                <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">AUDIT GUARANTEES</div>
+              <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-4 mt-4 space-y-2">
+                <div className="text-xs font-sans text-slate-600 uppercase tracking-wider font-bold">AUDIT GUARANTEES</div>
                 {['Zero Post-Hoc Manipulation (SHA-256 sealed)', 'Hindsight Lockout in Replay Mode', 'All Features Contemporaneous', '20/20 Unit Tests Passing'].map((g, i) => (
-                  <div key={i} className="flex items-center gap-2 text-xs text-emerald-400">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                  <div key={i} className="flex items-center gap-2 text-xs text-emerald-700 font-sans font-medium">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
                     {g}
                   </div>
                 ))}

@@ -127,59 +127,59 @@ export default function PredictionLedgerPage() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen select-none">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="ledger" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-6xl mx-auto space-y-5 pb-24 md:pb-6">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="chip chip-demo">APPEND-ONLY IMMUTABLE STORE</span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                  <Database className="w-5 h-5 text-cyan-400" />
-                  PREDICTION MEMORY & AUDIT LEDGER
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-300 text-xs font-semibold">APPEND-ONLY IMMUTABLE STORE</span>
+                <h1 className="text-xl font-bold font-sans text-slate-900 flex items-center gap-2">
+                  <Database className="w-5 h-5 text-blue-600" />
+                  PREDICTION MEMORY &amp; AUDIT LEDGER
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
+              <p className="text-sm text-slate-600 mt-1 font-sans">
                 Cryptographic black-box record of every model prediction, what was known at that exact moment, and what happened later
               </p>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-emerald-400 bg-emerald-950/80 border border-emerald-700/80 px-3.5 py-1.5 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.3)] font-bold flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span className="text-xs font-sans text-emerald-800 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 shadow-sm">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 IMMUTABLE SNAPSHOTS SEALED
               </span>
             </div>
           </div>
 
           {/* Search & Mode Filter Bar with Floating Panel */}
-          <div className="fp fp-operational rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
+          <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="relative w-full sm:w-96">
-              <Search className="w-4 h-4 text-cyan-400 absolute left-3.5 top-3" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
               <input
                 type="text"
                 placeholder="Search location, disaster, or prediction hash..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-950/80 border border-slate-700/80 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-xs text-slate-200 placeholder-slate-500 font-mono transition"
+                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 font-sans transition"
               />
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto font-mono text-xs">
-              <span className="text-slate-400 text-[11px] font-bold">DATA MODE:</span>
-              <div className="flex items-center fp rounded-xl p-1 shadow-inner">
+            <div className="flex items-center gap-2 w-full sm:w-auto font-sans text-xs">
+              <span className="text-slate-600 text-xs font-bold">DATA MODE:</span>
+              <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 shadow-inner">
                 {['ALL', 'DEMO', 'HINDCAST'].map((mode) => (
                   <button
                     key={mode}
                     onClick={() => setFilterMode(mode)}
-                    className={`px-3 py-1 rounded-lg text-[11px] font-bold transition transform active:scale-95 ${
+                    className={`px-3 py-1 rounded-lg text-xs font-bold transition transform active:scale-95 ${
                       filterMode === mode
-                        ? 'btn-primary text-white shadow-md'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     {mode}
@@ -194,21 +194,21 @@ export default function PredictionLedgerPage() {
             {filtered.map((record) => (
               <div
                 key={record.id}
-                className="fp fp-operational rounded-3xl p-6 transition-all duration-300 transform hover:-translate-y-1 space-y-4 relative overflow-hidden group shadow-2xl"
+                className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 transition-all duration-300 transform hover:-translate-y-0.5 space-y-4 relative overflow-hidden group hover:border-slate-300"
               >
                 {/* Top Row */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3.5 gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3.5 gap-2">
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-cyan-400 text-xs font-black tracking-wider bg-slate-950 px-2.5 py-0.5 rounded-lg border border-cyan-500/30">
+                      <span className="font-mono text-blue-700 text-xs font-bold tracking-wider bg-blue-50 px-2.5 py-0.5 rounded-lg border border-blue-200">
                         {record.id}
                       </span>
-                      <h2 className="text-base font-black text-white group-hover:text-cyan-300 transition">
+                      <h2 className="text-base font-bold font-sans text-slate-900 group-hover:text-blue-700 transition">
                         {record.where}
                       </h2>
                     </div>
-                    <div className="text-[11px] text-slate-400 font-mono flex items-center gap-2 mt-1">
-                      <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                    <div className="text-xs text-slate-500 font-sans flex items-center gap-2 mt-1">
+                      <Clock className="w-3.5 h-3.5 text-blue-600" />
                       <span>{record.when}</span>
                     </div>
                   </div>
@@ -221,54 +221,54 @@ export default function PredictionLedgerPage() {
                 </div>
 
                 {/* Middle Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="fp p-4 rounded-2xl space-y-2">
-                    <div className="text-slate-400 text-[10px] uppercase font-bold flex items-center justify-between">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
+                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-2">
+                    <div className="text-slate-600 text-xs uppercase font-bold flex items-center justify-between">
                       <span>MODEL CONFIGURATION</span>
-                      <span className="text-cyan-400">SCORE: {record.riskScore}/100</span>
+                      <span className="text-blue-700 font-mono font-bold">SCORE: {record.riskScore}/100</span>
                     </div>
-                    <div className="text-white font-bold text-xs">{record.modelVersion}</div>
-                    <div className="grid grid-cols-2 gap-1.5 pt-1 text-[10px] text-slate-300">
+                    <div className="text-slate-900 font-bold text-xs font-mono">{record.modelVersion}</div>
+                    <div className="grid grid-cols-2 gap-1.5 pt-1 text-xs text-slate-700 font-sans">
                       {record.contributors.map((c, i) => (
-                        <div key={i} className="fp px-2 py-1 rounded">
-                          <span className="text-slate-400">{c.name}:</span> <span className="text-cyan-300 font-bold">{c.val}</span>
+                        <div key={i} className="bg-white border border-slate-200 px-2.5 py-1 rounded shadow-xs">
+                          <span className="text-slate-500">{c.name}:</span> <span className="text-blue-700 font-mono font-bold">{c.val}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="fp p-4 rounded-2xl space-y-2">
-                    <div className="text-emerald-400 text-[10px] uppercase font-bold flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-2">
+                    <div className="text-emerald-800 text-xs uppercase font-bold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                       <span>WHAT HAPPENED LATER (OUTCOME VERIFICATION)</span>
                     </div>
-                    <p className="text-slate-200 text-xs leading-relaxed font-sans font-medium">
+                    <p className="text-slate-700 text-xs leading-relaxed font-sans font-medium">
                       {record.whatHappenedLater}
                     </p>
-                    <div className="text-[10px] text-cyan-300 font-mono font-bold pt-1">
-                      Lead Time Advantage: {record.leadTime}
+                    <div className="text-xs text-blue-700 font-sans font-semibold pt-1">
+                      Lead Time Advantage: <span className="font-mono font-bold">{record.leadTime}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Bottom Row */}
-                <div className="flex flex-col sm:flex-row items-center justify-between pt-2 border-t border-slate-800/80 text-xs font-mono gap-3">
-                  <div className="flex items-center gap-2 text-[10px] text-slate-400">
-                    <Fingerprint className="w-3.5 h-3.5 text-purple-400" />
-                    <span>Cryptographic Digest: <span className="text-purple-300 font-bold">{record.hash}</span></span>
+                <div className="flex flex-col sm:flex-row items-center justify-between pt-2 border-t border-slate-200 text-xs font-sans gap-3">
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <Fingerprint className="w-3.5 h-3.5 text-purple-600" />
+                    <span>Cryptographic Digest: <span className="text-purple-800 font-mono font-bold">{record.hash}</span></span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <Link
                       href="/flight-recorder"
-                      className="fp px-3 py-1.5 rounded-xl text-cyan-300 font-bold flex items-center gap-1.5 transition text-[11px]"
+                      className="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-slate-700 font-bold flex items-center gap-1.5 transition text-xs font-sans shadow-sm"
                     >
                       <span>BLACK-BOX TRACE</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                     <Link
                       href="/hindcast"
-                      className="btn-primary px-3 py-1.5 rounded-xl text-white font-bold flex items-center gap-1.5 transition text-[11px]"
+                      className="btn-primary px-3 py-1.5 rounded-xl text-white font-bold flex items-center gap-1.5 transition text-xs font-sans shadow-sm"
                     >
                       <span>REPLAY HINDSIGHT</span>
                       <ArrowRight className="w-3.5 h-3.5" />

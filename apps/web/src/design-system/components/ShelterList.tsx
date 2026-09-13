@@ -143,9 +143,9 @@ export const ShelterList: React.FC<{ filterState?: string }> = ({ filterState })
           <button
             type="button"
             onClick={() => setSelectedDistrict('ALL')}
-            className={`px-2.5 py-1 rounded text-xs font-medium transition ${
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold font-sans transition ${
               selectedDistrict === 'ALL'
-                ? 'bg-[#0f172a] text-white'
+                ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
@@ -156,9 +156,9 @@ export const ShelterList: React.FC<{ filterState?: string }> = ({ filterState })
               key={d}
               type="button"
               onClick={() => setSelectedDistrict(d)}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold font-sans transition ${
                 selectedDistrict === d
-                  ? 'bg-[#0f172a] text-white'
+                  ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >

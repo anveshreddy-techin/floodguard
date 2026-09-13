@@ -104,23 +104,23 @@ export default function CascadeFlowPage() {
   const active = cascadeStages[selectedNodeIndex];
 
   return (
-    <div className="flex flex-col min-h-screen select-none">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="cascade" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-6 pb-24 md:pb-6">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="chip chip-demo">PROPAGATION PHYSICS</span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-cyan-400" />
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-300 text-[10px] font-mono font-bold">PROPAGATION PHYSICS</span>
+                <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                  <Layers className="w-5 h-5 text-blue-600" />
                   UPSTREAM → DOWNSTREAM CASCADE PROPAGATION GRAPH
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
+              <p className="text-xs text-slate-600 mt-1 font-sans">
                 Physics-guided hazard chain mapping energy transfer from mountain ridge cloudburst down to settlement exposure
               </p>
             </div>
@@ -130,13 +130,13 @@ export default function CascadeFlowPage() {
           {/* Master 2-Column Spatial Flow Graph Workbench */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* LEFT: Vertical SVG Propagation Pipeline (5 Cols) */}
-            <div className="lg:col-span-5 fp fp-operational rounded-3xl p-6 space-y-4 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
+            <div className="lg:col-span-5 bg-white rounded-3xl p-6 space-y-4 border border-slate-200 shadow-sm">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <span className="text-xs font-mono font-bold text-blue-700 uppercase tracking-wider flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-blue-600 animate-pulse" />
                   PHYSICAL CASCADE PIPELINE
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">PROPAGATION: 4.2 M/S</span>
+                <span className="text-[10px] font-mono text-slate-500 font-bold">PROPAGATION: 4.2 M/S</span>
               </div>
 
               {/* Vertical Stack with Animated Downward Connectors */}
@@ -147,39 +147,39 @@ export default function CascadeFlowPage() {
                     <React.Fragment key={stg.id}>
                       <button
                         onClick={() => setSelectedNodeIndex(idx)}
-                        className={`w-full p-4 rounded-2xl text-left transition-all duration-300 flex items-center justify-between group ${
+                        className={`w-full p-4 rounded-2xl text-left transition-all duration-300 flex items-center justify-between group shadow-sm border ${
                           isSelected
-                            ? 'fp-operational ring-2 ring-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.3)] scale-[1.02]'
-                            : 'fp hover:bg-slate-900/60'
+                            ? 'bg-blue-50/80 border-2 border-blue-600 shadow-md scale-[1.01]'
+                            : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div
                             className="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-bold text-xs shrink-0"
                             style={{
-                              backgroundColor: `${stg.statusColor}25`,
+                              backgroundColor: `${stg.statusColor}15`,
                               color: stg.statusColor,
-                              border: `1px solid ${stg.statusColor}60`
+                              border: `1px solid ${stg.statusColor}50`
                             }}
                           >
                             0{idx + 1}
                           </div>
                           <div>
-                            <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition">
+                            <div className="text-xs font-bold text-slate-900 group-hover:text-blue-700 transition">
                               {stg.name}
                             </div>
-                            <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                            <div className="text-[10px] text-slate-500 font-mono mt-0.5">
                               {stg.domain}
                             </div>
                           </div>
                         </div>
 
                         <div className="text-right">
-                          <div className="text-xs font-mono font-bold text-cyan-300">{stg.value}</div>
+                          <div className="text-xs font-mono font-bold text-slate-900">{stg.value}</div>
                           <span
-                            className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded"
+                            className="text-[9px] font-mono font-bold px-2 py-0.5 rounded"
                             style={{
-                              backgroundColor: `${stg.statusColor}20`,
+                              backgroundColor: `${stg.statusColor}15`,
                               color: stg.statusColor,
                               border: `1px solid ${stg.statusColor}40`
                             }}
@@ -192,7 +192,7 @@ export default function CascadeFlowPage() {
                       {/* Animated Downward Flow Indicator */}
                       {idx < cascadeStages.length - 1 && (
                         <div className="flex justify-center my-0.5">
-                          <div className="w-0.5 h-4 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full animate-pulse" />
+                          <div className="w-0.5 h-4 bg-gradient-to-b from-blue-500 to-teal-500 rounded-full animate-pulse" />
                         </div>
                       )}
                     </React.Fragment>
@@ -203,18 +203,18 @@ export default function CascadeFlowPage() {
 
             {/* RIGHT: Active Node Detail Inspector & Physical Evidence (7 Cols) */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="fp fp-operational rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl animate-slide-up">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div className="bg-white rounded-3xl p-6 sm:p-8 space-y-6 border border-slate-200 shadow-sm animate-slide-up">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                   <div>
-                    <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
+                    <span className="text-[10px] font-mono text-blue-700 uppercase tracking-widest font-bold">
                       STAGE 0{selectedNodeIndex + 1} INSPECTION • {active.domain}
                     </span>
-                    <h2 className="text-xl font-black text-white mt-0.5">{active.name}</h2>
+                    <h2 className="text-xl font-black text-slate-900 mt-0.5">{active.name}</h2>
                   </div>
                   <span
-                    className="px-3 py-1 rounded-xl text-xs font-mono font-bold shadow-md"
+                    className="px-3 py-1 rounded-xl text-xs font-mono font-bold shadow-sm"
                     style={{
-                      backgroundColor: `${active.statusColor}20`,
+                      backgroundColor: `${active.statusColor}15`,
                       color: active.statusColor,
                       border: `1px solid ${active.statusColor}50`
                     }}
@@ -223,32 +223,32 @@ export default function CascadeFlowPage() {
                   </span>
                 </div>
 
-                <p className="text-sm text-slate-200 leading-relaxed font-sans font-medium">
+                <p className="text-sm text-slate-700 leading-relaxed font-sans font-medium">
                   {active.desc}
                 </p>
 
                 {/* Telemetry Metrics */}
                 <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="fp rounded-2xl p-4 space-y-1">
-                    <div className="text-slate-400 text-[10px] uppercase font-bold">PRIMARY VALUE</div>
-                    <div className="text-lg font-black text-cyan-300">{active.value}</div>
+                  <div className="bg-slate-50 rounded-2xl p-4 space-y-1 border border-slate-200">
+                    <div className="text-slate-500 text-[10px] uppercase font-bold">PRIMARY VALUE</div>
+                    <div className="text-lg font-black text-blue-700">{active.value}</div>
                   </div>
-                  <div className="fp rounded-2xl p-4 space-y-1">
-                    <div className="text-slate-400 text-[10px] uppercase font-bold">RATE OF CHANGE</div>
-                    <div className="text-lg font-black text-amber-300">{active.rate}</div>
+                  <div className="bg-slate-50 rounded-2xl p-4 space-y-1 border border-slate-200">
+                    <div className="text-slate-500 text-[10px] uppercase font-bold">RATE OF CHANGE</div>
+                    <div className="text-lg font-black text-amber-700">{active.rate}</div>
                   </div>
                 </div>
 
                 {/* Evidence Input Vectors */}
                 <div className="space-y-3 pt-2">
-                  <div className="font-mono font-bold text-slate-300 text-xs uppercase tracking-wider flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <div className="font-mono font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
                     SUPPORTING PHYSICAL OBSERVATIONS
                   </div>
                   <div className="space-y-2 font-mono text-xs">
                     {active.evidence.map((ev, i) => (
-                      <div key={i} className="fp p-3 rounded-xl text-slate-200 flex items-center gap-2.5">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                      <div key={i} className="bg-slate-50 p-3 rounded-xl text-slate-800 flex items-center gap-2.5 border border-slate-200">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                         <span>{ev}</span>
                       </div>
                     ))}

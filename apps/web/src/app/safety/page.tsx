@@ -25,11 +25,11 @@ const EvacuationLeafletMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[460px] rounded-2xl bg-slate-950 border border-cyan-500/30 flex items-center justify-center">
+      <div className="w-full h-[460px] rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center shadow-inner">
         <div className="text-center space-y-2">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-cyan-300 text-xs font-mono font-bold animate-pulse">LOADING REAL-WORLD MAP…</p>
-          <p className="text-slate-500 text-[10px] font-mono">Fetching OpenStreetMap tiles · Projecting multi-zone flood coordinates</p>
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-blue-700 text-xs font-sans font-bold animate-pulse">LOADING REAL-WORLD MAP…</p>
+          <p className="text-slate-500 text-xs font-sans">Fetching OpenStreetMap tiles · Projecting multi-zone flood coordinates</p>
         </div>
       </div>
     ),

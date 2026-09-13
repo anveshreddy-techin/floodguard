@@ -28,13 +28,13 @@ export const WhyRiskChangedPanel: React.FC = () => {
   ];
 
   return (
-    <div className="bg-[#0e1630] border border-[#223354] rounded-xl p-3.5 space-y-2.5 shadow-xl text-xs overflow-hidden">
+    <div className="bg-white border border-slate-200 rounded-xl p-3.5 space-y-2.5 shadow-sm text-xs overflow-hidden">
       {/* Tab Selectors */}
-      <div className="grid grid-cols-4 gap-1 border-b border-slate-800 pb-2">
+      <div className="grid grid-cols-4 gap-1 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab('CONTRIBUTORS')}
           className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-bold truncate ${
-            activeTab === 'CONTRIBUTORS' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            activeTab === 'CONTRIBUTORS' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
           }`}
           title="Why Risk? Feature Decomposition"
         >
@@ -43,7 +43,7 @@ export const WhyRiskChangedPanel: React.FC = () => {
         <button
           onClick={() => setActiveTab('CHANGED')}
           className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-bold truncate ${
-            activeTab === 'CHANGED' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            activeTab === 'CHANGED' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
           }`}
           title="What Changed? Parameter Deltas"
         >
@@ -52,7 +52,7 @@ export const WhyRiskChangedPanel: React.FC = () => {
         <button
           onClick={() => setActiveTab('MISSING')}
           className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-bold truncate ${
-            activeTab === 'MISSING' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            activeTab === 'MISSING' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
           }`}
           title="Data Gaps & Sensor Fallbacks"
         >
@@ -61,7 +61,7 @@ export const WhyRiskChangedPanel: React.FC = () => {
         <button
           onClick={() => setActiveTab('ELIGIBILITY')}
           className={`py-1.5 px-1 rounded text-[10px] font-mono text-center transition font-black truncate ${
-            activeTab === 'ELIGIBILITY' ? 'bg-cyan-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            activeTab === 'ELIGIBILITY' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
           }`}
           title="Location Prediction Eligibility"
         >
@@ -73,17 +73,17 @@ export const WhyRiskChangedPanel: React.FC = () => {
       {activeTab === 'CONTRIBUTORS' && (
         <div className="space-y-2.5">
           {contributors.map((c, i) => (
-            <div key={i} className="bg-slate-900/80 p-2.5 rounded border border-slate-800 space-y-1">
+            <div key={i} className="bg-slate-50 p-2.5 rounded border border-slate-200 space-y-1">
               <div className="flex items-center justify-between gap-1">
-                <span className="font-semibold text-slate-200 text-[11px] truncate min-w-0">{c.name}</span>
-                <span className="font-mono text-cyan-400 text-[11px] font-bold shrink-0">
-                  {c.score}/100 <span className="text-slate-400 text-[10px]">({c.points} pts)</span>
+                <span className="font-semibold text-slate-800 text-[11px] truncate min-w-0">{c.name}</span>
+                <span className="font-mono text-blue-600 text-[11px] font-bold shrink-0">
+                  {c.score}/100 <span className="text-slate-500 text-[10px]">({c.points} pts)</span>
                 </span>
               </div>
-              <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
                 <div className={`h-full ${c.color} transition-all duration-500`} style={{ width: `${c.score}%` }} />
               </div>
-              <div className="text-[10px] text-slate-400 font-mono italic">{c.note}</div>
+              <div className="text-[10px] text-slate-500 font-mono italic">{c.note}</div>
             </div>
           ))}
         </div>
@@ -93,14 +93,14 @@ export const WhyRiskChangedPanel: React.FC = () => {
       {activeTab === 'CHANGED' && (
         <div className="space-y-2">
           {deltas.map((d, i) => (
-            <div key={i} className="bg-slate-900/80 p-2.5 rounded border border-slate-800 flex items-center justify-between">
+            <div key={i} className="bg-slate-50 p-2.5 rounded border border-slate-200 flex items-center justify-between">
               <div>
-                <div className="font-semibold text-slate-200 text-[11px]">{d.param}</div>
-                <div className="text-[10px] text-slate-400 font-mono">Previous: {d.previous} → Current: {d.current}</div>
+                <div className="font-semibold text-slate-800 text-[11px]">{d.param}</div>
+                <div className="text-[10px] text-slate-500 font-mono">Previous: {d.previous} → Current: {d.current}</div>
               </div>
               <div className="text-right">
-                <div className="font-mono text-orange-400 font-bold text-[11px]">{d.change}</div>
-                <span className="text-[9px] font-mono bg-orange-950 text-orange-300 px-1 rounded">{d.status}</span>
+                <div className="font-mono text-orange-600 font-bold text-[11px]">{d.change}</div>
+                <span className="text-[9px] font-mono bg-orange-50 text-orange-700 border border-orange-200 px-1 rounded">{d.status}</span>
               </div>
             </div>
           ))}
@@ -111,12 +111,12 @@ export const WhyRiskChangedPanel: React.FC = () => {
       {activeTab === 'MISSING' && (
         <div className="space-y-2">
           {missingGaps.map((g, i) => (
-            <div key={i} className="bg-slate-900/80 p-2.5 rounded border border-slate-800 space-y-0.5">
+            <div key={i} className="bg-slate-50 p-2.5 rounded border border-slate-200 space-y-0.5">
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-slate-200 text-[11px]">{g.source}</span>
-                <span className="text-[9px] font-mono bg-amber-950 text-amber-300 px-1 rounded border border-amber-800">{g.status}</span>
+                <span className="font-semibold text-slate-800 text-[11px]">{g.source}</span>
+                <span className="text-[9px] font-mono bg-amber-50 text-amber-700 px-1 rounded border border-amber-200">{g.status}</span>
               </div>
-              <p className="text-[10px] text-slate-400 leading-relaxed">{g.detail}</p>
+              <p className="text-[10px] text-slate-500 leading-relaxed">{g.detail}</p>
             </div>
           ))}
         </div>
@@ -124,48 +124,48 @@ export const WhyRiskChangedPanel: React.FC = () => {
 
       {/* Tab 4: Location Eligibility & Coverage Profiles */}
       {activeTab === 'ELIGIBILITY' && (
-        <div className="space-y-2 text-slate-300">
+        <div className="space-y-2 text-slate-700">
           <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
-            <div className="bg-slate-950 p-2 rounded border border-slate-800">
+            <div className="bg-emerald-50 p-2 rounded border border-emerald-200">
               <span className="text-slate-500 block text-[9px]">REAL DATA SUFFICIENCY</span>
-              <span className="text-emerald-400 font-bold text-xs">✓ SUFFICIENT</span>
+              <span className="text-emerald-700 font-bold text-xs">✓ SUFFICIENT</span>
             </div>
-            <div className="bg-slate-950 p-2 rounded border border-slate-800">
+            <div className="bg-blue-50 p-2 rounded border border-blue-200">
               <span className="text-slate-500 block text-[9px]">MODEL VALIDATION</span>
-              <span className="text-cyan-400 font-bold text-xs">✓ BENCHMARKED</span>
+              <span className="text-blue-700 font-bold text-xs">✓ BENCHMARKED</span>
             </div>
           </div>
 
-          <div className="bg-slate-950/80 p-2 rounded border border-cyan-500/30 space-y-1 text-[10px] font-mono">
-            <div className="text-slate-400 font-bold">UNCERTAINTY-AWARE ESTIMATE:</div>
+          <div className="bg-slate-50 p-2 rounded border border-blue-200 space-y-1 text-[10px] font-mono">
+            <div className="text-slate-600 font-bold">UNCERTAINTY-AWARE ESTIMATE:</div>
             <div className="flex justify-between items-center text-xs">
-              <span className="text-slate-300">Risk Point Score:</span>
-              <strong className="text-white font-black text-sm">68.5 ± 12.4</strong>
+              <span className="text-slate-700">Risk Point Score:</span>
+              <strong className="text-slate-900 font-black text-sm">68.5 ± 12.4</strong>
             </div>
             <div className="flex justify-between text-[10px]">
-              <span className="text-slate-400">90% Confidence Interval:</span>
-              <span className="text-cyan-300 font-bold">[56.1, 80.9]</span>
+              <span className="text-slate-500">90% Confidence Interval:</span>
+              <span className="text-blue-700 font-bold">[56.1, 80.9]</span>
             </div>
             <div className="flex justify-between text-[10px]">
-              <span className="text-slate-400">Conservative Upper (Life Safety):</span>
-              <span className="text-amber-300 font-bold">77.8 / 100</span>
+              <span className="text-slate-500">Conservative Upper (Life Safety):</span>
+              <span className="text-amber-700 font-bold">77.8 / 100</span>
             </div>
             <div className="flex justify-between text-[10px]">
-              <span className="text-slate-400">Epistemic vs Aleatoric:</span>
-              <span className="text-slate-300 font-mono">18% / 12%</span>
+              <span className="text-slate-500">Epistemic vs Aleatoric:</span>
+              <span className="text-slate-700 font-mono">18% / 12%</span>
             </div>
           </div>
 
-          <div className="bg-slate-950/80 p-2 rounded border border-slate-800 space-y-1 text-[10px] font-mono">
-            <div className="text-slate-400 font-bold">STATUS HIERARCHY:</div>
-            <div className="flex items-center gap-1.5 text-emerald-300">✓ COMPUTATIONALLY_SUPPORTED</div>
-            <div className="flex items-center gap-1.5 text-emerald-300">✓ DATA_SUPPORTED_LOCATION</div>
-            <div className="flex items-center gap-1.5 text-cyan-300">✓ PREDICTION_ELIGIBLE_LOCATION</div>
-            <div className="flex items-center gap-1.5 text-emerald-300 font-semibold">✓ VALIDATED: HIMALAYAN_BENCHMARK</div>
+          <div className="bg-slate-50 p-2 rounded border border-slate-200 space-y-1 text-[10px] font-mono">
+            <div className="text-slate-600 font-bold">STATUS HIERARCHY:</div>
+            <div className="flex items-center gap-1.5 text-emerald-700">✓ COMPUTATIONALLY_SUPPORTED</div>
+            <div className="flex items-center gap-1.5 text-emerald-700">✓ DATA_SUPPORTED_LOCATION</div>
+            <div className="flex items-center gap-1.5 text-blue-700">✓ PREDICTION_ELIGIBLE_LOCATION</div>
+            <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">✓ VALIDATED: HIMALAYAN_BENCHMARK</div>
           </div>
 
-          <div className="p-2 rounded bg-slate-900 border border-cyan-500/30 text-[9px] font-mono text-slate-400 leading-relaxed">
-            <strong className="text-cyan-300">SCIENTIFIC PRINCIPLE: </strong>
+          <div className="p-2 rounded bg-blue-50 border border-blue-200 text-[9px] font-mono text-slate-600 leading-relaxed">
+            <strong className="text-blue-700">SCIENTIFIC PRINCIPLE: </strong>
             FloodGuard dynamically evaluates whether sufficient real data and model validation exist before emitting an uncertainty-aware estimate.
           </div>
         </div>

@@ -121,7 +121,7 @@ export function GovernmentStyleTable<T extends { id?: string | number }>({
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="bg-[#0f172a] text-white font-semibold">
+            <tr className="bg-slate-100 text-slate-900 font-bold border-b border-slate-300">
               {columns.map((col) => {
                 const isSorted = sortKey === col.key;
                 return (
@@ -129,8 +129,8 @@ export function GovernmentStyleTable<T extends { id?: string | number }>({
                     key={col.key}
                     scope="col"
                     onClick={() => col.sortable !== false && handleSort(col.key)}
-                    className={`px-3 py-2.5 border-b border-slate-800 tracking-wide select-none ${
-                      col.sortable !== false ? 'cursor-pointer hover:bg-slate-800' : ''
+                    className={`px-3 py-2.5 tracking-wide select-none ${
+                      col.sortable !== false ? 'cursor-pointer hover:bg-slate-200/70 transition' : ''
                     } ${col.className || ''}`}
                   >
                     <div className={`flex items-center gap-1.5 ${
@@ -138,11 +138,11 @@ export function GovernmentStyleTable<T extends { id?: string | number }>({
                     }`}>
                       <span>{col.header}</span>
                       {col.sortable !== false && (
-                        <span className="text-slate-400">
+                        <span className="text-slate-500">
                           {isSorted ? (
-                            sortOrder === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />
+                            sortOrder === 'asc' ? <ChevronUp className="w-3 h-3 text-blue-600" /> : <ChevronDown className="w-3 h-3 text-blue-600" />
                           ) : (
-                            <div className="w-3 h-3 opacity-30">↕</div>
+                            <div className="w-3 h-3 opacity-40">↕</div>
                           )}
                         </span>
                       )}

@@ -16,7 +16,7 @@ export default function RoleWorkspacePage() {
   }, [setPage, setMode, setRiskState]);
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#020714]">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8]">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="overview" />

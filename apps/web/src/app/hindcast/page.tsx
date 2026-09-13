@@ -1174,7 +1174,7 @@ export default function HindcastLabPage() {
   const activeStep = stepsData[currentStep] || stepsData[0];
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#020714] text-slate-100">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="HINDCAST" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="hindcast" />
@@ -1182,47 +1182,47 @@ export default function HindcastLabPage() {
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6 overflow-y-auto">
           
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-cyan-500/20 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="chip chip-hist">HINDSIGHT EVALUATION</span>
-                <h1 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                  <History className="w-5 h-5 text-purple-400" />
+                <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-300 text-xs font-semibold">HINDSIGHT EVALUATION</span>
+                <h1 className="text-xl sm:text-2xl font-bold font-sans text-slate-900 flex items-center gap-2">
+                  <History className="w-5 h-5 text-purple-600" />
                   HISTORICAL FLASH FLOOD HINDCAST LAB (2000 – 2026)
                 </h1>
               </div>
-              <p className="text-xs text-slate-300 mt-1 font-sans">
-                Comprehensive archive of verified Indian & Himalayan flash floods, GLOFs, cloudbursts, and dam surges. Replay model detection with strict zero-leakage hindsight lock.
+              <p className="text-sm text-slate-600 mt-1 font-sans">
+                Comprehensive archive of verified Indian &amp; Himalayan flash floods, GLOFs, cloudbursts, and dam surges. Replay model detection with strict zero-leakage hindsight lock.
               </p>
             </div>
             <DataModeBadge mode="HINDCAST" />
           </div>
 
           {/* ── Search & Filter Ribbon ── */}
-          <div className="fp fp-historical p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-mono">
+          <div className="bg-white border border-slate-200 shadow-sm p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-sans">
             {/* Search Input */}
             <div className="relative w-full md:w-72">
-              <Search className="w-4 h-4 text-purple-400 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-purple-600 absolute left-3 top-2.5" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search year, river, state..."
-                className="w-full pl-9 pr-3 py-2 bg-[#060e22] border border-purple-500/30 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-purple-400"
+                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
               />
             </div>
 
             {/* Era Filter Buttons */}
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-slate-400 text-[10px] uppercase font-bold mr-1">Period:</span>
+              <span className="text-slate-600 text-xs uppercase font-bold mr-1">Period:</span>
               {['ALL', '2000-2010', '2011-2018', '2019-2026'].map((era) => (
                 <button
                   key={era}
                   onClick={() => setSelectedEra(era)}
-                  className={`px-2.5 py-1 rounded-xl text-[11px] transition active:scale-95 ${
+                  className={`px-3 py-1 rounded-xl text-xs transition active:scale-95 ${
                     selectedEra === era
-                      ? 'bg-purple-600 text-white font-bold shadow-md'
-                      : 'bg-slate-900/90 text-slate-400 hover:text-white border border-slate-800'
+                      ? 'bg-blue-600 text-white font-bold shadow-sm'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                   }`}
                 >
                   {era}
@@ -1232,15 +1232,15 @@ export default function HindcastLabPage() {
 
             {/* Hazard Type Filter */}
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-slate-400 text-[10px] uppercase font-bold mr-1">Hazard:</span>
+              <span className="text-slate-600 text-xs uppercase font-bold mr-1">Hazard:</span>
               {['ALL', 'FLASH_FLOOD', 'GLOF', 'CLOUDBURST', 'URBAN_DELUGE'].map((t) => (
                 <button
                   key={t}
                   onClick={() => setSelectedType(t)}
-                  className={`px-2 py-1 rounded-xl text-[10px] transition active:scale-95 ${
+                  className={`px-2.5 py-1 rounded-xl text-xs transition active:scale-95 ${
                     selectedType === t
-                      ? 'bg-cyan-600 text-white font-bold shadow-md'
-                      : 'bg-slate-900/90 text-slate-400 hover:text-white border border-slate-800'
+                      ? 'bg-blue-600 text-white font-bold shadow-sm'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                   }`}
                 >
                   {t.replace(/_/g, ' ')}
@@ -1251,9 +1251,9 @@ export default function HindcastLabPage() {
 
           {/* ── Comprehensive Disaster Catalog Horizontal Carousel / Grid ── */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="flex items-center justify-between text-xs font-sans font-semibold text-slate-600 uppercase tracking-wide">
               <span>CATALOG DISASTERS ({filteredEvents.length} VERIFIED EVENTS FROM 2000 TO 2026):</span>
-              <span>Click any disaster to initialize hindcast replay</span>
+              <span className="text-slate-500 font-normal">Click any disaster to initialize hindcast replay</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-80 overflow-y-auto pr-1">
@@ -1264,37 +1264,37 @@ export default function HindcastLabPage() {
                     setSelectedEventId(ev.id);
                     setCurrentStep(3); // Default to T-15m
                   }}
-                  className={`p-3.5 rounded-2xl text-left text-xs transition-all duration-300 flex flex-col justify-between space-y-2 ${
+                  className={`p-3.5 rounded-2xl text-left text-xs transition-all duration-300 flex flex-col justify-between space-y-2 bg-white shadow-sm border ${
                     selectedEventId === ev.id
-                      ? 'fp-historical ring-2 ring-purple-400 shadow-xl bg-purple-950/40'
-                      : 'fp hover:bg-slate-900/80 border border-slate-800'
+                      ? 'border-blue-500 ring-2 ring-blue-400/30 shadow-md bg-blue-50/20'
+                      : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
                   <div>
                     <div className="flex items-center justify-between gap-1">
-                      <span className="text-[10px] font-mono text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">
+                      <span className="text-xs font-mono text-blue-800 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                         {ev.year}
                       </span>
-                      <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold ${
-                        ev.type === 'GLOF' ? 'bg-indigo-950 text-indigo-300 border border-indigo-700' :
-                        ev.type === 'CLOUDBURST' ? 'bg-amber-950 text-amber-300 border border-amber-700' :
-                        'bg-cyan-950 text-cyan-300 border border-cyan-700'
+                      <span className={`text-[10px] font-sans px-2 py-0.5 rounded-full font-bold ${
+                        ev.type === 'GLOF' ? 'bg-indigo-50 text-indigo-800 border border-indigo-200' :
+                        ev.type === 'CLOUDBURST' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
+                        'bg-blue-50 text-blue-800 border border-blue-200'
                       }`}>
                         {ev.type.replace(/_/g, ' ')}
                       </span>
                     </div>
-                    <div className="font-bold text-white text-xs mt-2 leading-snug line-clamp-2">
+                    <div className="font-bold text-slate-900 text-xs mt-2 leading-snug line-clamp-2 font-sans">
                       {ev.name}
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 truncate">
-                      <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
+                    <div className="text-xs text-slate-500 mt-1 flex items-center gap-1 truncate font-sans">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                       <span>{ev.state} • {ev.river}</span>
                     </div>
                   </div>
 
-                  <div className="text-[10px] text-purple-300 font-mono font-bold pt-1.5 border-t border-slate-800/80 flex items-center justify-between">
-                    <span>Lead Time: <strong className="text-white">{ev.leadTime}</strong></span>
-                    <span className="text-rose-400">{ev.casualties.split(',')[0]}</span>
+                  <div className="text-xs text-slate-600 font-sans pt-1.5 border-t border-slate-100 flex items-center justify-between">
+                    <span>Lead Time: <strong className="text-slate-900 font-mono">{ev.leadTime}</strong></span>
+                    <span className="text-red-600 font-semibold">{ev.casualties.split(',')[0]}</span>
                   </div>
                 </button>
               ))}
@@ -1302,48 +1302,48 @@ export default function HindcastLabPage() {
           </div>
 
           {/* ── Active Disaster Hero Summary Card ── */}
-          <div className="fp fp-operational p-4 sm:p-5 rounded-3xl border border-purple-500/30 shadow-2xl bg-gradient-to-r from-purple-950/40 via-slate-900/60 to-slate-900/80 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-500/20 pb-2.5">
+          <div className="bg-white border border-slate-200 shadow-sm p-4 sm:p-5 rounded-3xl space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
               <div className="flex items-center gap-2">
-                <Flame className="w-5 h-5 text-rose-400" />
-                <h2 className="text-base sm:text-lg font-black font-mono text-white tracking-wide">
+                <Flame className="w-5 h-5 text-red-600" />
+                <h2 className="text-base sm:text-lg font-bold font-sans text-slate-900 tracking-wide">
                   {activeEvent.name}
                 </h2>
               </div>
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="px-2.5 py-1 rounded-xl bg-purple-900/80 text-purple-200 border border-purple-500/40 font-bold">
+              <div className="flex items-center gap-2 font-sans text-xs">
+                <span className="px-2.5 py-1 rounded-xl bg-purple-50 text-purple-800 border border-purple-200 font-bold">
                   {activeEvent.date}
                 </span>
-                <span className="px-2.5 py-1 rounded-xl bg-rose-950/80 text-rose-300 border border-rose-600/40 font-bold">
+                <span className="px-2.5 py-1 rounded-xl bg-red-50 text-red-700 border border-red-200 font-bold">
                   {activeEvent.casualties}
                 </span>
               </div>
             </div>
 
-            <p className="text-xs text-slate-300 font-sans leading-relaxed">
+            <p className="text-sm text-slate-600 font-sans leading-relaxed">
               {activeEvent.summary}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-300 pt-1">
-              <div>River / Corridor: <strong className="text-cyan-300">{activeEvent.river}</strong></div>
-              <div>State / Jurisdiction: <strong className="text-indigo-300">{activeEvent.state}</strong></div>
-              <div>Peak Magnitude: <strong className="text-amber-300">{activeEvent.peakDischargeOrRain}</strong></div>
-              <div>Achieved Lead Time: <strong className="text-emerald-400 font-black">{activeEvent.leadTime}</strong></div>
+            <div className="flex flex-wrap items-center gap-4 text-xs font-sans text-slate-600 pt-1">
+              <div>River / Corridor: <strong className="text-blue-700 font-semibold">{activeEvent.river}</strong></div>
+              <div>State / Jurisdiction: <strong className="text-indigo-700 font-semibold">{activeEvent.state}</strong></div>
+              <div>Peak Magnitude: <strong className="text-amber-700 font-semibold">{activeEvent.peakDischargeOrRain}</strong></div>
+              <div>Achieved Lead Time: <strong className="text-emerald-700 font-bold font-mono">{activeEvent.leadTime}</strong></div>
             </div>
           </div>
 
           {/* ── Mode Selector & Hindsight Lock Bar ── */}
-          <div className="fp fp-historical rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-3">
-              <span className="text-slate-300 font-bold font-mono text-[11px]">REPLAY MODE:</span>
+              <span className="text-slate-700 font-bold font-sans text-xs">REPLAY MODE:</span>
               {(['STRICT_REPLAY', 'RECONSTRUCTION', 'SIMULATION'] as HindcastMode[]).map((m) => (
                 <button
                   key={m}
                   onClick={() => setLocalMode(m)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition transform active:scale-95 ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-sans font-bold transition transform active:scale-95 ${
                     mode === m
-                      ? 'btn-primary text-white shadow-md'
-                      : 'fp text-slate-400 hover:text-slate-200'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
                   }`}
                 >
                   {m}
@@ -1351,24 +1351,24 @@ export default function HindcastLabPage() {
               ))}
             </div>
 
-            <div className="flex items-center gap-2 font-mono text-[11px]">
+            <div className="flex items-center gap-2 font-sans text-xs">
               {mode === 'STRICT_REPLAY' ? (
-                <span className="text-emerald-400 flex items-center gap-1.5 bg-emerald-950/80 px-3 py-1 rounded-xl border border-emerald-700/80 font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)]">
-                  <Lock className="w-3.5 h-3.5" /> HINDSIGHT LOCK ACTIVE (Zero Future Data Leaks)
+                <span className="text-emerald-800 flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-300 font-semibold">
+                  <Lock className="w-3.5 h-3.5 text-emerald-600" /> HINDSIGHT LOCK ACTIVE (Zero Future Data Leaks)
                 </span>
               ) : (
-                <span className="text-amber-400 flex items-center gap-1.5 bg-amber-950/80 px-3 py-1 rounded-xl border border-amber-700/80 font-bold">
-                  <Unlock className="w-3.5 h-3.5" /> POST-EVENT EVIDENCE PERMITTED
+                <span className="text-amber-800 flex items-center gap-1.5 bg-amber-50 px-3 py-1 rounded-xl border border-amber-300 font-semibold">
+                  <Unlock className="w-3.5 h-3.5 text-amber-600" /> POST-EVENT EVIDENCE PERMITTED
                 </span>
               )}
             </div>
           </div>
 
           {/* ── Master Horizontal Waveform Timeline ── */}
-          <div className="fp fp-historical rounded-3xl p-6 space-y-4 shadow-2xl">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-              <div className="text-xs font-black text-white uppercase font-mono">
-                REPLAY TIME STEP: <span className="text-purple-300 text-sm font-bold">{activeStep.time}</span>
+          <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+              <div className="text-xs font-bold text-slate-900 uppercase font-sans">
+                REPLAY TIME STEP: <span className="text-blue-700 text-sm font-mono font-bold">{activeStep.time}</span>
               </div>
               <div className="flex items-center gap-2">
                 <RiskBadge level={activeStep.level} />
@@ -1378,15 +1378,15 @@ export default function HindcastLabPage() {
 
             {/* Time Step Buttons */}
             <div className="space-y-2">
-              <div className="grid grid-cols-5 gap-2 text-center text-xs font-mono">
+              <div className="grid grid-cols-5 gap-2 text-center text-xs font-sans">
                 {stepsData.map((s, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentStep(idx)}
                     className={`py-2 px-1 rounded-xl font-bold transition transform active:scale-95 ${
                       currentStep === idx
-                        ? 'btn-primary text-white shadow-md'
-                        : 'fp text-slate-400 hover:text-slate-200'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
                     {s.time}
@@ -1400,75 +1400,75 @@ export default function HindcastLabPage() {
                 max={stepsData.length - 1}
                 value={currentStep}
                 onChange={(e) => setCurrentStep(Number(e.target.value))}
-                className="w-full accent-purple-400 cursor-pointer h-2 bg-slate-900 rounded-lg"
+                className="w-full accent-blue-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
               />
             </div>
 
             {/* Narrative description */}
-            <div className="p-3 bg-purple-950/30 border border-purple-500/20 rounded-xl text-xs font-mono text-purple-200">
-              <strong>Telemetry Assessment:</strong> {activeStep.desc}
+            <div className="p-3 bg-blue-50/60 border border-blue-200 rounded-xl text-xs font-sans text-slate-700">
+              <strong className="text-blue-900">Telemetry Assessment:</strong> {activeStep.desc}
             </div>
           </div>
 
           {/* ── What Did The System Know vs Locked Out ── */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="fp fp-operational rounded-3xl p-6 space-y-3 text-xs shadow-xl">
-              <div className="font-bold text-emerald-300 uppercase tracking-wider text-xs flex items-center gap-2 font-mono">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 space-y-3 text-xs">
+              <div className="font-bold text-emerald-800 uppercase tracking-wider text-xs flex items-center gap-2 font-sans">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 AVAILABLE HISTORICAL OBSERVATIONS AT {activeStep.time}
               </div>
               <div className="space-y-2">
                 {activeStep.avail.map((item, idx) => (
-                  <div key={idx} className="fp p-3 rounded-xl text-slate-200 font-mono text-xs">
+                  <div key={idx} className="bg-slate-50 border border-slate-200 p-3 rounded-xl text-slate-800 font-sans text-xs">
                     {item}
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="fp fp-critical rounded-3xl p-6 space-y-3 text-xs shadow-xl">
-              <div className="font-bold text-rose-300 uppercase tracking-wider text-xs flex items-center gap-2 font-mono">
-                <Lock className="w-4 h-4 text-rose-400" />
+            <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 space-y-3 text-xs">
+              <div className="font-bold text-red-700 uppercase tracking-wider text-xs flex items-center gap-2 font-sans">
+                <Lock className="w-4 h-4 text-red-600" />
                 LOCKED OUT UNDER STRICT REPLAY (available_at &gt; replay_time)
               </div>
               <div className="space-y-2">
                 {activeStep.locked.length > 0 ? (
                   activeStep.locked.map((item, idx) => (
-                    <div key={idx} className="fp p-3 rounded-xl text-rose-300 font-mono text-xs flex items-center justify-between">
+                    <div key={idx} className="bg-red-50/50 border border-red-200 p-3 rounded-xl text-red-800 font-sans text-xs flex items-center justify-between">
                       <span>{item}</span>
-                      <span className="text-[10px] bg-rose-950 px-2 py-0.5 rounded border border-rose-800 font-bold">LOCKED</span>
+                      <span className="text-[10px] bg-red-100 text-red-800 px-2 py-0.5 rounded border border-red-300 font-bold font-mono">LOCKED</span>
                     </div>
                   ))
                 ) : (
-                  <div className="text-slate-400 italic text-xs fp p-3 rounded-xl">All post-event documentation unlocked at peak impact.</div>
+                  <div className="text-slate-500 italic text-xs bg-slate-50 border border-slate-200 p-3 rounded-xl font-sans">All post-event documentation unlocked at peak impact.</div>
                 )}
               </div>
             </div>
           </div>
 
           {/* ── Truthfulness Scorecard Guarantee ── */}
-          <div className="fp fp-historical rounded-3xl p-6 space-y-4 shadow-2xl">
-            <h3 className="text-sm font-black text-white flex items-center gap-2 border-b border-slate-800 pb-3">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
-              RETROSPECTIVE HINDCAST SCORECARD & TRUTHFULNESS GUARANTEE
+          <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 space-y-4">
+            <h3 className="text-sm font-bold font-sans text-slate-900 flex items-center gap-2 border-b border-slate-200 pb-3">
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              RETROSPECTIVE HINDCAST SCORECARD &amp; TRUTHFULNESS GUARANTEE
             </h3>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
-              <div className="fp p-4 rounded-2xl text-center">
-                <div className="text-slate-400 text-[10px]">Hazard Detected</div>
-                <div className="text-xl font-black text-emerald-400 mt-1">YES</div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-sans">
+              <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center">
+                <div className="text-slate-500 text-xs">Hazard Detected</div>
+                <div className="text-xl font-black text-emerald-700 font-mono mt-1">YES</div>
               </div>
-              <div className="fp p-4 rounded-2xl text-center">
-                <div className="text-slate-400 text-[10px]">Achieved Early Warning Lead Time</div>
-                <div className="text-xl font-black text-cyan-300 mt-1">{activeEvent.leadTime}</div>
+              <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center">
+                <div className="text-slate-500 text-xs">Achieved Early Warning Lead Time</div>
+                <div className="text-xl font-black text-blue-700 font-mono mt-1">{activeEvent.leadTime}</div>
               </div>
-              <div className="fp p-4 rounded-2xl text-center">
-                <div className="text-slate-400 text-[10px]">False Positive Rate</div>
-                <div className="text-xl font-black text-white mt-1">0.0%</div>
+              <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center">
+                <div className="text-slate-500 text-xs">False Positive Rate</div>
+                <div className="text-xl font-black text-slate-900 font-mono mt-1">0.0%</div>
               </div>
-              <div className="fp p-4 rounded-2xl text-center">
-                <div className="text-slate-400 text-[10px]">Historical Data Mode</div>
-                <div className="text-xl font-black text-purple-300 mt-1">PROVEN</div>
+              <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center">
+                <div className="text-slate-500 text-xs">Historical Data Mode</div>
+                <div className="text-xl font-black text-purple-700 font-mono mt-1">PROVEN</div>
               </div>
             </div>
           </div>

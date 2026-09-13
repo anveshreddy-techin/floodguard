@@ -73,103 +73,103 @@ const EVENTS = [
 
 export default function CrossBorderPage() {
   return (
-    <div className="flex h-screen bg-[#0a0f1e] text-white overflow-hidden">
+    <div className="flex h-screen bg-[#F0F4F8] text-slate-900 overflow-hidden font-sans">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 space-y-4">
+        <main className="flex-1 overflow-y-auto p-6 space-y-6">
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Globe className="w-6 h-6 text-blue-400" />
-                India Cross-Border Basin View
+              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5 font-sans">
+                <Globe className="w-7 h-7 text-blue-600" />
+                India Cross-Border Transboundary Basin View
               </h1>
-              <p className="text-gray-400 text-sm mt-1">
-                Shared river basins with Nepal, Bhutan, and Bangladesh — upstream data integration status.
+              <p className="text-slate-600 text-sm mt-1 font-sans">
+                Shared river basins with Nepal, Bhutan, and Bangladesh — upstream telemetry integration and warning protocols.
               </p>
             </div>
             <DataModeBadge mode="DEMO" />
           </div>
 
           {/* Upstream data gap warning */}
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+          <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-4 flex items-start gap-3.5 shadow-sm">
+            <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
             <div className="text-sm">
-              <p className="text-amber-300 font-semibold">Upstream Data Gap — All Cross-Border Basins</p>
-              <p className="text-amber-200/70 mt-0.5">
-                Upstream data from Nepal depends on DHM Nepal API integration (NOT_CONFIGURED). 
-                Bhutan DHMS API is also not configured. China upstream data is not accessible. 
-                Manual data upload or simulation available as fallback. Cross-border notification channels are all NOT_CONFIGURED.
+              <p className="text-amber-900 font-bold font-sans">Transboundary Upstream Telemetry Notice</p>
+              <p className="text-amber-800/90 mt-1 font-sans leading-relaxed">
+                Upstream river telemetry and precipitation from Nepal depends on DHM Nepal API integration (NOT_CONFIGURED). 
+                Bhutan DHMS API is similarly awaiting bilateral data sharing treaties. Direct feeds from China (Tibet Autonomous Region) are restricted. 
+                Field operators may utilize manual CSV/GeoJSON ingestion or hydrodynamic simulation. International early-warning CAP dispatch remains strictly non-operational in pilot mode.
               </p>
             </div>
           </div>
 
           {/* Basin cards */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {SHARED_BASINS.map(basin => (
-              <div key={basin.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div className="flex items-start justify-between">
+              <div key={basin.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3.5 transition-all hover:shadow-md">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="text-white font-semibold">{basin.name}</h3>
-                    <p className="text-gray-400 text-xs mt-0.5">{basin.countries}</p>
+                    <h3 className="text-slate-900 font-bold font-sans text-base">{basin.name}</h3>
+                    <p className="text-slate-500 text-xs font-medium font-sans mt-0.5">{basin.countries}</p>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded font-semibold ${
-                    basin.risk === 'EXTREME' ? 'text-red-400 bg-red-500/10' : 'text-amber-400 bg-amber-500/10'
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold font-sans shadow-sm ${
+                    basin.risk === 'EXTREME' ? 'text-red-700 bg-red-50 border border-red-200' : 'text-amber-800 bg-amber-50 border border-amber-200'
                   }`}>
                     {basin.risk} RISK
                   </span>
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm border-t border-slate-100 pt-3">
                   <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">Upstream Status</p>
-                    <div className="flex items-center gap-1">
-                      <WifiOff className="w-3 h-3 text-amber-400" />
-                      <span className="text-amber-300 text-xs">{basin.upstream_status}</span>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1 font-sans">Upstream Status</p>
+                    <div className="flex items-center gap-1.5">
+                      <WifiOff className="w-3.5 h-3.5 text-amber-600" />
+                      <span className="text-amber-800 font-semibold text-xs font-sans">{basin.upstream_status}</span>
                     </div>
-                    <p className="text-gray-600 text-xs">{basin.upstream_country}</p>
+                    <p className="text-slate-500 text-xs font-medium font-sans mt-0.5">{basin.upstream_country}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">Downstream Status</p>
-                    <div className="flex items-center gap-1">
-                      <span className="text-blue-300 text-xs">{basin.downstream_status}</span>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1 font-sans">Downstream Status</p>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-blue-700 font-semibold text-xs font-sans">{basin.downstream_status}</span>
                     </div>
-                    <p className="text-gray-600 text-xs">{basin.downstream_country}</p>
+                    <p className="text-slate-500 text-xs font-medium font-sans mt-0.5">{basin.downstream_country}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">Data Authority</p>
-                    <p className="text-gray-300 text-xs">{basin.data_authority}</p>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1 font-sans">Data Authority</p>
+                    <p className="text-slate-800 text-xs font-medium font-sans">{basin.data_authority}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">Notification</p>
-                    <div className="flex items-center gap-1">
-                      <WifiOff className="w-3 h-3 text-gray-500" />
-                      <span className="text-gray-400 text-xs">NOT_CONFIGURED</span>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1 font-sans">Notification Gateway</p>
+                    <div className="flex items-center gap-1.5">
+                      <WifiOff className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="text-slate-600 font-semibold text-xs font-sans">NOT_CONFIGURED</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-2 bg-gray-800/50 rounded p-2">
-                  <p className="text-gray-400 text-xs">{basin.note}</p>
+                <div className="mt-2 bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <p className="text-slate-700 text-xs font-sans leading-relaxed">{basin.note}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Historical timeline */}
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-            <h2 className="text-white font-semibold flex items-center gap-2 mb-3">
-              <Clock className="w-4 h-4 text-gray-400" />
-              Cross-Border Historical Events Timeline
+          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+            <h2 className="text-slate-900 font-bold font-sans flex items-center gap-2 text-base">
+              <Clock className="w-5 h-5 text-slate-500" />
+              Cross-Border Historical Events & Transboundary Cascades
             </h2>
-            <div className="space-y-2">
+            <div className="divide-y divide-slate-100">
               {EVENTS.map(e => (
-                <div key={e.date} className="flex items-start gap-3 text-sm">
-                  <span className="text-blue-400 font-mono text-xs flex-shrink-0 pt-0.5">{e.date}</span>
+                <div key={e.date} className="flex items-start gap-4 py-3 transition-colors hover:bg-slate-50/70">
+                  <span className="text-blue-700 font-mono font-bold text-xs flex-shrink-0 pt-0.5 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{e.date}</span>
                   <div>
-                    <p className="text-gray-300">{e.event}</p>
-                    <p className="text-gray-500 text-xs">{e.countries}</p>
+                    <p className="text-slate-900 font-medium font-sans text-sm">{e.event}</p>
+                    <p className="text-slate-500 text-xs font-sans mt-0.5">{e.countries}</p>
                   </div>
                 </div>
               ))}
@@ -177,14 +177,14 @@ export default function CrossBorderPage() {
           </div>
 
           {/* Protocol note */}
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-start gap-3">
-            <Info className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
-            <p className="text-gray-400 text-sm">
-              <strong className="text-gray-300">Cross-Border Notification Protocol: </strong>
-              FloodGuard AI is in PILOT_MODE. No international notifications are dispatched.
-              Operational protocol would require bilateral MoU between NDMA (India) and DHM (Nepal) / DHMS (Bhutan).
-              Upstream data upload pathway: manually upload Nepal DHM gauge CSVs via the{' '}
-              <span className="text-blue-400">Upload Center</span>.
+          <div className="bg-blue-50/90 border border-blue-200 rounded-xl p-4 flex items-start gap-3.5 shadow-sm">
+            <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <p className="text-blue-950/85 text-sm font-sans leading-relaxed">
+              <strong className="text-blue-900 font-bold">Cross-Border Notification Protocol: </strong>
+              FloodGuard AI operates strictly in PILOT_MODE. International automated early warnings are not dispatched to public channels.
+              Operational bilateral warning dissemination requires signed memorandums between NDMA (India) and partner hydrometeorological departments (DHM Nepal, DHMS Bhutan).
+              To ingest verified transboundary telemetry, field coordinators may upload standardized station CSVs in the{' '}
+              <a href="/upload" className="text-blue-700 font-semibold underline hover:text-blue-900">Upload Center</a>.
             </p>
           </div>
 
