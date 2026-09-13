@@ -79,7 +79,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
   const [activeBaseMap, setActiveBaseMap] = useState<BaseMapTileType>('SATELLITE');
   const [layers, setLayers] = useState<GisLayerVisibility>({
-    floodZone: false, // Clean satellite map by default; user toggles on demand
+    floodZone: true, // Red, Orange, Yellow multi-zone flood risk areas visible immediately
     evacuationRoute: true,
     sensors: true,
     slopeHazards: false,

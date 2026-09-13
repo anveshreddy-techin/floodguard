@@ -174,20 +174,20 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
   const [fitMode, setFitMode] = useState<'MEET' | 'COVER'>('MEET');
 
   return (
-    <div className={`relative w-full h-full bg-[#020714] overflow-hidden select-none flex flex-col justify-between transition-opacity duration-700 ${mapLoaded ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`relative w-full h-full bg-[#F0F4F8] overflow-hidden select-none flex flex-col justify-between transition-opacity duration-700 ${mapLoaded ? 'opacity-100' : 'opacity-0'}`}>
       
-      {/* Top Floating Map Controls with Radiant Glow */}
+      {/* Top Floating Map Controls with Clean Professional Style */}
       <div className="absolute top-2.5 left-2.5 right-2.5 z-20 flex items-center justify-between gap-1.5 pointer-events-none">
         {/* Layer Selector */}
-        <div className="pointer-events-auto glass-panel-glow rounded-xl p-0.5 sm:p-1 flex items-center gap-0.5 sm:gap-1 shadow-2xl border border-cyan-500/30 overflow-x-auto no-scrollbar max-w-[calc(100%-100px)] sm:max-w-none">
+        <div className="pointer-events-auto bg-white/95 backdrop-blur-md rounded-xl p-1 flex items-center gap-1 shadow-md border border-slate-200 overflow-x-auto no-scrollbar max-w-[calc(100%-100px)] sm:max-w-none">
           {(['RISK', 'RAINFALL', 'SOIL', 'TERRAIN', 'RIVER', 'EXPOSURE'] as MapLayerType[]).map((layer) => (
             <button
               key={layer}
               onClick={() => setActiveLayer(layer)}
-              className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-[9px] sm:text-[11px] font-mono font-bold transition-all transform active:scale-95 whitespace-nowrap shrink-0 ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-mono font-bold transition-all whitespace-nowrap shrink-0 ${
                 activeLayer === layer
-                  ? 'btn-glow-cyan text-white shadow-lg'
-                  : 'text-slate-400 hover:text-cyan-300 hover:bg-slate-800/80'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               {layer}
@@ -197,19 +197,19 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
 
         {/* Right Tools: Mode Switcher, 100% Full Map Toggle & Step Pill */}
         <div className="pointer-events-auto flex items-center gap-1.5 shrink-0">
-          <div className="flex items-center gap-1 glass-panel p-0.5 rounded-xl border border-cyan-500/30">
+          <div className="flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200 shadow-sm">
             <button
               onClick={() => setRenderMode('REAL_MAP')}
-              className={`px-2 py-1 rounded-lg text-[9px] sm:text-[11px] font-mono font-bold transition flex items-center gap-1 ${
-                renderMode === 'REAL_MAP' ? 'bg-cyan-500 text-slate-950 shadow font-black' : 'text-slate-400 hover:text-white'
+              className={`px-2 py-1 rounded-lg text-[10px] sm:text-xs font-mono font-bold transition flex items-center gap-1 ${
+                renderMode === 'REAL_MAP' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>🛰️ REAL MAP</span>
             </button>
             <button
               onClick={() => setRenderMode('SCHEMATIC')}
-              className={`px-2 py-1 rounded-lg text-[9px] sm:text-[11px] font-mono font-bold transition flex items-center gap-1 ${
-                renderMode === 'SCHEMATIC' ? 'bg-cyan-500 text-slate-950 shadow font-black' : 'text-slate-400 hover:text-white'
+              className={`px-2 py-1 rounded-lg text-[10px] sm:text-xs font-mono font-bold transition flex items-center gap-1 ${
+                renderMode === 'SCHEMATIC' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>📐 FLOW</span>
@@ -218,8 +218,8 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
 
           <button
             onClick={() => setFitMode(fitMode === 'MEET' ? 'COVER' : 'MEET')}
-            className={`fp px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-[9px] sm:text-xs font-mono font-bold flex items-center gap-1 shadow-xl transition active:scale-95 shrink-0 ${
-              fitMode === 'MEET' ? 'text-emerald-300 border-emerald-500/50 bg-emerald-950/60' : 'text-cyan-300 border-cyan-500/30'
+            className={`px-2.5 py-1 rounded-xl text-[10px] sm:text-xs font-mono font-bold flex items-center gap-1 shadow-sm transition active:scale-95 shrink-0 border ${
+              fitMode === 'MEET' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-white text-slate-700 border-slate-200'
             }`}
             title={fitMode === 'MEET' ? 'Currently viewing 100% Full Catchment' : 'Currently Zoomed Fill'}
           >
@@ -228,16 +228,60 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
             <span className="xs:hidden">{fitMode === 'MEET' ? '100%' : 'FILL'}</span>
           </button>
 
-          <div className="hidden sm:flex glass-panel px-2.5 py-1 rounded-xl text-[10px] sm:text-[11px] font-mono text-cyan-300 items-center gap-1.5 shadow-xl border border-cyan-500/30 shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <div className="hidden sm:flex bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl text-[10px] sm:text-[11px] font-mono text-slate-700 items-center gap-1.5 shadow-sm border border-slate-200 shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping" />
             <span className="font-bold">STEP: {simulatedTimeStep}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Flood Risk Level Legend on Map */}
+      <div className="hidden md:block absolute top-16 right-3 z-20 bg-white/95 backdrop-blur-md rounded-xl p-3 shadow-lg border border-slate-200 text-xs w-44 pointer-events-auto">
+        <div className="font-bold text-slate-800 text-xs mb-2 pb-1 border-b border-slate-100 flex items-center justify-between">
+          <span>Flood Risk Level</span>
+          <span className="text-[9px] text-blue-600 font-semibold font-mono">GIS ZONES</span>
+        </div>
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-red-500 shrink-0 shadow-sm"></span>
+            <span className="text-slate-700 font-medium">Critical</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-orange-500 shrink-0 shadow-sm"></span>
+            <span className="text-slate-700 font-medium">High</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-yellow-400 shrink-0 shadow-sm"></span>
+            <span className="text-slate-700 font-medium">Moderate</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-emerald-500 shrink-0 shadow-sm"></span>
+            <span className="text-slate-700 font-medium">Low</span>
+          </div>
+        </div>
+        <div className="border-t border-slate-100 my-2 pt-2 space-y-1 text-[11px] text-slate-600">
+          <div className="flex items-center gap-2">
+            <span className="w-4 h-0.5 bg-blue-500 shrink-0"></span>
+            <span>River / Water Body</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-4 border-b-2 border-dashed border-cyan-500 shrink-0"></span>
+            <span>Evacuation Route</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px]">📡</span>
+            <span>IoT Sensor Node</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px]">🏠</span>
+            <span>Safe Shelter</span>
           </div>
         </div>
       </div>
 
       {/* Primary Real Satellite GIS Map View vs Vector Schematic Canvas */}
       {renderMode === 'REAL_MAP' ? (
-        <div className="w-full h-full flex-1 relative bg-[#020714] overflow-hidden pt-12 sm:pt-14">
+        <div className="w-full h-full flex-1 relative bg-slate-900 overflow-hidden pt-12 sm:pt-14">
           <HyperLocalRealMap
             location={loc}
             activeLayerFilter={activeLayer}
