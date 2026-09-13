@@ -15,6 +15,7 @@ import {
   ChevronRight, Sparkles, Bell
 } from 'lucide-react';
 import { LocationSelectorModal } from '@/components/ui/LocationSelectorModal';
+import { HowItWorksVideoModal } from '@/components/ui/HowItWorksVideoModal';
 
 export const Header: React.FC<{
   dataMode?: string;
@@ -324,6 +325,7 @@ export const Header: React.FC<{
       <MobileNavDrawer isOpen={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)} />
       <MobileConfigDrawer isOpen={mobileConfigOpen} onClose={() => setMobileConfigOpen(false)} />
       <LocationSelectorModal isOpen={locationModalOpen} onClose={() => setLocationModalOpen(false)} />
+      <HowItWorksVideoModal />
     </>
   );
 };

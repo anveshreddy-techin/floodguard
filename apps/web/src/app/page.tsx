@@ -85,14 +85,23 @@ export default function CommandCenterPage() {
           {/* Core Prediction Architecture Strip: 4 Physical Pillars + IoT Real-Time + Ward Warnings + Lead Time */}
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-slate-900 text-slate-100 border-b border-slate-800 z-10 shrink-0 shadow-md text-xs overflow-x-auto no-scrollbar gap-2.5 select-none">
             
-            {/* Left: Core Mission Focus Tagline */}
+            {/* Left: Core Mission Focus Tagline + AI Video Trigger */}
             <div className="flex items-center gap-2 shrink-0">
               <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white font-mono text-[10px] font-bold tracking-wider">
                 CORE MANDATE
               </span>
-              <span className="font-bold text-slate-200 text-xs hidden lg:inline">
-                Flash Flood Multi-Source Physical Prediction System
-              </span>
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('open-how-it-works-modal'));
+                  }
+                }}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-950 hover:bg-cyan-900 border border-cyan-400/70 text-cyan-200 font-mono font-bold text-[11px] shadow-[0_0_12px_rgba(6,182,212,0.3)] active:scale-95 transition"
+                title="Watch AI Video & Interactive Simulation of How FloodGuard AI Prevents Disasters"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                <span>▶ AI VIDEO: HOW IT WORKS</span>
+              </button>
             </div>
 
             {/* Middle: The 4 Physical Pillars + IoT Telemetry */}
