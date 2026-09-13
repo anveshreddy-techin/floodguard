@@ -235,49 +235,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
         </div>
       </div>
 
-      {/* Floating Flood Risk Level Legend on Map */}
-      <div className="hidden md:block absolute top-16 right-3 z-20 bg-white/95 backdrop-blur-md rounded-xl p-3 shadow-lg border border-slate-200 text-xs w-44 pointer-events-auto">
-        <div className="font-bold text-slate-800 text-xs mb-2 pb-1 border-b border-slate-100 flex items-center justify-between">
-          <span>Flood Risk Level</span>
-          <span className="text-[9px] text-blue-600 font-semibold font-mono">GIS ZONES</span>
-        </div>
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red-500 shrink-0 shadow-sm"></span>
-            <span className="text-slate-700 font-medium">Critical</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-orange-500 shrink-0 shadow-sm"></span>
-            <span className="text-slate-700 font-medium">High</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-yellow-400 shrink-0 shadow-sm"></span>
-            <span className="text-slate-700 font-medium">Moderate</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-emerald-500 shrink-0 shadow-sm"></span>
-            <span className="text-slate-700 font-medium">Low</span>
-          </div>
-        </div>
-        <div className="border-t border-slate-100 my-2 pt-2 space-y-1 text-[11px] text-slate-600">
-          <div className="flex items-center gap-2">
-            <span className="w-4 h-0.5 bg-blue-500 shrink-0"></span>
-            <span>River / Water Body</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-4 border-b-2 border-dashed border-emerald-500 shrink-0"></span>
-            <span>Evacuation Route</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px]">📡</span>
-            <span>IoT Sensor Node</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px]">🏠</span>
-            <span>Safe Shelter</span>
-          </div>
-        </div>
-      </div>
+
 
       {/* Primary Real Satellite GIS Map View vs Vector Schematic Canvas */}
       {renderMode === 'REAL_MAP' ? (
@@ -607,8 +565,8 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
       </div>
       )}
 
-      {/* ── Sleek Unobtrusive Collapsible GIS Legend & Opacity (100% Clear Vision on Mobile) ── */}
-      <div className="absolute bottom-20 left-3 sm:bottom-4 sm:left-4 z-30 pointer-events-auto">
+      {/* ── Sleek Unobtrusive Collapsible GIS Legend & Opacity ── */}
+      <div className="absolute bottom-16 left-3 z-30 pointer-events-auto">
         {!legendOpen ? (
           <button
             onClick={() => setLegendOpen(true)}
