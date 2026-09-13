@@ -44,6 +44,7 @@ export default function CommandCenterPage() {
   const [currentStep, setCurrentStep] = useState('NOW');
   const [copilotOpen, setCopilotOpen] = useState(false);
   const [mobileBottomSheetOpen, setMobileBottomSheetOpen] = useState(false);
+  const [intelligenceHubOpen, setIntelligenceHubOpen] = useState(false);
 
   useEffect(() => {
     setPage('command-center');
@@ -64,7 +65,12 @@ export default function CommandCenterPage() {
       if (e.key === 'l' || e.key === 'L') {
         window.dispatchEvent(new CustomEvent('open-location-selector'));
       }
-      if (e.key === 'Escape') { setDrawerOpen(false); setCopilotOpen(false); setMobileBottomSheetOpen(false); }
+      if (e.key === 'Escape') { 
+        setDrawerOpen(false); 
+        setCopilotOpen(false); 
+        setMobileBottomSheetOpen(false);
+        setIntelligenceHubOpen(false);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -85,11 +91,20 @@ export default function CommandCenterPage() {
           {/* Core Prediction Architecture Strip: 4 Physical Pillars + IoT Real-Time + Ward Warnings + Lead Time */}
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-white text-slate-800 border-b border-slate-200 z-10 shrink-0 shadow-sm text-xs overflow-x-auto no-scrollbar gap-2.5 select-none">
             
-            {/* Left: Core Mission Focus Tagline + AI Video Trigger */}
+            {/* Left: Core Mission Focus Tagline + Roles + AI Video Trigger */}
             <div className="flex items-center gap-2 shrink-0">
               <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white font-mono text-[10px] font-bold tracking-wider">
                 CORE MANDATE
               </span>
+              <Link
+                href="/role-workspace"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-mono font-bold text-[11px] shadow-sm active:scale-95 transition"
+                title="Open Role-Adaptive Mission Workspace for 10 Statutory Roles (Hotkey: W)"
+              >
+                <Users className="w-3.5 h-3.5 text-indigo-600" />
+                <span>ROLES</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-indigo-600 text-white font-bold">10</span>
+              </Link>
               <button
                 onClick={() => {
                   if (typeof window !== 'undefined') {
@@ -100,7 +115,7 @@ export default function CommandCenterPage() {
                 title="Watch AI Video & Interactive Simulation of How FloodGuard AI Prevents Disasters"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
-                <span>▶ AI VIDEO: HOW IT WORKS</span>
+                <span>▶ AI VIDEO</span>
               </button>
             </div>
 
@@ -152,7 +167,7 @@ export default function CommandCenterPage() {
               </Link>
             </div>
 
-            {/* Right: Hyper-Local Ward Warning & Actionable Lead Time */}
+            {/* Right: Hyper-Local Ward Warning, Lead Time & Intelligence Hub */}
             <div className="flex items-center gap-1.5 shrink-0">
               <Link
                 href="/village/loc-uk-chamoli"
@@ -171,6 +186,20 @@ export default function CommandCenterPage() {
                 <span>⏱️ Lead Time:</span>
                 <span className="text-white font-mono font-black">42 Min</span>
               </Link>
+
+              {/* Intelligence Hub Drawer Trigger */}
+              <button
+                onClick={() => setIntelligenceHubOpen(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-50 hover:bg-orange-100 border border-orange-300 text-orange-800 font-mono font-bold text-[11px] shadow-sm active:scale-95 transition"
+                title="Open Comprehensive Intelligence Hub (Risk Dial, Telemetry, Alerts)"
+              >
+                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                <span>INTELLIGENCE HUB:</span>
+                <span className="text-orange-950 bg-orange-200/80 px-1.5 py-0.2 rounded font-black">
+                  {selectedLocation?.riskScore || 68.5} ({selectedLocation?.riskLevel || 'HIGH'})
+                </span>
+                <span className="text-orange-600 font-bold">➔</span>
+              </button>
             </div>
 
           </div>
@@ -186,22 +215,9 @@ export default function CommandCenterPage() {
               simulatedTimeStep={currentStep}
             />
 
-            {/* ── TOP-LEFT: ROLES Button (always visible, small) ── */}
-            <div className="hidden md:flex absolute top-3 left-3 z-[750] pointer-events-none">
-              <Link
-                href="/role-workspace"
-                className="pointer-events-auto bg-white/95 hover:bg-white border border-slate-200 px-3 py-1.5 text-slate-800 hover:text-blue-600 rounded-xl text-xs font-bold font-mono flex items-center gap-1.5 shadow-md active:scale-95 transition"
-                title="Open Role-Adaptive Mission Workspace for 10 Statutory Roles (Hotkey: W)"
-              >
-                <Users className="w-3.5 h-3.5 text-blue-600" />
-                <span>ROLES</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold">10</span>
-              </Link>
-            </div>
-
             {/* ── TOP-LEFT (below ROLES): Citizen Guidance HUD — only shown for citizen role ── */}
             {isCitizen && (
-              <div className="hidden md:block pointer-events-auto absolute top-12 left-3 z-[750] w-72 bg-white/95 border border-slate-200 rounded-2xl p-3.5 shadow-xl backdrop-blur-md space-y-2.5">
+              <div className="hidden md:block pointer-events-auto absolute top-3 left-3 z-[750] w-72 bg-white/95 border border-slate-200 rounded-2xl p-3.5 shadow-xl backdrop-blur-md space-y-2.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono text-slate-800 font-bold flex items-center gap-1.5">
                     <MapPin className="w-4 h-4 text-blue-600" /> {t('what_to_do')}
@@ -264,13 +280,15 @@ export default function CommandCenterPage() {
             )}
 
 
-            {/* ── RIGHT: Desktop Dockable Intelligence Panel (starts minimized) ── */}
+            {/* ── Slide-in Intelligence Hub Operations Drawer ── */}
             <DesktopIntelligencePanel
               score={selectedLocation?.riskScore || 68.5}
               level={selectedLocation?.riskLevel || 'HIGH'}
               rainfall={48}
               riverStage={3.8}
               locationName={selectedLocation?.name || 'Sunderbans Nagar'}
+              isOpen={intelligenceHubOpen}
+              onClose={() => setIntelligenceHubOpen(false)}
             />
 
             {/* ── Mobile Bottom Sheet ── */}

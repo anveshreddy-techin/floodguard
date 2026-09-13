@@ -1,28 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { 
-  Minimize2, 
-  Maximize2, 
-  X, 
-  Layers, 
-  Activity, 
-  ShieldAlert, 
-  Compass, 
-  Radio, 
-  Check, 
-  TrendingUp, 
-  ExternalLink,
-  Bot,
-  Sparkles,
-  ChevronRight,
-  ChevronDown
-} from 'lucide-react';
+import { X } from 'lucide-react';
 import { RiskDial } from './RiskDial';
 import { InteractiveAlertStream } from './InteractiveAlertStream';
 import { WhyRiskChangedPanel } from './WhyRiskChangedPanel';
-import { RiskBadge } from './Badges';
 
 interface DesktopIntelligencePanelProps {
   score?: number;
@@ -30,6 +13,8 @@ interface DesktopIntelligencePanelProps {
   rainfall?: number;
   riverStage?: number;
   locationName?: string;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> = ({
@@ -38,78 +23,57 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
   rainfall = 48,
   riverStage = 3.8,
   locationName = 'Sunderbans Nagar (Exposure Target)',
+  isOpen = false,
+  onClose = () => {},
 }) => {
-  const [isMinimized, setIsMinimized] = useState(true);
-  const [isDocked, setIsDocked] = useState(true);
-
-  if (isMinimized) {
-    return (
-      <div className="hidden md:flex absolute top-3 right-3 z-[500] animate-fade-in pointer-events-auto">
-        <button
-          onClick={() => setIsMinimized(false)}
-          className="px-3.5 py-2 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 shadow-lg backdrop-blur-xl flex items-center gap-2.5 text-xs font-mono text-slate-800 transition active:scale-95 group"
-        >
-          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-ping" />
-          <span className="font-black tracking-wider text-orange-600">INTELLIGENCE HUD</span>
-          <span className="text-[10px] text-slate-500 font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
-            {score} ({level})
-          </span>
-          <span className="text-[10px] text-blue-600 group-hover:text-blue-500 transition font-bold">
-            ⛶ Expand
-          </span>
-        </button>
-      </div>
-    );
-  }
+  if (!isOpen) return null;
 
   return (
-    <div 
-      className="hidden md:flex absolute top-3 right-3 z-[500] flex-col transition-all duration-300 pointer-events-none"
-      style={{
-        maxHeight: 'calc(100vh - 130px)',
-        width: isDocked ? '380px' : '440px',
-        maxWidth: 'calc(100vw - 280px)',
-      }}
-    >
+    <div className="fixed inset-0 z-[1100] flex justify-end pointer-events-auto select-none">
+      {/* Dimmed Backdrop */}
       <div 
-        className="pointer-events-auto w-full h-full max-h-[calc(100vh-130px)] bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-3xl p-3 flex flex-col shadow-xl space-y-2.5 overflow-hidden overflow-x-hidden"
+        onClick={onClose}
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity animate-fade-in"
+      />
+
+      {/* Slide-in Operations Drawer */}
+      <div 
+        className="relative w-full max-w-md h-full bg-white border-l border-slate-200 shadow-2xl p-4 flex flex-col space-y-3 z-10 animate-slide-left font-sans text-slate-800"
       >
-        {/* Panel Header with Controls */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-2 shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+        {/* Panel Header */}
+        <div className="flex items-center justify-between border-b border-slate-200 pb-3 shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse shrink-0" />
             <div className="min-w-0">
-              <h3 className="text-xs font-mono font-black text-slate-900 uppercase tracking-wider truncate">
+              <h3 className="text-sm font-mono font-black text-slate-900 uppercase tracking-wider truncate">
                 INTELLIGENCE HUB
               </h3>
-              <div className="text-[10px] font-mono text-slate-500 truncate max-w-[180px]">{locationName}</div>
+              <div className="text-xs font-mono text-slate-500 truncate max-w-[220px]">
+                {locationName}
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 text-slate-500 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-orange-100 text-orange-800 border border-orange-200">
+              {score} ({level})
+            </span>
             <button
-              onClick={() => setIsDocked(!isDocked)}
-              className="p-1 rounded-lg hover:bg-slate-100 hover:text-slate-800 transition"
-              title={isDocked ? 'Wider View' : 'Compact Dock'}
+              onClick={onClose}
+              className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition active:scale-95"
+              title="Close Intelligence Hub (ESC)"
             >
-              {isDocked ? <ExternalLink className="w-3.5 h-3.5" /> : <Layers className="w-3.5 h-3.5 text-blue-500" />}
-            </button>
-            <button
-              onClick={() => setIsMinimized(true)}
-              className="p-1 rounded-lg hover:bg-slate-100 hover:text-slate-800 transition"
-              title="Minimize HUD to top pill"
-            >
-              <Minimize2 className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Scrollable Intelligence Content (Strictly bounded so it never overflows) */}
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden space-y-2.5 pr-1 scrollbar-thin scrollbar-thumb-slate-300">
+        {/* Scrollable Content */}
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-1 scrollbar-thin scrollbar-thumb-slate-300">
           {/* Quick link to 4. Live Dashboard & Alerts */}
           <Link
             href="/dashboard"
-            className="w-full py-2 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-mono text-xs font-black flex items-center justify-between shadow-lg transition active:scale-95 border border-red-400/50"
+            className="w-full py-2.5 px-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-mono text-xs font-black flex items-center justify-between shadow-md transition active:scale-95 border border-red-400/50"
           >
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-white animate-ping" />

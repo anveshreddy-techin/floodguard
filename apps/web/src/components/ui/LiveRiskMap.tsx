@@ -176,8 +176,8 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
   return (
     <div className={`relative w-full h-full bg-[#F0F4F8] overflow-hidden select-none flex flex-col justify-between transition-opacity duration-700 ${mapLoaded ? 'opacity-100' : 'opacity-0'}`}>
       
-      {/* Top Floating Map Controls with Clean Professional Style */}
-      <div className="absolute top-2.5 left-28 right-72 z-20 hidden md:flex items-center justify-between gap-1.5 pointer-events-none">
+      {/* Top Floating Map Controls */}
+      <div className="absolute top-2.5 left-3 right-3 z-20 hidden md:flex items-center justify-between gap-2 pointer-events-none">
         {/* Layer Selector */}
         <div className="pointer-events-auto bg-white/95 backdrop-blur-md rounded-xl p-1 flex items-center gap-1 shadow-md border border-slate-200 overflow-x-auto no-scrollbar max-w-[calc(100%-100px)] sm:max-w-none">
           {(['RISK', 'RAINFALL', 'SOIL', 'TERRAIN', 'RIVER', 'EXPOSURE'] as MapLayerType[]).map((layer) => (
@@ -239,12 +239,12 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
 
       {/* Primary Real Satellite GIS Map View vs Vector Schematic Canvas */}
       {renderMode === 'REAL_MAP' ? (
-        <div className="w-full h-full flex-1 relative bg-slate-900 overflow-hidden pt-12 sm:pt-14">
+        <div className="w-full h-full flex-1 relative overflow-hidden">
           <HyperLocalRealMap
             location={loc}
             activeLayerFilter={activeLayer}
             className="w-full h-full"
-            showControlBar={true}
+            showControlBar={false}
           />
         </div>
       ) : (
