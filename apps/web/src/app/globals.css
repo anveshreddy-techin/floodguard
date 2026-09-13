@@ -205,6 +205,39 @@ body {
 }
 .btn-danger:active { transform: scale(0.97); }
 
+.btn-warning {
+  position: relative;
+  background: #F59E0B;
+  border: 1px solid #D97706;
+  color: #0F172A;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(217,119,6,0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-warning:hover {
+  background: #D97706;
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(217,119,6,0.35);
+  transform: translateY(-1px);
+}
+.btn-warning:active { transform: scale(0.97); }
+
+.btn-success {
+  position: relative;
+  background: #16A34A;
+  border: 1px solid #15803D;
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(22,163,74,0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-success:hover {
+  background: #15803D;
+  box-shadow: 0 4px 12px rgba(22,163,74,0.35);
+  transform: translateY(-1px);
+}
+.btn-success:active { transform: scale(0.97); }
+
 .btn-ghost {
   background: transparent;
   border: 1px solid #E2E8F0;

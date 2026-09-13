@@ -450,82 +450,82 @@ export default function MySafetyPage() {
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6 overflow-y-auto">
 
           {/* ── Top Bar & Location Presets ── */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className={`chip ${isSafeZone ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'chip-live bg-rose-950 text-rose-300 border-rose-700'}`}>
+                <span className={`chip ${isSafeZone ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-red-100 text-red-800 border-red-300 font-bold'}`}>
                   {isSafeZone ? 'BASELINE DRILL' : 'FLOOD ACTIVE NOW'}
                 </span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2 tracking-tight">
-                  <Compass className="w-5 h-5 text-cyan-400 animate-spin-slow" />
+                <h1 className="text-xl font-black text-slate-900 flex items-center gap-2 tracking-tight">
+                  <Compass className="w-5 h-5 text-blue-600 animate-spin-slow" />
                   CONSERVATIVE ESCAPE &amp; EVACUATION GUIDANCE
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
-                📍 Monitored Ground: <strong className="text-cyan-300">{locName}</strong> ({locState} · {locRegion})
+              <p className="text-xs text-slate-600 mt-1 font-sans">
+                📍 Monitored Ground: <strong className="text-blue-700">{locName}</strong> ({locState} · {locRegion})
               </p>
             </div>
 
             <div className="flex items-center gap-2.5 text-xs font-mono">
               <button
                 onClick={() => setEmergencyMode(!emergencyMode)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold font-mono flex items-center gap-2 transition transform active:scale-95 shadow-xl ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-black font-mono flex items-center gap-2 transition transform active:scale-95 shadow-sm ${
                   emergencyMode
-                    ? 'btn-danger text-white animate-pulse'
-                    : 'fp text-slate-300 hover:text-white hover:border-rose-500'
+                    ? 'bg-red-600 text-white animate-pulse'
+                    : 'bg-red-50 hover:bg-red-100 text-red-700 border border-red-300'
                 }`}
               >
-                {emergencyMode ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4 text-rose-400" />}
+                {emergencyMode ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4 text-red-600" />}
                 <span>{emergencyMode ? 'EXIT EMERGENCY HUD' : '🚨 EMERGENCY HUD'}</span>
               </button>
 
               <button
                 onClick={handleRequestBrowserLocation}
-                className="btn-primary px-3.5 py-2 text-white rounded-xl flex items-center gap-2 font-bold transition shadow-xl active:scale-95"
+                className="bg-blue-600 hover:bg-blue-700 px-3.5 py-2 text-white rounded-xl flex items-center gap-2 font-black transition shadow-sm active:scale-95"
               >
-                <MapPin className="w-4 h-4 text-cyan-300" />
+                <MapPin className="w-4 h-4 text-blue-200" />
                 <span>{locationMode === 'BROWSER' ? '📍 GPS: ' + locState : 'My Device GPS'}</span>
               </button>
             </div>
           </div>
 
           {/* ── FAST REGIONAL DISASTER SCENARIO SWITCHER ── */}
-          <div className="fp p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 text-xs font-mono">
-            <span className="text-cyan-400 font-bold flex items-center gap-2">
-              <Waves className="w-4 h-4" />
+          <div className="bg-white border border-slate-200 shadow-sm p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 text-xs font-mono">
+            <span className="text-blue-700 font-black flex items-center gap-2">
+              <Waves className="w-4 h-4 text-blue-600" />
               <span>DISASTER FLOOD RECONSTRUCTION (IF OCCURRING NOW):</span>
             </span>
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => handleSelectPreset('loc-as-guwahati')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs ${
                   isAssam
-                    ? 'bg-cyan-500 text-slate-950 font-black shadow-lg shadow-cyan-500/25'
-                    : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-700'
+                    ? 'bg-blue-600 text-white font-black shadow-sm'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                 }`}
               >
                 <span>🌊 ASSAM (Brahmaputra Flood)</span>
-                {isAssam && <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />}
+                {isAssam && <span className="w-2 h-2 rounded-full bg-white animate-ping" />}
               </button>
 
               <button
                 onClick={() => handleSelectPreset('loc-uk-chamoli')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs ${
                   isChamoli
-                    ? 'bg-cyan-500 text-slate-950 font-black shadow-lg shadow-cyan-500/25'
-                    : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-700'
+                    ? 'bg-blue-600 text-white font-black shadow-sm'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                 }`}
               >
                 <span>⛰️ UTTARAKHAND (Chamoli GLOF)</span>
-                {isChamoli && <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />}
+                {isChamoli && <span className="w-2 h-2 rounded-full bg-white animate-ping" />}
               </button>
 
               <button
                 onClick={() => handleSelectPreset('loc-uk-kedarnath')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs ${
                   isKedarnath
-                    ? 'bg-cyan-500 text-slate-950 font-black shadow-lg shadow-cyan-500/25'
-                    : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-700'
+                    ? 'bg-blue-600 text-white font-black shadow-sm'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                 }`}
               >
                 <span>🏔️ KEDARNATH (Mandakini)</span>
@@ -534,55 +534,55 @@ export default function MySafetyPage() {
           </div>
 
           {/* ── Official Authority Directive Banner ── */}
-          <div className={`rounded-2xl p-4 text-xs space-y-1.5 shadow-xl border ${
+          <div className={`rounded-2xl p-4 text-xs space-y-1.5 shadow-sm border-2 ${
             isSafeZone
-              ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200'
-              : 'fp fp-critical bg-rose-950/40 border-rose-600/50 text-rose-200'
+              ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+              : 'bg-red-50 border-red-300 text-red-950'
           }`}>
             <div className="flex items-center justify-between">
               <span className={`font-black uppercase tracking-wider flex items-center gap-2 font-mono text-xs ${
-                isSafeZone ? 'text-emerald-300' : 'text-rose-300'
+                isSafeZone ? 'text-emerald-800' : 'text-red-700'
               }`}>
-                {isSafeZone ? <ShieldCheck className="w-4 h-4 text-emerald-400" /> : <ShieldAlert className="w-4 h-4 text-rose-400 animate-pulse" />}
+                {isSafeZone ? <ShieldCheck className="w-4 h-4 text-emerald-600" /> : <ShieldAlert className="w-4 h-4 text-red-600 animate-pulse" />}
                 {locState.toUpperCase()} DISASTER MANAGEMENT AUTHORITY (SDMA) DIRECTIVE
               </span>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
-                isSafeZone ? 'bg-emerald-900/80 text-emerald-300 border border-emerald-700' : 'bg-rose-900 text-rose-200 border border-rose-700'
+              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black ${
+                isSafeZone ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-red-600 text-white shadow-xs'
               }`}>
                 {isSafeZone ? 'STATUS: DRY BASELINE ✓' : 'ACTIVE INUNDATION DIRECTIVE'}
               </span>
             </div>
-            <p className="text-slate-200 leading-relaxed font-sans text-xs">
+            <p className="text-slate-800 leading-relaxed font-sans text-xs font-medium">
               {isSafeZone
                 ? `Local authorities confirm dry baseline conditions in ${locName}. Standard monitoring active.`
                 : `CRITICAL ADVISORY: Historical ${locState} flood surge modeled as active now. Low-lying areas in ${locName} are under Red & Orange danger zones. Evacuate immediately along the green escape route to ${primaryShelter.name}. Do NOT attempt to cross submerged roadways!`}
             </p>
-            <div className="text-[11px] font-mono text-amber-300 pt-1">
+            <div className="text-[11px] font-mono text-amber-900 bg-amber-100/70 px-2 py-1 rounded-lg border border-amber-200 mt-1">
               📜 <strong>Historical Benchmark:</strong> {historicalContext}
             </div>
           </div>
 
           {/* ── Exposure Level / Emergency Drill Selector ── */}
-          <div className="fp p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-            <span className="text-slate-400 font-bold flex items-center gap-1.5">
-              <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="bg-white border border-slate-200 shadow-sm p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+            <span className="text-slate-700 font-bold flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-blue-600" />
               SIMULATED RISK &amp; FLOOD SCENARIO STAGE:
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               {exposureLevels.map((lvl, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSimulatedExposureStage(idx)}
-                  className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 text-[11px] ${
+                  className={`px-3 py-1.5 rounded-xl font-black transition active:scale-95 text-[11px] shadow-2xs ${
                     simulatedExposureStage === idx
                       ? idx === 0
-                        ? 'bg-emerald-500 text-slate-950 font-black shadow-lg shadow-emerald-500/20'
+                        ? 'bg-emerald-600 text-white shadow-sm'
                         : idx === 1
-                        ? 'bg-amber-500 text-slate-950 font-black'
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
                         : idx === 2
-                        ? 'bg-orange-500 text-slate-950 font-black'
-                        : 'bg-rose-500 text-white font-black'
-                      : 'bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800'
+                        ? 'bg-orange-500 text-slate-950 shadow-sm'
+                        : 'bg-red-600 text-white shadow-sm'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                   }`}
                 >
                   {idx === 0 ? '🟢 DRY BASELINE (0)' : idx === 1 ? '🟡 CAUTION (1)' : idx === 2 ? '🟠 ACTIVE FLOOD (2)' : '🔴 CRITICAL SURGE (3)'}
@@ -592,17 +592,17 @@ export default function MySafetyPage() {
           </div>
 
           {/* ── REAL-WORLD INTERACTIVE EVACUATION MAP ── */}
-          <div className="fp fp-operational rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
+          <div className="bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-2">
               <div>
-                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
+                <span className="text-[10px] font-mono text-blue-700 uppercase tracking-widest font-black">
                   MULTI-ZONE ESCAPE MAP · {locState.toUpperCase()} · 3-ZONE FLOOD RISK OVERLAY
                 </span>
-                <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 flex items-center gap-2">
-                  <Map className="w-5 h-5 text-cyan-400" />
+                <h2 className="text-lg sm:text-xl font-black text-slate-900 mt-0.5 flex items-center gap-2">
+                  <Map className="w-5 h-5 text-blue-600" />
                   {currentExp.title}
                 </h2>
-                <p className="text-[11px] text-slate-400 font-sans mt-0.5">
+                <p className="text-[11px] text-slate-600 font-sans mt-0.5 font-medium">
                   🔴 Red: Active Inundation (Fatal) · 🟠 Orange: High Surge Buffer · 🟡 Yellow: Caution · 🟢 Green: Safe High-Ground Shelter
                 </p>
               </div>
@@ -637,44 +637,44 @@ export default function MySafetyPage() {
 
             {/* Info strip below map */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
-              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                <div className="text-[10px] text-slate-400 uppercase">Primary Safe Shelter</div>
-                <div className="font-bold text-white mt-0.5 truncate">{primaryShelter.name.split('(')[0]}</div>
-                <div className="text-[10px] text-emerald-400">{primaryShelter.elevation}</div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="text-[10px] text-slate-500 uppercase font-bold">Primary Safe Shelter</div>
+                <div className="font-bold text-slate-900 mt-0.5 truncate">{primaryShelter.name.split('(')[0]}</div>
+                <div className="text-[10px] text-emerald-700 font-bold">{primaryShelter.elevation}</div>
               </div>
-              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                <div className="text-[10px] text-slate-400 uppercase">Local Inundation Status</div>
-                <div className={`font-bold mt-0.5 text-sm truncate ${isSafeZone ? 'text-emerald-400' : 'text-rose-400'}`}>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="text-[10px] text-slate-500 uppercase font-bold">Local Inundation Status</div>
+                <div className={`font-black mt-0.5 text-sm truncate ${isSafeZone ? 'text-emerald-700' : 'text-red-600'}`}>
                   {isSafeZone ? 'NO ACTIVE SURGE' : isAssam ? '50.25m (+0.57m Above Danger)' : selectedLocation.riverStage}
                 </div>
-                <div className="text-[10px] text-slate-400">{isSafeZone ? 'Dry Roadway Terrain' : 'Severe Inundation Active'}</div>
+                <div className="text-[10px] text-slate-600 font-medium">{isSafeZone ? 'Dry Roadway Terrain' : 'Severe Inundation Active'}</div>
               </div>
-              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                <div className="text-[10px] text-slate-400 uppercase">Response Agency</div>
-                <div className="font-bold text-purple-300 mt-0.5 truncate">{locState} SDRF / 112</div>
-                <div className="text-[10px] text-purple-400">Emergency Radio &amp; SOS Ready</div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="text-[10px] text-slate-500 uppercase font-bold">Response Agency</div>
+                <div className="font-bold text-blue-800 mt-0.5 truncate">{locState} SDRF / 112</div>
+                <div className="text-[10px] text-blue-600 font-medium">Emergency Radio &amp; SOS Ready</div>
               </div>
-              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                <div className="text-[10px] text-slate-400 uppercase">Your Position</div>
-                <div className="font-bold text-cyan-300 mt-0.5 text-[11px]">{activeLat.toFixed(4)}°N</div>
-                <div className="text-[10px] text-cyan-400">{activeLon.toFixed(4)}°E · ±15m</div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="text-[10px] text-slate-500 uppercase font-bold">Your Position</div>
+                <div className="font-black text-blue-700 mt-0.5 text-[11px]">{activeLat.toFixed(4)}°N</div>
+                <div className="text-[10px] text-slate-600 font-bold">{activeLon.toFixed(4)}°E · ±15m</div>
               </div>
             </div>
           </div>
 
           {/* ── AFFECTED AREAS & PREVIOUS FLOOD IMPACT REPORT ── */}
-          <div className="fp fp-operational rounded-3xl p-4 sm:p-5 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 space-y-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-2">
               <div>
-                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
+                <span className="text-[10px] font-mono text-blue-700 uppercase tracking-widest font-black">
                   AREA INUNDATION AUDIT &amp; REALISTIC DAMAGE BREAKDOWN
                 </span>
-                <h3 className="text-base font-black text-white mt-0.5 flex items-center gap-2">
+                <h3 className="text-base font-black text-slate-900 mt-0.5 flex items-center gap-2">
                   <span>🌊</span>
                   <span>{locState.toUpperCase()} FLOOD IMPACT &amp; EXPOSED SECTORS (IF OCCURRED NOW)</span>
                 </h3>
               </div>
-              <span className="text-[10px] px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono font-bold">
+              <span className="text-[11px] px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-mono font-bold w-fit">
                 {affectedAreas.length} MONITORED SECTORS
               </span>
             </div>
@@ -686,30 +686,30 @@ export default function MySafetyPage() {
                 return (
                   <div
                     key={i}
-                    className={`p-3 rounded-xl border space-y-1.5 transition ${
+                    className={`p-3 rounded-xl border space-y-1.5 transition shadow-2xs ${
                       isRed
-                        ? 'bg-rose-950/20 border-rose-800/50 hover:border-rose-500'
+                        ? 'bg-red-50/80 border-red-200 hover:border-red-400'
                         : isOrange
-                        ? 'bg-orange-950/20 border-orange-800/50 hover:border-orange-500'
-                        : 'bg-amber-950/20 border-amber-800/50 hover:border-amber-500'
+                        ? 'bg-amber-50/80 border-amber-200 hover:border-amber-400'
+                        : 'bg-yellow-50/80 border-yellow-200 hover:border-yellow-400'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded shadow-2xs ${
                         isRed
-                          ? 'bg-rose-950 text-rose-300 border border-rose-800'
+                          ? 'bg-red-600 text-white'
                           : isOrange
-                          ? 'bg-orange-950 text-orange-300 border border-orange-800'
-                          : 'bg-amber-950 text-amber-300 border border-amber-800'
+                          ? 'bg-orange-500 text-slate-950 font-black'
+                          : 'bg-amber-400 text-slate-950 font-black'
                       }`}>
                         {area.zone}
                       </span>
-                      <span className="text-[10px] text-slate-400">~{area.population} pop</span>
+                      <span className="text-[10px] text-slate-500 font-bold">~{area.population} pop</span>
                     </div>
-                    <div className="font-bold text-white font-sans text-sm">{area.name}</div>
-                    <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-800/60">
-                      <span className="text-slate-400">Depth: <strong className={isRed ? 'text-rose-400' : isOrange ? 'text-orange-400' : 'text-amber-400'}>{area.depth}</strong></span>
-                      <span className="text-[10px] text-slate-300 font-bold">{area.status}</span>
+                    <div className="font-bold text-slate-900 font-sans text-sm">{area.name}</div>
+                    <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200">
+                      <span className="text-slate-600">Depth: <strong className={isRed ? 'text-red-600 font-black' : isOrange ? 'text-amber-700 font-black' : 'text-amber-800 font-black'}>{area.depth}</strong></span>
+                      <span className="text-[10px] text-slate-700 font-bold">{area.status}</span>
                     </div>
                   </div>
                 );
@@ -717,24 +717,24 @@ export default function MySafetyPage() {
             </div>
 
             {/* Safe Places List */}
-            <div className="p-3.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 space-y-2">
-              <div className="text-emerald-300 font-bold font-mono text-xs uppercase flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-2">
+              <div className="text-emerald-900 font-black font-mono text-xs uppercase flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 <span>DESIGNATED SAFE PLACES &amp; HIGH-GROUND REFUGE LIST ({locState})</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs font-mono">
                 {safePlaces.map((sp) => (
-                  <div key={sp.id} className="p-2.5 rounded-xl bg-slate-950/80 border border-emerald-800/60 space-y-1">
+                  <div key={sp.id} className="p-2.5 rounded-xl bg-white border border-emerald-200 shadow-2xs space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-emerald-300">{sp.name}</span>
+                      <span className="font-bold text-emerald-950">{sp.name}</span>
                       {sp.isPrimary && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-900 text-emerald-200 border border-emerald-700 font-bold">
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-600 text-white font-bold">
                           PRIMARY
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] text-slate-300">Elevation: <strong className="text-emerald-400">{sp.elevation}</strong></div>
-                    <div className="text-[10px] text-slate-400">{sp.type} · Distance: {sp.distance}</div>
+                    <div className="text-[11px] text-slate-700">Elevation: <strong className="text-emerald-700 font-bold">{sp.elevation}</strong></div>
+                    <div className="text-[10px] text-slate-500">{sp.type} · Distance: {sp.distance}</div>
                   </div>
                 ))}
               </div>
@@ -742,9 +742,9 @@ export default function MySafetyPage() {
           </div>
 
           {/* ── Candidate Routes List ── */}
-          <div className="fp fp-operational rounded-2xl p-4 sm:p-5 space-y-3">
-            <h3 className="font-bold text-white text-sm font-mono uppercase tracking-wider flex items-center gap-2">
-              <Navigation className="w-4 h-4 text-cyan-400" />
+          <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-4 sm:p-5 space-y-3">
+            <h3 className="font-black text-slate-900 text-sm font-mono uppercase tracking-wider flex items-center gap-2">
+              <Navigation className="w-4 h-4 text-blue-600" />
               EVALUATED EVACUATION &amp; TRANSIT CORRIDORS
             </h3>
             <div className="space-y-2.5">
@@ -753,31 +753,31 @@ export default function MySafetyPage() {
                   key={rt.id}
                   className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono ${
                     rt.blocked
-                      ? 'bg-rose-950/20 border-rose-800/40 text-rose-300'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-200 hover:border-cyan-500/40'
+                      ? 'bg-red-50 border-red-200 text-red-950'
+                      : 'bg-slate-50 border-slate-200 text-slate-900 hover:border-blue-300'
                   }`}
                 >
                   <div className="space-y-1 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${rt.blocked ? 'bg-rose-500' : 'bg-emerald-400'}`} />
-                      <h4 className="font-bold text-white text-sm font-sans">{rt.name}</h4>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        rt.blocked ? 'bg-rose-900 text-rose-300' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                      <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${rt.blocked ? 'bg-red-600' : 'bg-emerald-600'}`} />
+                      <h4 className="font-bold text-slate-900 text-sm font-sans">{rt.name}</h4>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-black ${
+                        rt.blocked ? 'bg-red-600 text-white' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                       }`}>
                         {rt.status}
                       </span>
                     </div>
-                    <p className="text-slate-400 text-xs font-sans">{rt.note}</p>
+                    <p className="text-slate-600 text-xs font-sans font-medium">{rt.note}</p>
                   </div>
 
                   <div className="flex items-center gap-4 shrink-0 text-right">
                     <div>
-                      <div className="text-slate-400 text-[10px]">DISTANCE</div>
-                      <div className="font-bold text-cyan-300">{rt.distance}</div>
+                      <div className="text-slate-500 text-[10px] font-bold">DISTANCE</div>
+                      <div className="font-black text-blue-700">{rt.distance}</div>
                     </div>
                     <div>
-                      <div className="text-slate-400 text-[10px]">ELEVATION GAIN</div>
-                      <div className="font-bold text-emerald-400">{rt.elevation}</div>
+                      <div className="text-slate-500 text-[10px] font-bold">ELEVATION GAIN</div>
+                      <div className="font-black text-emerald-700">{rt.elevation}</div>
                     </div>
                   </div>
                 </div>
@@ -786,16 +786,16 @@ export default function MySafetyPage() {
           </div>
 
           {/* ── Emergency SOS & Rescue Dispatch ── */}
-          <div className="fp fp-critical rounded-3xl p-5 sm:p-6 space-y-4 shadow-2xl">
+          <div className="bg-red-50 border-2 border-red-300 rounded-3xl p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <span className="text-[10px] font-mono text-rose-400 uppercase tracking-widest font-bold">
+                <span className="text-[10px] font-mono text-red-700 uppercase tracking-widest font-black">
                   CITIZEN RESCUE BEACON &amp; SDRF DISPATCH
                 </span>
-                <h3 className="text-lg font-black text-white mt-0.5">
+                <h3 className="text-lg font-black text-slate-900 mt-0.5">
                   Trapped in Flood Water or Need Urgent Water Rescue?
                 </h3>
-                <p className="text-xs text-slate-400 font-sans mt-0.5">
+                <p className="text-xs text-slate-700 font-sans mt-0.5 font-medium">
                   Sends verified GPS coordinates directly to {locState} State Disaster Management Authority (SDMA / 112 Command).
                 </p>
               </div>
@@ -803,10 +803,10 @@ export default function MySafetyPage() {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => setRescueRequested(!rescueRequested)}
-                  className={`px-5 py-3 rounded-2xl font-mono font-black text-xs flex items-center gap-2 shadow-2xl active:scale-95 transition ${
+                  className={`px-5 py-3 rounded-2xl font-mono font-black text-xs flex items-center gap-2 shadow-md active:scale-95 transition ${
                     rescueRequested
                       ? 'bg-emerald-600 text-white animate-pulse'
-                      : 'btn-danger text-white'
+                      : 'bg-red-600 hover:bg-red-700 text-white border border-red-700'
                   }`}
                 >
                   <PhoneCall className="w-4 h-4" />
@@ -816,12 +816,12 @@ export default function MySafetyPage() {
             </div>
 
             {rescueRequested && (
-              <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/60 text-xs font-mono text-emerald-200 space-y-1 animate-fade-in">
-                <div className="font-bold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <div className="p-3.5 rounded-xl bg-white border border-emerald-400 text-xs font-mono text-emerald-950 space-y-1 shadow-sm animate-fade-in">
+                <div className="font-black flex items-center gap-2 text-emerald-800">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   <span>BEACON ACKNOWLEDGED BY {locState.toUpperCase()} SDRF / NDRF DISPATCH</span>
                 </div>
-                <p className="text-[11px] text-slate-300 font-sans">
+                <p className="text-[11px] text-slate-700 font-sans font-medium">
                   Your coordinates ({activeLat.toFixed(5)}°N, {activeLon.toFixed(5)}°E) have been logged with incident token <strong>#SOS-{Math.floor(100000 + Math.random() * 900000)}</strong>. Rescue team dispatched. Ascend to nearest safe shelter: <strong>{primaryShelter.name}</strong>.
                 </p>
               </div>

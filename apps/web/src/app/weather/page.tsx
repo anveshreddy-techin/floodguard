@@ -351,7 +351,7 @@ export default function WeatherIntelligencePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#020714] text-slate-100 select-none">
+    <div className="flex flex-col min-h-screen bg-[#F0F4F8] text-slate-900 select-none">
       <Header dataMode={operatingMode} systemStatus="OPERATIONAL" />
 
       <div className="flex flex-1 min-h-0 relative">
@@ -360,12 +360,12 @@ export default function WeatherIntelligencePage() {
         <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-6 space-y-5 safe-bottom">
           
           {/* Top Control Ribbon: Location Adaptation & Action Triggers */}
-          <div className="fp fp-operational p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-slate-800 shadow-2xl">
+          <div className="bg-white border border-slate-200 shadow-sm p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3">
             
             {/* Left: State & Corridor Selector */}
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-1 bg-slate-900 border border-slate-700/80 px-2.5 py-1.5 rounded-xl text-xs font-mono text-cyan-300 font-bold">
-                <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 px-3 py-1.5 rounded-xl text-xs font-mono text-blue-700 font-bold shadow-2xs">
+                <MapPin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 <select
                   value={hierarchy.state}
                   onChange={(e) => {
@@ -381,11 +381,11 @@ export default function WeatherIntelligencePage() {
                       if (matched) selectLocationById(matched.id);
                     }
                   }}
-                  className="bg-transparent text-cyan-300 font-bold focus:outline-none cursor-pointer"
+                  className="bg-transparent text-slate-900 font-bold focus:outline-none cursor-pointer"
                 >
-                  <option value="ALL" className="bg-slate-950 text-slate-400">🇮🇳 All States</option>
+                  <option value="ALL" className="bg-white text-slate-900">🇮🇳 All States</option>
                   {INDIAN_STATES.map((st) => (
-                    <option key={st.id} value={st.name} className="bg-slate-950 text-slate-200">
+                    <option key={st.id} value={st.name} className="bg-white text-slate-900">
                       {st.name}
                     </option>
                   ))}
@@ -393,8 +393,8 @@ export default function WeatherIntelligencePage() {
               </div>
 
               {/* Specific Location Corridor Pill */}
-              <div className="flex items-center gap-1 bg-slate-900 border border-slate-700/80 px-2.5 py-1.5 rounded-xl text-xs font-mono text-slate-300 font-bold">
-                <Compass className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 px-3 py-1.5 rounded-xl text-xs font-mono text-slate-700 font-bold shadow-2xs">
+                <Compass className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                 <select
                   value={selectedLocation.id}
                   onChange={(e) => {
@@ -403,10 +403,10 @@ export default function WeatherIntelligencePage() {
                     const loc = LOCATIONS.find(l => l.id === e.target.value);
                     if (loc) setStateFilter(loc.state);
                   }}
-                  className="bg-transparent text-slate-200 font-bold focus:outline-none cursor-pointer max-w-[160px] sm:max-w-[200px] truncate"
+                  className="bg-transparent text-slate-900 font-bold focus:outline-none cursor-pointer max-w-[160px] sm:max-w-[220px] truncate"
                 >
                   {LOCATIONS.map((l) => (
-                    <option key={l.id} value={l.id} className="bg-slate-950 text-slate-200">
+                    <option key={l.id} value={l.id} className="bg-white text-slate-900">
                       {l.name} ({l.region})
                     </option>
                   ))}
@@ -416,10 +416,10 @@ export default function WeatherIntelligencePage() {
               {/* Device GPS Trigger */}
               <button
                 onClick={handleTriggerGPS}
-                className={`px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1 border transition active:scale-95 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 border transition active:scale-95 shadow-2xs ${
                   gpsActive
-                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
-                    : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700 shadow-sm'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
                 }`}
                 title="Use Live Device GPS"
               >
@@ -432,7 +432,7 @@ export default function WeatherIntelligencePage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setReportModalOpen(true)}
-                className="px-3 py-1.5 rounded-xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/80 text-cyan-300 text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg active:scale-95 transition"
+                className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 border border-amber-600 text-slate-950 text-xs font-mono font-black flex items-center gap-1.5 shadow-sm active:scale-95 transition"
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span className="hidden xs:inline">REPORT HAZARD</span>
@@ -441,14 +441,13 @@ export default function WeatherIntelligencePage() {
 
               <button
                 onClick={() => setUploadModalOpen(true)}
-                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-mono font-bold flex items-center gap-1.5 active:scale-95 transition"
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 border border-blue-700 text-white text-xs font-mono font-black flex items-center gap-1.5 shadow-sm active:scale-95 transition"
               >
                 <UploadCloud className="w-3.5 h-3.5" />
                 <span className="hidden xs:inline">UPLOAD CSV</span>
                 <span className="xs:hidden">UPLOAD</span>
               </button>
             </div>
-
           </div>
 
           {/* 1. Master Current Weather Hero Card */}

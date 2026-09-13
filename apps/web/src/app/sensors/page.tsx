@@ -138,29 +138,29 @@ export default function SensorsConstellationPage() {
   const current = sensorNodes[selectedSensorIndex];
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#020714]">
+    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="LIVE" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="sensors" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6 overflow-y-auto">
           {/* Page Title Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/80 pb-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
               <div className="flex items-center gap-2.5">
                 <span className="chip chip-live">LIVING SENSOR FIELD</span>
-                <h1 className="text-xl font-black text-white flex items-center gap-2">
-                  <Radio className="w-5 h-5 text-cyan-400 animate-pulse" />
+                <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                  <Radio className="w-5 h-5 text-blue-600 animate-pulse" />
                   IOT SENSOR CONSTELLATION & HYDROLOGICAL MESH
                 </h1>
               </div>
-              <p className="text-xs text-slate-400 mt-1 font-sans">
+              <p className="text-xs text-slate-600 mt-1 font-sans font-medium">
                 Real-time physical telemetry stream from mountain ridge rain gauges, FMCW radar river stations, soil TDR probes, and seismic geophones
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2.5 py-1 rounded-xl flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
                 <span>3/4 NODES ONLINE</span>
               </span>
               <DataModeBadge mode="LIVE" />
@@ -168,23 +168,23 @@ export default function SensorsConstellationPage() {
           </div>
 
           {/* ── HERO: Mountain Elevation Cross-Section Spatial Sensor Map ── */}
-          <div className="fp fp-operational rounded-3xl p-4 sm:p-6 shadow-2xl relative overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-              <span className="text-xs font-mono font-bold text-cyan-300 flex items-center gap-2">
-                <Mountain className="w-4 h-4 text-cyan-400" />
+          <div className="bg-white border border-slate-200 rounded-3xl p-4 sm:p-6 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
+              <span className="text-xs font-mono font-black text-blue-700 flex items-center gap-2">
+                <Mountain className="w-4 h-4 text-blue-600" />
                 CATCHMENT ELEVATION DEPLOYMENT PROFILE (1,450m Ridge → 1,180m Gorge)
               </span>
-              <span className="text-[10px] font-mono text-slate-400">CLICK SENSOR NODE TO INSPECT TELEMETRY</span>
+              <span className="text-[10px] font-mono text-slate-500 font-bold">CLICK SENSOR NODE TO INSPECT TELEMETRY</span>
             </div>
 
             {/* Spatial Mountain SVG Canvas */}
-            <div className="w-full h-56 sm:h-64 bg-[#03091e] rounded-2xl relative overflow-hidden border border-cyan-500/20">
+            <div className="w-full h-56 sm:h-64 bg-[#0F1E36] rounded-2xl relative overflow-hidden border border-slate-300 shadow-inner">
               <svg viewBox="0 0 800 320" className="w-full h-full object-cover">
                 <defs>
                   <linearGradient id="mountainSlopeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0a193b" stopOpacity="0.9" />
-                    <stop offset="50%" stopColor="#07132c" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="#040b1a" stopOpacity="0.95" />
+                    <stop offset="0%" stopColor="#1E3A5F" stopOpacity="0.95" />
+                    <stop offset="50%" stopColor="#152B47" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#0B1728" stopOpacity="0.98" />
                   </linearGradient>
 
                   <radialGradient id="sensorPulseGlow" cx="50%" cy="50%" r="50%">
@@ -206,25 +206,25 @@ export default function SensorsConstellationPage() {
                 <path
                   d="M 580,240 Q 660,260 780,290"
                   fill="none"
-                  stroke="#00A8E8"
+                  stroke="#38BDF8"
                   strokeWidth="8"
                   strokeLinecap="round"
-                  strokeOpacity="0.7"
+                  strokeOpacity="0.85"
                 />
 
                 {/* Elevation Baseline Markers */}
-                <line x1="50" y1="40" x2="780" y2="40" stroke="rgba(56,189,248,0.1)" strokeDasharray="3 4" />
-                <line x1="50" y1="140" x2="780" y2="140" stroke="rgba(56,189,248,0.1)" strokeDasharray="3 4" />
-                <line x1="50" y1="260" x2="780" y2="260" stroke="rgba(56,189,248,0.1)" strokeDasharray="3 4" />
-                <text x="60" y="35" fill="#64748b" fontSize="9" fontFamily="monospace">1,450m (Ridge Peak)</text>
-                <text x="60" y="135" fill="#64748b" fontSize="9" fontFamily="monospace">1,320m (Mid Slope)</text>
-                <text x="60" y="255" fill="#64748b" fontSize="9" fontFamily="monospace">1,180m (River Gorge)</text>
+                <line x1="50" y1="40" x2="780" y2="40" stroke="rgba(255,255,255,0.2)" strokeDasharray="3 4" />
+                <line x1="50" y1="140" x2="780" y2="140" stroke="rgba(255,255,255,0.2)" strokeDasharray="3 4" />
+                <line x1="50" y1="260" x2="780" y2="260" stroke="rgba(255,255,255,0.2)" strokeDasharray="3 4" />
+                <text x="60" y="35" fill="#94a3b8" fontSize="9" fontFamily="monospace" fontWeight="bold">1,450m (Ridge Peak)</text>
+                <text x="60" y="135" fill="#94a3b8" fontSize="9" fontFamily="monospace" fontWeight="bold">1,320m (Mid Slope)</text>
+                <text x="60" y="255" fill="#94a3b8" fontSize="9" fontFamily="monospace" fontWeight="bold">1,180m (River Gorge)</text>
 
                 {/* Interactive Sensor Nodes */}
                 {sensorNodes.map((s, idx) => {
                   const isSelected = selectedSensorIndex === idx;
                   const isDegraded = s.status === 'DEGRADED';
-                  const nodeColor = isDegraded ? '#F39C12' : '#00A8E8';
+                  const nodeColor = isDegraded ? '#F59E0B' : '#38BDF8';
 
                   return (
                     <g
@@ -261,8 +261,8 @@ export default function SensorsConstellationPage() {
                         width="90"
                         height="20"
                         rx="5"
-                        fill="rgba(6,14,32,0.92)"
-                        stroke={isSelected ? '#38bdf8' : 'rgba(56,189,248,0.3)'}
+                        fill="rgba(15,23,42,0.95)"
+                        stroke={isSelected ? '#38bdf8' : 'rgba(255,255,255,0.3)'}
                         strokeWidth={isSelected ? '1.5' : '0.8'}
                       />
                       <text
@@ -294,32 +294,32 @@ export default function SensorsConstellationPage() {
                   <button
                     key={s.id}
                     onClick={() => setSelectedSensorIndex(idx)}
-                    className={`w-full p-3.5 rounded-2xl text-left transition-all duration-200 flex flex-col justify-between space-y-2 ${
+                    className={`w-full p-3.5 rounded-2xl text-left transition-all duration-200 flex flex-col justify-between space-y-2 shadow-sm ${
                       isSelected
-                        ? 'fp-operational border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.25)] scale-[1.01]'
+                        ? 'bg-blue-50/90 border-2 border-blue-500 shadow-md ring-2 ring-blue-500/20'
                         : isDegraded
-                        ? 'fp-critical'
-                        : 'fp hover:bg-slate-900/60'
+                        ? 'bg-amber-50/80 border-2 border-amber-300'
+                        : 'bg-white hover:bg-slate-50 border border-slate-200'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className={`w-2 h-2 rounded-full ${isDegraded ? 'bg-amber-400 animate-ping' : 'bg-emerald-400 animate-pulse'}`} />
-                        <span className="font-mono text-xs font-black text-white">{s.id}</span>
-                        <span className="text-[10px] font-mono text-slate-400">({s.elevation})</span>
+                        <span className={`w-2 h-2 rounded-full ${isDegraded ? 'bg-amber-500 animate-ping' : 'bg-emerald-500 animate-pulse'}`} />
+                        <span className="font-mono text-xs font-black text-slate-900">{s.id}</span>
+                        <span className="text-[10px] font-mono text-slate-500 font-bold">({s.elevation})</span>
                       </div>
                       <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded ${
-                        isDegraded ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                        isDegraded ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                       }`}>
                         {s.status}
                       </span>
                     </div>
 
-                    <div className="font-bold text-slate-200 text-xs">{s.name}</div>
+                    <div className="font-bold text-slate-800 text-xs font-sans">{s.name}</div>
 
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1 border-t border-slate-800/60">
-                      <span>Value: <strong className="text-cyan-300">{s.value}</strong></span>
-                      <span>Signal: <strong className={isDegraded ? 'text-amber-400' : 'text-slate-300'}>{s.signal.split(' ')[0]}</strong></span>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-600 pt-1 border-t border-slate-200">
+                      <span>Value: <strong className="text-blue-700 font-black">{s.value}</strong></span>
+                      <span>Signal: <strong className={isDegraded ? 'text-amber-800 font-bold' : 'text-slate-700 font-bold'}>{s.signal.split(' ')[0]}</strong></span>
                     </div>
                   </button>
                 );
@@ -327,81 +327,81 @@ export default function SensorsConstellationPage() {
             </div>
 
             {/* Selected Node Real-Time Telemetric Detail View (7 Cols) */}
-            <div className="lg:col-span-7 fp fp-operational rounded-3xl p-5 sm:p-7 space-y-5 shadow-2xl animate-slide-up">
-              <div className="border-b border-slate-800 pb-3.5 flex items-center justify-between">
+            <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 space-y-5 shadow-sm animate-slide-up">
+              <div className="border-b border-slate-200 pb-3.5 flex items-center justify-between">
                 <div>
-                  <div className="text-[10px] font-mono text-cyan-400 font-bold uppercase">{current.id} • {current.type}</div>
-                  <h2 className="text-lg sm:text-xl font-black text-white mt-0.5">{current.name}</h2>
-                  <div className="text-xs text-slate-400 font-mono mt-0.5">{current.elevation} • {current.slope}</div>
+                  <div className="text-[10px] font-mono text-blue-700 font-black uppercase">{current.id} • {current.type}</div>
+                  <h2 className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">{current.name}</h2>
+                  <div className="text-xs text-slate-500 font-mono mt-0.5 font-bold">{current.elevation} • {current.slope}</div>
                 </div>
                 <span className={`chip ${current.status === 'DEGRADED' ? 'chip-sim' : 'chip-live'}`}>
                   {current.quality}
                 </span>
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">{current.desc}</p>
+              <p className="text-xs text-slate-700 leading-relaxed font-sans font-medium">{current.desc}</p>
 
               {/* Physical Telemetry Strip */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-mono">
-                <div className="fp p-3 rounded-2xl text-center">
-                  <div className="text-slate-400 text-[10px] flex items-center justify-center gap-1">
-                    <Battery className="w-3 h-3 text-emerald-400" /> Battery
+                <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-center shadow-2xs">
+                  <div className="text-slate-500 text-[10px] font-bold flex items-center justify-center gap-1">
+                    <Battery className="w-3 h-3 text-emerald-600" /> Battery
                   </div>
-                  <div className="text-emerald-300 font-bold mt-1">{current.battery}</div>
-                  <div className="text-[9px] text-slate-500">{current.batteryVoltage}</div>
+                  <div className="text-emerald-700 font-black mt-1 text-sm">{current.battery}</div>
+                  <div className="text-[9px] text-slate-500 font-semibold">{current.batteryVoltage}</div>
                 </div>
 
-                <div className="fp p-3 rounded-2xl text-center">
-                  <div className="text-slate-400 text-[10px] flex items-center justify-center gap-1">
-                    <Signal className="w-3 h-3 text-purple-400" /> RSSI / SNR
+                <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-center shadow-2xs">
+                  <div className="text-slate-500 text-[10px] font-bold flex items-center justify-center gap-1">
+                    <Signal className="w-3 h-3 text-purple-600" /> RSSI / SNR
                   </div>
-                  <div className="text-purple-300 font-bold mt-1">{current.signal.split(' ')[0]}</div>
-                  <div className="text-[9px] text-slate-500">SNR: {current.snr}</div>
+                  <div className="text-purple-700 font-black mt-1 text-sm">{current.signal.split(' ')[0]}</div>
+                  <div className="text-[9px] text-slate-500 font-semibold">SNR: {current.snr}</div>
                 </div>
 
-                <div className="fp p-3 rounded-2xl text-center">
-                  <div className="text-slate-400 text-[10px] flex items-center justify-center gap-1">
-                    <Clock className="w-3 h-3 text-amber-400" /> Packet Freshness
+                <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-center shadow-2xs">
+                  <div className="text-slate-500 text-[10px] font-bold flex items-center justify-center gap-1">
+                    <Clock className="w-3 h-3 text-amber-600" /> Freshness
                   </div>
-                  <div className="text-amber-300 font-bold mt-1">{current.lastTransmission}</div>
-                  <div className="text-[9px] text-slate-500">Live Cycle</div>
+                  <div className="text-amber-800 font-black mt-1 text-sm">{current.lastTransmission}</div>
+                  <div className="text-[9px] text-slate-500 font-semibold">Live Cycle</div>
                 </div>
 
-                <div className="fp p-3 rounded-2xl text-center">
-                  <div className="text-slate-400 text-[10px] flex items-center justify-center gap-1">
-                    <Wifi className="w-3 h-3 text-cyan-400" /> Protocol
+                <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-center shadow-2xs">
+                  <div className="text-slate-500 text-[10px] font-bold flex items-center justify-center gap-1">
+                    <Wifi className="w-3 h-3 text-blue-600" /> Protocol
                   </div>
-                  <div className="text-cyan-300 font-bold mt-1">LoRaWAN 868</div>
-                  <div className="text-[9px] text-slate-500">AES-128 Encrypted</div>
+                  <div className="text-blue-700 font-black mt-1 text-sm">LoRaWAN 868</div>
+                  <div className="text-[9px] text-slate-500 font-semibold">AES-128</div>
                 </div>
               </div>
 
               {/* Primary Telemetry Metric Dial Box */}
-              <div className="fp p-4 sm:p-5 rounded-2xl space-y-1.5 border border-cyan-500/30 bg-gradient-to-r from-cyan-950/40 to-blue-950/40">
+              <div className="p-4 sm:p-5 rounded-2xl space-y-1.5 border border-blue-200 bg-blue-50/80 shadow-2xs">
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-slate-400 uppercase font-bold">CURRENT PHYSICAL READING</span>
-                  <span className="text-cyan-300 font-bold flex items-center gap-1">
+                  <span className="text-slate-600 uppercase font-black">CURRENT PHYSICAL READING</span>
+                  <span className="text-blue-700 font-black flex items-center gap-1">
                     <TrendingUp className="w-3.5 h-3.5" /> {current.trend}
                   </span>
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white font-mono">{current.value}</div>
+                <div className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">{current.value}</div>
               </div>
 
               {/* Telemetry Packet Stream Logs */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 uppercase font-bold">
+                <div className="flex items-center justify-between text-[10px] font-mono text-slate-600 uppercase font-black">
                   <span>RAW TELEMETRY FRAME STREAM</span>
-                  <span className="text-cyan-400 flex items-center gap-1">
+                  <span className="text-blue-700 flex items-center gap-1 font-bold">
                     <RefreshCw className="w-3 h-3 animate-spin" /> LIVE PACKETS
                   </span>
                 </div>
                 <div className="space-y-1.5 font-mono text-xs">
                   {current.logs.map((lg, i) => (
-                    <div key={i} className="fp p-2.5 rounded-xl flex items-center justify-between text-slate-200">
-                      <span className="text-slate-400">{lg.time}</span>
-                      <span className="text-cyan-300 font-bold">{lg.reading}</span>
-                      <span className="text-slate-400">Batt: {lg.battery}</span>
-                      <span className="text-emerald-400 text-[10px]">{lg.status}</span>
+                    <div key={i} className="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between text-slate-800 shadow-2xs">
+                      <span className="text-slate-500">{lg.time}</span>
+                      <span className="text-blue-700 font-black">{lg.reading}</span>
+                      <span className="text-slate-600">Batt: {lg.battery}</span>
+                      <span className="text-emerald-700 font-bold text-[10px]">{lg.status}</span>
                     </div>
                   ))}
                 </div>

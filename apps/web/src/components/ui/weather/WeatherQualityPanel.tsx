@@ -9,15 +9,17 @@ interface WeatherQualityPanelProps {
 
 export const WeatherQualityPanel: React.FC<WeatherQualityPanelProps> = ({ qualityReports = [] }) => {
   return (
-    <div className="fp fp-operational p-4 sm:p-5 rounded-2xl space-y-4 border border-slate-800 shadow-2xl">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+    <div className="bg-white border border-slate-200 shadow-sm p-4 sm:p-5 rounded-2xl space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
         <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-cyan-400" />
-          <h3 className="text-sm font-black font-mono text-white tracking-wide uppercase">
+          <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-700 shrink-0">
+            <Activity className="w-4 h-4" />
+          </div>
+          <h3 className="text-sm font-black font-mono text-slate-900 tracking-wide uppercase">
             PROVIDER TELEMETRY QUALITY & FRESHNESS COMPLIANCE
           </h3>
         </div>
-        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
+        <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300 w-fit">
           Continuous Ingestion Audit
         </span>
       </div>
@@ -26,43 +28,43 @@ export const WeatherQualityPanel: React.FC<WeatherQualityPanelProps> = ({ qualit
         {qualityReports.map((q, i) => (
           <div
             key={i}
-            className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2.5"
+            className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5 shadow-xs"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-white uppercase">
+              <span className="text-xs font-mono font-black text-slate-900 uppercase">
                 {q.provider_id.replace(/_/g, ' ')}
               </span>
-              <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${
+              <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
                 q.quality_grade === 'GRADE_A'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'bg-slate-800 text-slate-400 border border-slate-700'
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                  : 'bg-amber-100 text-amber-900 border border-amber-300'
               }`}>
                 {q.quality_grade}
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs font-mono text-slate-300">
-              <div className="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
-                <div className="text-[9px] text-slate-500">COMPLETENESS</div>
-                <div className="font-bold text-cyan-300">{q.completeness_pct}%</div>
+            <div className="grid grid-cols-2 gap-2 text-xs font-mono text-slate-700">
+              <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-xs">
+                <div className="text-[9px] text-slate-500 font-bold">COMPLETENESS</div>
+                <div className="font-black text-blue-700 text-sm">{q.completeness_pct}%</div>
               </div>
-              <div className="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
-                <div className="text-[9px] text-slate-500">AVG LATENCY</div>
-                <div className="font-bold text-teal-300">{q.latency_avg_ms} ms</div>
+              <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-xs">
+                <div className="text-[9px] text-slate-500 font-bold">AVG LATENCY</div>
+                <div className="font-black text-teal-700 text-sm">{q.latency_avg_ms} ms</div>
               </div>
-              <div className="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
-                <div className="text-[9px] text-slate-500">FRESHNESS RATE</div>
-                <div className="font-bold text-emerald-300">{q.freshness_compliance_pct}%</div>
+              <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-xs">
+                <div className="text-[9px] text-slate-500 font-bold">FRESHNESS RATE</div>
+                <div className="font-black text-emerald-700 text-sm">{q.freshness_compliance_pct}%</div>
               </div>
-              <div className="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
-                <div className="text-[9px] text-slate-500">SPIKE ANOMALIES</div>
-                <div className="font-bold text-amber-300">{q.spike_anomaly_count}</div>
+              <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-xs">
+                <div className="text-[9px] text-slate-500 font-bold">SPIKE ANOMALIES</div>
+                <div className="font-black text-amber-700 text-sm">{q.spike_anomaly_count}</div>
               </div>
             </div>
 
-            <div className="text-[10px] font-mono text-slate-500 flex items-center justify-between pt-1 border-t border-slate-800/60">
+            <div className="text-[10px] font-mono text-slate-500 flex items-center justify-between pt-1 border-t border-slate-200">
               <span>Records: {q.total_records_processed.toLocaleString()}</span>
-              <span>Audited: Just now</span>
+              <span className="font-semibold text-emerald-700">Audited: Just now</span>
             </div>
           </div>
         ))}

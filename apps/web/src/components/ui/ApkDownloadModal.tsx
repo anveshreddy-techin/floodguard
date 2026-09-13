@@ -23,10 +23,7 @@ export const ApkDownloadModal: React.FC = () => {
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   useEffect(() => {
-    // Show popup automatically on load
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 600);
+    // Modal opens only when explicitly requested (e.g. open-apk-modal event)
 
     // Listen for PWA beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -40,7 +37,6 @@ export const ApkDownloadModal: React.FC = () => {
     window.addEventListener('open-apk-modal', handleOpenModal);
 
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('open-apk-modal', handleOpenModal);
     };

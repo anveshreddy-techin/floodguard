@@ -77,25 +77,25 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
   }
 
   return (
-    <div className="fp fp-operational p-4 sm:p-5 rounded-3xl space-y-4 border border-cyan-500/30 shadow-2xl backdrop-blur-2xl">
+    <div className="bg-white p-5 rounded-2xl space-y-4 border border-slate-200 shadow-sm">
       
       {/* ── Title & Timeframe Selector Bar ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-cyan-500/20 pb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
             {timeframe === 'HOURS' && <Clock className="w-4 h-4" />}
             {timeframe === 'DAYS' && <Calendar className="w-4 h-4" />}
             {timeframe === 'WEEKS' && <Layers className="w-4 h-4" />}
           </div>
           <div>
-            <h3 className="text-sm font-black font-mono text-white tracking-wide uppercase flex items-center gap-2">
+            <h3 className="text-sm font-black font-mono text-slate-900 tracking-wide uppercase flex items-center gap-2">
               <span>
                 {timeframe === 'HOURS' && '24-HOUR HOURLY PRECIPITATION & SURGE HYDROGRAPH'}
                 {timeframe === 'DAYS' && '7-DAY DAILY RAINFALL & TEMPERATURE OUTLOOK'}
                 {timeframe === 'WEEKS' && '6-WEEK SUB-SEASONAL MONSOON ENSEMBLE FORECAST'}
               </span>
             </h3>
-            <p className="text-[11px] text-slate-400 font-sans">
+            <p className="text-[11px] text-slate-500 font-sans">
               {timeframe === 'HOURS' && 'High-resolution orographic precipitation intensity & flash tripwire alerts'}
               {timeframe === 'DAYS' && 'Medium-range daily accumulation & flood precondition trajectory'}
               {timeframe === 'WEEKS' && 'Sub-seasonal anomalous precipitation departure & soil saturation buildup'}
@@ -105,14 +105,14 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
 
         {/* Action Controls: Timeframe Switcher + Table Toggle */}
         <div className="flex items-center gap-2 self-start md:self-auto">
-          {/* Timeframe Mode Pill Buttons */}
-          <div className="flex items-center bg-[#060e22] border border-cyan-500/40 p-1 rounded-2xl shadow-inner text-xs font-mono">
+          {/* Timeframe Mode Pill Buttons (Different Distinct Colors: Blue, Yellow, Teal) */}
+          <div className="flex items-center bg-slate-100 border border-slate-200 p-1 rounded-xl shadow-inner text-xs font-mono">
             <button
               onClick={() => { setTimeframe('HOURS'); setHoveredIdx(null); }}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all active:scale-95 ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all active:scale-95 ${
                 timeframe === 'HOURS'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-cyan-300'
+                  ? 'bg-blue-600 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               ⏱️ HOURS (24H)
@@ -120,10 +120,10 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
 
             <button
               onClick={() => { setTimeframe('DAYS'); setHoveredIdx(null); }}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all active:scale-95 ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all active:scale-95 ${
                 timeframe === 'DAYS'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-cyan-300'
+                  ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               📅 DAYS (7D)
@@ -131,10 +131,10 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
 
             <button
               onClick={() => { setTimeframe('WEEKS'); setHoveredIdx(null); }}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all active:scale-95 ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all active:scale-95 ${
                 timeframe === 'WEEKS'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-cyan-300'
+                  ? 'bg-teal-600 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               🗓️ WEEKS (6W)
@@ -143,7 +143,7 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
 
           <button
             onClick={() => setShowTable(!showTable)}
-            className="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700 text-xs font-mono text-slate-300 hover:text-white flex items-center gap-1 active:scale-95 transition"
+            className="px-3 py-1.5 rounded-xl bg-white border border-slate-300 text-xs font-mono font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center gap-1 active:scale-95 transition shadow-sm"
             title="Toggle raw data table"
           >
             <Table className="w-3.5 h-3.5" />
@@ -153,23 +153,23 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
       </div>
 
       {/* ── Active Time-Step Telemetry Inspector Banner ── */}
-      <div className="bg-[#071128]/90 border border-cyan-500/30 p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-300 shadow-sm animate-fade-in">
+      <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-700 shadow-inner">
         {timeframe === 'HOURS' && (() => {
           const activeH = (hoveredIdx !== null && displayHours[hoveredIdx]) ? displayHours[hoveredIdx] : displayHours[0] || {};
           return (
             <>
               <div className="flex items-center gap-2">
-                <span className="text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded-md border border-cyan-700/50">
+                <span className="text-blue-700 font-black bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300">
                   TIME: {activeH.timestamp ? new Date(activeH.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now'}
                 </span>
                 {activeH.condition_code && <WeatherConditionBadge condition={activeH.condition_code} />}
               </div>
               <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
-                <span>Rain: <strong className="text-cyan-300">{activeH.precipitation_mm ?? 0} mm/h</strong></span>
-                <span>Probability: <strong className="text-teal-300">{activeH.rain_probability_pct ?? 0}%</strong></span>
-                <span>Cumulative: <strong className="text-amber-300">{activeH.accumulated_precipitation_mm ?? 0} mm</strong></span>
-                <span>Temp: <strong className="text-white">{activeH.temperature_c ?? '--'}°C</strong></span>
-                <span>Wind: <strong className="text-slate-200">{activeH.wind_speed_kmh ?? '--'} km/h</strong></span>
+                <span>Rain: <strong className="text-blue-700 font-bold">{activeH.precipitation_mm ?? 0} mm/h</strong></span>
+                <span>Probability: <strong className="text-teal-700 font-bold">{activeH.rain_probability_pct ?? 0}%</strong></span>
+                <span>Cumulative: <strong className="text-amber-700 font-bold">{activeH.accumulated_precipitation_mm ?? 0} mm</strong></span>
+                <span>Temp: <strong className="text-slate-900 font-bold">{activeH.temperature_c ?? '--'}°C</strong></span>
+                <span>Wind: <strong className="text-slate-700 font-bold">{activeH.wind_speed_kmh ?? '--'} km/h</strong></span>
               </div>
             </>
           );
@@ -180,16 +180,16 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
           return (
             <>
               <div className="flex items-center gap-2">
-                <span className="text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded-md border border-cyan-700/50">
+                <span className="text-amber-800 font-black bg-amber-100 px-2 py-0.5 rounded-md border border-amber-300">
                   DATE: {activeD.date || 'Day 1'}
                 </span>
                 {activeD.dominant_condition && <WeatherConditionBadge condition={activeD.dominant_condition} />}
               </div>
               <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
-                <span>24h Rain: <strong className="text-cyan-300">{activeD.total_precipitation_mm ?? 0} mm/day</strong></span>
-                <span>Rain Probability: <strong className="text-teal-300">{activeD.rain_probability_max_pct ?? 0}%</strong></span>
-                <span>Temp Range: <strong className="text-white">{activeD.temperature_min_c ?? 17}°C – {activeD.temperature_max_c ?? 24}°C</strong></span>
-                <span className="text-emerald-400 font-bold">NWP Global Model</span>
+                <span>24h Rain: <strong className="text-blue-700 font-bold">{activeD.total_precipitation_mm ?? 0} mm/day</strong></span>
+                <span>Rain Probability: <strong className="text-teal-700 font-bold">{activeD.rain_probability_max_pct ?? 0}%</strong></span>
+                <span>Temp Range: <strong className="text-slate-900 font-bold">{activeD.temperature_min_c ?? 17}°C – {activeD.temperature_max_c ?? 24}°C</strong></span>
+                <span className="text-emerald-700 font-bold">NWP Global Model</span>
               </div>
             </>
           );
@@ -200,21 +200,21 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
           return (
             <>
               <div className="flex items-center gap-2">
-                <span className="text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded-md border border-cyan-700/50">
+                <span className="text-teal-800 font-black bg-teal-100 px-2 py-0.5 rounded-md border border-teal-300">
                   PERIOD: {activeW.label}
                 </span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                   activeW.anomaly_departure_pct > 20
-                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                    : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                    ? 'bg-red-100 text-red-800 border border-red-300'
+                    : 'bg-teal-100 text-teal-800 border border-teal-300'
                 }`}>
                   {activeW.anomaly_departure_pct > 0 ? `+${activeW.anomaly_departure_pct}% SURGE` : `${activeW.anomaly_departure_pct}% DEFICIT`}
                 </span>
               </div>
               <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
-                <span>Weekly Rain: <strong className="text-cyan-300">{activeW.total_rainfall_mm} mm/wk</strong></span>
-                <span>Ensemble Spread: <strong className="text-amber-300">±{activeW.nwp_ensemble_spread_mm} mm</strong></span>
-                <span>Soil Saturation: <strong className="text-purple-300">{activeW.soil_saturation_buildup_pct}%</strong></span>
+                <span>Weekly Rain: <strong className="text-blue-700 font-bold">{activeW.total_rainfall_mm} mm/wk</strong></span>
+                <span>Ensemble Spread: <strong className="text-amber-700 font-bold">±{activeW.nwp_ensemble_spread_mm} mm</strong></span>
+                <span>Soil Saturation: <strong className="text-purple-700 font-bold">{activeW.soil_saturation_buildup_pct}%</strong></span>
               </div>
             </>
           );
@@ -228,20 +228,20 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
             <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-full h-auto select-none">
               <defs>
                 <linearGradient id="rainHourlyGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.85" />
-                  <stop offset="100%" stopColor="#0284c7" stopOpacity="0.25" />
+                  <stop offset="0%" stopColor="#2563EB" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#93C5FD" stopOpacity="0.4" />
                 </linearGradient>
                 <linearGradient id="alertHourlyGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.95" />
-                  <stop offset="100%" stopColor="#be123c" stopOpacity="0.35" />
+                  <stop offset="0%" stopColor="#DC2626" stopOpacity="0.95" />
+                  <stop offset="100%" stopColor="#FCA5A5" stopOpacity="0.4" />
                 </linearGradient>
                 <linearGradient id="dailyBarGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
-                  <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0.3" />
+                  <stop offset="0%" stopColor="#D97706" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#FDE68A" stopOpacity="0.4" />
                 </linearGradient>
                 <linearGradient id="weeklyBarGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#a855f7" stopOpacity="0.85" />
-                  <stop offset="100%" stopColor="#6b21a8" stopOpacity="0.3" />
+                  <stop offset="0%" stopColor="#0D9488" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#99F6E4" stopOpacity="0.4" />
                 </linearGradient>
               </defs>
 
@@ -252,8 +252,8 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
                 const unit = timeframe === 'HOURS' ? 'mm/h' : (timeframe === 'DAYS' ? 'mm/d' : 'mm/w');
                 return (
                   <g key={idx}>
-                    <line x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#1e293b" strokeWidth="1" strokeDasharray="3,3" />
-                    <text x={paddingX - 6} y={y + 3} textAnchor="end" fill="#64748b" fontSize="9" fontFamily="monospace">
+                    <line x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3,3" />
+                    <text x={paddingX - 6} y={y + 3} textAnchor="end" fill="#64748B" fontSize="9" fontFamily="monospace" fontWeight="bold">
                       {val} {idx === 4 ? unit : ''}
                     </text>
                   </g>
@@ -269,8 +269,8 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hours 
                     if (alertY >= paddingY && alertY <= paddingY + chartHeight) {
                       return (
                         <g>
-                          <line x1={paddingX} y1={alertY} x2={svgWidth - paddingX} y2={alertY} stroke="#f43f5e" strokeWidth="1.5" strokeDasharray="4,2" />
-                          <text x={svgWidth - paddingX} y={alertY - 4} textAnchor="end" fill="#fb7185" fontSize="8" fontFamily="monospace">
+                          <line x1={paddingX} y1={alertY} x2={svgWidth - paddingX} y2={alertY} stroke="#DC2626" strokeWidth="1.5" strokeDasharray="4,2" />
+                          <text x={svgWidth - paddingX} y={alertY - 4} textAnchor="end" fill="#DC2626" fontSize="8" fontFamily="monospace" fontWeight="bold">
                             FLASH FLOOD THRESHOLD (15 mm/h)
                           </text>
                         </g>

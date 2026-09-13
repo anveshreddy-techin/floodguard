@@ -127,7 +127,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
   return (
     <aside
-      className={`hidden md:flex flex-col justify-between transition-all duration-300 select-none z-[200] shrink-0 ${
+      className={`hidden md:flex flex-col justify-between transition-all duration-300 select-none z-[200] shrink-0 h-full max-h-full ${
         collapsed ? 'w-16' : 'w-64 xl:w-72'
       }`}
       style={{
@@ -136,43 +136,48 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
         boxShadow: '2px 0 16px rgba(0,0,0,0.15)',
       }}
     >
-      <div className="p-3 space-y-4 overflow-y-auto flex-1 custom-sidebar-scroll">
-        {/* Brand Header with Logo and Collapse Button */}
-        <div className="flex items-center justify-between px-1 pb-1 border-b border-white/10">
-          {!collapsed ? (
-            <div className="flex items-center gap-2.5">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow"
-                style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }}
-              >
-                <ShieldAlert className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <div className="text-sm font-bold text-white tracking-tight leading-tight">
-                  FloodGuard AI
-                </div>
-                <div className="text-[10px] leading-tight" style={{ color: '#88A4B8' }}>
-                  Safer Communities
-                </div>
-              </div>
-            </div>
-          ) : (
+      {/* ── Fixed Brand Header at Top (Never scrolls away, circle logo perfectly centered and visible) ── */}
+      <div className="p-3.5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#162332]">
+        {!collapsed ? (
+          <div className="flex items-center gap-2.5 min-w-0">
+            {/* The Logo Circle Badge with clean padding and no clipping */}
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center mx-auto shadow"
+              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-md ring-2 ring-blue-400/30"
               style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }}
             >
-              <ShieldAlert className="w-4 h-4 text-white" />
+              <ShieldAlert className="w-5 h-5 text-white" />
             </div>
-          )}
-
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition active:scale-95 ml-auto"
-            title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+            <div className="min-w-0">
+              <div className="text-sm font-black text-white tracking-tight leading-tight truncate">
+                FloodGuard AI
+              </div>
+              <div className="text-[10px] font-medium leading-tight text-blue-200 mt-0.5 truncate">
+                Safer Communities
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div
+            className="w-9 h-9 rounded-full flex items-center justify-center mx-auto shadow-md ring-2 ring-blue-400/30 shrink-0"
+            style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }}
+            title="FloodGuard AI • Safer Communities"
           >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
-        </div>
+            <ShieldAlert className="w-5 h-5 text-white" />
+          </div>
+        )}
+
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition active:scale-95 ml-auto"
+          title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+        >
+          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        </button>
+      </div>
+
+      {/* ── Scrollable Navigation Items Container ── */}
+      <div className="p-3 space-y-4 overflow-y-auto flex-1 custom-sidebar-scroll">
+
 
         {/* 5-Phase Categorized Navigation Sections (ALL OPTIONS PRESERVED) */}
         {navSections.map((section) => (
