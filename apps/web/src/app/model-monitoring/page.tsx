@@ -220,11 +220,11 @@ void loop() { /* Tipping bucket + TDR + Ultrasonic read & HMAC-SHA256 post */ }
   const villageInfo = VILLAGES[selectedVillage];
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
+    <div className="flex flex-col h-screen overflow-hidden select-none bg-[#F0F4F8] text-slate-900">
       <Header />
-      <div className="flex flex-1 min-h-0">
+      <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="model-monitoring" />
-        <main className="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-y-auto pb-24 md:pb-6">
+        <main className="flex-1 min-h-0 overflow-y-auto p-3.5 sm:p-5 lg:p-6 pb-24 md:pb-6">
           {/* Related Tools in Governance & ML Hub */}
           <RelatedAppsBar activeAppId="model-monitoring" className="mb-5" />
           

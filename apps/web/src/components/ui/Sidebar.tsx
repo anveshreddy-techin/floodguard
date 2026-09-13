@@ -156,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
   return (
     <aside
-      className={`hidden md:flex flex-col justify-between transition-all duration-300 select-none z-[200] shrink-0 h-full max-h-full ${
+      className={`hidden md:flex flex-col justify-between transition-all duration-300 select-none z-30 shrink-0 sticky top-[88px] h-[calc(100vh-88px)] max-h-[calc(100vh-88px)] ${
         collapsed ? 'w-16' : 'w-64 xl:w-72'
       }`}
       style={{
@@ -204,7 +204,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       </div>
 
       {/* ── Scrollable Application Hubs Container ── */}
-      <div className="p-2.5 space-y-3 overflow-y-auto flex-1 custom-sidebar-scroll">
+      <div className="p-2.5 space-y-3 overflow-y-auto flex-1 min-h-0 custom-sidebar-scroll">
         {APP_HUB_OPTIONS.map((hub) => {
           const HubIcon = hub.icon;
           const isHubExpanded = !!expandedHubs[hub.id];
@@ -317,7 +317,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       {/* ── Footer ── */}
       {!collapsed && (
         <div
-          className="p-3 border-t text-xs font-sans flex items-center justify-between bg-black/20"
+          className="p-3 border-t text-xs font-sans flex items-center justify-between bg-black/20 shrink-0"
           style={{ borderColor: 'rgba(255,255,255,0.08)', color: '#88A4B8' }}
         >
           <span className="font-semibold text-blue-400">SIH26192 • Theme 4</span>

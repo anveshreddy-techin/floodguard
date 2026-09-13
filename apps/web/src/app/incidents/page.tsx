@@ -75,11 +75,11 @@ export default function IncidentCommandPage() {
   const stageColor = STAGE_DATA[incident.stage]?.color || '#6b7280';
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8]">
+    <div className="flex flex-col h-screen overflow-hidden select-none bg-[#F0F4F8]">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
-      <div className="flex flex-1 min-h-0">
+      <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="incidents" />
-        <main className="flex-1 p-3.5 sm:p-5 max-w-7xl mx-auto w-full pb-24 md:pb-6 overflow-y-auto">
+        <main className="flex-1 min-h-0 overflow-y-auto p-3.5 sm:p-5 max-w-7xl mx-auto w-full pb-24 md:pb-6">
           <RelatedAppsBar activeAppId="incidents" />
 
           {/* Header */}

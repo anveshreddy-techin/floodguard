@@ -32,6 +32,7 @@ export const NationalRiverRiskMap: React.FC<{
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [showInMapCard, setShowInMapCard] = useState<boolean>(true);
   const [inMapCardMinimized, setInMapCardMinimized] = useState<boolean>(false);
+  const [showAllLabels, setShowAllLabels] = useState<boolean>(false);
 
   // Filtered river points
   const filteredPoints = useMemo(() => {
@@ -433,8 +434,20 @@ export const NationalRiverRiskMap: React.FC<{
               </button>
             )}
 
-            {/* Quick Zoom Controls */}
-            <div className="absolute top-2 right-2 z-10 flex items-center gap-1 bg-white/95 border border-slate-200 p-1 rounded-xl shadow-lg backdrop-blur-md">
+            {/* Quick Map & Zoom Controls */}
+            <div className="absolute top-2 right-2 z-10 flex items-center gap-1.5 bg-white/95 border border-slate-200 p-1 rounded-xl shadow-lg backdrop-blur-md">
+              <button
+                onClick={() => setShowAllLabels((s) => !s)}
+                className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold transition flex items-center gap-1 ${
+                  showAllLabels 
+                    ? 'bg-blue-600 text-white shadow-xs' 
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+                title="Toggle all gauge risk percentage labels"
+              >
+                <span>{showAllLabels ? '🏷️ All Labels' : '✨ Clean Map'}</span>
+              </button>
+              <div className="w-[1px] h-4 bg-slate-200" />
               <button
                 onClick={() => setZoomLevel((z) => Math.min(2, z + 0.25))}
                 className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-blue-600 active:scale-95 transition"
@@ -547,7 +560,7 @@ export const NationalRiverRiskMap: React.FC<{
                 );
               })}
 
-              {/* ── 3. Interactive River Gauge Radar Points ── */}
+              {/* ── 3. Interactive River Gauge Radar Points (Clean, Non-Overlapping) ── */}
               {filteredPoints.map((pt) => {
                 const isSelected = selectedPoint?.id === pt.id;
                 const isHovered = hoveredPoint?.id === pt.id;
@@ -556,87 +569,147 @@ export const NationalRiverRiskMap: React.FC<{
                 return (
                   <g
                     key={pt.id}
-                    className="cursor-pointer transition-all active:scale-110"
+                    className="cursor-pointer transition-all"
                     onClick={() => handlePointClick(pt)}
                     onMouseEnter={() => setHoveredPoint(pt)}
                     onMouseLeave={() => setHoveredPoint(null)}
                   >
                     <title>{`${pt.name} (${pt.river}, ${pt.state}) — ${pt.riskPercentage}% Risk [${pt.riskCategory}] — Click to inspect live telemetry`}</title>
 
-                    {/* Animated Pulsing Beacon for Selected Node */}
+                    {/* Selected Node: Clean static locator target ring (NO spinning circular animation) */}
                     {isSelected && (
                       <>
                         <circle
                           cx={pt.svgX}
                           cy={pt.svgY}
-                          r="24"
+                          r="16"
                           fill="none"
-                          stroke={riskColor}
+                          stroke="#38bdf8"
                           strokeWidth="2"
-                          strokeDasharray="4 3"
-                          opacity="0.8"
-                          className="animate-spin"
+                          strokeDasharray="4 2"
+                          opacity="0.85"
                         />
                         <circle
                           cx={pt.svgX}
                           cy={pt.svgY}
-                          r="18"
-                          fill={riskColor}
-                          fillOpacity="0.25"
-                          stroke={riskColor}
-                          strokeWidth="1.5"
+                          r="11"
+                          fill="#38bdf8"
+                          fillOpacity="0.2"
+                          stroke="#38bdf8"
+                          strokeWidth="1.2"
                         />
                       </>
                     )}
 
-                    {/* Outer Glow Shield */}
+                    {/* Outer Halo Node */}
                     <circle
                       cx={pt.svgX}
                       cy={pt.svgY}
-                      r={isSelected ? 14 : isHovered ? 11 : 8}
+                      r={isSelected ? 9 : isHovered ? 8 : 6}
                       fill={riskColor}
-                      fillOpacity={isSelected ? 0.45 : 0.2}
+                      fillOpacity={isSelected ? 0.45 : isHovered ? 0.35 : 0.22}
                       stroke={riskColor}
-                      strokeWidth={isSelected ? 2.5 : 1}
+                      strokeWidth={isSelected ? 2 : 1}
                     />
 
                     {/* Inner Core Solid Node */}
                     <circle
                       cx={pt.svgX}
                       cy={pt.svgY}
-                      r={isSelected ? 7 : isHovered ? 5.5 : 4}
+                      r={isSelected ? 5 : isHovered ? 4.5 : 3.2}
                       fill={isSelected ? '#38bdf8' : '#ffffff'}
                       stroke={riskColor}
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                     />
 
-                    {/* Gauge Percentage Callout Tag */}
-                    <g transform={`translate(${pt.svgX + 12}, ${pt.svgY - 8})`}>
-                      <rect
-                        x="-2"
-                        y="-10"
-                        width={isSelected ? 104 : 64}
-                        height="18"
-                        rx="5"
-                        fill="#030712"
-                        fillOpacity="0.95"
-                        stroke={riskColor}
-                        strokeWidth={isSelected ? 2 : 1}
-                      />
-                      <text
-                        x="4"
-                        y="3"
-                        fill={isSelected ? '#ffffff' : riskColor}
-                        fontSize={isSelected ? '10' : '9'}
-                        fontWeight="bold"
-                        fontFamily="monospace"
-                      >
-                        {isSelected ? `📍 ${pt.riskPercentage}% ${pt.name.split(' at ')[0].slice(0, 10)}` : `${pt.riskPercentage}% ${pt.riskCategory === 'CRITICAL' ? '⚠️' : ''}`}
-                      </text>
-                    </g>
+                    {/* All Labels Mode (Only if explicitly toggled ON by user) */}
+                    {showAllLabels && !isSelected && !isHovered && (
+                      <g transform={`translate(${pt.svgX + 7}, ${pt.svgY - 4})`} className="pointer-events-none opacity-85">
+                        <text
+                          x="0"
+                          y="0"
+                          fill={riskColor}
+                          fontSize="8"
+                          fontWeight="bold"
+                          fontFamily="monospace"
+                        >
+                          {pt.riskPercentage}%
+                        </text>
+                      </g>
+                    )}
                   </g>
                 );
               })}
+
+              {/* ── 4. Dedicated High-Z-Index Callout Layer (Never Collides or Gets Hidden) ── */}
+              {/* Selected Point Callout Badge */}
+              {selectedPoint && (
+                <g
+                  transform={`translate(${selectedPoint.svgX}, ${selectedPoint.svgY - 24})`}
+                  className="pointer-events-none drop-shadow-md"
+                >
+                  <rect
+                    x="-75"
+                    y="-13"
+                    width="150"
+                    height="22"
+                    rx="6"
+                    fill="#0b1329"
+                    stroke="#38bdf8"
+                    strokeWidth="1.5"
+                    fillOpacity="0.98"
+                  />
+                  <text
+                    x="0"
+                    y="2"
+                    textAnchor="middle"
+                    fill="#ffffff"
+                    fontSize="9.5"
+                    fontWeight="bold"
+                    fontFamily="sans-serif"
+                  >
+                    📍 {selectedPoint.name.split(' at ')[0]} ({selectedPoint.riskPercentage}%)
+                  </text>
+                  <polygon points="-4,9 4,9 0,13" fill="#0b1329" stroke="#38bdf8" strokeWidth="1" />
+                </g>
+              )}
+
+              {/* Hovered Point Callout Tooltip (Only if different from selected) */}
+              {hoveredPoint && hoveredPoint.id !== selectedPoint?.id && (
+                <g
+                  transform={`translate(${hoveredPoint.svgX}, ${hoveredPoint.svgY - 22})`}
+                  className="pointer-events-none drop-shadow-md"
+                >
+                  <rect
+                    x="-60"
+                    y="-11"
+                    width="120"
+                    height="20"
+                    rx="5"
+                    fill="#0f172a"
+                    stroke={getRiskColor(hoveredPoint.riskPercentage)}
+                    strokeWidth="1.2"
+                    fillOpacity="0.95"
+                  />
+                  <text
+                    x="0"
+                    y="3"
+                    textAnchor="middle"
+                    fill="#ffffff"
+                    fontSize="9"
+                    fontWeight="bold"
+                    fontFamily="sans-serif"
+                  >
+                    {hoveredPoint.name.split(' at ')[0]} • {hoveredPoint.riskPercentage}%
+                  </text>
+                  <polygon
+                    points="-3,9 3,9 0,12"
+                    fill="#0f172a"
+                    stroke={getRiskColor(hoveredPoint.riskPercentage)}
+                    strokeWidth="1"
+                  />
+                </g>
+              )}
             </svg>
 
             {/* Quick Floating Legend (Bottom Left of Map) */}

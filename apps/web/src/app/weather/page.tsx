@@ -352,13 +352,13 @@ export default function WeatherIntelligencePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F0F4F8] text-slate-900 select-none">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#F0F4F8] text-slate-900 select-none">
       <Header dataMode={operatingMode} systemStatus="OPERATIONAL" />
 
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="weather" />
 
-        <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-6 space-y-5 safe-bottom">
+        <main className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-5 lg:p-6 space-y-5 safe-bottom">
           {/* Related Tools in Meteorology Hub */}
           <RelatedAppsBar activeAppId="weather" />
 

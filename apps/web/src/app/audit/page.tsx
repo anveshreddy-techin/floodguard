@@ -41,11 +41,11 @@ export default function AuditPage() {
   const active = CHAIN_NODES.find(n => n.id === selectedNode);
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
+    <div className="flex flex-col h-screen overflow-hidden select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
-      <div className="flex flex-1 min-h-0">
+      <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="audit" />
-        <main className="flex-1 p-3.5 sm:p-5 max-w-7xl mx-auto w-full pb-24 md:pb-6 overflow-y-auto">
+        <main className="flex-1 min-h-0 overflow-y-auto p-3.5 sm:p-5 max-w-7xl mx-auto w-full pb-24 md:pb-6">
 
           {/* Header */}
           <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">

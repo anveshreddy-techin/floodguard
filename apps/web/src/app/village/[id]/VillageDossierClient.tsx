@@ -325,12 +325,12 @@ export const VillageDossierClient: React.FC<{ params: { id: string } }> = ({ par
   const evac = forecastData?.evacuation_guidance;
 
   return (
-    <div className="flex flex-col min-h-screen select-none bg-[#F0F4F8] text-slate-900">
+    <div className="flex flex-col h-screen overflow-hidden select-none bg-[#F0F4F8] text-slate-900">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="village" />
 
-        <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-6 pb-24 md:pb-6 overflow-y-auto">
+        <main className="flex-1 min-h-0 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-6 pb-24 md:pb-6 overflow-y-auto">
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
