@@ -14,7 +14,7 @@ import {
   Wind, MapPin, CheckCircle2, AlertTriangle, Filter,
   Sliders, Maximize2, RefreshCw, Layers, Zap, Info,
   ChevronRight, Radio, Compass, Building, Flame,
-  ZoomIn, ZoomOut, RotateCcw, ChevronDown, ChevronUp
+  ZoomIn, ZoomOut, RotateCcw, ChevronDown, ChevronUp, X, ExternalLink
 } from 'lucide-react';
 import { DataModeBadge } from '@/components/ui/Badges';
 
@@ -30,6 +30,8 @@ export const NationalRiverRiskMap: React.FC<{
   const [flowAnimationSpeed, setFlowAnimationSpeed] = useState<'NORMAL' | 'FAST' | 'PAUSED'>('NORMAL');
   const [statsExpanded, setStatsExpanded] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [showInMapCard, setShowInMapCard] = useState<boolean>(true);
+  const [inMapCardMinimized, setInMapCardMinimized] = useState<boolean>(false);
 
   // Filtered river points
   const filteredPoints = useMemo(() => {
@@ -74,15 +76,45 @@ export const NationalRiverRiskMap: React.FC<{
 
   const handlePointClick = (pt: RiverPoint) => {
     setSelectedPoint(pt);
+    setShowInMapCard(true);
+    setInMapCardMinimized(false);
     if (onSelectRiverPoint) {
       onSelectRiverPoint(pt);
     }
-    // On mobile, smooth scroll to inspector card
+    // On mobile, smooth scroll to inspector card if needed
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {
       const el = document.getElementById('gauge-inspector-card');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
+    }
+  };
+
+  const handleBasinSelect = (bId: RiverBasinId | 'ALL') => {
+    setSelectedBasin(bId);
+    setShowInMapCard(true);
+    setInMapCardMinimized(false);
+    if (bId !== 'ALL') {
+      const basinPoints = NATIONAL_RIVER_POINTS.filter((p) => p.basin === bId);
+      if (basinPoints.length > 0) {
+        // Automatically pick the highest risk point in this basin
+        const top = [...basinPoints].sort((a, b) => b.riskPercentage - a.riskPercentage)[0];
+        setSelectedPoint(top);
+        if (onSelectRiverPoint) onSelectRiverPoint(top);
+      }
+    }
+  };
+
+  const handleRiverPathClick = (path: any) => {
+    handleBasinSelect(path.basin);
+    const basinPoints = NATIONAL_RIVER_POINTS.filter((p) => p.basin === path.basin);
+    const matchingPoint = basinPoints.find((p) =>
+      p.river.toLowerCase().includes(path.name.toLowerCase().split(' ')[0]) ||
+      path.name.toLowerCase().includes(p.river.toLowerCase().split(' ')[0])
+    ) || basinPoints[0];
+    if (matchingPoint) {
+      setSelectedPoint(matchingPoint);
+      if (onSelectRiverPoint) onSelectRiverPoint(matchingPoint);
     }
   };
 
@@ -197,7 +229,7 @@ export const NationalRiverRiskMap: React.FC<{
             <Filter className="w-3 h-3 text-cyan-400" /> BASIN:
           </span>
           <button
-            onClick={() => setSelectedBasin('ALL')}
+            onClick={() => handleBasinSelect('ALL')}
             className={`px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition ${
               selectedBasin === 'ALL'
                 ? 'bg-cyan-500 text-slate-950 shadow'
@@ -211,7 +243,7 @@ export const NationalRiverRiskMap: React.FC<{
             return (
               <button
                 key={bId}
-                onClick={() => setSelectedBasin(bId)}
+                onClick={() => handleBasinSelect(bId)}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition flex items-center gap-1.5 ${
                   selectedBasin === bId
                     ? 'bg-cyan-500 text-slate-950 shadow'
@@ -248,10 +280,158 @@ export const NationalRiverRiskMap: React.FC<{
         {viewMode === 'MAP' && (
           <div className="flex-1 relative min-h-[520px] sm:min-h-[640px] lg:min-h-0 bg-[#02050f] flex items-center justify-center p-1 sm:p-2 overflow-hidden">
             
-            {/* Mobile Touch Guidance Banner */}
-            <div className="absolute top-2 left-2 z-10 bg-slate-950/85 border border-cyan-800/80 px-2.5 py-1 rounded-xl text-[10px] font-mono text-cyan-300 flex items-center gap-1.5 pointer-events-none shadow-lg">
-              <span>👆 Tap any gauge pin for telemetry</span>
-            </div>
+            {/* ── IN-MAP TELEMETRY & BASIN INTELLIGENCE HUD CARD ── */}
+            {showInMapCard && (
+              <div className={`absolute top-2 left-2 z-20 transition-all duration-300 max-w-[340px] sm:max-w-[390px] w-full ${
+                inMapCardMinimized ? 'w-auto' : ''
+              }`}>
+                {inMapCardMinimized ? (
+                  <button
+                    onClick={() => setInMapCardMinimized(false)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950/95 border border-cyan-500/60 text-cyan-300 text-xs font-mono font-bold shadow-2xl backdrop-blur-md hover:bg-slate-900 transition active:scale-95"
+                  >
+                    <Waves className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                    <span>SHOW TELEMETRY: {selectedPoint.name.split(' at ')[0]} ({selectedPoint.riskPercentage}%)</span>
+                    <ChevronDown className="w-3.5 h-3.5 ml-1" />
+                  </button>
+                ) : (
+                  <div className="bg-slate-950/95 border border-cyan-500/40 rounded-2xl p-3 sm:p-3.5 backdrop-blur-xl shadow-[0_0_30px_rgba(0,0,0,0.85)] text-xs font-mono space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {/* Header with basin badge, title, and action buttons */}
+                    <div className="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-2">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span
+                            className="px-2 py-0.5 rounded-md text-[9px] font-bold text-white uppercase tracking-wider flex items-center gap-1 shadow-sm"
+                            style={{ backgroundColor: RIVER_BASINS_META[selectedPoint.basin]?.color || '#06b6d4' }}
+                          >
+                            <span>🌊 {selectedPoint.basinName}</span>
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-bold">
+                            {selectedPoint.state}
+                          </span>
+                        </div>
+                        <h3 className="text-sm sm:text-base font-black text-white mt-1 leading-tight truncate">
+                          {selectedPoint.name}
+                        </h3>
+                        <div className="text-[10px] text-cyan-400 font-bold flex items-center gap-1 mt-0.5">
+                          <span>{selectedPoint.river}</span>
+                          <span className="text-slate-600">·</span>
+                          <span className="text-slate-400">{selectedPoint.cwcStationCode}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => setInMapCardMinimized(true)}
+                          className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                          title="Minimize Telemetry Card"
+                        >
+                          <ChevronUp className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setShowInMapCard(false)}
+                          className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                          title="Close Card"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Risk Badge & Stage Alert */}
+                    <div className="flex items-center justify-between gap-2 bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                      <span className={`px-2 py-0.5 rounded-lg text-[10px] font-black border flex items-center gap-1 ${getRiskBadge(selectedPoint.riskCategory)}`}>
+                        <AlertTriangle className="w-3 h-3" />
+                        <span>{selectedPoint.riskPercentage}% {selectedPoint.riskCategory}</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-rose-400 animate-pulse flex items-center gap-1">
+                        <Activity className="w-3 h-3" />
+                        <span>{selectedPoint.trend.replace('_', ' ')}</span>
+                      </span>
+                    </div>
+
+                    {/* Key Telemetry Stats Grid */}
+                    <div className="grid grid-cols-3 gap-1.5 text-center">
+                      <div className="p-1.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                        <span className="text-[9px] text-slate-400 block">WATER STAGE</span>
+                        <span className="text-sm font-black text-white">{selectedPoint.currentStageM}m</span>
+                        <span className="text-[8px] text-rose-400 block font-bold">Danger: {selectedPoint.dangerLevelM}m</span>
+                      </div>
+                      <div className="p-1.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                        <span className="text-[9px] text-slate-400 block">DISCHARGE</span>
+                        <span className="text-sm font-black text-cyan-300">{selectedPoint.dischargeCumecs.toLocaleString()}</span>
+                        <span className="text-[8px] text-slate-400 block">m³/s</span>
+                      </div>
+                      <div className="p-1.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                        <span className="text-[9px] text-slate-400 block">3H RAIN</span>
+                        <span className="text-sm font-black text-emerald-300">{selectedPoint.rainfall3hMm}mm</span>
+                        <span className="text-[8px] text-slate-400 block">Vel: {selectedPoint.flowVelocityMs}m/s</span>
+                      </div>
+                    </div>
+
+                    {/* Danger Ratio Bar */}
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[9px] text-slate-400">
+                        <span>STAGE / DANGER RATIO</span>
+                        <span className="font-bold text-amber-300">
+                          {Math.round((selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%
+                        </span>
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${Math.min(100, (selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%`,
+                            backgroundColor: getRiskColor(selectedPoint.riskPercentage),
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Threat & Directive */}
+                    <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-sans leading-tight">
+                      <div className="text-[9px] font-mono font-bold text-amber-400 flex items-center gap-1 mb-0.5">
+                        <ShieldAlert className="w-3 h-3" />
+                        <span>THREAT PROFILE</span>
+                      </div>
+                      <p className="text-slate-200">{selectedPoint.primaryHazard}</p>
+                    </div>
+
+                    {/* Quick Stations in this Basin */}
+                    <div className="pt-1 border-t border-slate-800/80">
+                      <span className="text-[9px] text-slate-400 block font-bold mb-1">
+                        OTHER STATIONS IN {selectedPoint.basinName.toUpperCase()}:
+                      </span>
+                      <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+                        {NATIONAL_RIVER_POINTS.filter((p) => p.basin === selectedPoint.basin).map((p) => (
+                          <button
+                            key={p.id}
+                            onClick={() => handlePointClick(p)}
+                            className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold shrink-0 transition ${
+                              selectedPoint.id === p.id
+                                ? 'bg-cyan-500 text-slate-950 shadow'
+                                : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-800'
+                            }`}
+                          >
+                            {p.name.split(' at ')[0].slice(0, 14)} ({p.riskPercentage}%)
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!showInMapCard && (
+              <button
+                onClick={() => { setShowInMapCard(true); setInMapCardMinimized(false); }}
+                className="absolute top-2 left-2 z-10 bg-slate-950/90 border border-cyan-500/50 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-cyan-300 hover:bg-slate-900 flex items-center gap-1.5 shadow-xl transition"
+              >
+                <Waves className="w-3.5 h-3.5 text-cyan-400" />
+                <span>OPEN IN-MAP TELEMETRY HUD</span>
+              </button>
+            )}
 
             {/* Quick Zoom Controls */}
             <div className="absolute top-2 right-2 z-10 flex items-center gap-1 bg-slate-950/90 border border-slate-800 p-1 rounded-xl shadow-lg">
@@ -320,18 +500,25 @@ export const NationalRiverRiskMap: React.FC<{
                 opacity="0.5"
               />
 
-              {/* ── 2. Flowing Animated River Channels ── */}
+              {/* ── 2. Flowing Animated River Channels (Interactive & Downstream Flow) ── */}
               {NATIONAL_RIVER_PATHS.map((path) => {
                 const isSelectedBasin = selectedBasin === 'ALL' || path.basin === selectedBasin;
                 return (
-                  <g key={path.id} opacity={isSelectedBasin ? 1 : 0.2}>
+                  <g
+                    key={path.id}
+                    opacity={isSelectedBasin ? 1 : 0.25}
+                    className="cursor-pointer transition-opacity group"
+                    onClick={() => handleRiverPathClick(path)}
+                  >
+                    <title>{`${path.name} (${RIVER_BASINS_META[path.basin]?.name}) — Click to view telemetry`}</title>
+
                     {/* Underlying Glow Ribbon */}
                     <path
                       d={path.pathData}
                       fill="none"
                       stroke={path.color}
                       strokeWidth={path.strokeWidth * 2.5}
-                      strokeOpacity="0.15"
+                      strokeOpacity={isSelectedBasin ? 0.25 : 0.08}
                       strokeLinecap="round"
                     />
 
@@ -341,7 +528,7 @@ export const NationalRiverRiskMap: React.FC<{
                       fill="none"
                       stroke={path.color}
                       strokeWidth={path.strokeWidth}
-                      strokeOpacity="0.85"
+                      strokeOpacity={isSelectedBasin ? 0.95 : 0.35}
                       strokeLinecap="round"
                     />
 
@@ -353,7 +540,7 @@ export const NationalRiverRiskMap: React.FC<{
                       strokeWidth={path.strokeWidth * 0.8}
                       strokeDasharray="8 16"
                       className={flowAnimationSpeed === 'FAST' ? 'flow-stream-fast' : 'flow-stream'}
-                      strokeOpacity="0.9"
+                      strokeOpacity={isSelectedBasin ? 0.95 : 0.25}
                       strokeLinecap="round"
                     />
                   </g>
@@ -374,15 +561,43 @@ export const NationalRiverRiskMap: React.FC<{
                     onMouseEnter={() => setHoveredPoint(pt)}
                     onMouseLeave={() => setHoveredPoint(null)}
                   >
+                    <title>{`${pt.name} (${pt.river}, ${pt.state}) — ${pt.riskPercentage}% Risk [${pt.riskCategory}] — Click to inspect live telemetry`}</title>
+
+                    {/* Animated Pulsing Beacon for Selected Node */}
+                    {isSelected && (
+                      <>
+                        <circle
+                          cx={pt.svgX}
+                          cy={pt.svgY}
+                          r="24"
+                          fill="none"
+                          stroke={riskColor}
+                          strokeWidth="2"
+                          strokeDasharray="4 3"
+                          opacity="0.8"
+                          className="animate-spin"
+                        />
+                        <circle
+                          cx={pt.svgX}
+                          cy={pt.svgY}
+                          r="18"
+                          fill={riskColor}
+                          fillOpacity="0.25"
+                          stroke={riskColor}
+                          strokeWidth="1.5"
+                        />
+                      </>
+                    )}
+
                     {/* Outer Glow Shield */}
                     <circle
                       cx={pt.svgX}
                       cy={pt.svgY}
                       r={isSelected ? 14 : isHovered ? 11 : 8}
                       fill={riskColor}
-                      fillOpacity={isSelected ? 0.35 : 0.2}
+                      fillOpacity={isSelected ? 0.45 : 0.2}
                       stroke={riskColor}
-                      strokeWidth={isSelected ? 2 : 1}
+                      strokeWidth={isSelected ? 2.5 : 1}
                     />
 
                     {/* Inner Core Solid Node */}
@@ -390,7 +605,7 @@ export const NationalRiverRiskMap: React.FC<{
                       cx={pt.svgX}
                       cy={pt.svgY}
                       r={isSelected ? 7 : isHovered ? 5.5 : 4}
-                      fill="#ffffff"
+                      fill={isSelected ? '#38bdf8' : '#ffffff'}
                       stroke={riskColor}
                       strokeWidth="2"
                     />
@@ -400,23 +615,23 @@ export const NationalRiverRiskMap: React.FC<{
                       <rect
                         x="-2"
                         y="-10"
-                        width={isSelected ? 88 : 62}
+                        width={isSelected ? 104 : 64}
                         height="18"
                         rx="5"
                         fill="#030712"
-                        fillOpacity="0.9"
+                        fillOpacity="0.95"
                         stroke={riskColor}
-                        strokeWidth={isSelected ? 1.5 : 1}
+                        strokeWidth={isSelected ? 2 : 1}
                       />
                       <text
                         x="4"
                         y="3"
-                        fill={riskColor}
+                        fill={isSelected ? '#ffffff' : riskColor}
                         fontSize={isSelected ? '10' : '9'}
                         fontWeight="bold"
                         fontFamily="monospace"
                       >
-                        {pt.riskPercentage}% {pt.riskCategory === 'CRITICAL' ? '⚠️' : ''}
+                        {isSelected ? `📍 ${pt.riskPercentage}% ${pt.name.split(' at ')[0].slice(0, 10)}` : `${pt.riskPercentage}% ${pt.riskCategory === 'CRITICAL' ? '⚠️' : ''}`}
                       </text>
                     </g>
                   </g>
@@ -507,7 +722,12 @@ export const NationalRiverRiskMap: React.FC<{
                     const basinPoints = NATIONAL_RIVER_POINTS.filter((p) => p.basin === bId);
                     const peakDischarge = Math.max(...basinPoints.map((p) => p.dischargeCumecs));
                     return (
-                      <tr key={bId} className="hover:bg-slate-900/50 transition">
+                      <tr
+                        key={bId}
+                        onClick={() => { handleBasinSelect(bId); setViewMode('MAP'); }}
+                        className="hover:bg-slate-900/70 transition cursor-pointer active:scale-[0.99]"
+                        title="Click to view on National River Map"
+                      >
                         <td className="p-3 font-bold text-white flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: meta.color }} />
                           {meta.name}
