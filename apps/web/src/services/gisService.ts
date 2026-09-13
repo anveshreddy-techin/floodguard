@@ -55,6 +55,30 @@ export interface EvacuationRouteResult {
   routeStatus: 'CLEAR_UPHILL_TRAIL' | 'RIVERBED_BLOCKED';
 }
 
+export interface RiverGeoJSONFeature {
+  type: 'Feature';
+  properties: {
+    id: string;
+    name: string;
+    waterway: string;
+    isMainstem: boolean;
+    stroke: string;
+    strokeWidth: number;
+    strokeOpacity: number;
+  };
+  geometry: {
+    type: 'LineString';
+    coordinates: [number, number][]; // [lon, lat] per GeoJSON RFC 7946
+  };
+}
+
+export interface RiverGeoJSONCollection {
+  type: 'FeatureCollection';
+  features: RiverGeoJSONFeature[];
+}
+
+import osmRiversData from '@/data/osm_rivers.json';
+
 // ─── 1. GEOSPATIAL ALGORITHMS ─────────────────────────────────────────────
 
 /**
@@ -105,47 +129,69 @@ export function haversineDistanceKm(p1: [number, number], p2: [number, number]):
   return R * c;
 }
 
+/**
+ * Mathematically builds a 2D closed buffer polygon around a river path
+ * by computing perpendicular normal vectors at each vertex.
+ */
+export function makeRiverBufferPolygon(pts: [number, number][], offsetM: number): [number, number][] {
+  if (!pts || pts.length < 2) return [];
+  const leftSide: [number, number][] = [];
+  const rightSide: [number, number][] = [];
+
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i];
+    let dx: number;
+    let dy: number;
+    if (i === 0) {
+      dx = pts[1][1] - pts[0][1];
+      dy = pts[1][0] - pts[0][0];
+    } else if (i === pts.length - 1) {
+      dx = pts[i][1] - pts[i - 1][1];
+      dy = pts[i][0] - pts[i - 1][0];
+    } else {
+      dx = pts[i + 1][1] - pts[i - 1][1];
+      dy = pts[i + 1][0] - pts[i - 1][0];
+    }
+
+    const cosLat = Math.cos((p[0] * Math.PI) / 180);
+    const dxM = dx * 111000 * cosLat;
+    const dyM = dy * 111000;
+    const len = Math.sqrt(dxM * dxM + dyM * dyM) || 1;
+
+    const nx = -dyM / len;
+    const ny = dxM / len;
+
+    const leftLat = p[0] + (ny * offsetM) / 111000;
+    const leftLon = p[1] + (nx * offsetM) / (111000 * cosLat);
+    leftSide.push([Number(leftLat.toFixed(6)), Number(leftLon.toFixed(6))]);
+
+    const rightLat = p[0] - (ny * offsetM) / 111000;
+    const rightLon = p[1] - (nx * offsetM) / (111000 * cosLat);
+    rightSide.push([Number(rightLat.toFixed(6)), Number(rightLon.toFixed(6))]);
+  }
+
+  return [...leftSide, ...rightSide.reverse(), leftSide[0]];
+}
+
 // ─── 2. REAL OPENSTREETMAP HYDROGRAPHIC DATASET ────────────────────────────
 
 // Authoritative OpenStreetMap waterways extracted directly from OSM for key Indian disaster basins
-const VERIFIED_OSM_HYDROGRAPHY: Record<string, WaterwayFeature[]> = {
+export const VERIFIED_OSM_HYDROGRAPHY: Record<string, WaterwayFeature[]> = {
   // Chamoli / Alaknanda-Dhauliganga Basin (Raini Village Confluence)
   'loc-uk-chamoli': [
     {
       id: 'dhauli-ganga-main',
-      name: 'Dhauliganga River (Mainstem)',
+      name: (osmRiversData as any)['loc-uk-chamoli'].mainstem.name,
       waterway: 'river',
       isMainstem: true,
-      coords: [
-        [30.4869, 79.7300], [30.4867, 79.7260], [30.4863, 79.7220],
-        [30.4860, 79.7180], [30.4857, 79.7140], [30.4853, 79.7100],
-        [30.4851, 79.7060], [30.4849, 79.7020], [30.4848, 79.6980],
-        [30.4847, 79.6945], [30.4847, 79.6928], [30.4846, 79.6900],
-        [30.4843, 79.6860], [30.4841, 79.6820], [30.4839, 79.6780],
-        [30.4840, 79.6740], [30.4843, 79.6700], [30.4847, 79.6660],
-        [30.4850, 79.6620], [30.4851, 79.6580], [30.4850, 79.6540],
-        [30.4848, 79.6500], [30.4850, 79.6460], [30.4855, 79.6420],
-        [30.4862, 79.6380], [30.4871, 79.6340], [30.4873, 79.6300]
-      ],
+      coords: (osmRiversData as any)['loc-uk-chamoli'].mainstem.coords as [number, number][],
     },
     {
       id: 'rishi-ganga-trib',
-      name: 'Rishiganga River (GLOF Surge Tributary)',
+      name: (osmRiversData as any)['loc-uk-chamoli'].tributary.name,
       waterway: 'river',
-      coords: [
-        [30.4678, 79.7212], [30.4700, 79.7175], [30.4722, 79.7148],
-        [30.4743, 79.7115], [30.4762, 79.7085], [30.4780, 79.7055],
-        [30.4800, 79.7025], [30.4818, 79.6998], [30.4832, 79.6970],
-        [30.4840, 79.6952], [30.4847, 79.6928]
-      ],
-    },
-    {
-      id: 'subhain-gadhera',
-      name: 'Subhain Gadhera (Mountain Torrent)',
-      waterway: 'stream',
-      coords: [
-        [30.4343, 79.6630], [30.4500, 79.6680], [30.4700, 79.6740], [30.4878, 79.6813]
-      ],
+      isMainstem: false,
+      coords: (osmRiversData as any)['loc-uk-chamoli'].tributary.coords as [number, number][],
     },
   ],
 
@@ -153,14 +199,10 @@ const VERIFIED_OSM_HYDROGRAPHY: Record<string, WaterwayFeature[]> = {
   'loc-as-guwahati': [
     {
       id: 'brahmaputra-main',
-      name: 'Brahmaputra River (Mainstem)',
+      name: (osmRiversData as any)['loc-as-guwahati'].mainstem.name,
       waterway: 'river',
       isMainstem: true,
-      coords: [
-        [26.1950, 91.8200], [26.1920, 91.7850], [26.1880, 91.7600],
-        [26.1820, 91.7400], [26.1750, 91.7150], [26.1620, 91.6850],
-        [26.1550, 91.6600], [26.1500, 91.6400]
-      ],
+      coords: (osmRiversData as any)['loc-as-guwahati'].mainstem.coords as [number, number][],
     },
     {
       id: 'bharalu-trib',
@@ -177,13 +219,10 @@ const VERIFIED_OSM_HYDROGRAPHY: Record<string, WaterwayFeature[]> = {
   'loc-uk-kedarnath': [
     {
       id: 'mandakini-main',
-      name: 'Mandakini River (Chorabari Source)',
+      name: (osmRiversData as any)['loc-uk-kedarnath'].mainstem.name,
       waterway: 'river',
       isMainstem: true,
-      coords: [
-        [30.7480, 79.0620], [30.7410, 79.0645], [30.7350, 79.0670],
-        [30.7250, 79.0700], [30.7100, 79.0750], [30.6950, 79.0800]
-      ],
+      coords: (osmRiversData as any)['loc-uk-kedarnath'].mainstem.coords as [number, number][],
     },
   ],
 
@@ -191,16 +230,62 @@ const VERIFIED_OSM_HYDROGRAPHY: Record<string, WaterwayFeature[]> = {
   'loc-hp-kullu': [
     {
       id: 'beas-main',
-      name: 'Beas River (Upper Himalayan Reach)',
+      name: (osmRiversData as any)['loc-hp-kullu'].mainstem.name,
       waterway: 'river',
       isMainstem: true,
-      coords: [
-        [31.9850, 77.1280], [31.9700, 77.1180], [31.9550, 77.1080],
-        [31.9380, 77.0980], [31.9200, 77.0900]
-      ],
+      coords: (osmRiversData as any)['loc-hp-kullu'].mainstem.coords as [number, number][],
     },
   ],
 };
+
+/**
+ * Returns river geometry as a standard GeoJSON FeatureCollection containing LineString features.
+ * Coordinates are formatted as standard GeoJSON [longitude, latitude] per RFC 7946.
+ */
+export function getRiverGeoJSON(
+  locationId: string,
+  baseLat?: number,
+  baseLon?: number
+): RiverGeoJSONCollection {
+  const waterways = VERIFIED_OSM_HYDROGRAPHY[locationId] || (baseLat && baseLon ? [
+    {
+      id: `fallback-river-${locationId}`,
+      name: 'Regional Basin Watercourse',
+      waterway: 'river',
+      isMainstem: true,
+      coords: [
+        [baseLat + 0.015, baseLon - 0.012],
+        [baseLat + 0.008, baseLon - 0.006],
+        [baseLat, baseLon],
+        [baseLat - 0.008, baseLon + 0.006],
+        [baseLat - 0.015, baseLon + 0.012],
+      ] as [number, number][],
+    }
+  ] : []);
+
+  const features: RiverGeoJSONFeature[] = waterways.map((w) => ({
+    type: 'Feature',
+    properties: {
+      id: String(w.id),
+      name: w.name,
+      waterway: w.waterway,
+      isMainstem: !!w.isMainstem,
+      stroke: w.isMainstem ? '#0284c7' : '#fb923c',
+      strokeWidth: w.isMainstem ? 6 : 3.5,
+      strokeOpacity: 0.9,
+    },
+    geometry: {
+      type: 'LineString',
+      coordinates: w.coords.map(([lat, lon]) => [lon, lat]),
+    },
+  }));
+
+  return {
+    type: 'FeatureCollection',
+    features,
+  };
+}
+
 
 // In-memory cache for live OSM Overpass queries
 const OVERPASS_CACHE = new Map<string, WaterwayFeature[]>();
@@ -300,135 +385,50 @@ export function getFloodRiskPolygons(
   baseLon: number,
   primaryRiverCoords?: [number, number][]
 ): FloodRiskPolygons {
-  // Chamoli / Raini Gorge Floor Reconstruction
+  // Chamoli / Raini Gorge Floor Reconstruction — wraps the real OSM Dhauliganga canyon
   if (locationId === 'loc-uk-chamoli' || locationId.includes('chamoli')) {
+    const dhauliPts = VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli'][0].coords;
     return {
       dataStatus: 'HYBRID_REAL_GIS_SIMULATED_SCENARIO',
-      modelNote: '2021 GLOF Hydraulic Surge Inundation Envelope (CWC/NRSC Verified)',
-      zone1Red: [
-        [30.4876, 79.6300], [30.4864, 79.6370], [30.4854, 79.6450],
-        [30.4859, 79.6530], [30.4856, 79.6610], [30.4849, 79.6690],
-        [30.4844, 79.6760], [30.4846, 79.6830], [30.4849, 79.6890],
-        [30.4851, 79.6928], [30.4852, 79.6950], [30.4854, 79.7000],
-        [30.4858, 79.7060], [30.4862, 79.7120], [30.4866, 79.7180],
-        [30.4872, 79.7240], [30.4874, 79.7300], [30.4866, 79.7300],
-        [30.4864, 79.7240], [30.4858, 79.7180], [30.4854, 79.7120],
-        [30.4850, 79.7000], [30.4846, 79.6950], [30.4843, 79.6932],
-        [30.4826, 79.6970], [30.4801, 79.7015], [30.4771, 79.7060],
-        [30.4736, 79.7115], [30.4706, 79.7165], [30.4676, 79.7215],
-        [30.4684, 79.7205], [30.4714, 79.7155], [30.4744, 79.7105],
-        [30.4779, 79.7050], [30.4809, 79.7005], [30.4834, 79.6960],
-        [30.4843, 79.6924], [30.4841, 79.6890], [30.4838, 79.6830],
-        [30.4836, 79.6760], [30.4841, 79.6690], [30.4848, 79.6610],
-        [30.4851, 79.6530], [30.4846, 79.6450], [30.4856, 79.6370],
-        [30.4868, 79.6300], [30.4876, 79.6300]
-      ],
-      zone2Orange: [
-        [30.4880, 79.6300], [30.4869, 79.6370], [30.4858, 79.6450],
-        [30.4863, 79.6530], [30.4860, 79.6610], [30.4853, 79.6690],
-        [30.4849, 79.6760], [30.4851, 79.6830], [30.4854, 79.6890],
-        [30.4854, 79.6928], [30.4856, 79.6960], [30.4858, 79.7010],
-        [30.4862, 79.7070], [30.4866, 79.7130], [30.4870, 79.7190],
-        [30.4876, 79.7250], [30.4878, 79.7300], [30.4838, 79.6928],
-        [30.4820, 79.6960], [30.4796, 79.7010], [30.4766, 79.7060],
-        [30.4731, 79.7110], [30.4701, 79.7160], [30.4671, 79.7210],
-        [30.4685, 79.7218], [30.4715, 79.7168], [30.4745, 79.7118],
-        [30.4780, 79.7068], [30.4810, 79.7018], [30.4836, 79.6970],
-        [30.4845, 79.6937], [30.4836, 79.6890], [30.4833, 79.6830],
-        [30.4831, 79.6760], [30.4836, 79.6690], [30.4844, 79.6610],
-        [30.4847, 79.6530], [30.4843, 79.6450], [30.4852, 79.6370],
-        [30.4866, 79.6300], [30.4880, 79.6300]
-      ],
-      zone3Yellow: [
-        [30.4892, 79.6300], [30.4880, 79.6370], [30.4868, 79.6450],
-        [30.4874, 79.6530], [30.4870, 79.6610], [30.4862, 79.6690],
-        [30.4856, 79.6760], [30.4858, 79.6830], [30.4862, 79.6890],
-        [30.4862, 79.6928], [30.4864, 79.6970], [30.4868, 79.7020],
-        [30.4872, 79.7080], [30.4876, 79.7140], [30.4880, 79.7200],
-        [30.4886, 79.7260], [30.4888, 79.7300], [30.4828, 79.6928],
-        [30.4810, 79.6955], [30.4786, 79.7005], [30.4756, 79.7055],
-        [30.4721, 79.7105], [30.4691, 79.7155], [30.4661, 79.7205],
-        [30.4675, 79.7228], [30.4705, 79.7178], [30.4735, 79.7128],
-        [30.4770, 79.7078], [30.4800, 79.7028], [30.4826, 79.6978],
-        [30.4838, 79.6950], [30.4830, 79.6890], [30.4826, 79.6830],
-        [30.4824, 79.6760], [30.4829, 79.6690], [30.4837, 79.6610],
-        [30.4840, 79.6530], [30.4836, 79.6450], [30.4845, 79.6370],
-        [30.4859, 79.6300], [30.4892, 79.6300]
-      ],
+      modelNote: '2021 GLOF Hydraulic Surge Inundation Envelope (CWC/NRSC Topographic Alignment)',
+      zone1Red: makeRiverBufferPolygon(dhauliPts, 65),
+      zone2Orange: makeRiverBufferPolygon(dhauliPts, 140),
+      zone3Yellow: makeRiverBufferPolygon(dhauliPts, 220),
     };
   }
 
   // Guwahati / Brahmaputra Inundation Basin
   if (locationId === 'loc-as-guwahati' || locationId.includes('guwahati')) {
+    const brahmaPts = VERIFIED_OSM_HYDROGRAPHY['loc-as-guwahati'][0].coords;
     return {
       dataStatus: 'HYBRID_REAL_GIS_SIMULATED_SCENARIO',
       modelNote: '2022/2024 Assam Riverfront & Bharalu Backflow Envelope (CWC Verified)',
-      zone1Red: [
-        [26.1950, 91.8200], [26.1920, 91.7850], [26.1880, 91.7600],
-        [26.1820, 91.7400], [26.1750, 91.7150], [26.1620, 91.6850],
-        [26.1550, 91.6600], [26.1480, 91.6600], [26.1550, 91.6850],
-        [26.1680, 91.7150], [26.1750, 91.7400], [26.1810, 91.7600],
-        [26.1850, 91.7850], [26.1880, 91.8200], [26.1950, 91.8200]
-      ],
-      zone2Orange: [
-        [26.2000, 91.8250], [26.1960, 91.7850], [26.1920, 91.7600],
-        [26.1860, 91.7400], [26.1800, 91.7150], [26.1660, 91.6800],
-        [26.1500, 91.6500], [26.1380, 91.6600], [26.1450, 91.6900],
-        [26.1580, 91.7200], [26.1650, 91.7450], [26.1700, 91.7700],
-        [26.1750, 91.8000], [26.1800, 91.8300], [26.2000, 91.8250]
-      ],
-      zone3Yellow: [
-        [26.2050, 91.8300], [26.2000, 91.7850], [26.1950, 91.7600],
-        [26.1900, 91.7400], [26.1850, 91.7100], [26.1700, 91.6750],
-        [26.1450, 91.6450], [26.1300, 91.6550], [26.1380, 91.6950],
-        [26.1500, 91.7250], [26.1580, 91.7500], [26.1620, 91.7800],
-        [26.1680, 91.8100], [26.1750, 91.8400], [26.2050, 91.8300]
-      ],
+      zone1Red: makeRiverBufferPolygon(brahmaPts, 280),
+      zone2Orange: makeRiverBufferPolygon(brahmaPts, 550),
+      zone3Yellow: makeRiverBufferPolygon(brahmaPts, 900),
     };
   }
 
-  // Dynamic Topographic Watershed Envelope (Closed organic polygon, NOT parallel lines)
-  const pts = primaryRiverCoords && primaryRiverCoords.length > 3 ? primaryRiverCoords : [
-    [baseLat + 0.015, baseLon - 0.012],
-    [baseLat + 0.008, lonOffset(baseLon, -0.006)],
-    [baseLat, baseLon],
-    [baseLat - 0.008, lonOffset(baseLon, 0.006)],
-    [baseLat - 0.015, lonOffset(baseLon, 0.012)],
-  ];
-
-  const z1Red: [number, number][] = [];
-  const z2Orange: [number, number][] = [];
-  const z3Yellow: [number, number][] = [];
-
-  // Left bank outward envelope
-  for (let i = 0; i < pts.length; i++) {
-    z1Red.push([pts[i][0] + 0.0018, pts[i][1] - 0.0022]);
-    z2Orange.push([pts[i][0] + 0.0035, pts[i][1] - 0.0042]);
-    z3Yellow.push([pts[i][0] + 0.0055, pts[i][1] - 0.0065]);
-  }
-  // Right bank return envelope (closed loop)
-  for (let i = pts.length - 1; i >= 0; i--) {
-    z1Red.push([pts[i][0] - 0.0018, pts[i][1] + 0.0022]);
-    z2Orange.push([pts[i][0] - 0.0035, pts[i][1] + 0.0042]);
-    z3Yellow.push([pts[i][0] - 0.0055, pts[i][1] + 0.0065]);
-  }
-  // Close the polygons
-  z1Red.push(z1Red[0]);
-  z2Orange.push(z2Orange[0]);
-  z3Yellow.push(z3Yellow[0]);
+  // Dynamic Topographic Watershed Envelope (Closed organic polygon along real river centerline)
+  const pts = primaryRiverCoords && primaryRiverCoords.length > 2
+    ? primaryRiverCoords
+    : (VERIFIED_OSM_HYDROGRAPHY[locationId]?.[0]?.coords ?? [
+        [baseLat + 0.015, baseLon - 0.012],
+        [baseLat + 0.008, baseLon - 0.006],
+        [baseLat, baseLon],
+        [baseLat - 0.008, baseLon + 0.006],
+        [baseLat - 0.015, baseLon + 0.012],
+      ]);
 
   return {
     dataStatus: 'HYBRID_REAL_GIS_SIMULATED_SCENARIO',
     modelNote: 'Hydrologic Runoff Inundation Envelope (Topographic Descent Simulation)',
-    zone1Red: z1Red,
-    zone2Orange: z2Orange,
-    zone3Yellow: z3Yellow,
+    zone1Red: makeRiverBufferPolygon(pts, 60),
+    zone2Orange: makeRiverBufferPolygon(pts, 130),
+    zone3Yellow: makeRiverBufferPolygon(pts, 210),
   };
 }
 
-function lonOffset(base: number, delta: number): number {
-  return Number((base + delta).toFixed(5));
-}
 
 // ─── 4. CANDIDATE SHELTER SAFETY EVALUATOR ────────────────────────────────
 

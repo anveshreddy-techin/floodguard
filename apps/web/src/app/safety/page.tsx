@@ -17,7 +17,7 @@ import {
 import { RiskBadge } from '@/components/ui/Badges';
 import { GuidanceLevel, ExposureStatus, RiskLevel } from '@/types';
 import { FloodZonePolygons, SafePlaceItem } from '@/components/ui/EvacuationLeafletMap';
-import { getFloodRiskPolygons, getEvacuationRoute } from '@/services/gisService';
+import { getFloodRiskPolygons, getEvacuationRoute, VERIFIED_OSM_HYDROGRAPHY } from '@/services/gisService';
 
 // Dynamically import Leaflet map (avoid SSR in Next.js static export)
 const EvacuationLeafletMap = dynamic(
@@ -119,43 +119,12 @@ export default function MySafetyPage() {
   } = useMemo(() => {
     if (isAssam) {
       // ── ASSAM (GUWAHATI / BRAHMAPUTRA 2022/2024 FLOOD RECONSTRUCTION) ──
-      // Traced along the Brahmaputra River through Guwahati past Uzanbazar, Fancy Bazar, Bharalumukh, Pandu
-      const rVector: [number, number][] = [
-        [26.1950, 91.8200],
-        [26.1920, 91.7850],
-        [26.1880, 91.7600],
-        [26.1820, 91.7400],
-        [26.1750, 91.7150], // Fancy Bazar & Bharalumukh confluence
-        [26.1620, 91.6850], // Pandu Port
-        [26.1550, 91.6600], // Saraighat Bridge
-      ];
-
-      // Zone 1 (Red): Active inundation along Brahmaputra riverfront & Bharalu backflow
-      const z1Red: [number, number][] = [
-        [26.1950, 91.8200], [26.1920, 91.7850], [26.1880, 91.7600],
-        [26.1820, 91.7400], [26.1750, 91.7150], [26.1620, 91.6850],
-        [26.1550, 91.6600], [26.1480, 91.6600], [26.1550, 91.6850],
-        [26.1680, 91.7150], [26.1750, 91.7400], [26.1810, 91.7600],
-        [26.1850, 91.7850], [26.1880, 91.8200],
-      ];
-
-      // Zone 2 (Orange): High-velocity surge buffer covering low urban wards
-      const z2Orange: [number, number][] = [
-        [26.2000, 91.8250], [26.1960, 91.7850], [26.1920, 91.7600],
-        [26.1860, 91.7400], [26.1800, 91.7150], [26.1660, 91.6800],
-        [26.1500, 91.6500], [26.1380, 91.6600], [26.1450, 91.6900],
-        [26.1580, 91.7200], [26.1650, 91.7450], [26.1700, 91.7700],
-        [26.1750, 91.8000], [26.1800, 91.8300],
-      ];
-
-      // Zone 3 (Yellow): Caution perimeter covering hill toes and outer waterlogged districts
-      const z3Yellow: [number, number][] = [
-        [26.2050, 91.8300], [26.2000, 91.7850], [26.1950, 91.7600],
-        [26.1900, 91.7400], [26.1850, 91.7100], [26.1700, 91.6750],
-        [26.1450, 91.6450], [26.1300, 91.6550], [26.1380, 91.6950],
-        [26.1500, 91.7250], [26.1580, 91.7500], [26.162, 91.7800],
-        [26.1680, 91.8100], [26.1750, 91.8400],
-      ];
+      // Authoritative OpenStreetMap survey coordinates (37 dense nodes)
+      const rVector = VERIFIED_OSM_HYDROGRAPHY['loc-as-guwahati'][0].coords;
+      const floodPolys = getFloodRiskPolygons('loc-as-guwahati', 26.175, 91.74, rVector);
+      const z1Red = floodPolys.zone1Red;
+      const z2Orange = floodPolys.zone2Orange;
+      const z3Yellow = floodPolys.zone3Yellow;
 
       // Primary Shelter: Kamakhya Nilachal Hilltop Refuge (Solid granite hill bench, 215m ASL, +160m above river level)
       const pShelter = {
@@ -232,64 +201,12 @@ export default function MySafetyPage() {
       };
     } else if (isChamoli) {
       // ── UTTARAKHAND (CHAMOLI / RAINI & RISHIGANGA 2021 GLOF SURGE) ──
-      const rVector: [number, number][] = [
-        [30.4870, 79.7300],
-        [30.4862, 79.7180],
-        [30.4854, 79.7060],
-        [30.4847, 79.6928], // Raini Confluence
-        [30.4842, 79.6830],
-        [30.4850, 79.6600],
-        [30.4872, 79.6300], // Tapovan direction
-      ];
-
-      const z1Red: [number, number][] = [
-        [30.4873, 79.6300], [30.4861, 79.6370], [30.4851, 79.6450],
-        [30.4856, 79.6530], [30.4853, 79.6610], [30.4847, 79.6690],
-        [30.4843, 79.6760], [30.4845, 79.6830], [30.4848, 79.6890],
-        [30.4850, 79.6928], [30.4851, 79.6950], [30.4853, 79.7000],
-        [30.4857, 79.7060], [30.4861, 79.7120], [30.4865, 79.7180],
-        [30.4869, 79.7240], [30.4872, 79.7300],
-        [30.4866, 79.7300], [30.4863, 79.7240], [30.4859, 79.7180],
-        [30.4855, 79.7120], [30.4851, 79.7000], [30.4847, 79.6950],
-        [30.4845, 79.6928], [30.4843, 79.6890], [30.4840, 79.6830],
-        [30.4838, 79.6760], [30.4843, 79.6690], [30.4849, 79.6610],
-        [30.4852, 79.6530], [30.4847, 79.6450], [30.4857, 79.6370],
-        [30.4869, 79.6300],
-      ];
-
-      const z2Orange: [number, number][] = [
-        [30.4880, 79.6300], [30.4869, 79.6370], [30.4858, 79.6450],
-        [30.4863, 79.6530], [30.4860, 79.6610], [30.4853, 79.6690],
-        [30.4849, 79.6760], [30.4851, 79.6830], [30.4854, 79.6890],
-        [30.4854, 79.6928], [30.4856, 79.6960], [30.4858, 79.7010],
-        [30.4862, 79.7070], [30.4866, 79.7130], [30.4870, 79.7190],
-        [30.4876, 79.7250], [30.4878, 79.7300],
-        [30.4838, 79.6928], [30.4820, 79.6960], [30.4796, 79.7010],
-        [30.4766, 79.7060], [30.4731, 79.7110], [30.4701, 79.7160],
-        [30.4671, 79.7210], [30.4685, 79.7218], [30.4715, 79.7168],
-        [30.4745, 79.7118], [30.4780, 79.7068], [30.4810, 79.7018],
-        [30.4836, 79.6970], [30.4845, 79.6937],
-        [30.4836, 79.6890], [30.4833, 79.6830], [30.4831, 79.6760],
-        [30.4836, 79.6690], [30.4844, 79.6610], [30.4847, 79.6530],
-        [30.4843, 79.6450], [30.4852, 79.6370], [30.4866, 79.6300],
-      ];
-
-      const z3Yellow: [number, number][] = [
-        [30.4892, 79.6300], [30.4880, 79.6370], [30.4868, 79.6450],
-        [30.4874, 79.6530], [30.4870, 79.6610], [30.4862, 79.6690],
-        [30.4856, 79.6760], [30.4858, 79.6830], [30.4862, 79.6890],
-        [30.4862, 79.6928], [30.4864, 79.6970], [30.4868, 79.7020],
-        [30.4872, 79.7080], [30.4876, 79.7140], [30.4880, 79.7200],
-        [30.4886, 79.7260], [30.4888, 79.7300],
-        [30.4828, 79.6928], [30.4810, 79.6955], [30.4786, 79.7005],
-        [30.4756, 79.7055], [30.4721, 79.7105], [30.4691, 79.7155],
-        [30.4661, 79.7205], [30.4675, 79.7228], [30.4705, 79.7178],
-        [30.4735, 79.7128], [30.4770, 79.7078], [30.4800, 79.7028],
-        [30.4826, 79.6978], [30.4838, 79.6950],
-        [30.4830, 79.6890], [30.4826, 79.6830], [30.4824, 79.6760],
-        [30.4829, 79.6690], [30.4837, 79.6610], [30.4840, 79.6530],
-        [30.4836, 79.6450], [30.4845, 79.6370], [30.4859, 79.6300],
-      ];
+      // Authoritative OpenStreetMap survey coordinates (149 dense nodes)
+      const rVector = VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli'][0].coords;
+      const floodPolys = getFloodRiskPolygons('loc-uk-chamoli', 30.485, 79.695, rVector);
+      const z1Red = floodPolys.zone1Red;
+      const z2Orange = floodPolys.zone2Orange;
+      const z3Yellow = floodPolys.zone3Yellow;
 
       const pShelter = {
         name: 'Lata Village Flat Terrace Shelter (+340m ASL)',
@@ -355,17 +272,16 @@ export default function MySafetyPage() {
       };
     } else {
       // ── GENERAL REGIONAL BASIN: DYNAMIC REAL GIS EXTRACTION VIA GIS SERVICE ──
-      const gisZones = getFloodRiskPolygons(selectedLocation.id, activeLat, activeLon);
-      const safeShelterCoords: [number, number] = [activeLat + 0.007, activeLon + 0.006];
-      const evacRoute = getEvacuationRoute(selectedLocation.id, [activeLat, activeLon], safeShelterCoords);
-
-      const rVector: [number, number][] = [
+      const rVector: [number, number][] = VERIFIED_OSM_HYDROGRAPHY[selectedLocation.id]?.[0]?.coords ?? [
         [activeLat + 0.015, activeLon - 0.012],
         [activeLat + 0.008, activeLon - 0.006],
         [activeLat, activeLon],
         [activeLat - 0.008, activeLon + 0.006],
         [activeLat - 0.015, activeLon + 0.012],
       ];
+      const gisZones = getFloodRiskPolygons(selectedLocation.id, activeLat, activeLon, rVector);
+      const safeShelterCoords: [number, number] = [activeLat + 0.007, activeLon + 0.006];
+      const evacRoute = getEvacuationRoute(selectedLocation.id, [activeLat, activeLon], safeShelterCoords);
 
       const pShelter = {
         name: `${selectedLocation.name.split('/')[0].trim()} High-Ground Refuge (+120m ASL)`,

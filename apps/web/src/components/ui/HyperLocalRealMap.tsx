@@ -32,6 +32,8 @@ import { RiskBadge } from '@/components/ui/Badges';
 import {
   getRealRiverWaterways,
   getFloodRiskPolygons,
+  getRiverGeoJSON,
+  VERIFIED_OSM_HYDROGRAPHY,
   evaluateCandidateShelters,
   getEvacuationRoute,
   calculateSegmentBearing,
@@ -151,107 +153,13 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
     if (isRaini) {
       // ── RAINI VILLAGE / DHAULIGANGA & RISHIGANGA CONFLUENCE ──
-      // River traced precisely along the white rocky gorge centerline visible in Google Earth satellite.
-      // Dhauliganga flows East→West through the canyon. The gorge is a deep V-shaped ravine ~300-400m deep.
-      riverVector = [
-        [30.4869, 79.7300],
-        [30.4867, 79.7260],
-        [30.4863, 79.7220],
-        [30.4860, 79.7180],
-        [30.4857, 79.7140],
-        [30.4853, 79.7100],
-        [30.4851, 79.7060],
-        [30.4849, 79.7020],
-        [30.4848, 79.6980],
-        [30.4847, 79.6945], // Approaching Raini bridge confluence
-        [30.4847, 79.6928], // Raini bridge — Rishiganga confluence
-        [30.4846, 79.6900],
-        [30.4843, 79.6860],
-        [30.4841, 79.6820],
-        [30.4839, 79.6780],
-        [30.4840, 79.6740],
-        [30.4843, 79.6700],
-        [30.4847, 79.6660],
-        [30.4850, 79.6620],
-        [30.4851, 79.6580],
-        [30.4850, 79.6540],
-        [30.4848, 79.6500],
-        [30.4850, 79.6460],
-        [30.4855, 79.6420],
-        [30.4862, 79.6380],
-        [30.4871, 79.6340],
-        [30.4873, 79.6300], // Tapovan direction
-      ];
+      // Authoritative OpenStreetMap survey coordinates (149 dense nodes following the true canyon bends)
+      riverVector = VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli'][0].coords;
+      tributaryVector = VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli'][1].coords;
 
-      // Rishiganga tributary — traced along the actual gorge from Theng/Raini Chak confluence
-      tributaryVector = [
-        [30.4678, 79.7212], // Theng village (glacial source valley)
-        [30.4700, 79.7175],
-        [30.4722, 79.7148],
-        [30.4743, 79.7115], // Paing village
-        [30.4762, 79.7085],
-        [30.4780, 79.7055],
-        [30.4800, 79.7025],
-        [30.4818, 79.6998],
-        [30.4832, 79.6970], // Raini Chak Lata gorge floor
-        [30.4840, 79.6952],
-        [30.4847, 79.6928], // Confluence with Dhauliganga at Raini Bridge
-      ];
-
-      // ── 3-ZONE FLOOD RISK POLYGONS ──
-      // Zone 1 (RED): Active gorge-floor inundation — certain death zone during surge
-      // Zone 2 (ORANGE): High-velocity surge reach buffer — extreme danger
-      // Zone 3 (YELLOW): Potential splash/debris zone — caution, evacuate
-      // Zones are stored as separate entries, rendered in the useEffect below
-      floodPolygon = [
-        // Dhauliganga North Canyon Wall (West to East) — ZONE 1 RED inner gorge
-        [30.4876, 79.6300],
-        [30.4864, 79.6370],
-        [30.4854, 79.6450],
-        [30.4859, 79.6530],
-        [30.4856, 79.6610],
-        [30.4849, 79.6690],
-        [30.4844, 79.6760],
-        [30.4846, 79.6830],
-        [30.4849, 79.6890],
-        [30.4851, 79.6928],
-        [30.4852, 79.6950],
-        [30.4854, 79.7000],
-        [30.4858, 79.7060],
-        [30.4862, 79.7120],
-        [30.4866, 79.7180],
-        [30.4872, 79.7240],
-        [30.4874, 79.7300],
-        [30.4866, 79.7300],
-        [30.4864, 79.7240],
-        [30.4858, 79.7180],
-        [30.4854, 79.7120],
-        [30.4850, 79.7000],
-        [30.4846, 79.6950],
-        [30.4843, 79.6932],
-        [30.4826, 79.6970],
-        [30.4801, 79.7015],
-        [30.4771, 79.7060],
-        [30.4736, 79.7115],
-        [30.4706, 79.7165],
-        [30.4676, 79.7215],
-        [30.4684, 79.7205],
-        [30.4714, 79.7155],
-        [30.4744, 79.7105],
-        [30.4779, 79.7050],
-        [30.4809, 79.7005],
-        [30.4834, 79.6960],
-        [30.4843, 79.6924],
-        [30.4841, 79.6890],
-        [30.4838, 79.6830],
-        [30.4836, 79.6760],
-        [30.4841, 79.6690],
-        [30.4848, 79.6610],
-        [30.4851, 79.6530],
-        [30.4846, 79.6450],
-        [30.4856, 79.6370],
-        [30.4868, 79.6300],
-      ];
+      // 3-Zone dynamic buffer polygons wrapping the real gorge centerline
+      const gisZones = getFloodRiskPolygons(location.id, lat, lon, riverVector);
+      floodPolygon = gisZones.zone1Red;
 
       // PRIMARY SHELTER: Lata Village flat terrace (+340m above gorge, 2,380m ASL)
       // Lata Village is a FLAT BENCH terrace — clearly visible in satellite as a level
@@ -292,30 +200,10 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       ];
     } else if (isKedarnath) {
       // ── KEDARNATH / MANDAKINI GLACIATED GORGE ──
-      // Flows North (Chorabari moraine) to South past Kedarnath Temple
-      riverVector = [
-        [30.7480, 79.0620],
-        [30.7410, 79.0645],
-        [30.7350, 79.0670],
-        [30.7250, 79.0700],
-        [30.7100, 79.0750],
-        [30.6950, 79.0800],
-      ];
-
-      floodPolygon = [
-        [30.7490, 79.0600],
-        [30.7420, 79.0625],
-        [30.7360, 79.0645],
-        [30.7260, 79.0675],
-        [30.7110, 79.0725],
-        [30.6960, 79.0775],
-        [30.6940, 79.0825],
-        [30.7090, 79.0775],
-        [30.7240, 79.0725],
-        [30.7340, 79.0695],
-        [30.7400, 79.0665],
-        [30.7470, 79.0640],
-      ];
+      // Authoritative OpenStreetMap survey coordinates (129 dense nodes)
+      riverVector = VERIFIED_OSM_HYDROGRAPHY['loc-uk-kedarnath'][0].coords;
+      const gisZones = getFloodRiskPolygons(location.id, lat, lon, riverVector);
+      floodPolygon = gisZones.zone1Red;
 
       primaryShelterCoords = [30.7380, 79.0720];
       secondaryShelterCoords = [30.7320, 79.0640];
@@ -341,27 +229,10 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       ];
     } else if (isKullu) {
       // ── KULLU VALLEY / BEAS RIVER ──
-      // Flows North to South along the Himalayan valley
-      riverVector = [
-        [31.9850, 77.1280],
-        [31.9700, 77.1180],
-        [31.9550, 77.1080],
-        [31.9380, 77.0980],
-        [31.9200, 77.0900],
-      ];
-
-      floodPolygon = [
-        [31.9860, 77.1250],
-        [31.9710, 77.1150],
-        [31.9560, 77.1050],
-        [31.9390, 77.0950],
-        [31.9210, 77.0870],
-        [31.9190, 77.0930],
-        [31.9370, 77.1010],
-        [31.9540, 77.1110],
-        [31.9690, 77.1210],
-        [31.9840, 77.1310],
-      ];
+      // Authoritative OpenStreetMap survey coordinates (93 dense nodes)
+      riverVector = VERIFIED_OSM_HYDROGRAPHY['loc-hp-kullu'][0].coords;
+      const gisZones = getFloodRiskPolygons(location.id, lat, lon, riverVector);
+      floodPolygon = gisZones.zone1Red;
 
       primaryShelterCoords = [lat + 0.007, lon + 0.008];
       secondaryShelterCoords = [lat + 0.009, lon - 0.007];
@@ -381,34 +252,12 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       ];
     } else if (isGuwahati) {
       // ── GUWAHATI / BRAHMAPUTRA RIVER & BHARALU CONFLUENCE (ASSAM) ──
-      // Brahmaputra flows East to West through the valley past Uzan Bazar, Fancy Bazar, Bharalumukh, Pandu
-      riverVector = [
-        [26.1950, 91.8200],
-        [26.1920, 91.7850],
-        [26.1880, 91.7600],
-        [26.1820, 91.7400],
-        [26.1750, 91.7150], // Confluence with Bharalu river & sluice gate
-        [26.1620, 91.6850], // Pandu Port
-        [26.1550, 91.6600], // Saraighat Bridge
-      ];
+      // Authoritative OpenStreetMap survey coordinates (37 dense nodes)
+      riverVector = VERIFIED_OSM_HYDROGRAPHY['loc-as-guwahati'][0].coords;
+      tributaryVector = VERIFIED_OSM_HYDROGRAPHY['loc-as-guwahati'][1].coords;
+      const gisZones = getFloodRiskPolygons(location.id, lat, lon, riverVector);
+      floodPolygon = gisZones.zone1Red;
 
-      // Bharalu River Tributary (urban stormwater backflow channel during Brahmaputra surge)
-      tributaryVector = [
-        [26.1250, 91.7750], // Basistha / Beltola headwaters
-        [26.1400, 91.7600], // Dispur / Downtown
-        [26.1550, 91.7400], // Anil Nagar / Hatigaon lowlands
-        [26.1680, 91.7280], // Bharalumukh Sluice Gate
-        [26.1750, 91.7150], // Confluence with Brahmaputra
-      ];
-
-      // 100-Year Flood Envelope: Active alluvial inundation along riverfront & Bharalu backflow
-      floodPolygon = [
-        [26.1950, 91.8200], [26.1920, 91.7850], [26.1880, 91.7600],
-        [26.1820, 91.7400], [26.1750, 91.7150], [26.1620, 91.6850],
-        [26.1550, 91.6600], [26.1480, 91.6600], [26.1550, 91.6850],
-        [26.1680, 91.7150], [26.1750, 91.7400], [26.1810, 91.7600],
-        [26.1850, 91.7850], [26.1880, 91.8200],
-      ];
 
       // Primary Shelter: Kamakhya Nilachal Hilltop Refuge (215m ASL, +160m above river)
       primaryShelterCoords = [26.1660, 91.7055];
@@ -783,24 +632,9 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       // ── 1. MULTI-ZONE FLOOD INUNDATION ENVELOPE ──
       if (layers.floodZone) {
         if (isRaini) {
-          // ZONE 1 — RED: Active gorge-floor inundation (certain death during surge)
-          // Inner canyon walls, ~50-70m either side of river centerline
-          const zone1Red: [number, number][] = [
-            [30.4873, 79.6300], [30.4861, 79.6370], [30.4851, 79.6450],
-            [30.4856, 79.6530], [30.4853, 79.6610], [30.4847, 79.6690],
-            [30.4843, 79.6760], [30.4845, 79.6830], [30.4848, 79.6890],
-            [30.4850, 79.6928], [30.4851, 79.6950], [30.4853, 79.7000],
-            [30.4857, 79.7060], [30.4861, 79.7120], [30.4865, 79.7180],
-            [30.4869, 79.7240], [30.4872, 79.7300],
-            // South wall back
-            [30.4866, 79.7300], [30.4863, 79.7240], [30.4859, 79.7180],
-            [30.4855, 79.7120], [30.4851, 79.7000], [30.4847, 79.6950],
-            [30.4845, 79.6928], [30.4843, 79.6890], [30.4840, 79.6830],
-            [30.4838, 79.6760], [30.4843, 79.6690], [30.4849, 79.6610],
-            [30.4852, 79.6530], [30.4847, 79.6450], [30.4857, 79.6370],
-            [30.4869, 79.6300],
-          ];
-          L.polygon(zone1Red, {
+          // ZONE 1/2/3 — dynamically buffered from OSM Dhauliganga centerline (149 nodes)
+          const rainiZones = getFloodRiskPolygons(location.id, location.lat, location.lon, spatialEntities.riverVector);
+          L.polygon(rainiZones.zone1Red, {
             color: '#dc2626',
             weight: 2,
             fillColor: '#ef4444',
@@ -811,31 +645,11 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               <b>Risk Level:</b> EXTREME — certain fatality during surge<br/>
               <b>Water Depth:</b> 2.0m – 4.5m (debris-laden torrent)<br/>
               <b>Area:</b> Active riverbed + canyon floor terraces<br/>
+              <b>Data:</b> ⚡ Real OSM Dhauliganga geometry (149 nodes)<br/>
               <b>Action:</b> <span style="color:#dc2626;font-weight:bold;">EVACUATE IMMEDIATELY — DO NOT ENTER</span>
             </div>
           `);
-
-          // ZONE 2 — ORANGE: High-velocity surge reach buffer (~100-180m from centerline)
-          // This covers low terraces and any valley-floor settlement platforms
-          const zone2Orange: [number, number][] = [
-            [30.4880, 79.6300], [30.4869, 79.6370], [30.4858, 79.6450],
-            [30.4863, 79.6530], [30.4860, 79.6610], [30.4853, 79.6690],
-            [30.4849, 79.6760], [30.4851, 79.6830], [30.4854, 79.6890],
-            [30.4854, 79.6928], [30.4856, 79.6960], [30.4858, 79.7010],
-            [30.4862, 79.7070], [30.4866, 79.7130], [30.4870, 79.7190],
-            [30.4876, 79.7250], [30.4878, 79.7300],
-            // Rishiganga outer surge buffer
-            [30.4838, 79.6928], [30.4820, 79.6960], [30.4796, 79.7010],
-            [30.4766, 79.7060], [30.4731, 79.7110], [30.4701, 79.7160],
-            [30.4671, 79.7210], [30.4685, 79.7218], [30.4715, 79.7168],
-            [30.4745, 79.7118], [30.4780, 79.7068], [30.4810, 79.7018],
-            [30.4836, 79.6970], [30.4845, 79.6937],
-            // South wall return
-            [30.4836, 79.6890], [30.4833, 79.6830], [30.4831, 79.6760],
-            [30.4836, 79.6690], [30.4844, 79.6610], [30.4847, 79.6530],
-            [30.4843, 79.6450], [30.4852, 79.6370], [30.4866, 79.6300],
-          ];
-          L.polygon(zone2Orange, {
+          L.polygon(rainiZones.zone2Orange, {
             color: '#ea580c',
             weight: 1.5,
             fillColor: '#f97316',
@@ -849,26 +663,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               <b>Action:</b> <span style="color:#ea580c;font-weight:bold;">EVACUATE — MOVE TO RIDGE (ZONE 3 or above)</span>
             </div>
           `);
-
-          // ZONE 3 — YELLOW: Caution / spray & debris zone (~200-350m from centerline)
-          // Slope toes and lower terrace edges — potential splash, seepage, minor debris
-          const zone3Yellow: [number, number][] = [
-            [30.4892, 79.6300], [30.4880, 79.6370], [30.4868, 79.6450],
-            [30.4874, 79.6530], [30.4870, 79.6610], [30.4862, 79.6690],
-            [30.4856, 79.6760], [30.4858, 79.6830], [30.4862, 79.6890],
-            [30.4862, 79.6928], [30.4864, 79.6970], [30.4868, 79.7020],
-            [30.4872, 79.7080], [30.4876, 79.7140], [30.4880, 79.7200],
-            [30.4886, 79.7260], [30.4888, 79.7300],
-            [30.4828, 79.6928], [30.4810, 79.6955], [30.4786, 79.7005],
-            [30.4756, 79.7055], [30.4721, 79.7105], [30.4691, 79.7155],
-            [30.4661, 79.7205], [30.4675, 79.7228], [30.4705, 79.7178],
-            [30.4735, 79.7128], [30.4770, 79.7078], [30.4800, 79.7028],
-            [30.4826, 79.6978], [30.4838, 79.6950],
-            [30.4830, 79.6890], [30.4826, 79.6830], [30.4824, 79.6760],
-            [30.4829, 79.6690], [30.4837, 79.6610], [30.4840, 79.6530],
-            [30.4836, 79.6450], [30.4845, 79.6370], [30.4859, 79.6300],
-          ];
-          L.polygon(zone3Yellow, {
+          L.polygon(rainiZones.zone3Yellow, {
             color: '#ca8a04',
             weight: 1.5,
             dashArray: '6 4',
@@ -876,7 +671,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             fillOpacity: 0.18,
           }).addTo(lg).bindPopup(`
             <div style="font-family:monospace;font-size:12px;line-height:1.6;min-width:240px;">
-              <b style="color:#ca8a04;font-size:13px;">🟡 ZONE 3 — CAUTION (SPLASH & DEBRIS REACH)</b><br/>
+              <b style="color:#ca8a04;font-size:13px;">🟡 ZONE 3 — CAUTION (SPLASH &amp; DEBRIS REACH)</b><br/>
               <b>Risk Level:</b> MODERATE — edge spray, soil saturation, minor debris<br/>
               <b>Water Depth:</b> &lt;0.5m (seepage, runoff)<br/>
               <b>Area:</b> Slope toes, lower terrace edges<br/>
@@ -886,15 +681,9 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
         } else if (isGuwahati) {
           // ── ASSAM (GUWAHATI / BRAHMAPUTRA FLOOD) ──
-          // ZONE 1 — RED: Active inundation along Brahmaputra riverfront & Bharalu backflow
-          const zone1RedGuwahati: [number, number][] = [
-            [26.1950, 91.8200], [26.1920, 91.7850], [26.1880, 91.7600],
-            [26.1820, 91.7400], [26.1750, 91.7150], [26.1620, 91.6850],
-            [26.1550, 91.6600], [26.1480, 91.6600], [26.1550, 91.6850],
-            [26.1680, 91.7150], [26.1750, 91.7400], [26.1810, 91.7600],
-            [26.1850, 91.7850], [26.1880, 91.8200],
-          ];
-          L.polygon(zone1RedGuwahati, {
+          // ZONE 1/2/3 — dynamically buffered from OSM Brahmaputra centerline (37 nodes)
+          const guwahatiZones = getFloodRiskPolygons(location.id, location.lat, location.lon, spatialEntities.riverVector);
+          L.polygon(guwahatiZones.zone1Red, {
             color: '#dc2626',
             weight: 2.5,
             fillColor: '#ef4444',
@@ -905,19 +694,12 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               <b>Risk Level:</b> EXTREME — Submerged lowlands &amp; Bharalu backflow<br/>
               <b>Water Depth:</b> 2.0m – 3.5m (River stage 50.25m vs Danger 49.68m)<br/>
               <b>Area:</b> Pandu Port, Bharalumukh, Fancy Bazar ghats<br/>
+              <b>Data:</b> ⚡ Real OSM Brahmaputra survey geometry (37 nodes)<br/>
               <b>Action:</b> <span style="color:#dc2626;font-weight:bold;">EVACUATE IMMEDIATELY TO NILACHAL / KAMAKHYA</span>
             </div>
           `);
 
-          // ZONE 2 — ORANGE: High-velocity surge & urban stormwater waterlogging buffer
-          const zone2OrangeGuwahati: [number, number][] = [
-            [26.2000, 91.8250], [26.1960, 91.7850], [26.1920, 91.7600],
-            [26.1860, 91.7400], [26.1800, 91.7150], [26.1660, 91.6800],
-            [26.1500, 91.6500], [26.1380, 91.6600], [26.1450, 91.6900],
-            [26.1580, 91.7200], [26.1650, 91.7450], [26.1700, 91.7700],
-            [26.1750, 91.8000], [26.1800, 91.8300],
-          ];
-          L.polygon(zone2OrangeGuwahati, {
+          L.polygon(guwahatiZones.zone2Orange, {
             color: '#ea580c',
             weight: 2,
             fillColor: '#f97316',
@@ -931,15 +713,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             </div>
           `);
 
-          // ZONE 3 — YELLOW: Caution & drainage runout perimeter
-          const zone3YellowGuwahati: [number, number][] = [
-            [26.2050, 91.8300], [26.2000, 91.7850], [26.1950, 91.7600],
-            [26.1900, 91.7400], [26.1850, 91.7100], [26.1700, 91.6750],
-            [26.1450, 91.6450], [26.1300, 91.6550], [26.1380, 91.6950],
-            [26.1500, 91.7250], [26.1580, 91.7500], [26.1620, 91.7800],
-            [26.1680, 91.8100], [26.1750, 91.8400],
-          ];
-          L.polygon(zone3YellowGuwahati, {
+          L.polygon(guwahatiZones.zone3Yellow, {
             color: '#ca8a04',
             weight: 1.5,
             dashArray: '6 4',
@@ -1006,10 +780,10 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
       // ── 2. REAL STRAHLER RIVER FLOW VECTOR (MAINSTEM & TRIBUTARY) ──
       if (layers.riverVector) {
-        // For generic/fallback locations, prefer real OSM waterway if fetched
-        const activeRiverCoords = (!isRaini && !isGuwahati && osmWaterways.length > 0)
+        // For all locations, prefer fetched OSM waterway, then VERIFIED_OSM_HYDROGRAPHY, then spatialEntities.riverVector
+        const activeRiverCoords = osmWaterways.length > 0
           ? osmWaterways[0].coords
-          : spatialEntities.riverVector;
+          : (VERIFIED_OSM_HYDROGRAPHY[location.id]?.[0]?.coords ?? spatialEntities.riverVector);
 
         // Mainstem River Channel (Dhauliganga / Mandakini / Beas / Brahmaputra)
         L.polyline(activeRiverCoords, {
@@ -1031,7 +805,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               <b style="color:#0284c7;">💧 ${location.region.split('(')[0]} Mainstem Channel</b><br/>
               <b>Current Water Stage:</b> ${location.riverStage}<br/>
               <b>Threshold Status:</b> ${isHighRisk ? '⚠️ FLASH DANGER THRESHOLD EXCEEDED' : '✅ NORMAL SEASONAL FLOW'}<br/>
-              <b>Geometry:</b> ${(!isRaini && !isGuwahati && osmWaterways.length > 0) ? '✅ Real OSM Waterway Data' : 'Traced along riverbed canyon'}<br/>
+              <b>Geometry:</b> ${VERIFIED_OSM_HYDROGRAPHY[location.id] || osmWaterways.length > 0 ? `✅ Real OSM Survey Hydrography (${activeRiverCoords.length} nodes)` : 'Hydrological centerline vector'}<br/>
               <b>Velocity:</b> 4.2 m/s downstream surge
             </div>
           `);

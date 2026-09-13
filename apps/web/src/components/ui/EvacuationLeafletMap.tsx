@@ -294,10 +294,11 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
           </div>
         `);
 
-      // White directional flow arrows (➔) spaced along river segments
-      for (let i = 0; i < riverVector.length - 1; i++) {
+      // White directional flow arrows (➔) spaced gracefully along river
+      const arrowStep = Math.max(1, Math.floor(riverVector.length / 8));
+      for (let i = Math.floor(arrowStep / 2); i < riverVector.length - 1; i += arrowStep) {
         const p1 = riverVector[i];
-        const p2 = riverVector[i + 1];
+        const p2 = riverVector[Math.min(i + Math.max(1, Math.floor(arrowStep / 2)), riverVector.length - 1)];
         const midLat = (p1[0] + p2[0]) / 2;
         const midLon = (p1[1] + p2[1]) / 2;
 
