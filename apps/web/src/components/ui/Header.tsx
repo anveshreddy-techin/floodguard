@@ -12,9 +12,8 @@ import { LANGUAGES, SupportedLanguage } from '@/data/i18n';
 import {
   Search, Globe, Menu, Bot, UserCheck, ShieldAlert,
   MapPin, Radio, PhoneCall, Compass, AlertTriangle,
-  ChevronRight, Sparkles, Heart
+  ChevronRight, Sparkles
 } from 'lucide-react';
-import { DonateModal } from '@/components/ui/donate/DonateModal';
 import { LocationSelectorModal } from '@/components/ui/LocationSelectorModal';
 
 export const Header: React.FC<{
@@ -25,7 +24,6 @@ export const Header: React.FC<{
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [mobileConfigOpen, setMobileConfigOpen] = useState(false);
-  const [donateModalOpen, setDonateModalOpen] = useState(false);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   
   const { selectedLocation, selectLocationById } = useLocation();
@@ -69,12 +67,9 @@ export const Header: React.FC<{
   };
 
   React.useEffect(() => {
-    const handleOpenDonate = () => setDonateModalOpen(true);
     const handleOpenLocation = () => setLocationModalOpen(true);
-    window.addEventListener('open-donate-modal', handleOpenDonate);
     window.addEventListener('open-location-selector', handleOpenLocation);
     return () => {
-      window.removeEventListener('open-donate-modal', handleOpenDonate);
       window.removeEventListener('open-location-selector', handleOpenLocation);
     };
   }, []);
@@ -181,15 +176,6 @@ export const Header: React.FC<{
               <span className="hidden sm:inline">PUBLIC PORTAL</span>
             </Link>
 
-            {/* Disaster Relief Donation Button (Desktop / Tablet) */}
-            <button
-              onClick={() => setDonateModalOpen(true)}
-              className="hidden sm:flex px-2.5 py-1 rounded-xl text-xs font-mono font-bold bg-rose-950/80 hover:bg-rose-900 border border-rose-500/70 text-rose-300 items-center gap-1 shadow-[0_0_12px_rgba(244,63,94,0.3)] active:scale-95 transition shrink-0"
-              title="Donate to Disaster Relief Funds (80G Tax Exempt)"
-            >
-              <Heart className="w-3.5 h-3.5 fill-rose-500/50 text-rose-400 animate-pulse" />
-              <span className="hidden md:inline">DONATE</span>
-            </button>
 
             {/* AI Copilot Button */}
             <button
@@ -356,11 +342,6 @@ export const Header: React.FC<{
         onClose={() => setMobileConfigOpen(false)}
       />
 
-      {/* Global Disaster Relief Donation Modal */}
-      <DonateModal
-        isOpen={donateModalOpen}
-        onClose={() => setDonateModalOpen(false)}
-      />
 
       {/* Pan-India Multi-Basin & GPS Location Selector Modal */}
       <LocationSelectorModal

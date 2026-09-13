@@ -46,7 +46,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
       phaseColor: 'text-rose-400',
       items: [
         { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, badge: 'LIVE' },
-        { id: 'donate', label: 'Disaster Relief Funds', href: '/donate', icon: Heart, badge: '80G EXEMPT' },
+
         { id: 'safety', label: 'My Safety & Guidance', href: '/safety', icon: Compass, badge: 'HUD' },
         { id: 'incidents', label: 'Incident Command', href: '/incidents', icon: FileText },
       ],
