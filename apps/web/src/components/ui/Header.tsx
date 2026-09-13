@@ -247,39 +247,39 @@ export const Header: React.FC<{
         </div>
 
         {/* Row 2: Sub-Bar Context & Breadcrumbs */}
-        <div className="h-8 border-t border-slate-800/80 bg-[#040a1a]/95 px-3 sm:px-4 flex items-center justify-between gap-2 text-xs select-none overflow-x-auto no-scrollbar">
+        <div className="h-8 border-t border-slate-200 bg-slate-50 px-3 sm:px-4 flex items-center justify-between gap-2 text-xs select-none overflow-x-auto no-scrollbar">
           {isCitizen ? (
             /* Citizen Context Strip */
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => setLocationModalOpen(true)}
-                className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-700/70 font-bold hover:bg-cyan-900 active:scale-95 transition shrink-0 shadow-sm"
+                className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-300 font-bold hover:bg-blue-100 active:scale-95 transition shrink-0 shadow-sm"
                 title="Tap to change location or detect your GPS location"
               >
-                <MapPin className="w-3 h-3 text-cyan-400 animate-pulse" />
+                <MapPin className="w-3 h-3 text-blue-500 animate-pulse" />
                 <span>{hierarchy.district || hierarchy.state || selectedLocation?.name}</span>
-                <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-400/20 text-cyan-200 border border-cyan-400/40 font-mono font-bold">
+                <span className="text-[9px] px-1 py-0.5 rounded bg-blue-600 text-white font-mono font-bold">
                   GPS
                 </span>
               </button>
-              <span className="px-2 py-0.5 rounded bg-red-950/80 text-red-300 border border-red-800/60 font-bold shrink-0">
+              <span className="px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 font-bold shrink-0">
                 Risk: {selectedLocation.riskLevel} ({selectedLocation.riskScore}/100)
               </span>
               <Link
                 href="/safety"
-                className="px-2.5 py-0.5 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition flex items-center gap-1 shrink-0 shadow-sm"
+                className="px-2.5 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1 shrink-0 shadow-sm"
               >
                 <Compass className="w-3 h-3" /> {t('what_to_do')}
               </Link>
               <Link
                 href="/safety"
-                className="px-2.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-cyan-300 font-bold border border-slate-700 transition shrink-0 shadow-sm"
+                className="px-2.5 py-0.5 rounded bg-white hover:bg-slate-50 text-blue-700 font-bold border border-slate-200 transition shrink-0 shadow-sm"
               >
                 {t('nearby_shelters')}
               </Link>
               <Link
                 href="/upload"
-                className="px-2.5 py-0.5 rounded bg-rose-950/90 hover:bg-rose-900 border border-rose-700 text-rose-200 font-bold transition shrink-0 shadow-sm"
+                className="px-2.5 py-0.5 rounded bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold transition shrink-0 shadow-sm"
               >
                 {t('report_flood')}
               </Link>
@@ -291,27 +291,27 @@ export const Header: React.FC<{
                 {/* Interactive Location Badge */}
                 <button
                   onClick={() => setLocationModalOpen(true)}
-                  className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-950/90 text-cyan-300 border border-cyan-500/40 font-bold hover:bg-cyan-900 active:scale-95 transition shrink-0 shadow-xs"
+                  className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-bold hover:bg-blue-100 active:scale-95 transition shrink-0 shadow-sm"
                   title="Click to switch state/basin or filter geography"
                 >
-                  <MapPin className="w-3 h-3 text-cyan-400 animate-pulse" />
-                  <span className="text-slate-100 font-bold">{selectedLocation.name}</span>
-                  <span className="text-[10px] text-cyan-400/70">▾</span>
+                  <MapPin className="w-3 h-3 text-blue-500 animate-pulse" />
+                  <span className="text-blue-800 font-bold">{selectedLocation.name}</span>
+                  <span className="text-[10px] text-blue-400">▾</span>
                 </button>
 
-                <span className="text-slate-700">|</span>
-                <span className="text-slate-400 font-medium">State: <strong className="text-cyan-300">{selectedLocation.state}</strong></span>
-                <span className="text-slate-700">•</span>
-                <span className="text-slate-400 font-medium truncate max-w-[240px]">Region: <strong className="text-indigo-300">{selectedLocation.region}</strong></span>
+                <span className="text-slate-300">|</span>
+                <span className="text-slate-500 font-medium">State: <strong className="text-blue-700">{selectedLocation.state}</strong></span>
+                <span className="text-slate-300">•</span>
+                <span className="text-slate-500 font-medium truncate max-w-[240px]">Region: <strong className="text-indigo-700">{selectedLocation.region}</strong></span>
               </div>
 
               {/* Status Badges on the right */}
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800/60">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
                   {dataMode} MODE
                 </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                   <span>{systemStatus}</span>
                 </span>
               </div>

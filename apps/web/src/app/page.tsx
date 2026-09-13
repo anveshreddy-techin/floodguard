@@ -83,7 +83,7 @@ export default function CommandCenterPage() {
         <main className="flex-1 relative min-h-0 overflow-hidden flex flex-col">
 
           {/* Core Prediction Architecture Strip: 4 Physical Pillars + IoT Real-Time + Ward Warnings + Lead Time */}
-          <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-slate-900 text-slate-100 border-b border-slate-800 z-10 shrink-0 shadow-md text-xs overflow-x-auto no-scrollbar gap-2.5 select-none">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-white text-slate-800 border-b border-slate-200 z-10 shrink-0 shadow-sm text-xs overflow-x-auto no-scrollbar gap-2.5 select-none">
             
             {/* Left: Core Mission Focus Tagline + AI Video Trigger */}
             <div className="flex items-center gap-2 shrink-0">
@@ -96,10 +96,10 @@ export default function CommandCenterPage() {
                     window.dispatchEvent(new CustomEvent('open-how-it-works-modal'));
                   }
                 }}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-950 hover:bg-cyan-900 border border-cyan-400/70 text-cyan-200 font-mono font-bold text-[11px] shadow-[0_0_12px_rgba(6,182,212,0.3)] active:scale-95 transition"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-50 hover:bg-cyan-100 border border-cyan-400 text-cyan-700 font-mono font-bold text-[11px] shadow-sm active:scale-95 transition"
                 title="Watch AI Video & Interactive Simulation of How FloodGuard AI Prevents Disasters"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
                 <span>▶ AI VIDEO: HOW IT WORKS</span>
               </button>
             </div>
@@ -108,46 +108,46 @@ export default function CommandCenterPage() {
             <div className="flex items-center gap-1.5 shrink-0">
               <Link
                 href="/weather"
-                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-750 border border-blue-500/40 text-blue-300 text-[11px] font-semibold transition"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-[11px] font-semibold transition"
                 title="Pillar 1: Rainfall (AWS Telemetry & Radar NWP Accumulation)"
               >
                 <span>🌧️ Rainfall</span>
-                <span className="text-[10px] text-slate-300 font-mono bg-blue-950/80 px-1 py-0.2 rounded border border-blue-800/60">48mm/3h</span>
+                <span className="text-[10px] text-blue-800 font-mono bg-blue-100 px-1.5 py-0.5 rounded border border-blue-200 font-bold">48mm/3h</span>
               </Link>
 
               <Link
                 href="/sensors"
-                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-750 border border-amber-500/40 text-amber-300 text-[11px] font-semibold transition"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 text-[11px] font-semibold transition"
                 title="Pillar 2: Soil Moisture (TDR Probe & Catchment Saturation)"
               >
                 <span>🌱 Soil Saturation</span>
-                <span className="text-[10px] text-slate-300 font-mono bg-amber-950/80 px-1 py-0.2 rounded border border-amber-800/60">82%</span>
+                <span className="text-[10px] text-amber-800 font-mono bg-amber-100 px-1.5 py-0.5 rounded border border-amber-200 font-bold">82%</span>
               </Link>
 
               <Link
                 href="/cascade"
-                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-750 border border-rose-500/40 text-rose-300 text-[11px] font-semibold transition"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 text-[11px] font-semibold transition"
                 title="Pillar 3: Slope Stability (Topographic DEM Angle & Factor of Safety)"
               >
                 <span>⛰️ Slope FoS</span>
-                <span className="text-[10px] text-slate-300 font-mono bg-rose-950/80 px-1 py-0.2 rounded border border-rose-800/60">0.94</span>
+                <span className="text-[10px] text-red-800 font-mono bg-red-100 px-1.5 py-0.5 rounded border border-red-200 font-bold">0.94</span>
               </Link>
 
               <Link
                 href="/benchmark"
-                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-750 border border-indigo-500/40 text-indigo-300 text-[11px] font-semibold transition"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 text-[11px] font-semibold transition"
                 title="Pillar 4: Historical Disaster Data (18 Disasters 2000-2026 LOOCV Verified)"
               >
                 <span>📚 Historical Data</span>
-                <span className="text-[10px] text-slate-300 font-mono bg-indigo-950/80 px-1 py-0.2 rounded border border-indigo-800/60">18 Events</span>
+                <span className="text-[10px] text-indigo-800 font-mono bg-indigo-100 px-1.5 py-0.5 rounded border border-indigo-200 font-bold">18 Events</span>
               </Link>
 
               <Link
                 href="/sensors"
-                className="hidden xl:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/70 border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold transition"
+                className="hidden xl:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-700 text-[11px] font-semibold transition"
                 title="IoT Sensor Network: FMCW Radar, AWS Rain, TDR Soil, Geophone"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                 <span>IoT Mesh: LIVE</span>
               </Link>
             </div>
@@ -156,16 +156,16 @@ export default function CommandCenterPage() {
             <div className="flex items-center gap-1.5 shrink-0">
               <Link
                 href="/village/loc-uk-chamoli"
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600/25 hover:bg-blue-600/40 border border-blue-400/60 text-blue-200 text-[11px] font-bold transition shadow-xs"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-700 text-[11px] font-bold transition shadow-sm"
                 title="Hyper-Local Village / Ward Level Early Warnings"
               >
                 <span>🏘️ Ward Warning:</span>
-                <span className="text-amber-300 font-mono">Level 3</span>
+                <span className="text-amber-600 font-mono font-black">Level 3</span>
               </Link>
 
               <Link
                 href="/safety"
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-600/35 hover:bg-red-600/50 border border-red-500 text-red-200 text-[11px] font-bold transition shadow-xs animate-pulse"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-700 border border-red-500 text-white text-[11px] font-bold transition shadow-sm animate-pulse"
                 title="Actionable Early Lead Time for Safe Evacuation"
               >
                 <span>⏱️ Lead Time:</span>
