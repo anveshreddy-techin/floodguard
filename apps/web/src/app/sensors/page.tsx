@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import { useEnvironment } from '@/context/EnvironmentContext';
 import { 
   Activity, 
@@ -144,6 +145,7 @@ export default function SensorsConstellationPage() {
         <Sidebar activeTab="sensors" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6 overflow-y-auto">
+          <RelatedAppsBar activeAppId="sensors" />
           {/* Page Title Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>

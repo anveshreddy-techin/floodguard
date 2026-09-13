@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useEffect } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
@@ -23,6 +24,7 @@ export default function RiverBasinsNationalPage() {
         <Sidebar activeTab="river-basins" />
         
         <main className="flex-1 p-2 sm:p-4 md:p-6 pb-28 md:pb-6 overflow-y-auto bg-[#F0F4F8]">
+          <RelatedAppsBar activeAppId="river-basins" />
           <NationalRiverRiskMap />
         </main>
       </div>

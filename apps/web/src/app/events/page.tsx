@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
@@ -515,6 +516,7 @@ export default function EventMemoryPage() {
         <Sidebar activeTab="events" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6 overflow-y-auto">
+          <RelatedAppsBar activeAppId="events" />
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>

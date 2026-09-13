@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
@@ -133,6 +134,7 @@ export default function PredictionLedgerPage() {
         <Sidebar activeTab="ledger" />
 
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 max-w-6xl mx-auto space-y-5 pb-24 md:pb-6">
+          <RelatedAppsBar activeAppId="ledger" />
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>

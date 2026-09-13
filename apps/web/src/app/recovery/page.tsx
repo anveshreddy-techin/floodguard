@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
@@ -74,6 +75,7 @@ export default function RecoveryPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-6 space-y-6">
+          <RelatedAppsBar activeAppId="recovery" />
 
           <div className="flex items-center justify-between">
             <div>

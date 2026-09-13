@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
@@ -22,6 +23,7 @@ export default function AdminControlPage() {
         <Header />
 
         <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+          <RelatedAppsBar activeAppId="admin" />
           {/* Header Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
             <div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
@@ -17,6 +18,7 @@ export default function DataFlowPage() {
 
       {/* Main Container */}
       <main className="flex-1 w-full max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+          <RelatedAppsBar activeAppId="data-flow" />
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-sans text-slate-500">

@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
@@ -79,6 +80,7 @@ export default function IncidentCommandPage() {
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="incidents" />
         <main className="flex-1 p-3.5 sm:p-5 max-w-7xl mx-auto w-full pb-24 md:pb-6 overflow-y-auto">
+          <RelatedAppsBar activeAppId="incidents" />
 
           {/* Header */}
           <div className="flex items-center justify-between mb-5">

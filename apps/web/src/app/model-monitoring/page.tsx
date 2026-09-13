@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import { useEnvironment } from '@/context/EnvironmentContext';
 import { Brain, AlertTriangle, Waves, Mountain, CloudRain, Activity, Zap, ShieldAlert, CheckCircle2, TrendingUp, Sliders, Radio, RefreshCw, Target, Navigation, Cpu, MapPin, Shield, Clock, BarChart3, Database, FileCheck, GitBranch, Layers, Award, AlertOctagon, HelpCircle, Check, X } from 'lucide-react';
 import { DataModeBadge } from '@/components/ui/Badges';
@@ -224,6 +225,8 @@ void loop() { /* Tipping bucket + TDR + Ultrasonic read & HMAC-SHA256 post */ }
       <div className="flex flex-1 min-h-0">
         <Sidebar activeTab="model-monitoring" />
         <main className="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-y-auto pb-24 md:pb-6">
+          {/* Related Tools in Governance & ML Hub */}
+          <RelatedAppsBar activeAppId="model-monitoring" className="mb-5" />
           
           <div className="border-b border-slate-200 pb-4 mb-6">
             <div className="flex flex-wrap gap-2 mb-2">

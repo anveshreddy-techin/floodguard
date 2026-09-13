@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
@@ -161,6 +162,7 @@ export default function DataSourcesPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-6 space-y-6">
+          <RelatedAppsBar activeAppId="data-sources" />
 
           {/* Title */}
           <div className="flex items-center justify-between">

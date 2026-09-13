@@ -1,5 +1,6 @@
 'use client';
 
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
@@ -228,6 +229,7 @@ export default function HyperLocalGISPage() {
         <Sidebar activeTab="map" />
 
         <main className="flex-1 relative flex flex-col min-h-0 overflow-hidden bg-[#F0F4F8]">
+          <RelatedAppsBar activeAppId="map" />
           {/* Top Floating Spatial GIS Command Bar (Clean, Single-Row Responsive Layout) */}
           <div className="absolute top-3 left-3 right-3 z-30 flex items-center justify-between gap-2 pointer-events-none font-sans">
             {/* View Switcher: Real Map vs 3D Schematic vs National River Map */}

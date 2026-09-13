@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/ui/Header';
 import { Sidebar } from '@/components/ui/Sidebar';
+import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
 import { useAdaptive } from '@/context/AdaptiveContext';
 import { INDIAN_STATES, getStateFromCoordinates } from '@/data/states';
@@ -358,7 +359,9 @@ export default function WeatherIntelligencePage() {
         <Sidebar activeTab="weather" />
 
         <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-6 space-y-5 safe-bottom">
-          
+          {/* Related Tools in Meteorology Hub */}
+          <RelatedAppsBar activeAppId="weather" />
+
           {/* Top Control Ribbon: Location Adaptation & Action Triggers */}
           <div className="bg-white border border-slate-200 shadow-sm p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3">
             
