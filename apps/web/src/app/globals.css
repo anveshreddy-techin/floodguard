@@ -8,77 +8,54 @@
    ============================================================ */
 
 :root {
-  /* -- Atmospheric Base Palette -- */
-  --env-void:        #010409;
-  --env-abyss:       #020810;
-  --env-deep:        #04091a;
-  --env-base:        #060d22;
-  --env-mid:         #0a1530;
-  --env-surface:     #0d1b3e;
+  /* -- Hazard Semantic Colors (prominent on light background) -- */
+  --hazard-critical:  #EF4444;
+  --hazard-high:      #F97316;
+  --hazard-moderate:  #EAB308;
+  --hazard-low:       #22C55E;
+  /* Legacy aliases */
+  --hazard-safe:      #22C55E;
+  --hazard-alert:     #EAB308;
+  --hazard-caution:   #F97316;
+  --hazard-danger:    #EF4444;
+  --hazard-extreme:   #EF4444;
 
-  /* -- Terrain Geometry -- */
-  --terrain-ridge:   rgba(56, 189, 248, 0.04);
-  --terrain-slope:   rgba(56, 189, 248, 0.025);
-  --terrain-valley:  rgba(99, 102, 241, 0.03);
+  /* -- Water Features -- */
+  --water-channel:   #2563EB;
+  --water-gauge:     #1D4ED8;
+  --water-inundate:  #1E40AF;
+  --water-calm:      rgba(37, 99, 235, 0.4);
+  --water-rising:    rgba(37, 99, 235, 0.7);
+  --water-surge:     rgba(30, 64, 175, 0.9);
+  --signal-node:     rgba(37, 99, 235, 0.8);
+  --signal-line:     rgba(37, 99, 235, 0.2);
 
-  /* -- Spec-Refined Hazard Semantic Colors -- */
-  --hazard-safe:     #2ECC71; /* Safe <25/100 */
-  --hazard-alert:    #F39C12; /* Alert 25-50/100 */
-  --hazard-caution:  #E67E22; /* Caution 50-75/100 */
-  --hazard-danger:   #E74C3C; /* Danger >75/100 */
-  --hazard-low:      #2ECC71;
-  --hazard-moderate: #F39C12;
-  --hazard-high:     #E67E22;
-  --hazard-extreme:  #E74C3C;
-
-  /* -- Spec-Refined Water Features -- */
-  --water-channel:   #00A8E8; /* Bright cyan */
-  --water-gauge:     #1E90FF; /* Dodger blue */
-  --water-inundate:  #0073E6; /* Saturated blue */
-  --water-bg:        #001D3D; /* Dark navy blend */
-  --water-calm:      rgba(0, 168, 232, 0.4);
-  --water-rising:    rgba(30, 144, 255, 0.7);
-  --water-surge:     rgba(0, 115, 230, 0.9);
-  --signal-node:     rgba(0, 168, 232, 0.8);
-  --signal-line:     rgba(0, 168, 232, 0.2);
-
-  /* -- Panel System -- */
-  --panel-bg:        rgba(10, 18, 36, 0.85);
-  --panel-border:    rgba(0, 168, 232, 0.2);
-  --panel-highlight: rgba(0, 168, 232, 0.08);
-  --panel-shadow:    0 8px 40px rgba(0, 0, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.4);
+  /* -- Light Panel System -- */
+  --panel-bg:        #FFFFFF;
+  --panel-border:    #E2E8F0;
+  --panel-highlight: rgba(37, 99, 235, 0.04);
+  --panel-shadow:    0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
 }
 
 /* ============================================================
-   BODY — Deep Atmospheric Multi-Layer Base
-   (no single flat color — multiple depth layers)
+   BODY — Clean Light Professional Dashboard Background
    ============================================================ */
 body {
-  color: #f1f5f9;
-  background:
-    /* Specular luminous sapphire ridge highlight top-center */
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(14, 165, 233, 0.15) 0%, transparent 70%),
-    /* Deep atmospheric sapphire haze center-right */
-    radial-gradient(ellipse 70% 80% at 75% 45%, rgba(30, 58, 138, 0.25) 0%, transparent 65%),
-    /* Luminous indigo bloom bottom-left */
-    radial-gradient(ellipse 60% 60% at 15% 85%, rgba(37, 99, 235, 0.18) 0%, transparent 65%),
-    /* Rich midnight sapphire base gradient */
-    linear-gradient(175deg, #09132c 0%, #060e22 45%, #040918 100%);
+  color: #1E293B;
+  background: #F0F4F8;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 /* ============================================================
-   SCROLLBAR — Tactical Thin
+   SCROLLBAR — Subtle Gray
    ============================================================ */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(56,189,248,0.4) 0%, rgba(99,102,241,0.4) 100%);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.7); }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #F1F5F9; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
 
 /* ============================================================
    FLOATING PANEL SYSTEM
@@ -91,46 +68,49 @@ body {
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   border: 1px solid var(--panel-border);
-  box-shadow: var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+  box-shadow: var(--panel-shadow);
   position: relative;
 }
-/* Edge specular highlight — top-left corner catch */
-.fp::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, transparent 40%);
-  pointer-events: none;
-}
+/* Remove dark cyan overlay */
+.fp::before { display: none; }
 
-/* Operational surface — active/live mode */
+/* Operational card */
 .fp-operational {
-  background: rgba(6, 14, 30, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.18);
-  box-shadow: var(--panel-shadow), 0 0 20px rgba(6, 182, 212, 0.06), inset 0 1px 0 rgba(56,189,248,0.08);
+  background: #FFFFFF;
+  border: 1px solid #DBEAFE;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
 }
 
-/* Critical surface — high/extreme risk state */
+/* Critical alert card */
 .fp-critical {
-  background: rgba(20, 6, 6, 0.88);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  box-shadow: var(--panel-shadow), 0 0 30px rgba(239, 68, 68, 0.08), inset 0 1px 0 rgba(239,68,68,0.06);
+  background: #FFF5F5;
+  border: 1px solid #FECACA;
+  box-shadow: 0 1px 3px rgba(239,68,68,0.08), 0 4px 16px rgba(239,68,68,0.06);
 }
 
-/* Historical surface — hindcast/replay mode */
+/* Historical card */
 .fp-historical {
-  background: rgba(20, 14, 30, 0.88);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-  box-shadow: var(--panel-shadow), 0 0 20px rgba(168, 85, 247, 0.06), inset 0 1px 0 rgba(168,85,247,0.06);
+  background: #FAF5FF;
+  border: 1px solid #E9D8FD;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
-/* Simulation surface */
+/* Simulation card */
 .fp-simulation {
-  background: rgba(12, 14, 28, 0.88);
-  border: 1px solid rgba(124, 58, 237, 0.22);
-  box-shadow: var(--panel-shadow), 0 0 20px rgba(124, 58, 237, 0.07), inset 0 1px 0 rgba(124,58,237,0.06);
+  background: #F5F3FF;
+  border: 1px solid #DDD6FE;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
+
+/* Map-context overlay (dark, over satellite imagery — keep dark) */
+.fp-map-overlay {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.fp-map-overlay::before { display: none; }
 
 /* Legacy aliases (backward compat) */
 .glass-panel { @apply fp; }
@@ -151,10 +131,11 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.chip-live    { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; }
-.chip-demo    { background: rgba(56,189,248,0.1);  border: 1px solid rgba(56,189,248,0.3); color: #7dd3fc; }
-.chip-sim     { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4); color: #c4b5fd; }
-.chip-hist    { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.35); color: #d8b4fe; }
+.chip-live    { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; }
+.chip-demo    { background: #EFF6FF; border: 1px solid #BFDBFE; color: #2563EB; }
+.chip-sim     { background: #F5F3FF; border: 1px solid #DDD6FE; color: #7C3AED; }
+.chip-hist    { background: #FAF5FF; border: 1px solid #E9D8FD; color: #9333EA; }
+
 
 /* ============================================================
    RISK CONTOUR UTILITIES
@@ -196,46 +177,44 @@ body {
    ============================================================ */
 .btn-primary {
   position: relative;
-  background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  box-shadow: 0 0 18px rgba(14, 165, 233, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  background: #2563EB;
+  border: 1px solid #1D4ED8;
+  color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(37,99,235,0.2), 0 4px 12px rgba(37,99,235,0.15);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, transparent 100%);
-  pointer-events: none;
 }
 .btn-primary:hover {
-  box-shadow: 0 0 28px rgba(14, 165, 233, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  background: #1D4ED8;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3), 0 6px 20px rgba(37,99,235,0.2);
   transform: translateY(-1px);
 }
 .btn-primary:active { transform: scale(0.97); }
 
 .btn-danger {
   position: relative;
-  background: linear-gradient(135deg, #9f1239 0%, #be123c 100%);
-  border: 1px solid rgba(244, 63, 94, 0.35);
-  box-shadow: 0 0 18px rgba(244, 63, 94, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+  background: #DC2626;
+  border: 1px solid #B91C1C;
+  color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(220,38,38,0.2);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn-danger:hover {
-  box-shadow: 0 0 30px rgba(244, 63, 94, 0.55), inset 0 1px 0 rgba(255,255,255,0.15);
+  background: #B91C1C;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.3);
   transform: translateY(-1px);
 }
 .btn-danger:active { transform: scale(0.97); }
 
 .btn-ghost {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: transparent;
+  border: 1px solid #E2E8F0;
+  color: #475569;
   transition: all 0.2s ease;
 }
 .btn-ghost:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(56, 189, 248, 0.3);
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #1E293B;
 }
 
 /* Legacy aliases */
@@ -245,11 +224,12 @@ body {
 /* ============================================================
    DATA FRESHNESS INDICATOR
    ============================================================ */
-.freshness-live    { color: #34d399; }
-.freshness-stale   { color: #fbbf24; }
-.freshness-offline { color: #6b7280; }
-.freshness-sim     { color: #a78bfa; }
-.freshness-hist    { color: #c084fc; }
+.freshness-live    { color: #16A34A; }
+.freshness-stale   { color: #CA8A04; }
+.freshness-offline { color: #9CA3AF; }
+.freshness-sim     { color: #7C3AED; }
+.freshness-hist    { color: #9333EA; }
+
 
 /* ============================================================
    ANIMATED FLOW LINES (River / Data Streams)
@@ -448,17 +428,15 @@ html, body {
 
 /* Mobile Bottom Navigation Bar Styles */
 .mobile-nav-bar {
-  background: rgba(5, 10, 23, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(56, 189, 248, 0.15);
-  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
 }
 
 .mobile-nav-active {
-  color: #00A8E8;
-  text-shadow: 0 0 12px rgba(0, 168, 232, 0.8);
+  color: #2563EB;
 }
+
 
 /* ============================================================
    FLOODGUARD MAP VISUALIZATION ENHANCEMENT ANIMATIONS
@@ -768,3 +746,26 @@ html, body {
   touch-action: pan-x pan-y;
 }
 
+
+/* ============================================================
+   DASHBOARD CARD UTILITIES (Light Theme)
+   ============================================================ */
+.card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04); }
+.card-header { font-size: 0.875rem; font-weight: 600; color: #374151; border-bottom: 1px solid #F1F5F9; padding: 0.875rem 1rem; }
+.stat-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Risk level colors — prominent on light background */
+.text-risk-critical { color: #DC2626; }
+.text-risk-high     { color: #EA580C; }
+.text-risk-moderate { color: #CA8A04; }
+.text-risk-low      { color: #16A34A; }
+
+.badge-risk-critical { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; padding: 2px 8px; font-weight: 700; font-size: 0.75rem; }
+.badge-risk-high     { background: #FFF7ED; color: #EA580C; border: 1px solid #FED7AA; border-radius: 6px; padding: 2px 8px; font-weight: 700; font-size: 0.75rem; }
+.badge-risk-moderate { background: #FEFCE8; color: #CA8A04; border: 1px solid #FEF08A; border-radius: 6px; padding: 2px 8px; font-weight: 700; font-size: 0.75rem; }
+.badge-risk-low      { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; border-radius: 6px; padding: 2px 8px; font-weight: 700; font-size: 0.75rem; }
+
+/* Sidebar nav item utility */
+.sidebar-nav-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.5rem 0.875rem; border-radius: 0.5rem; font-size: 0.8125rem; font-weight: 500; color: #94A3B8; transition: all 0.15s ease; text-decoration: none; }
+.sidebar-nav-item:hover  { background: rgba(255,255,255,0.07); color: #E2E8F0; }
+.sidebar-nav-item.active { background: #2563EB; color: #FFFFFF; }

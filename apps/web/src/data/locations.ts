@@ -38,6 +38,27 @@ export interface LocationDossier {
 
 // 🇮🇳 Comprehensive Pan-India Multi-Basin Disaster Location Registry
 export const LOCATIONS: LocationDossier[] = [
+  // ── DEMO HERO ZONE (Telangana / Krishna Basin) ──
+  {
+    id: 'loc-tg-rangapur',
+    name: 'Rangapur',
+    state: 'Telangana',
+    region: 'Veligonda Mandal (Krishna River Basin)',
+    zone: 'PENINSULAR_CENTRAL',
+    application: 'FLASH_FLOOD_CLOUDBURST',
+    lat: 16.5200,
+    lon: 78.1800,
+    elevation: '134 m',
+    population: 1842,
+    riskScore: 82.0,
+    riskLevel: 'HIGH',
+    rainfall3h: '42 mm',
+    soilMoisture: '68%',
+    riverStage: '4.8 m (rising)',
+    leadTimeMinutes: 420,
+    primaryHazard: 'Krishna River Flash Surge & Heavy Catchment Runoff',
+    authoritativeAgency: 'CWC & Telangana Disaster Management (TG-SDMA)',
+  },
   // ── 1. NORTHERN HIMALAYAN ZONE ──
   {
     id: 'loc-uk-chamoli',

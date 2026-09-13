@@ -20,7 +20,7 @@ interface LocationContextType {
 }
 
 const LocationContext = createContext<LocationContextType>({
-  selectedLocation: LOCATIONS[LOCATIONS.length - 1], // Default: demo-village-003
+  selectedLocation: LOCATIONS[0], // Default: Rangapur, Telangana
   activeZoneFilter: 'ALL',
   setActiveZoneFilter: () => {},
   setSelectedLocation: () => {},
@@ -29,7 +29,7 @@ const LocationContext = createContext<LocationContextType>({
 });
 
 export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [selectedLocation, setSelectedLocation] = useState<LocationDossier>(LOCATIONS[LOCATIONS.length - 1]);
+  const [selectedLocation, setSelectedLocation] = useState<LocationDossier>(LOCATIONS[0]);
   const [activeZoneFilter, setActiveZoneFilter] = useState<IndiaDisasterZone | 'ALL'>('ALL');
 
   const selectLocationById = (id: string) => {

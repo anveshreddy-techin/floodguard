@@ -221,13 +221,13 @@ export default function HyperLocalGISPage() {
   const [fitMode, setFitMode] = useState<'MEET' | 'COVER'>('MEET');
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden select-none bg-slate-950">
+    <div className="flex flex-col h-screen overflow-hidden select-none bg-[#F0F4F8]">
       <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
 
       <div className="flex flex-1 min-h-0 relative">
         <Sidebar activeTab="map" />
 
-        <main className="flex-1 relative flex flex-col min-h-0 overflow-hidden bg-slate-950">
+        <main className="flex-1 relative flex flex-col min-h-0 overflow-hidden bg-[#F0F4F8]">
           {/* Top Floating Spatial GIS Command Bar (Clean, Single-Row Responsive Layout) */}
           <div className="absolute top-2.5 left-2.5 right-2.5 z-30 flex items-center justify-between gap-2 pointer-events-none">
             {/* View Switcher: Real Map vs 3D Schematic vs National River Map */}

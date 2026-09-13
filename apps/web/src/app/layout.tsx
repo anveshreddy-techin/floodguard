@@ -3,7 +3,6 @@ import "./globals.css";
 import { LocationProvider } from "@/context/LocationContext";
 import { EnvironmentProvider } from "@/context/EnvironmentContext";
 import { AdaptiveProvider } from "@/context/AdaptiveContext";
-import { EnvironmentLayer } from "@/components/ui/EnvironmentLayer";
 import { MobileNavigationWrapper } from "@/components/ui/MobileNavigationWrapper";
 
 export const metadata: Metadata = {
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "FloodGuard",
   },
   icons: {
@@ -28,27 +27,24 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: "#050a17",
+  themeColor: "#1B2A3B",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="antialiased min-h-screen overflow-x-hidden">
+    <html lang="en">
+      <body className="antialiased min-h-screen overflow-x-hidden bg-[#F0F4F8]">
         <EnvironmentProvider>
           <AdaptiveProvider>
             <LocationProvider>
-              {/* 8-Layer living environment — always behind content */}
-              <EnvironmentLayer />
-              
-              {/* Application content — floats over environment */}
-              <div className="env-content min-h-screen flex flex-col pb-16 md:pb-0">
+              {/* Application content */}
+              <div className="min-h-screen flex flex-col pb-16 md:pb-0">
                 {children}
               </div>
 
-              {/* Mobile Navigation HUD (Bottom Bar & Slide Drawer) */}
+              {/* Mobile Navigation HUD */}
               <MobileNavigationWrapper />
             </LocationProvider>
           </AdaptiveProvider>
