@@ -24,13 +24,13 @@ export const NationalRiverRiskMap: React.FC<{
 }> = ({ onSelectRiverPoint, className = '' }) => {
   const [selectedBasin, setSelectedBasin] = useState<RiverBasinId | 'ALL'>('ALL');
   const [minRiskFilter, setMinRiskFilter] = useState<number>(0);
-  const [selectedPoint, setSelectedPoint] = useState<RiverPoint>(NATIONAL_RIVER_POINTS[0]);
+  const [selectedPoint, setSelectedPoint] = useState<RiverPoint | null>(null);
   const [hoveredPoint, setHoveredPoint] = useState<RiverPoint | null>(null);
   const [viewMode, setViewMode] = useState<'MAP' | 'DIAGRAM' | 'ANALYTICS'>('MAP');
   const [flowAnimationSpeed, setFlowAnimationSpeed] = useState<'NORMAL' | 'FAST' | 'PAUSED'>('NORMAL');
   const [statsExpanded, setStatsExpanded] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
-  const [showInMapCard, setShowInMapCard] = useState<boolean>(true);
+  const [showInMapCard, setShowInMapCard] = useState<boolean>(false);
   const [inMapCardMinimized, setInMapCardMinimized] = useState<boolean>(false);
   const [showAllLabels, setShowAllLabels] = useState<boolean>(false);
 
@@ -279,10 +279,11 @@ export const NationalRiverRiskMap: React.FC<{
         
         {/* VIEW 1: MASTER SPATIAL VECTOR MAP */}
         {viewMode === 'MAP' && (
-          <div className="flex-1 relative min-h-[520px] sm:min-h-[640px] lg:min-h-0 bg-[#02050f] flex items-center justify-center p-1 sm:p-2 overflow-hidden">
+          <div className="flex-1 relative min-h-[520px] sm:min-h-[640px] lg:min-h-0 bg-[#dbeafe] flex items-center justify-center p-1 sm:p-2 overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 40%, #dde9f7 100%)' }}>
             
             {/* ── IN-MAP TELEMETRY & BASIN INTELLIGENCE HUD CARD ── */}
-            {showInMapCard && (
+            {showInMapCard && selectedPoint && (
               <div className={`absolute top-2 left-2 z-20 transition-all duration-300 max-w-[340px] sm:max-w-[390px] w-full ${
                 inMapCardMinimized ? 'w-auto' : ''
               }`}>
@@ -481,36 +482,33 @@ export const NationalRiverRiskMap: React.FC<{
               }}
             >
               <defs>
-                {/* Flowing Water Particle Marker */}
                 <radialGradient id="riverGlow" cx="50%" cy="50%" r="50%">
                   <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.8" />
                   <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
                 </radialGradient>
-                
-                {/* Elevation Background Relief Gradients */}
-                <linearGradient id="himalayaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="#0f172a" stopOpacity="0.2" />
+                <linearGradient id="indiaFill" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#e0f2fe" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#bfdbfe" stopOpacity="0.7" />
                 </linearGradient>
               </defs>
 
-              {/* ── 1. Realistic Geographic Coastline & National Boundary of India ── */}
+              {/* ── 1. India Map Boundary ── */}
               <path
                 d="M 280,100 Q 350,90 410,130 Q 480,180 540,210 Q 640,220 700,240 Q 820,250 880,310 Q 850,380 820,440 Q 760,460 710,440 Q 650,490 640,560 Q 610,640 550,720 Q 490,790 440,860 Q 380,950 350,980 Q 320,930 300,860 Q 250,760 220,680 Q 180,600 200,530 Q 160,480 200,420 Q 220,340 240,260 Z"
-                fill="url(#himalayaGradient)"
-                stroke="#1e293b"
-                strokeWidth="1.5"
-                strokeDasharray="4 2"
+                fill="url(#indiaFill)"
+                stroke="#94a3b8"
+                strokeWidth="2"
+                strokeDasharray="6 3"
               />
 
-              {/* Northern Mountain Ridge Silhouette */}
+              {/* Northern Mountain Ridge */}
               <path
                 d="M 220,130 Q 310,100 420,160 T 630,220 T 870,290"
                 fill="none"
-                stroke="#475569"
-                strokeWidth="1.2"
+                stroke="#cbd5e1"
+                strokeWidth="1.5"
                 strokeDasharray="6 3"
-                opacity="0.5"
+                opacity="0.7"
               />
 
               {/* ── 2. Flowing Animated River Channels (Interactive & Downstream Flow) ── */}
@@ -826,125 +824,152 @@ export const NationalRiverRiskMap: React.FC<{
           </div>
         )}
 
-        {/* ── Right River Point Inspector Card (Scroll-linked on Mobile) ── */}
+        {/* ── Right River Point Inspector Card ── */}
         <div
           id="gauge-inspector-card"
-          className="w-full lg:w-96 bg-slate-50/95 border-t lg:border-t-0 lg:border-l border-slate-200 p-4 md:p-5 flex flex-col justify-between overflow-y-auto space-y-4 shadow-sm shrink-0 text-slate-800"
+          className="w-full lg:w-96 bg-slate-50/95 border-t lg:border-t-0 lg:border-l border-slate-200 p-4 md:p-5 flex flex-col overflow-y-auto space-y-4 shadow-sm shrink-0 text-slate-800"
         >
-          <div className="space-y-4">
-            
-            {/* Inspector Header */}
-            <div className="flex items-start justify-between gap-2 border-b border-slate-200 pb-3">
+          {!selectedPoint ? (
+            /* Empty state — shown before user taps any gauge node */
+            <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 py-12">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center">
+                <Waves className="w-8 h-8 text-blue-400" />
+              </div>
               <div>
-                <span className="text-[10px] font-mono text-blue-700 font-bold uppercase tracking-wider block">
-                  {selectedPoint.basinName} · {selectedPoint.state}
-                </span>
-                <h3 className="text-base font-black text-slate-900 leading-tight font-sans mt-0.5">
-                  {selectedPoint.name}
-                </h3>
-                <span className="text-[10px] font-mono text-slate-500">
-                  Station: {selectedPoint.cwcStationCode}
-                </span>
+                <h3 className="text-sm font-bold text-slate-700 font-sans">Select a Gauge Station</h3>
+                <p className="text-xs text-slate-500 mt-1 max-w-[180px] leading-relaxed font-sans">
+                  Click any colored dot on the map to view live hydrological telemetry for that river station.
+                </p>
               </div>
-
-              <div className="text-right shrink-0">
-                <span className={`px-2.5 py-1 rounded-xl text-xs font-mono font-black border block ${getRiskBadge(selectedPoint.riskCategory)}`}>
-                  {selectedPoint.riskPercentage}% RISK
-                </span>
-                <span className="text-[9px] font-mono text-red-600 font-bold mt-1 block">
-                  {selectedPoint.trend.replace('_', ' ')}
-                </span>
-              </div>
-            </div>
-
-            {/* Gauge Dial & Hydrodynamics */}
-            <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <span className="text-[10px] text-slate-500 block font-semibold">CURRENT STAGE</span>
-                <div className="text-xl font-black text-slate-900 mt-0.5 font-mono">
-                  {selectedPoint.currentStageM} <span className="text-xs font-normal text-slate-500">m</span>
+              <div className="grid grid-cols-3 gap-2 w-full text-[10px] font-mono mt-2">
+                <div className="p-2 rounded-xl bg-white border border-red-200 text-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500 mx-auto mb-1" />
+                  <span className="text-red-700 font-bold">Critical</span>
+                  <div className="text-slate-500">≥85%</div>
                 </div>
-                <span className="text-[10px] text-red-600 font-bold">
-                  Danger: {selectedPoint.dangerLevelM} m
+                <div className="p-2 rounded-xl bg-white border border-amber-200 text-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500 mx-auto mb-1" />
+                  <span className="text-amber-700 font-bold">High</span>
+                  <div className="text-slate-500">75-84%</div>
+                </div>
+                <div className="p-2 rounded-xl bg-white border border-emerald-200 text-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 mx-auto mb-1" />
+                  <span className="text-emerald-700 font-bold">Safe</span>
+                  <div className="text-slate-500">&lt;60%</div>
+                </div>
+              </div>
+              <p className="text-[10px] text-slate-400 font-mono">37 CWC gauge stations across India</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Inspector Header */}
+              <div className="flex items-start justify-between gap-2 border-b border-slate-200 pb-3">
+                <div>
+                  <span className="text-[10px] font-mono text-blue-700 font-bold uppercase tracking-wider block">
+                    {selectedPoint.basinName} · {selectedPoint.state}
+                  </span>
+                  <h3 className="text-base font-black text-slate-900 leading-tight font-sans mt-0.5">
+                    {selectedPoint.name}
+                  </h3>
+                  <span className="text-[10px] font-mono text-slate-500">
+                    Station: {selectedPoint.cwcStationCode}
+                  </span>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className={`px-2.5 py-1 rounded-xl text-xs font-mono font-black border block ${getRiskBadge(selectedPoint.riskCategory)}`}>
+                    {selectedPoint.riskPercentage}% RISK
+                  </span>
+                  <span className="text-[9px] font-mono text-red-600 font-bold mt-1 block">
+                    {selectedPoint.trend.replace('_', ' ')}
+                  </span>
+                </div>
+              </div>
+
+              {/* Gauge Dial & Hydrodynamics */}
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                  <span className="text-[10px] text-slate-500 block font-semibold">CURRENT STAGE</span>
+                  <div className="text-xl font-black text-slate-900 mt-0.5 font-mono">
+                    {selectedPoint.currentStageM} <span className="text-xs font-normal text-slate-500">m</span>
+                  </div>
+                  <span className="text-[10px] text-red-600 font-bold">
+                    Danger: {selectedPoint.dangerLevelM} m
+                  </span>
+                </div>
+                <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                  <span className="text-[10px] text-slate-500 block font-semibold">DISCHARGE FLOW</span>
+                  <div className="text-lg font-black text-blue-700 mt-0.5 font-mono">
+                    {selectedPoint.dischargeCumecs.toLocaleString()}
+                  </div>
+                  <span className="text-[10px] text-slate-500">m³/s (cumecs)</span>
+                </div>
+              </div>
+
+              {/* Stage Progress Bar relative to Danger Level */}
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5 text-xs font-mono">
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="text-slate-500 font-semibold">STAGE TO DANGER RATIO</span>
+                  <span className="font-bold text-amber-700">
+                    {Math.round((selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(100, (selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%`,
+                      backgroundColor: getRiskColor(selectedPoint.riskPercentage),
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-[9px] text-slate-500 font-semibold">
+                  <span>Warning: {selectedPoint.warningLevelM}m</span>
+                  <span>Danger: {selectedPoint.dangerLevelM}m</span>
+                </div>
+              </div>
+
+              {/* Primary Hazard */}
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5">
+                <span className="text-[10px] font-mono font-bold text-amber-700 uppercase tracking-wider flex items-center gap-1">
+                  <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
+                  PRIMARY HYDROLOGICAL THREAT
                 </span>
+                <p className="text-xs text-slate-700 font-sans leading-relaxed">
+                  {selectedPoint.primaryHazard}
+                </p>
               </div>
 
-              <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <span className="text-[10px] text-slate-500 block font-semibold">DISCHARGE FLOW</span>
-                <div className="text-lg font-black text-blue-700 mt-0.5 font-mono">
-                  {selectedPoint.dischargeCumecs.toLocaleString()}
-                </div>
-                <span className="text-[10px] text-slate-500">m³/s (cumecs)</span>
-              </div>
-            </div>
-
-            {/* Stage Progress Bar relative to Danger Level */}
-            <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5 text-xs font-mono">
-              <div className="flex justify-between items-center text-[10px]">
-                <span className="text-slate-500 font-semibold">STAGE TO DANGER RATIO</span>
-                <span className="font-bold text-amber-700">
-                  {Math.round((selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%
+              {/* Cascade Linkages */}
+              <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm text-xs font-mono space-y-2">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">
+                  HYDRODYNAMIC CASCADE LINKAGES
                 </span>
+                {selectedPoint.upstreamNodeId && (
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-slate-500">↑ Upstream Gauge:</span>
+                    <span className="text-blue-700 font-bold">{selectedPoint.upstreamNodeId}</span>
+                  </div>
+                )}
+                {selectedPoint.downstreamNodeId && (
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-slate-500">↓ Downstream Gauge:</span>
+                    <span className="text-emerald-700 font-bold">{selectedPoint.downstreamNodeId}</span>
+                  </div>
+                )}
               </div>
-              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${Math.min(100, (selectedPoint.currentStageM / selectedPoint.dangerLevelM) * 100)}%`,
-                    backgroundColor: getRiskColor(selectedPoint.riskPercentage),
-                  }}
-                />
-              </div>
-              <div className="flex justify-between text-[9px] text-slate-500 font-semibold">
-                <span>Warning: {selectedPoint.warningLevelM}m</span>
-                <span>Danger: {selectedPoint.dangerLevelM}m</span>
-              </div>
+
+              {/* Action Links */}
+              <Link
+                href="/safety"
+                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-sans font-bold text-center flex items-center justify-center gap-2 shadow-sm active:scale-95 transition"
+              >
+                <Compass className="w-4 h-4 text-white" />
+                <span>EVACUATION GUIDANCE — {selectedPoint.state.toUpperCase()}</span>
+              </Link>
             </div>
-
-            {/* Primary Hazard & Model Evidence */}
-            <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5">
-              <span className="text-[10px] font-mono font-bold text-amber-700 uppercase tracking-wider block flex items-center gap-1">
-                <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
-                PRIMARY HYDROLOGICAL THREAT
-              </span>
-              <p className="text-xs text-slate-700 font-sans leading-relaxed">
-                {selectedPoint.primaryHazard}
-              </p>
-            </div>
-
-            {/* Cascade Flow Connections */}
-            <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-sm text-xs font-mono space-y-2">
-              <span className="text-[10px] text-slate-500 uppercase font-bold block">
-                HYDRODYNAMIC CASCADE LINKAGES
-              </span>
-              {selectedPoint.upstreamNodeId && (
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-slate-500">↑ Upstream Gauge:</span>
-                  <span className="text-blue-700 font-bold">{selectedPoint.upstreamNodeId}</span>
-                </div>
-              )}
-              {selectedPoint.downstreamNodeId && (
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-slate-500">↓ Downstream Gauge:</span>
-                  <span className="text-emerald-700 font-bold">{selectedPoint.downstreamNodeId}</span>
-                </div>
-              )}
-            </div>
-
-          </div>
-
-          {/* Action Links */}
-          <div className="pt-2 flex flex-col gap-2">
-            <Link
-              href="/safety"
-              className="w-full py-2.5 rounded-xl btn-primary text-white text-xs font-sans font-bold text-center flex items-center justify-center gap-2 shadow-sm active:scale-95 transition"
-            >
-              <Compass className="w-4 h-4 text-white" />
-              <span>EVACUATION GUIDANCE FOR {selectedPoint.state.toUpperCase()}</span>
-            </Link>
-          </div>
-
+          )}
         </div>
+
 
       </div>
 
