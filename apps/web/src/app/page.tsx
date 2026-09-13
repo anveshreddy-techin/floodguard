@@ -263,18 +263,6 @@ export default function CommandCenterPage() {
               </div>
             )}
 
-            {/* ── BOTTOM-RIGHT: Hotkey Hint Bar (doesn't clash with legend bottom-left) ── */}
-            <div className="hidden md:flex absolute bottom-16 right-3 z-[600] bg-white/90 backdrop-blur-md rounded-xl px-3 py-2 text-[10px] font-mono text-slate-600 items-center gap-2 border border-slate-200 shadow-md">
-              <span className="text-blue-600 font-bold">KEYS:</span>
-              <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 font-bold border border-slate-200">W</span>
-              <span>Roles</span>
-              <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 font-bold border border-slate-200">S</span>
-              <span>Safety</span>
-              <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 font-bold border border-slate-200">H</span>
-              <span>Hindcast</span>
-              <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 font-bold border border-slate-200">R</span>
-              <span>Replay</span>
-            </div>
 
             {/* ── RIGHT: Desktop Dockable Intelligence Panel (starts minimized) ── */}
             <DesktopIntelligencePanel

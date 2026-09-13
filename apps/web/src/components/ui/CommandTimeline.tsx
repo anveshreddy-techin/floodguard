@@ -87,6 +87,19 @@ export const CommandTimeline: React.FC<CommandTimelineProps> = ({
         </div>
       </div>
 
+      {/* Hotkeys Hint */}
+      <div className="hidden xl:flex items-center gap-1.5 font-mono text-[10px] text-slate-500 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+        <span className="text-blue-600 font-bold">KEYS:</span>
+        <span className="bg-white px-1 py-0.2 rounded text-slate-800 font-bold border border-slate-200">W</span>
+        <span>Roles</span>
+        <span className="bg-white px-1 py-0.2 rounded text-slate-800 font-bold border border-slate-200">S</span>
+        <span>Safety</span>
+        <span className="bg-white px-1 py-0.2 rounded text-slate-800 font-bold border border-slate-200">H</span>
+        <span>Hindcast</span>
+        <span className="bg-white px-1 py-0.2 rounded text-slate-800 font-bold border border-slate-200">R</span>
+        <span>Replay</span>
+      </div>
+
       {/* Live System Subsystem Health Lights */}
       <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-slate-700">
         <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-md border border-slate-200">
