@@ -400,7 +400,25 @@ export default function DataIngestionWorkbenchPage() {
                 Real-world Open-Meteo weather API ingestion, direct ESP32/Raspberry Pi IoT telemetry push, manual staff gauge logging, and CSV pipelines.
               </p>
             </div>
-            <DataModeBadge mode={operatingMode === 'REAL_PILOT' ? 'LIVE' : 'DEMO'} />
+            <div className="flex items-center gap-2">
+              <a
+                href="/data-sources"
+                className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-mono text-[11px] font-bold transition flex items-center gap-1 shadow-2xs"
+                title="View Data Providers Registry (IMD, CWC, NRSC)"
+              >
+                <span>📡 Providers</span>
+                <span className="text-slate-400">→</span>
+              </a>
+              <a
+                href="/ingestion"
+                className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-mono text-[11px] font-bold transition flex items-center gap-1 shadow-2xs"
+                title="View Ingestion Jobs Queue"
+              >
+                <span>🔄 Queue</span>
+                <span className="text-slate-400">→</span>
+              </a>
+              <DataModeBadge mode={operatingMode === 'REAL_PILOT' ? 'LIVE' : 'DEMO'} />
+            </div>
           </div>
 
           {/* Ingestion Source Tabs */}

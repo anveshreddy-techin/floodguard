@@ -127,7 +127,16 @@ export default function CascadeFlowPage() {
                 Physics-guided hazard chain mapping energy transfer from mountain ridge cloudburst down to settlement exposure
               </p>
             </div>
-            <DataModeBadge mode="DEMO" />
+            <div className="flex items-center gap-2">
+              <a
+                href="/simulation"
+                className="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-mono text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+              >
+                <span>🧪 Scenario Lab (What-If)</span>
+                <span className="text-blue-500">→</span>
+              </a>
+              <DataModeBadge mode="DEMO" />
+            </div>
           </div>
 
           {/* Master 2-Column Spatial Flow Graph Workbench */}

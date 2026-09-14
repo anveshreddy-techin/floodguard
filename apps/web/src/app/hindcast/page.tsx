@@ -1198,7 +1198,16 @@ export default function HindcastLabPage() {
                 Comprehensive archive of verified Indian &amp; Himalayan flash floods, GLOFs, cloudbursts, and dam surges. Replay model detection with strict zero-leakage hindsight lock.
               </p>
             </div>
-            <DataModeBadge mode="HINDCAST" />
+            <div className="flex items-center gap-2">
+              <a
+                href="/replay"
+                className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 font-mono text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+              >
+                <span>⏪ Strict Replay Studio</span>
+                <span className="text-purple-500">→</span>
+              </a>
+              <DataModeBadge mode="HINDCAST" />
+            </div>
           </div>
 
           {/* ── Search & Filter Ribbon ── */}
