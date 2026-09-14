@@ -80,11 +80,11 @@ export const Header: React.FC<{
         className="border-b border-cyan-500/20 bg-[#070f24]/95 backdrop-blur-2xl sticky top-0 z-40 select-none safe-top shrink-0"
         style={{ boxShadow: '0 4px 25px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(56,189,248,0.1)' }}
       >
-        {/* Row 1: Primary Navigation Bar (56px) */}
-        <div className="h-14 px-2 sm:px-4 lg:px-6 flex items-center justify-between gap-1.5 sm:gap-3 max-w-full relative">
+        {/* Row 1: Primary Navigation Bar (52px) */}
+        <div className="h-13 px-3 sm:px-4 lg:px-5 flex items-center justify-between gap-1.5 sm:gap-3 max-w-full relative">
           
           {/* Left: Hamburger (mobile) + Brand Wordmark + Mode Toggle */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
             <button
               onClick={() => setMobileDrawerOpen(true)}
               className="md:hidden w-8 h-8 rounded-xl bg-slate-900/90 border border-cyan-500/30 flex items-center justify-center text-cyan-400 active:scale-95 transition shrink-0 shadow-sm"
@@ -94,9 +94,9 @@ export const Header: React.FC<{
               <Menu className="w-4 h-4" />
             </button>
 
-            <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group shrink-0">
-              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-cyan-400 animate-ping shadow-[0_0_12px_rgba(6,182,212,1)] shrink-0" />
-              <div className="text-sm sm:text-base font-black tracking-wide bg-gradient-to-r from-cyan-300 via-sky-200 to-indigo-200 bg-clip-text text-transparent group-hover:brightness-125 transition truncate">
+            <Link href="/" className="flex items-center gap-2 group shrink-0 py-1">
+              <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping shadow-[0_0_12px_rgba(6,182,212,1)] shrink-0" />
+              <div className="text-sm sm:text-base font-black tracking-tight bg-gradient-to-r from-cyan-300 via-sky-200 to-indigo-200 bg-clip-text text-transparent group-hover:brightness-125 transition truncate">
                 FLOODGUARD <span className="text-cyan-400 font-extrabold">AI</span>
               </div>
             </Link>
