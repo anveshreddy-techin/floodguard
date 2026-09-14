@@ -1219,9 +1219,9 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       {/* ── MAP CONTAINER ── */}
       <div ref={mapContainerRef} className="w-full h-full flex-1" style={{ zIndex: 1 }} />
 
-      {/* ── TOP CONTROL BAR: BASE MAP & LAYER TOGGLES (NEVER OVERLAPS VIEW SWITCHER) ── */}
+      {/* ── TOP CONTROL BAR: BASE MAP & LAYER TOGGLES ── */}
       {showControlBar && (
-        <div className="absolute top-2.5 left-3 right-3 z-[400] hidden md:flex items-center justify-end gap-2 pointer-events-none">
+        <div className="absolute top-2.5 right-3 z-[400] hidden md:flex items-center gap-2 pointer-events-none">
           {/* Base Map Switcher */}
           <div className="pointer-events-auto bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-md border border-slate-200 flex items-center gap-1">
             <span className="text-[10px] font-mono font-bold text-blue-600 px-1.5 uppercase hidden sm:inline">
@@ -1256,7 +1256,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               onClick={() => setLayers((p) => ({ ...p, floodZone: !p.floodZone }))}
               title="100-Year Modeled Inundation Corridor (Illustrative Hydraulic Estimate)"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.floodZone ? 'bg-orange-100 text-orange-800 border border-orange-300' : 'text-slate-400 hover:text-slate-600'
+                layers.floodZone ? 'bg-orange-100 text-orange-800 border border-orange-300 font-bold' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
               }`}
             >
               <Waves className="w-3 h-3 text-orange-600" />
@@ -1268,7 +1268,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               onClick={() => setLayers((p) => ({ ...p, evacuationRoute: !p.evacuationRoute }))}
               title="Candidate High-Ground Escape Trail (Unverified Ground Surface)"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.evacuationRoute ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'text-slate-400 hover:text-slate-600'
+                layers.evacuationRoute ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
               }`}
             >
               <Navigation className="w-3 h-3 text-emerald-600" />
@@ -1279,7 +1279,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               onClick={() => setLayers((p) => ({ ...p, sensors: !p.sensors }))}
               title="Real IoT Gauges"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.sensors ? 'bg-blue-100 text-blue-800 border border-blue-300' : 'text-slate-400 hover:text-slate-600'
+                layers.sensors ? 'bg-blue-100 text-blue-800 border border-blue-300 font-bold' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
               }`}
             >
               <Radio className="w-3 h-3 text-blue-600" />
@@ -1290,7 +1290,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               onClick={() => setLayers((p) => ({ ...p, slopeHazards: !p.slopeHazards }))}
               title="Steep Slope Hazards"
               className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition ${
-                layers.slopeHazards ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'text-slate-400 hover:text-slate-600'
+                layers.slopeHazards ? 'bg-rose-100 text-rose-800 border border-rose-300 font-bold' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
               }`}
             >
               <Mountain className="w-3 h-3 text-rose-600" />
@@ -1308,7 +1308,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
               <RotateCcw className="w-4 h-4" />
             </button>
 
-            <div className="bg-white/95 px-2.5 py-1 rounded-xl text-[10px] font-mono text-slate-700 border border-slate-200 hidden lg:flex items-center gap-1.5 shadow-md">
+            <div className="bg-white/95 px-2.5 py-1 rounded-xl text-[10px] font-mono text-slate-700 border border-slate-200 hidden xl:flex items-center gap-1.5 shadow-md">
               <MapPin className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
               <span>{location.lat.toFixed(4)}°N, {location.lon.toFixed(4)}°E ({location.elevation})</span>
             </div>
@@ -1318,7 +1318,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
 
       {/* Mobile Map Style Bar (compact right pill, never collides) */}
       {showControlBar && (
-        <div className="md:hidden absolute top-14 right-3 z-[400] flex items-center gap-1.5 pointer-events-none">
+        <div className="md:hidden absolute top-2.5 right-3 z-[400] flex items-center gap-1.5 pointer-events-none">
           <div className="pointer-events-auto bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-md border border-slate-200 flex items-center gap-1">
             {(['SATELLITE', 'TOPO', 'DARK'] as BaseMapTileType[]).map((tile) => (
               <button
@@ -1343,7 +1343,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       )}
 
       {/* ── UNIFIED LEFT-SIDE INFORMATION PANEL (ALL INFORMATION NEATLY ON THE LEFT) ── */}
-      <div className="absolute top-14 left-3 z-[450] flex flex-col pointer-events-none">
+      <div className="absolute top-2.5 left-3 z-[450] flex flex-col pointer-events-none">
         {hudExpanded ? (
           <div className="pointer-events-auto w-80 lg:w-[360px] max-h-[calc(100vh-170px)] bg-white/95 border border-slate-200 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 animate-fade-in">
             {/* Panel Header */}
@@ -1493,16 +1493,16 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           /* Collapsed Pill Button on Left */
           <button
             onClick={() => setHudExpanded(true)}
-            className="pointer-events-auto px-3.5 py-2 rounded-2xl bg-white/95 hover:bg-white border border-slate-200 text-slate-800 hover:text-blue-600 shadow-md backdrop-blur-md flex items-center gap-2 text-xs font-mono font-bold transition active:scale-95 group"
+            className="pointer-events-auto px-3.5 py-2 rounded-2xl bg-white/95 hover:bg-white border border-slate-200 text-slate-800 hover:text-blue-600 shadow-md backdrop-blur-md flex items-center gap-2 text-xs font-mono font-bold transition active:scale-95 group max-w-[260px] sm:max-w-none"
           >
             <span className={`w-2 h-2 rounded-full shrink-0 ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}`} />
-            <span>GROUND SITUATION: {location.name.split('/')[0].trim()}</span>
-            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+            <span className="truncate">GROUND SITUATION: {location.name.split('/')[0].trim()}</span>
+            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 ${
               isHighRisk ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
             }`}>
               {location.riskLevel}
             </span>
-            <span className="text-[10px] text-blue-600 font-bold group-hover:translate-x-0.5 transition-transform">▶</span>
+            <span className="text-[10px] text-blue-600 font-bold group-hover:translate-x-0.5 transition-transform shrink-0">▶</span>
           </button>
         )}
       </div>

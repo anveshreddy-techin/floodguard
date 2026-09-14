@@ -1,6 +1,5 @@
 'use client';
 
-import { RelatedAppsBar } from '@/components/ui/RelatedAppsBar';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/ui/Header';
@@ -229,19 +228,18 @@ export default function HyperLocalGISPage() {
         <Sidebar activeTab="map" />
 
         <main className="flex-1 relative flex flex-col min-h-0 overflow-hidden bg-[#F0F4F8]">
-          <RelatedAppsBar activeAppId="map" />
-          {/* Top Floating Spatial GIS Command Bar (Clean, Single-Row Responsive Layout) */}
-          <div className="absolute top-3 left-3 right-3 z-30 flex items-center justify-between gap-2 pointer-events-none font-sans">
-            {/* View Switcher: Real Map vs 3D Schematic vs National River Map */}
-            <div className="pointer-events-auto flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1.5 rounded-xl shadow-md border border-slate-200">
+          {/* Top Dedicated GIS Workspace Command Bar (In-Flow Header, Zero Collision) */}
+          <div className="h-11 bg-white border-b border-slate-200 px-3 flex items-center justify-between shrink-0 z-20 font-sans shadow-2xs">
+            {/* Left: View Mode Switcher Tabs */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
               <button
                 onClick={() => {
                   setActiveMapView('HYPER_LOCAL');
                   setGisRenderMode('REAL_MAP');
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 shadow-xs ${
+                className={`px-3 py-1 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 ${
                   activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'REAL_MAP'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
@@ -253,9 +251,9 @@ export default function HyperLocalGISPage() {
                   setActiveMapView('HYPER_LOCAL');
                   setGisRenderMode('SCHEMATIC');
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 shadow-xs ${
+                className={`px-3 py-1 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 ${
                   activeMapView === 'HYPER_LOCAL' && gisRenderMode === 'SCHEMATIC'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
@@ -264,9 +262,9 @@ export default function HyperLocalGISPage() {
               </button>
               <button
                 onClick={() => setActiveMapView('NATIONAL_RIVERS')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 shadow-xs ${
+                className={`px-3 py-1 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 ${
                   activeMapView === 'NATIONAL_RIVERS'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
@@ -275,9 +273,9 @@ export default function HyperLocalGISPage() {
               </button>
               <button
                 onClick={() => setActiveMapView('DASHBOARD_ALERTS')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 shadow-xs ${
+                className={`px-3 py-1 rounded-lg text-xs font-sans font-bold transition flex items-center gap-1.5 ${
                   activeMapView === 'DASHBOARD_ALERTS'
-                    ? 'bg-red-600 text-white shadow'
+                    ? 'bg-red-600 text-white shadow-xs'
                     : 'text-red-700 hover:bg-red-50'
                 }`}
               >
@@ -286,12 +284,17 @@ export default function HyperLocalGISPage() {
               </button>
             </div>
 
-            {/* Right: Viewport Mode Toggle & Info Triggers */}
-            <div className="pointer-events-auto flex items-center gap-1.5">
-              {/* Bilingual Hindi/English GIS Toggle */}
+            {/* Right: Active Location Breadcrumb + Bilingual Hindi/English GIS Toggle */}
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-xs font-mono">
+                <MapPin className="w-3 h-3 text-blue-600" />
+                <span className="font-bold">{selectedLocation.name}</span>
+                <span className="text-slate-400">({selectedLocation.elevation})</span>
+              </div>
+
               <button
                 onClick={() => setGisLang(gisLang === 'en' ? 'hi' : 'en')}
-                className="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-sans font-bold text-slate-800 border border-slate-200 hover:bg-slate-50 shadow-md transition active:scale-95 flex items-center gap-1.5"
+                className="bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-lg text-xs font-sans font-bold text-slate-800 border border-slate-200 shadow-2xs transition active:scale-95 flex items-center gap-1.5"
                 title={gisLang === 'en' ? 'Switch to Hindi (हिन्दी)' : 'Switch to English'}
               >
                 <Globe className="w-3.5 h-3.5 text-blue-600" />
@@ -300,16 +303,16 @@ export default function HyperLocalGISPage() {
             </div>
           </div>
 
-          {/* Conditional View Render Overlay for Live Dashboard & Alerts */}
+          {/* Conditional View Render for Live Dashboard & Alerts */}
           {activeMapView === 'DASHBOARD_ALERTS' && (
-            <div className="absolute inset-0 pt-14 p-1 sm:p-4 overflow-y-auto pb-20 md:pb-4 min-h-0 bg-[#F0F4F8] z-40">
+            <div className="flex-1 p-2 sm:p-4 overflow-y-auto min-h-0 bg-[#F0F4F8] z-10">
               <LiveDashboardAlertsView onClose={() => setActiveMapView('HYPER_LOCAL')} />
             </div>
           )}
 
-          {/* Conditional View Render Overlay for National River Map */}
+          {/* Conditional View Render for National River Map */}
           {activeMapView === 'NATIONAL_RIVERS' && (
-            <div className="absolute inset-0 pt-14 p-1 sm:p-4 overflow-y-auto pb-28 md:pb-4 min-h-0 bg-[#F0F4F8] z-20">
+            <div className="flex-1 p-2 sm:p-4 overflow-y-auto min-h-0 bg-[#F0F4F8] z-10">
               <NationalRiverRiskMap />
             </div>
           )}
@@ -317,7 +320,7 @@ export default function HyperLocalGISPage() {
           {/* Master Full-Bleed Spatial Vector GIS Canvas: REAL MAP vs SCHEMATIC */}
           {activeMapView === 'HYPER_LOCAL' && (
             gisRenderMode === 'REAL_MAP' ? (
-              <div className="flex-1 relative w-full h-full bg-slate-100 overflow-hidden">
+              <div className="flex-1 relative w-full h-full bg-slate-100 min-h-0 overflow-hidden">
                 <HyperLocalRealMap
                   location={selectedLocation}
                   selectedNodeId={selectedNode?.id}
@@ -332,7 +335,9 @@ export default function HyperLocalGISPage() {
                 />
               </div>
             ) : (
-              <Real3DTerrainCatchment location={selectedLocation} />
+              <div className="flex-1 relative w-full h-full min-h-0 overflow-hidden">
+                <Real3DTerrainCatchment location={selectedLocation} />
+              </div>
             )
           )}
 
