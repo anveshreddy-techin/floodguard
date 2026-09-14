@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   ShieldAlert, Map, Layers, History, Activity, Database, 
@@ -39,7 +39,7 @@ export const APP_HUB_OPTIONS: AppHubOption[] = [
     desc: 'Live Command, Alerts, Roles & Evacuation',
     icon: ShieldAlert,
     badge: 'Response',
-    accentColor: '#EF4444',
+    accentColor: '#DC2626',
     defaultHref: '/',
     relatedApps: [
       { id: 'overview', label: 'Command Center', href: '/', icon: ShieldAlert, tag: 'Live Ops', badgeColor: 'red' },
@@ -55,7 +55,7 @@ export const APP_HUB_OPTIONS: AppHubOption[] = [
     desc: 'Terrain GIS, River Basins, Cascade & Simulation',
     icon: Map,
     badge: 'GIS Lab',
-    accentColor: '#3B82F6',
+    accentColor: '#2563EB',
     defaultHref: '/map',
     relatedApps: [
       { id: 'map', label: 'Hyper-Local GIS Map', href: '/map', icon: Map, tag: 'Satellite', badgeColor: 'blue' },
@@ -71,7 +71,7 @@ export const APP_HUB_OPTIONS: AppHubOption[] = [
     desc: 'Weather, IoT Sensors & Data Ingestion',
     icon: CloudRain,
     badge: 'Telemetry',
-    accentColor: '#10B981',
+    accentColor: '#059669',
     defaultHref: '/weather',
     relatedApps: [
       { id: 'weather', label: 'Weather & Radar Intelligence', href: '/weather', icon: CloudRain, tag: 'Radar/NWP', badgeColor: 'blue' },
@@ -86,7 +86,7 @@ export const APP_HUB_OPTIONS: AppHubOption[] = [
     desc: 'Historical Replay, Benchmarking & Audit',
     icon: History,
     badge: 'Forensics',
-    accentColor: '#A855F7',
+    accentColor: '#7C3AED',
     defaultHref: '/hindcast',
     relatedApps: [
       { id: 'hindcast', label: 'Historical Hindcast & Replay', href: '/hindcast', icon: History, tag: '2000-2026', badgeColor: 'purple' },
@@ -101,7 +101,7 @@ export const APP_HUB_OPTIONS: AppHubOption[] = [
     desc: 'NDRF ML Models, Admin RBAC & Citizen Services',
     icon: Brain,
     badge: 'Gov & ML',
-    accentColor: '#F59E0B',
+    accentColor: '#D97706',
     defaultHref: '/model-monitoring',
     relatedApps: [
       { id: 'model-monitoring', label: 'NDRF ML Model Studio', href: '/model-monitoring', icon: Brain, tag: 'AI Eval', badgeColor: 'blue' },
@@ -118,21 +118,10 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
   const [collapsed, setCollapsed] = useState(false);
 
-  // Determine which hub contains the activeTab so it's open by default
-  const findHubForTab = (tab: string): string => {
-    for (const hub of APP_HUB_OPTIONS) {
-      if (hub.relatedApps.some((a) => a.id === tab || (tab.startsWith('village') && a.id === 'village'))) {
-        return hub.id;
-      }
-    }
-    return 'hub-ops';
-  };
-
-  // Keep track of which hubs are expanded (all open or active one open)
   const [expandedHubs, setExpandedHubs] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     APP_HUB_OPTIONS.forEach((h) => {
-      initial[h.id] = true; // Open all by default so user can quickly glance
+      initial[h.id] = true;
     });
     return initial;
   });
@@ -146,47 +135,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
   return (
     <aside
-      className={`hidden md:flex flex-col justify-between transition-all duration-300 select-none z-30 shrink-0 sticky top-[88px] h-[calc(100vh-88px)] max-h-[calc(100vh-88px)] ${
+      className={`hidden md:flex flex-col justify-between transition-all duration-300 select-none z-30 shrink-0 bg-white border-r border-slate-200/90 shadow-[1px_0_6px_rgba(0,0,0,0.03)] h-full ${
         collapsed ? 'w-16' : 'w-64 xl:w-72'
       }`}
-      style={{
-        background: '#1B2A3B',
-        borderRight: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '2px 0 16px rgba(0,0,0,0.15)',
-      }}
     >
-      {/* ── Fixed Brand Header at Top (Never scrolls away) ── */}
-      <div className="p-3.5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#162332]">
-        {!collapsed ? (
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-md ring-2 ring-blue-400/30"
-              style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }}
-            >
-              <ShieldAlert className="w-5 h-5 text-white" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-sm font-black text-white tracking-tight leading-tight truncate">
-                FloodGuard AI
-              </div>
-              <div className="text-[10px] font-medium leading-tight text-blue-200 mt-0.5 truncate">
-                Disaster Management Platform
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center mx-auto shadow-md ring-2 ring-blue-400/30 shrink-0"
-            style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }}
-            title="FloodGuard AI"
-          >
-            <ShieldAlert className="w-5 h-5 text-white" />
-          </div>
+      {/* ── Top Bar with Section Title & Collapse Toggle ── */}
+      <div className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between shrink-0 bg-slate-50/80">
+        {!collapsed && (
+          <span className="text-[10px] font-mono font-bold tracking-wider text-slate-500 uppercase">
+            DISASTER HUBS
+          </span>
         )}
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition active:scale-95 ml-auto"
+          className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition active:scale-95 ml-auto"
           title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -194,7 +157,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       </div>
 
       {/* ── Scrollable Application Hubs Container ── */}
-      <div className="p-2.5 space-y-3 overflow-y-auto flex-1 min-h-0 custom-sidebar-scroll">
+      <div className="p-2.5 space-y-2.5 overflow-y-auto flex-1 min-h-0 custom-sidebar-scroll">
         {APP_HUB_OPTIONS.map((hub) => {
           const HubIcon = hub.icon;
           const isHubExpanded = !!expandedHubs[hub.id];
@@ -207,8 +170,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
               key={hub.id}
               className={`rounded-2xl transition-all border ${
                 hasActiveChild 
-                  ? 'bg-slate-900/50 border-blue-500/40' 
-                  : 'bg-slate-900/20 border-white/5'
+                  ? 'bg-blue-50/60 border-blue-200 shadow-2xs' 
+                  : 'bg-slate-50/70 border-slate-200/80 hover:border-slate-300 hover:bg-slate-100/60'
               }`}
             >
               {/* Hub Option Header */}
@@ -220,16 +183,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                     title={hub.desc}
                   >
                     <div 
-                      className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 shadow-xs"
-                      style={{ background: `${hub.accentColor}25`, color: hub.accentColor }}
+                      className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 shadow-2xs"
+                      style={{ background: `${hub.accentColor}18`, color: hub.accentColor }}
                     >
                       <HubIcon className="w-3.5 h-3.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-xs font-bold text-white tracking-normal truncate group-hover:text-blue-300 transition">
+                      <div className="text-xs font-bold text-slate-800 tracking-normal truncate group-hover:text-blue-600 transition">
                         {hub.shortTitle}
                       </div>
-                      <div className="text-[10px] text-slate-400 truncate font-medium">
+                      <div className="text-[10px] text-slate-500 truncate font-medium">
                         {hub.badge}
                       </div>
                     </div>
@@ -238,7 +201,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                   {/* Expand/Collapse Toggle for Related Apps */}
                   <button
                     onClick={() => toggleHub(hub.id)}
-                    className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition"
+                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition"
                     title={isHubExpanded ? 'Collapse related applications' : 'Expand related applications'}
                   >
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isHubExpanded ? 'rotate-180' : ''}`} />
@@ -248,10 +211,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                 /* Collapsed Icon-Only Option */
                 <Link
                   href={hub.defaultHref}
-                  className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center transition-all my-1.5"
+                  className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center transition-all my-1.5 shadow-2xs"
                   style={{
-                    background: hasActiveChild ? '#2563EB' : 'rgba(255,255,255,0.06)',
-                    color: hasActiveChild ? '#FFFFFF' : '#CBD5E1',
+                    background: hasActiveChild ? '#2563EB' : '#F1F5F9',
+                    color: hasActiveChild ? '#FFFFFF' : '#475569',
                   }}
                   title={`${hub.title} (${hub.relatedApps.length} related apps)`}
                 >
@@ -261,36 +224,37 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
               {/* Related Sub-Applications (Nested in the same option) */}
               {!collapsed && isHubExpanded && (
-                <div className="px-2 pb-2 pt-0.5 space-y-0.5 border-t border-white/5 font-sans">
+                <div className="px-2 pb-2 pt-0.5 space-y-1 border-t border-slate-200/60 font-sans">
                   {hub.relatedApps.map((subApp) => {
                     const SubIcon = subApp.icon;
                     const isActive = activeTab === subApp.id || (activeTab.startsWith('village') && subApp.id === 'village');
 
-                    let badgeBg = 'bg-white/10 text-slate-300 border-white/15';
-                    if (subApp.badgeColor === 'red') badgeBg = 'bg-red-500 text-white border-red-600';
-                    else if (subApp.badgeColor === 'blue') badgeBg = 'bg-blue-600 text-white border-blue-700';
-                    else if (subApp.badgeColor === 'green') badgeBg = 'bg-emerald-600 text-white border-emerald-700';
-                    else if (subApp.badgeColor === 'amber') badgeBg = 'bg-amber-600 text-white border-amber-700';
-                    else if (subApp.badgeColor === 'purple') badgeBg = 'bg-purple-600 text-white border-purple-700';
+                    let badgeBg = 'bg-slate-100 text-slate-600 border-slate-200';
+                    if (subApp.badgeColor === 'red') badgeBg = 'bg-red-50 text-red-700 border-red-200';
+                    else if (subApp.badgeColor === 'blue') badgeBg = 'bg-blue-50 text-blue-700 border-blue-200';
+                    else if (subApp.badgeColor === 'green') badgeBg = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                    else if (subApp.badgeColor === 'amber') badgeBg = 'bg-amber-50 text-amber-700 border-amber-200';
+                    else if (subApp.badgeColor === 'purple') badgeBg = 'bg-purple-50 text-purple-700 border-purple-200';
 
                     return (
                       <Link
                         key={subApp.id}
                         href={subApp.href}
-                        className={`flex items-center justify-between pl-3 pr-2 py-1.5 rounded-lg text-xs transition group relative ${
+                        className={`flex items-center justify-between pl-2.5 pr-2 py-1.5 rounded-lg text-xs transition group relative ${
                           isActive 
-                            ? 'bg-blue-600 text-white font-semibold shadow-xs' 
-                            : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
+                            ? 'bg-blue-600 text-white font-bold shadow-xs' 
+                            : 'text-slate-600 hover:bg-white hover:text-blue-700 hover:border-slate-200/90 border border-transparent font-medium'
                         }`}
                       >
-                        {/* Sub-tree connecting indicator */}
                         <div className="flex items-center gap-2 min-w-0">
-                          <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-300'}`} />
+                          <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'}`} />
                           <span className="truncate text-xs">{subApp.label}</span>
                         </div>
 
                         {subApp.tag && (
-                          <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 border ${badgeBg}`}>
+                          <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 border ${
+                            isActive ? 'bg-blue-700 text-blue-100 border-blue-500/40' : badgeBg
+                          }`}>
                             {subApp.tag}
                           </span>
                         )}
@@ -306,12 +270,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
       {/* ── Footer ── */}
       {!collapsed && (
-        <div
-          className="p-3 border-t text-xs font-sans flex items-center justify-between bg-black/20 shrink-0"
-          style={{ borderColor: 'rgba(255,255,255,0.08)', color: '#88A4B8' }}
-        >
-          <span className="font-semibold text-blue-400">SIH26192 • Theme 4</span>
-          <span className="text-emerald-400 font-semibold">5 Unified Hubs</span>
+        <div className="p-3 border-t border-slate-200 bg-slate-50/80 text-xs font-sans flex items-center justify-between text-slate-500 shrink-0">
+          <span className="font-semibold text-slate-700">SIH26192 • Theme 4</span>
+          <span className="text-emerald-700 font-bold">5 Unified Hubs</span>
         </div>
       )}
     </aside>
