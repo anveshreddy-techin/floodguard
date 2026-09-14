@@ -105,18 +105,6 @@ export default function CommandCenterPage() {
                 <span>ROLES</span>
                 <span className="text-[9px] px-1.5 py-0.2 rounded bg-indigo-600 text-white font-bold">10</span>
               </Link>
-              <button
-                onClick={() => {
-                  if (typeof window !== 'undefined') {
-                    window.dispatchEvent(new CustomEvent('open-how-it-works-modal'));
-                  }
-                }}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-50 hover:bg-cyan-100 border border-cyan-400 text-cyan-700 font-mono font-bold text-[11px] shadow-sm active:scale-95 transition"
-                title="Watch AI Video & Interactive Simulation of How FloodGuard AI Prevents Disasters"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
-                <span>▶ AI VIDEO</span>
-              </button>
             </div>
 
             {/* Middle: The 4 Physical Pillars + IoT Telemetry */}
