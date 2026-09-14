@@ -116,15 +116,15 @@ export const Header: React.FC<{
             </div>
           </div>
 
-          {/* Center: SOS 112 Emergency Button */}
-          <div className="hidden md:flex items-center justify-center">
+          {/* Center: SOS 112 Emergency Button - Exactly Centered in Header */}
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 pointer-events-none z-10">
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new CustomEvent('open-emergency-modal'));
                 }
               }}
-              className="relative group flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 transition-all shadow-[0_0_15px_rgba(239,68,68,0.5)] ring-2 ring-rose-400/50 ring-offset-1 ring-offset-slate-900 shrink-0"
+              className="pointer-events-auto relative group flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 transition-all shadow-[0_0_15px_rgba(239,68,68,0.5)] ring-2 ring-rose-400/50 ring-offset-1 ring-offset-slate-900 shrink-0"
               title="Immediate Emergency Rescue & Disaster Helpline Dispatch (Hotkey: E)"
             >
               <span className="relative flex h-2 w-2">

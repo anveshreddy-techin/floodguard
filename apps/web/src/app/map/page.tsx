@@ -88,7 +88,7 @@ export default function HyperLocalGISPage() {
     SURGE: true,
     SENSORS: true,
     SHELTERS: true,
-    SLOPE: false,
+    SLOPE: true,
   });
 
   const [flowThreshold, setFlowThreshold] = useState<number>(35); // km² accumulation

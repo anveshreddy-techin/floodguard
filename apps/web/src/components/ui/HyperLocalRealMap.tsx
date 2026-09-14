@@ -84,7 +84,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
     floodZone: true, // Red, Orange, Yellow multi-zone flood risk areas visible immediately
     evacuationRoute: true,
     sensors: true,
-    slopeHazards: false,
+    slopeHazards: true,
     isochrones: false,
     riverVector: true, // River flow vector cleanly traces natural channel
   });
