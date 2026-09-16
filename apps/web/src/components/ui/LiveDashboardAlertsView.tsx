@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import dynamic from 'next/dynamic';
 import { 
   Home, 
   MapPin, 
@@ -22,21 +21,8 @@ import {
 } from 'lucide-react';
 import { useAdaptive } from '@/context/AdaptiveContext';
 import { useLocation, LOCATIONS } from '@/context/LocationContext';
-import { DashboardLayer } from './DashboardRealMap';
 
-// Dynamically import real Leaflet GIS Satellite Map to avoid SSR issues
-const DashboardRealMap = dynamic(() => import('@/components/ui/DashboardRealMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full min-h-[360px] flex items-center justify-center bg-slate-900 rounded-2xl border border-slate-700">
-      <div className="text-center space-y-2">
-        <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-cyan-400 text-xs font-mono font-bold animate-pulse">LOADING REAL GIS SATELLITE MAP…</p>
-        <p className="text-slate-400 text-[10px] font-mono">Fetching High-Res Satellite Tiles & Topography</p>
-      </div>
-    </div>
-  ),
-});
+export type DashboardLayer = 'RISK' | 'RAINFALL' | 'RIVER' | 'SOIL' | 'LAYERS';
 
 interface LiveDashboardAlertsViewProps {
   onClose?: () => void;
@@ -108,7 +94,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-semibold shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-            <span>REAL-TIME TELEMETRY</span>
+            <span>REAL-TIME STREAM</span>
           </div>
           {onClose && (
             <button
@@ -148,14 +134,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
             {/* Precision Speedometer Gauge with Clear Calibration Zones */}
             <div className="relative w-44 h-26 flex items-center justify-center overflow-hidden">
               <svg viewBox="0 0 200 120" className="w-full h-full">
-                <defs>
-                  <filter id="gaugeShadow" x="-10%" y="-10%" width="120%" height="120%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.25" />
-                  </filter>
-                </defs>
-
                 {/* 4 Colored Band Sectors with Exact Calibrated Ranges */}
-                {/* 1. Green (0-35% Safe / Normal) */}
                 <path
                   d="M 20,105 A 80,80 0 0,1 53.6,38.4"
                   fill="none"
@@ -163,21 +142,18 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
                   strokeWidth="18"
                   strokeLinecap="round"
                 />
-                {/* 2. Yellow (35-60% Moderate / Advisory) */}
                 <path
                   d="M 53.6,38.4 A 80,80 0 0,1 115,26.5"
                   fill="none"
                   stroke="#eab308"
                   strokeWidth="18"
                 />
-                {/* 3. Orange (60-80% Warning / Flash Surge) */}
                 <path
                   d="M 115,26.5 A 80,80 0 0,1 161,51"
                   fill="none"
                   stroke="#f97316"
                   strokeWidth="18"
                 />
-                {/* 4. Red (80-100% Critical Inundation / Evacuate) */}
                 <path
                   d="M 161,51 A 80,80 0 0,1 180,105"
                   fill="none"
@@ -186,17 +162,17 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
                   strokeLinecap="round"
                 />
 
-                {/* Tick Mark Lines & Numeric Calibrations */}
+                {/* Tick Mark Lines */}
                 <line x1="20" y1="105" x2="30" y2="105" stroke="#ffffff" strokeWidth="1.5" />
                 <line x1="100" y1="25" x2="100" y2="35" stroke="#ffffff" strokeWidth="1.5" />
                 <line x1="180" y1="105" x2="170" y2="105" stroke="#ffffff" strokeWidth="1.5" />
 
-                {/* Labeled Ticks */}
+                {/* Numeric Scale */}
                 <text x="24" y="118" fill="#64748b" fontSize="8" fontFamily="monospace" fontWeight="bold">0%</text>
                 <text x="94" y="20" fill="#64748b" fontSize="8" fontFamily="monospace" fontWeight="bold">50%</text>
                 <text x="166" y="118" fill="#64748b" fontSize="8" fontFamily="monospace" fontWeight="bold">100%</text>
 
-                {/* Gauge Needle with Pivot Cap */}
+                {/* Needle */}
                 <g transform={`rotate(${needleAngle}, 100, 105)`}>
                   <line
                     x1="100"
@@ -214,7 +190,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
               </svg>
             </div>
 
-            {/* Dial Readout with Clear Threshold Meaning */}
+            {/* Dial Readout */}
             <div className="flex flex-col items-center -mt-1">
               <span className="text-2xl font-black font-mono text-red-600 leading-tight">
                 {summary.riskPercent}%
@@ -239,7 +215,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
               </span>
             </div>
             
-            {/* Clean Blue Progress Bar */}
+            {/* Blue Progress Bar */}
             <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200 p-0.5">
               <div
                 className="h-full bg-blue-600 rounded-full transition-all duration-700"
@@ -247,7 +223,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
               />
             </div>
 
-            {/* Explainable Telemetry Coverage Breakdown (Easy Understanding) */}
+            {/* Explainable Telemetry Coverage Breakdown */}
             <div className="mt-2.5 pt-2 border-t border-slate-100 space-y-1.5 text-[10px] font-mono text-slate-600">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1">
@@ -315,7 +291,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
               </svg>
             </div>
 
-            {/* Clear Lead-Time Trajectory Steps */}
+            {/* Lead-Time Trajectory Steps */}
             <div className="grid grid-cols-4 gap-1 text-center font-mono text-[9px] pt-1.5 border-t border-slate-100">
               <div className="bg-slate-50 p-1 rounded">
                 <span className="text-slate-400 block">T-3h</span>
@@ -337,16 +313,315 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
           </div>
         </div>
 
-        {/* ── CENTER SECTION: REAL GIS SATELLITE MAP + FACTOR BREAKDOWN + ALERT ── */}
+        {/* ── CENTER SECTION: EXACT VIBRANT DANGER AREAS COLOR MAP ── */}
         <div className="lg:col-span-6 flex flex-col gap-3 min-h-0">
           
-          {/* REALISTIC GIS MAP CONTAINER (EMBEDS LEAFLET SATELLITE/TOPO ENGINE) */}
-          <div className="flex-1 min-h-[380px] sm:min-h-[440px] flex flex-col">
-            <DashboardRealMap
-              location={loc}
-              activeLayer={activeLayer}
-              onLayerChange={setActiveLayer}
-            />
+          {/* MAP CANVAS CONTAINER (INSTANT LOAD, EXACT COLOR REPRESENTATION) */}
+          <div className="relative flex-1 min-h-[340px] sm:min-h-[380px] bg-[#133020] border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col">
+            
+            {/* Top Layer Control Bar */}
+            <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between gap-1 overflow-x-auto pb-1 pointer-events-auto">
+              <div className="flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200 shadow-md">
+                <button
+                  onClick={() => setActiveLayer('RISK')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                    activeLayer === 'RISK'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <span>Risk Map</span>
+                </button>
+                <button
+                  onClick={() => setActiveLayer('RAINFALL')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                    activeLayer === 'RAINFALL'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <CloudRain className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Rainfall</span>
+                </button>
+                <button
+                  onClick={() => setActiveLayer('RIVER')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                    activeLayer === 'RIVER'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <Waves className="w-3.5 h-3.5 text-teal-600" />
+                  <span>River Levels</span>
+                </button>
+                <button
+                  onClick={() => setActiveLayer('SOIL')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                    activeLayer === 'SOIL'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <Droplets className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Soil Moisture</span>
+                </button>
+                <button
+                  onClick={() => setActiveLayer('LAYERS')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                    activeLayer === 'LAYERS'
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <Layers className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Layers</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Realistic Topographic Valley Landscape SVG with Exact Red, Orange, Yellow, Green Colors Overlay */}
+            <div className="w-full h-full relative overflow-hidden bg-[#133020]">
+              <svg viewBox="0 0 700 420" className="w-full h-full object-cover">
+                <defs>
+                  {/* Mountain background gradient */}
+                  <linearGradient id="mountainBg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#1e3a24" />
+                    <stop offset="60%" stopColor="#2d5236" />
+                    <stop offset="100%" stopColor="#25432b" />
+                  </linearGradient>
+
+                  {/* Red Risk Glow */}
+                  <radialGradient id="redZoneGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#ef4444" stopOpacity="0.85" />
+                    <stop offset="70%" stopColor="#dc2626" stopOpacity="0.75" />
+                    <stop offset="100%" stopColor="#b91c1c" stopOpacity="0.65" />
+                  </radialGradient>
+
+                  {/* Orange Risk Glow */}
+                  <radialGradient id="orangeZoneGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#fb923c" stopOpacity="0.80" />
+                    <stop offset="80%" stopColor="#f97316" stopOpacity="0.70" />
+                    <stop offset="100%" stopColor="#ea580c" stopOpacity="0.60" />
+                  </radialGradient>
+
+                  {/* Yellow Risk Glow */}
+                  <radialGradient id="yellowZoneGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#fef08a" stopOpacity="0.75" />
+                    <stop offset="80%" stopColor="#facc15" stopOpacity="0.65" />
+                    <stop offset="100%" stopColor="#eab308" stopOpacity="0.55" />
+                  </radialGradient>
+
+                  {/* Green Safe Zone Glow */}
+                  <radialGradient id="greenSafeGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#86efac" stopOpacity="0.75" />
+                    <stop offset="80%" stopColor="#4ade80" stopOpacity="0.65" />
+                    <stop offset="100%" stopColor="#22c55e" stopOpacity="0.55" />
+                  </radialGradient>
+                </defs>
+
+                {/* 1. Base Mountain & Valley Terrain Texture */}
+                <rect width="700" height="420" fill="url(#mountainBg)" />
+
+                {/* Mountain Ridge Contours */}
+                <path d="M 0,160 Q 120,70 240,140 T 480,90 T 700,150 L 700,0 L 0,0 Z" fill="#1b3022" opacity="0.8" />
+                <path d="M 0,220 Q 180,130 360,190 T 700,180 L 700,0 L 0,0 Z" fill="#24442e" opacity="0.6" />
+                <path d="M 0,280 Q 200,210 400,270 T 700,240 L 700,420 L 0,420 Z" fill="#2d5236" opacity="0.7" />
+
+                {/* 2. Road Network (Orange/Yellow connecting lines) */}
+                <path d="M 20,380 Q 150,330 260,300 T 450,260 T 680,240" fill="none" stroke="#d97706" strokeWidth="3.5" strokeLinecap="round" />
+                <path d="M 120,40 Q 240,150 340,220 T 480,310 T 600,400" fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="6,4" />
+                <path d="M 30,180 Q 180,200 320,240 T 560,200 T 690,140" fill="none" stroke="#b45309" strokeWidth="2" />
+
+                {/* 3. Winding River Water Channel (Vibrant Blue Ribbon) */}
+                <path
+                  d="M 0,250 Q 80,240 140,270 T 260,220 T 360,240 T 480,180 T 600,120 T 700,90"
+                  fill="none"
+                  stroke="#0284c7"
+                  strokeWidth="16"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 0,250 Q 80,240 140,270 T 260,220 T 360,240 T 480,180 T 600,120 T 700,90"
+                  fill="none"
+                  stroke="#38bdf8"
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                />
+
+                {/* Tributary River */}
+                <path
+                  d="M 360,240 Q 380,300 420,340 T 460,420"
+                  fill="none"
+                  stroke="#0284c7"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 360,240 Q 380,300 420,340 T 460,420"
+                  fill="none"
+                  stroke="#38bdf8"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+
+                {/* 4. EXACT MULTI-ZONE COLOR OVERLAYS FROM USER IMAGE */}
+                {/* 🟩 GREEN ZONE (Lowest Risk / Safe Elevation Buffer) */}
+                <ellipse
+                  cx="540"
+                  cy="320"
+                  rx="65"
+                  ry="45"
+                  fill="url(#greenSafeGlow)"
+                  stroke="#16a34a"
+                  strokeWidth="2.5"
+                  strokeDasharray="4,3"
+                />
+
+                {/* 🟨 YELLOW ZONE (Low Risk / Caution Perimeter) */}
+                <path
+                  d="M 440,190 C 490,170 570,180 590,230 C 600,270 540,290 480,270 C 440,260 410,210 440,190 Z"
+                  fill="url(#yellowZoneGlow)"
+                  stroke="#ca8a04"
+                  strokeWidth="2"
+                />
+
+                {/* 🟧 ORANGE ZONE (Medium Risk / Surge Buffer) */}
+                <path
+                  d="M 320,180 C 390,160 470,190 460,250 C 450,290 380,300 330,270 C 290,250 280,200 320,180 Z"
+                  fill="url(#orangeZoneGlow)"
+                  stroke="#ea580c"
+                  strokeWidth="2.5"
+                />
+
+                {/* 🟥 RED ZONE (High Risk / Inundation Core) */}
+                <path
+                  d="M 220,170 C 290,130 380,150 370,220 C 360,270 280,290 230,260 C 180,230 170,180 220,170 Z"
+                  fill="url(#redZoneGlow)"
+                  stroke="#dc2626"
+                  strokeWidth="3"
+                />
+                {/* Secondary Red Spillover Pocket along riverbed */}
+                <path
+                  d="M 230,260 C 280,250 340,260 320,310 C 300,340 240,330 220,300 C 200,280 210,265 230,260 Z"
+                  fill="url(#redZoneGlow)"
+                  stroke="#dc2626"
+                  strokeWidth="2.5"
+                />
+
+                {/* 5. BRIDGES OVER THE RIVER */}
+                {/* Bridge 1 at Confluence */}
+                <g transform="translate(180, 240) rotate(15)">
+                  <rect x="-14" y="-5" width="28" height="10" fill="#475569" rx="2" stroke="#e2e8f0" strokeWidth="1.5" />
+                  <line x1="-12" y1="-5" x2="-12" y2="5" stroke="#f8fafc" strokeWidth="1.5" />
+                  <line x1="12" y1="-5" x2="12" y2="5" stroke="#f8fafc" strokeWidth="1.5" />
+                </g>
+                {/* Bridge 2 */}
+                <g transform="translate(420, 205) rotate(-25)">
+                  <rect x="-14" y="-5" width="28" height="10" fill="#475569" rx="2" stroke="#e2e8f0" strokeWidth="1.5" />
+                  <line x1="-12" y1="-5" x2="-12" y2="5" stroke="#f8fafc" strokeWidth="1.5" />
+                  <line x1="12" y1="-5" x2="12" y2="5" stroke="#f8fafc" strokeWidth="1.5" />
+                </g>
+
+                {/* 6. VILLAGE / SETTLEMENT ICONS COLOR-CODED BY ZONE */}
+                {/* Red Zone Houses (High Risk) */}
+                <g transform="translate(260, 185)">
+                  <circle cx="10" cy="10" r="14" fill="#dc2626" stroke="#ffffff" strokeWidth="2" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="13" fill="#ffffff">🏠</text>
+                </g>
+                <g transform="translate(300, 160)">
+                  <circle cx="10" cy="10" r="14" fill="#dc2626" stroke="#ffffff" strokeWidth="2" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="13" fill="#ffffff">🏠</text>
+                </g>
+                <g transform="translate(270, 280)">
+                  <circle cx="10" cy="10" r="14" fill="#dc2626" stroke="#ffffff" strokeWidth="2" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="13" fill="#ffffff">🏠</text>
+                </g>
+
+                {/* Orange Zone Houses (Medium Risk) */}
+                <g transform="translate(390, 220)">
+                  <circle cx="10" cy="10" r="13" fill="#ea580c" stroke="#ffffff" strokeWidth="2" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="12" fill="#ffffff">🏠</text>
+                </g>
+
+                {/* Yellow Zone Houses (Low Risk) */}
+                <g transform="translate(510, 220)">
+                  <circle cx="10" cy="10" r="13" fill="#eab308" stroke="#ffffff" strokeWidth="2" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="12" fill="#ffffff">🏠</text>
+                </g>
+                <g transform="translate(420, 310)">
+                  <circle cx="10" cy="10" r="13" fill="#eab308" stroke="#ffffff" strokeWidth="2" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="12" fill="#ffffff">🏠</text>
+                </g>
+
+                {/* Outside Safe Houses (White/Green) */}
+                <g transform="translate(140, 210)">
+                  <circle cx="10" cy="10" r="12" fill="#0f172a" stroke="#ffffff" strokeWidth="1.5" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="11" fill="#ffffff">🏠</text>
+                </g>
+                <g transform="translate(230, 340)">
+                  <circle cx="10" cy="10" r="12" fill="#0f172a" stroke="#ffffff" strokeWidth="1.5" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="11" fill="#ffffff">🏠</text>
+                </g>
+                <g transform="translate(570, 180)">
+                  <circle cx="10" cy="10" r="12" fill="#0f172a" stroke="#ffffff" strokeWidth="1.5" />
+                  <text x="10" y="14" textAnchor="middle" fontSize="11" fill="#ffffff">🏠</text>
+                </g>
+
+                {/* 7. SAFE SHELTER WITH BLUE BADGE (MATCHING USER IMAGE) */}
+                <g transform="translate(615, 185)">
+                  <circle cx="12" cy="12" r="15" fill="#0284c7" stroke="#ffffff" strokeWidth="2.5" />
+                  <path d="M 6,17 L 12,8 L 18,17 Z" fill="#ffffff" />
+                  <rect x="9" y="13" width="6" height="5" fill="#0284c7" />
+                </g>
+
+                {/* 8. WHITE DASHED EVACUATION ROUTE TO SAFE PLACE */}
+                <path
+                  d="M 310,165 Q 450,140 540,160 T 615,195"
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="3.5"
+                  strokeDasharray="6,5"
+                />
+
+                {/* Animated Waypoint Dot along Route */}
+                <circle cx="480" cy="150" r="4" fill="#ffffff" className="animate-ping" />
+
+                {/* Layer specific highlights when non-risk tabs are active */}
+                {activeLayer === 'RAINFALL' && (
+                  <g>
+                    <ellipse cx="280" cy="160" rx="140" ry="90" fill="#3b82f6" fillOpacity="0.25" className="animate-pulse" />
+                    <text x="280" y="150" textAnchor="middle" fill="#60a5fa" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                      CLOUDBURST RAINFALL CELL: 48.2 mm / 3h
+                    </text>
+                  </g>
+                )}
+
+                {activeLayer === 'RIVER' && (
+                  <g>
+                    <text x="280" y="240" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                      RIVER STAGE: 3.80m (↑ +0.40m/h) — WARNING EXCEEDED
+                    </text>
+                  </g>
+                )}
+
+                {activeLayer === 'SOIL' && (
+                  <g>
+                    <ellipse cx="360" cy="220" rx="120" ry="70" fill="#d97706" fillOpacity="0.28" />
+                    <text x="360" y="220" textAnchor="middle" fill="#fbbf24" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                      SOIL SATURATION: 82.4% (CRITICAL)
+                    </text>
+                  </g>
+                )}
+              </svg>
+
+              {/* Map Floating Badges Overlay (Exact from user image) */}
+              <div className="absolute bottom-2 left-3 bg-white/95 px-3 py-1.5 rounded-xl border border-slate-300 text-[10px] font-mono text-slate-800 backdrop-blur-md flex items-center gap-3 shadow-md">
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-red-600 inline-block"/> High</span>
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-orange-500 inline-block"/> Medium</span>
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-yellow-400 inline-block"/> Low</span>
+                <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"/> Safe</span>
+              </div>
+            </div>
           </div>
 
           {/* BOTTOM ROW: 4-FACTOR SCIENTIFIC EXPLANATION + RED EMERGENCY DIRECTIVE */}
@@ -356,7 +631,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
             <div className="md:col-span-7 bg-white border border-slate-200 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 mb-2">
                 <span className="text-[11px] font-mono text-blue-700 font-bold tracking-wider uppercase flex items-center gap-1.5">
-                  <span>EXPLANATION: 4 PHYSICAL RISK DRIVERS</span>
+                  <span>EXPLANATION (WHY RISK IS HIGH)</span>
                 </span>
                 <span className="text-[9px] font-mono font-bold text-slate-500">SIH26192 MODEL</span>
               </div>
@@ -418,7 +693,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
 
               {/* Concluding physical insight */}
               <div className="mt-2 text-[10px] text-slate-600 font-mono bg-slate-50 px-2 py-1 rounded-lg border border-slate-200">
-                💡 <strong>PHYSICS SUMMARY:</strong> High rain + pre-saturated soil converts 85% of rainfall into overland flash flood surge within 42 minutes.
+                💡 <strong>PHYSICS SUMMARY:</strong> Heavy rainfall forecast → High soil saturation → Steep terrain → Rising river levels → High probability of flash flood in this area.
               </div>
             </div>
 
@@ -431,7 +706,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
                   </div>
                   <div>
                     <span className="text-xs font-black font-mono tracking-wider uppercase block">
-                      LEVEL 3 EMERGENCY DIRECTIVE
+                      ALERT
                     </span>
                     <span className="text-[10px] text-red-200 font-mono">
                       LEAD TIME: {summary.leadTimeHours} HOURS
@@ -439,12 +714,12 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
                   </div>
                 </div>
                 <span className="px-2 py-0.5 rounded bg-red-950/80 text-white font-mono text-[9px] font-bold border border-red-400/40">
-                  ACTIVE SOP
+                  ACTIVE
                 </span>
               </div>
 
               <div className="my-2 bg-red-950/40 rounded-xl p-2.5 border border-red-400/30 text-xs text-red-50 font-medium leading-relaxed">
-                🚨 <strong>MANDATORY EVACUATION:</strong> Evacuate low-lying riverbank dwellings immediately to <strong>Lata Village Assembly Shelter (+320m ASL)</strong> via North Ridge Trail.
+                🚨 <strong>High risk of flash flood in {summary.leadTimeHours} hours.</strong> Prepare for evacuation and rescue immediately.
               </div>
 
               <div className="flex items-center justify-between text-[10px] text-red-200 font-mono pt-1 border-t border-red-400/30">
@@ -464,7 +739,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
               <span className="text-xs sm:text-sm font-mono text-slate-900 font-black tracking-wider uppercase border-b border-slate-200 pb-2 flex items-center justify-between">
                 <span>AFFECTED SUMMARY</span>
                 <span className="text-[10px] text-blue-700 font-mono font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                  REAL-TIME ESTIMATE
+                  SIMULATION
                 </span>
               </span>
 
