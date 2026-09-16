@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { LocationDossier, LOCATIONS } from '@/data/locations';
 import { 
   CloudRain, 
@@ -10,8 +10,7 @@ import {
   MapPin, 
   RotateCcw,
   Plus,
-  Minus,
-  Check
+  Minus
 } from 'lucide-react';
 import { VERIFIED_OSM_HYDROGRAPHY, getFloodRiskPolygons } from '@/services/gisService';
 
@@ -50,7 +49,332 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
     riverChannel: true,
   });
 
-  // 1. Initialize Leaflet Map with robust container measurement & resize observer
+  // Reusable Layer Rendering Function
+  const renderAllLayers = useCallback((map: any, lg: any, L: any) => {
+    if (!map || !lg || !L) return;
+
+    // Invalidate size immediately so tiles fill the whole container
+    map.invalidateSize();
+
+    // 1. Update Base Tile Layer with Fast, Globally Reliable CDN
+    if (tileLayerRef.current) {
+      map.removeLayer(tileLayerRef.current);
+    }
+
+    let tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    let maxZoom = 19;
+    let attribution = '© Esri · FloodGuard AI';
+
+    if (baseMap === 'TOPO') {
+      tileUrl = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+      maxZoom = 17;
+      attribution = '© OpenTopoMap · FloodGuard AI';
+    } else if (baseMap === 'STREET') {
+      tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      maxZoom = 19;
+      attribution = '© OpenStreetMap contributors · FloodGuard AI';
+    }
+
+    const tileLayer = L.tileLayer(tileUrl, {
+      maxZoom,
+      attribution,
+    }).addTo(map);
+    tileLayerRef.current = tileLayer;
+
+    // 2. Clear previous vector/marker layers
+    lg.clearLayers();
+
+    const lat = activeLoc.lat;
+    const lon = activeLoc.lon;
+
+    // Authoritative OSM hydrography for Chamoli / Dhauliganga
+    const riverVector: [number, number][] = isRaini && VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli']
+      ? VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli'][0].coords
+      : [
+          [lat - 0.015, lon - 0.02],
+          [lat - 0.008, lon - 0.012],
+          [lat, lon - 0.005],
+          [lat + 0.008, lon + 0.006],
+          [lat + 0.015, lon + 0.018],
+        ];
+
+    // Safe assembly shelter coordinates (Lata Village)
+    const shelterCoords: [number, number] = isRaini
+      ? [30.5020, 79.7040] // Lata Village Assembly Shelter (+320m above gorge floor)
+      : [lat + 0.012, lon + 0.01];
+
+    // ── A. RISK MAP LAYER (Default Operational View) ──
+    if (activeLayer === 'RISK' || activeLayer === 'LAYERS') {
+      if (customLayers.floodZone) {
+        const floodZones = getFloodRiskPolygons(activeLoc.id, lat, lon, riverVector);
+
+        // Zone 3: Yellow Caution Buffer
+        L.polygon(floodZones.zone3Yellow, {
+          color: '#facc15',
+          weight: 1.5,
+          fillColor: '#facc15',
+          fillOpacity: 0.22,
+          dashArray: '4, 4',
+        })
+          .bindTooltip('🟡 Zone 3: Caution Infiltration Buffer (<0.5m depth)', { sticky: true })
+          .addTo(lg);
+
+        // Zone 2: Orange Flash Surge Wave
+        L.polygon(floodZones.zone2Orange, {
+          color: '#f97316',
+          weight: 2,
+          fillColor: '#ea580c',
+          fillOpacity: 0.35,
+        })
+          .bindTooltip('🟠 Zone 2: Flash Surge Wave (0.5m – 1.5m depth)', { sticky: true })
+          .addTo(lg);
+
+        // Zone 1: Red Core Inundation Corridor
+        L.polygon(floodZones.zone1Red, {
+          color: '#ef4444',
+          weight: 2.5,
+          fillColor: '#dc2626',
+          fillOpacity: 0.48,
+        })
+          .bindTooltip('🔴 Zone 1: Active Inundation Channel (>1.5m depth) — EVACUATE', { sticky: true })
+          .addTo(lg);
+      }
+
+      // River Flow Vector
+      if (customLayers.riverChannel) {
+        L.polyline(riverVector, {
+          color: '#0284c7',
+          weight: 6,
+          opacity: 0.9,
+        }).addTo(lg);
+
+        L.polyline(riverVector, {
+          color: '#38bdf8',
+          weight: 2.5,
+          opacity: 1,
+          dashArray: '6, 6',
+        }).addTo(lg);
+      }
+
+      // Evacuation Safe Trail to Lata Shelter
+      if (customLayers.evacRoute) {
+        const safeTrail: [number, number][] = isRaini
+          ? [
+              [30.4850, 79.6920], // Raini Village
+              [30.4885, 79.6955], // Ridge junction
+              [30.4940, 79.7005], // Mid spur
+              [30.5020, 79.7040], // Lata Assembly Shelter
+            ]
+          : [
+              [lat, lon],
+              [lat + 0.005, lon + 0.005],
+              [shelterCoords[0], shelterCoords[1]],
+            ];
+
+        L.polyline(safeTrail, {
+          color: '#10b981',
+          weight: 4,
+          opacity: 0.95,
+          dashArray: '8, 6',
+        })
+          .bindTooltip('🟢 RECOMMENDED ESCAPE TRAIL (+320m elevation gain to Lata Shelter)', { sticky: true })
+          .addTo(lg);
+
+        // Blocked Trail Warning along Riverbed
+        const blockedTrail: [number, number][] = [
+          [lat, lon],
+          [lat - 0.002, lon - 0.004],
+          [lat - 0.004, lon - 0.008],
+        ];
+        L.polyline(blockedTrail, {
+          color: '#dc2626',
+          weight: 3,
+          opacity: 0.8,
+          dashArray: '4, 4',
+        })
+          .bindTooltip('⛔ LOW RIVERBED TRAIL: BLOCKED BY SURGE', { sticky: true })
+          .addTo(lg);
+      }
+
+      // Primary Village Marker (Raini Village)
+      const villageIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+          <div style="background: rgba(220, 38, 38, 0.95); color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: white; display: inline-block;"></span>
+            <span>🏠 ${activeLoc.name.split('/')[0].trim()} (${activeLoc.elevation})</span>
+            <span style="background: rgba(0,0,0,0.3); padding: 1px 4px; border-radius: 6px; font-size: 9px;">82% RISK</span>
+          </div>
+        `,
+        iconAnchor: [60, 15],
+      });
+      L.marker([lat, lon], { icon: villageIcon })
+        .bindPopup(`
+          <div style="font-family: sans-serif; padding: 4px;">
+            <b style="color: #dc2626; font-size: 13px;">${activeLoc.name}</b><br/>
+            <span style="font-size: 11px; color: #475569;">Elevation: ${activeLoc.elevation} · Pop: ${activeLoc.population.toLocaleString()}</span><br/>
+            <div style="margin-top: 6px; padding: 6px; background: #fee2e2; border-radius: 8px; font-size: 11px; color: #991b1b; font-weight: bold;">
+              ⚠️ Critical Flood Exposure: Direct low-lying river surge zone.<br/>
+              SOP: Evacuate immediately uphill to Lata Shelter (+320m).
+            </div>
+          </div>
+        `)
+        .addTo(lg);
+
+      // Safe Assembly Shelter Marker (Lata Village Assembly Shelter)
+      const shelterIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+          <div style="background: rgba(16, 185, 129, 0.95); color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
+            <span>🏕️</span>
+            <span>Lata Shelter (+320m)</span>
+            <span style="background: rgba(0,0,0,0.25); padding: 1px 4px; border-radius: 6px; font-size: 9px; color: #d1fae5;">SAFE REFUGE</span>
+          </div>
+        `,
+        iconAnchor: [70, 15],
+      });
+      L.marker(shelterCoords, { icon: shelterIcon })
+        .bindPopup(`
+          <div style="font-family: sans-serif; padding: 4px;">
+            <b style="color: #059669; font-size: 13px;">Lata Village Assembly Shelter</b><br/>
+            <span style="font-size: 11px; color: #475569;">Elevation: 2,360m ASL (+320m above riverbed)</span><br/>
+            <div style="margin-top: 6px; padding: 6px; background: #ecfdf5; border-radius: 8px; font-size: 11px; color: #065f46; font-weight: bold;">
+              ✅ Designated Safe Refuge: Outside 100-year inundation reach.<br/>
+              Capacity: 450 persons · Potable Water & Medical First-Aid verified.
+            </div>
+          </div>
+        `)
+        .addTo(lg);
+
+      // Bridge Risk Marker
+      const bridgeCoords: [number, number] = isRaini ? [30.4855, 79.6890] : [lat - 0.005, lon - 0.006];
+      const bridgeIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+          <div style="background: #475569; color: white; padding: 3px 6px; border-radius: 8px; font-weight: bold; font-size: 9px; border: 1.5px solid #f87171; display: flex; align-items: center; gap: 3px; white-space: nowrap; font-family: sans-serif;">
+            <span>🌉</span>
+            <span>Culvert KM 0.6: OVERTOPPED</span>
+          </div>
+        `,
+        iconAnchor: [45, 10],
+      });
+      L.marker(bridgeCoords, { icon: bridgeIcon })
+        .bindTooltip('⚠️ Bridge KM 0.6: Overtopped by floodwaters — Road impassable', { sticky: true })
+        .addTo(lg);
+    }
+
+    // ── B. RAINFALL DOPPLER RADAR LAYER ──
+    if (activeLayer === 'RAINFALL') {
+      const radarCenter: [number, number] = [lat + 0.008, lon - 0.005];
+      L.circle(radarCenter, {
+        radius: 1800,
+        color: '#ef4444',
+        weight: 2,
+        fillColor: '#ef4444',
+        fillOpacity: 0.35,
+      })
+        .bindTooltip('🌧️ IMD Doppler Radar: Severe Convective Storm Cell (48.2 mm / 3h)', { sticky: true })
+        .addTo(lg);
+
+      L.circle(radarCenter, {
+        radius: 1000,
+        color: '#b91c1c',
+        weight: 2,
+        fillColor: '#991b1b',
+        fillOpacity: 0.45,
+      }).addTo(lg);
+
+      // Rain Gauge Pins
+      const rainGaugeIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+          <div style="background: #1e3a8a; color: white; padding: 4px 8px; border-radius: 10px; font-weight: 800; font-size: 11px; border: 2px solid #60a5fa; box-shadow: 0 4px 8px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
+            <span>🌧️</span>
+            <span>AWS-001 (Joshimath): 48.2 mm</span>
+          </div>
+        `,
+        iconAnchor: [55, 12],
+      });
+      L.marker([lat + 0.005, lon - 0.008], { icon: rainGaugeIcon })
+        .bindPopup('<b>AWS-001 Rain Gauge</b><br/>Rainfall: 48.2 mm in 3h<br/>Intensity: 16.1 mm/h (Extreme Cloudburst)')
+        .addTo(lg);
+    }
+
+    // ── C. RIVER LEVELS FMCW RADAR LAYER ──
+    if (activeLayer === 'RIVER') {
+      L.polyline(riverVector, {
+        color: '#0284c7',
+        weight: 8,
+        opacity: 0.9,
+      }).addTo(lg);
+
+      L.polyline(riverVector, {
+        color: '#38bdf8',
+        weight: 4,
+        opacity: 1,
+        dashArray: '8, 8',
+      }).addTo(lg);
+
+      // CWC Radar Gauge
+      const riverGaugeIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+          <div style="background: #0f172a; color: #38bdf8; padding: 4px 8px; border-radius: 10px; font-weight: 800; font-size: 11px; border: 2px solid #38bdf8; box-shadow: 0 4px 8px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
+            <span>🌊</span>
+            <span>CWC Radar Gauge: 3.80m (↑ +0.40m/h)</span>
+          </div>
+        `,
+        iconAnchor: [70, 12],
+      });
+      L.marker([lat + 0.001, lon - 0.003], { icon: riverGaugeIcon })
+        .bindPopup(`
+          <div style="font-family: sans-serif;">
+            <b>CWC Tapovan FMCW Radar Stage Gauge</b><br/>
+            Current Stage: <b>3.80 m</b><br/>
+            Warning Level: <b>3.50 m (EXCEEDED)</b><br/>
+            Danger Level: <b>4.20 m (Approaching in 45 min)</b><br/>
+            Surge Rate: <b>+0.40 m/h</b>
+          </div>
+        `)
+        .addTo(lg);
+    }
+
+    // ── D. SOIL MOISTURE & SLOPE STABILITY LAYER ──
+    if (activeLayer === 'SOIL') {
+      const slopePolygon: [number, number][] = [
+        [lat + 0.006, lon + 0.002],
+        [lat + 0.009, lon + 0.007],
+        [lat + 0.004, lon + 0.010],
+        [lat + 0.002, lon + 0.005],
+      ];
+
+      L.polygon(slopePolygon, {
+        color: '#d97706',
+        weight: 2,
+        fillColor: '#f59e0b',
+        fillOpacity: 0.35,
+        dashArray: '5, 4',
+      })
+        .bindTooltip('⛰️ Steep Colluvial Slope (>38°): High Soil Saturation Liquefaction Risk', { sticky: true })
+        .addTo(lg);
+
+      const soilProbeIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+          <div style="background: #78350f; color: #fef3c7; padding: 4px 8px; border-radius: 10px; font-weight: 800; font-size: 11px; border: 2px solid #f59e0b; box-shadow: 0 4px 8px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
+            <span>💧</span>
+            <span>SOIL-002: 82.4% Saturation</span>
+          </div>
+        `,
+        iconAnchor: [60, 12],
+      });
+      L.marker([lat + 0.005, lon + 0.004], { icon: soilProbeIcon })
+        .bindPopup('<b>SOIL-002 Mid-Slope TDR Probe</b><br/>Volumetric Saturation: 82.4%<br/>Infiltration Buffer: EXHAUSTED (Runoff coeff: 0.85)')
+        .addTo(lg);
+    }
+  }, [activeLoc, baseMap, activeLayer, customLayers, isRaini]);
+
+  // 1. Initialize Leaflet Map on Mount and render immediately
   useEffect(() => {
     if (typeof window === 'undefined') return;
     let isCancelled = false;
@@ -71,26 +395,27 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
         // Add attribution in bottom right
         L.control
           .attribution({ position: 'bottomright', prefix: false })
-          .addAttribution('© Google Earth / OSM · FloodGuard AI')
+          .addAttribution('© Esri · FloodGuard AI')
           .addTo(map);
 
+        const lg = L.layerGroup().addTo(map);
         mapInstanceRef.current = map;
-        layerGroupRef.current = L.layerGroup().addTo(map);
+        layerGroupRef.current = lg;
+
+        // Render layers IMMEDIATELY on creation
+        renderAllLayers(map, lg, L);
+
         setMapReady(true);
 
-        // Force invalidation to ensure tiles fill the whole container
-        setTimeout(() => {
-          map.invalidateSize();
-        }, 100);
-        setTimeout(() => {
-          map.invalidateSize();
-        }, 300);
+        // Invalidate size to guarantee tiles stretch edge-to-edge
+        setTimeout(() => map.invalidateSize(), 60);
+        setTimeout(() => map.invalidateSize(), 200);
       }
     };
 
     initMap();
 
-    // ResizeObserver ensures map always resizes when container changes width or height
+    // ResizeObserver ensures map always fills container as flex layout settles
     const ro = new ResizeObserver(() => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.invalidateSize();
@@ -105,366 +430,19 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
       isCancelled = true;
       ro.disconnect();
     };
-  }, []);
+  }, [activeLoc.lat, activeLoc.lon, renderAllLayers]);
 
-  // 2. Center map when location changes
+  // 2. Re-render when activeLayer, baseMap, or customLayers change
   useEffect(() => {
-    if (!mapInstanceRef.current || !activeLoc) return;
-    mapInstanceRef.current.setView([activeLoc.lat, activeLoc.lon], 14, { animate: true });
-    mapInstanceRef.current.invalidateSize();
-  }, [activeLoc.lat, activeLoc.lon]);
+    if (!mapReady || !mapInstanceRef.current || !layerGroupRef.current) return;
 
-  // 3. Render Base Tiles & Vector Overlays based on activeLayer and baseMap
-  useEffect(() => {
-    if (!mapInstanceRef.current || !layerGroupRef.current) return;
-
-    const renderLayers = async () => {
+    const updateLayers = async () => {
       const L = (await import('leaflet')).default;
-      const map = mapInstanceRef.current;
-      const lg = layerGroupRef.current;
-
-      // Invalidate size on each layer render to avoid blank margins
-      map.invalidateSize();
-
-      // Update Tile Layer
-      if (tileLayerRef.current) map.removeLayer(tileLayerRef.current);
-
-      let tileUrl = 'https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
-      let subdomains = ['0', '1', '2', '3'];
-      let maxZoom = 20;
-
-      if (baseMap === 'TOPO') {
-        tileUrl = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
-        subdomains = ['a', 'b', 'c'];
-        maxZoom = 17;
-      } else if (baseMap === 'STREET') {
-        tileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-        subdomains = ['a', 'b', 'c', 'd'];
-        maxZoom = 19;
-      }
-
-      const tileLayer = L.tileLayer(tileUrl, {
-        subdomains,
-        maxZoom,
-      }).addTo(map);
-      tileLayerRef.current = tileLayer;
-
-      // Clear previous overlay layers
-      lg.clearLayers();
-
-      // Coordinates setup
-      const lat = activeLoc.lat;
-      const lon = activeLoc.lon;
-
-      // Authoritative OSM hydrography for Chamoli / Dhauliganga
-      const riverVector: [number, number][] = isRaini && VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli']
-        ? VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli'][0].coords
-        : [
-            [lat - 0.015, lon - 0.02],
-            [lat - 0.008, lon - 0.012],
-            [lat, lon - 0.005],
-            [lat + 0.008, lon + 0.006],
-            [lat + 0.015, lon + 0.018],
-          ];
-
-      // Safe assembly shelter coordinates
-      const shelterCoords: [number, number] = isRaini
-        ? [30.5020, 79.7040] // Lata Village Assembly Shelter (+320m above gorge floor)
-        : [lat + 0.012, lon + 0.01];
-
-      // Secondary shelter
-      const secShelterCoords: [number, number] = isRaini
-        ? [30.4910, 79.7060] // Upper Raini Spur (+140m ASL)
-        : [lat + 0.006, lon + 0.015];
-
-      // ── A. RISK MAP LAYER (Default & Primary Operational View) ──
-      if (activeLayer === 'RISK' || activeLayer === 'LAYERS') {
-        if (customLayers.floodZone) {
-          const floodZones = getFloodRiskPolygons(activeLoc.id, lat, lon, riverVector);
-
-          // Zone 3: Yellow Caution Buffer
-          L.polygon(floodZones.zone3Yellow, {
-            color: '#facc15',
-            weight: 1.5,
-            fillColor: '#facc15',
-            fillOpacity: 0.20,
-            dashArray: '4, 4',
-          })
-            .bindTooltip('🟡 Zone 3: Caution Infiltration Buffer (<0.5m depth)', { sticky: true })
-            .addTo(lg);
-
-          // Zone 2: Orange Flash Surge Wave
-          L.polygon(floodZones.zone2Orange, {
-            color: '#f97316',
-            weight: 2,
-            fillColor: '#ea580c',
-            fillOpacity: 0.32,
-          })
-            .bindTooltip('🟠 Zone 2: Flash Surge Wave (0.5m – 1.5m depth)', { sticky: true })
-            .addTo(lg);
-
-          // Zone 1: Red Core Inundation Corridor
-          L.polygon(floodZones.zone1Red, {
-            color: '#ef4444',
-            weight: 2.5,
-            fillColor: '#dc2626',
-            fillOpacity: 0.45,
-          })
-            .bindTooltip('🔴 Zone 1: Active Inundation Channel (>1.5m depth) — EVACUATE', { sticky: true })
-            .addTo(lg);
-        }
-
-        // River Flow Vector
-        if (customLayers.riverChannel) {
-          L.polyline(riverVector, {
-            color: '#0284c7',
-            weight: 6,
-            opacity: 0.9,
-          }).addTo(lg);
-
-          L.polyline(riverVector, {
-            color: '#38bdf8',
-            weight: 2.5,
-            opacity: 1,
-            dashArray: '6, 6',
-          }).addTo(lg);
-        }
-
-        // Evacuation Safe Trail to Lata Shelter
-        if (customLayers.evacRoute) {
-          const safeTrail: [number, number][] = isRaini
-            ? [
-                [30.4850, 79.6920], // Raini Village
-                [30.4885, 79.6955], // Ridge junction
-                [30.4940, 79.7005], // Mid spur
-                [30.5020, 79.7040], // Lata Assembly Shelter
-              ]
-            : [
-                [lat, lon],
-                [lat + 0.005, lon + 0.005],
-                [shelterCoords[0], shelterCoords[1]],
-              ];
-
-          L.polyline(safeTrail, {
-            color: '#10b981',
-            weight: 4,
-            opacity: 0.95,
-            dashArray: '8, 6',
-          })
-            .bindTooltip('🟢 RECOMMENDED ESCAPE TRAIL (+320m elevation gain to Lata Shelter)', { sticky: true })
-            .addTo(lg);
-
-          // Blocked Trail Warning along Riverbed
-          const blockedTrail: [number, number][] = [
-            [lat, lon],
-            [lat - 0.002, lon - 0.004],
-            [lat - 0.004, lon - 0.008],
-          ];
-          L.polyline(blockedTrail, {
-            color: '#dc2626',
-            weight: 3,
-            opacity: 0.8,
-            dashArray: '4, 4',
-          })
-            .bindTooltip('⛔ LOW RIVERBED TRAIL: BLOCKED BY SURGE', { sticky: true })
-            .addTo(lg);
-        }
-
-        // Primary Village Marker (Raini Village)
-        const villageIcon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `
-            <div style="background: rgba(220, 38, 38, 0.95); color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
-              <span style="width: 8px; height: 8px; border-radius: 50%; background: white; display: inline-block;"></span>
-              <span>🏠 ${activeLoc.name.split('/')[0].trim()} (${activeLoc.elevation})</span>
-              <span style="background: rgba(0,0,0,0.3); padding: 1px 4px; border-radius: 6px; font-size: 9px;">82% RISK</span>
-            </div>
-          `,
-          iconAnchor: [60, 15],
-        });
-        L.marker([lat, lon], { icon: villageIcon })
-          .bindPopup(`
-            <div style="font-family: sans-serif; padding: 4px;">
-              <b style="color: #dc2626; font-size: 13px;">${activeLoc.name}</b><br/>
-              <span style="font-size: 11px; color: #475569;">Elevation: ${activeLoc.elevation} · Pop: ${activeLoc.population.toLocaleString()}</span><br/>
-              <div style="margin-top: 6px; padding: 6px; background: #fee2e2; border-radius: 8px; font-size: 11px; color: #991b1b; font-weight: bold;">
-                ⚠️ Critical Flood Exposure: Direct low-lying river surge zone.<br/>
-                SOP: Evacuate immediately uphill to Lata Shelter (+320m).
-              </div>
-            </div>
-          `)
-          .addTo(lg);
-
-        // Safe Assembly Shelter Marker (Lata Village Assembly Shelter)
-        const shelterIcon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `
-            <div style="background: rgba(16, 185, 129, 0.95); color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
-              <span>🏕️</span>
-              <span>Lata Shelter (+320m)</span>
-              <span style="background: rgba(0,0,0,0.25); padding: 1px 4px; border-radius: 6px; font-size: 9px; color: #d1fae5;">SAFE REFUGE</span>
-            </div>
-          `,
-          iconAnchor: [70, 15],
-        });
-        L.marker(shelterCoords, { icon: shelterIcon })
-          .bindPopup(`
-            <div style="font-family: sans-serif; padding: 4px;">
-              <b style="color: #059669; font-size: 13px;">Lata Village Assembly Shelter</b><br/>
-              <span style="font-size: 11px; color: #475569;">Elevation: 2,360m ASL (+320m above riverbed)</span><br/>
-              <div style="margin-top: 6px; padding: 6px; background: #ecfdf5; border-radius: 8px; font-size: 11px; color: #065f46; font-weight: bold;">
-                ✅ Designated Safe Refuge: Outside 100-year inundation reach.<br/>
-                Capacity: 450 persons · Potable Water & Medical First-Aid verified.
-              </div>
-            </div>
-          `)
-          .addTo(lg);
-
-        // Secondary Refuge
-        if (isRaini) {
-          const secShelterIcon = L.divIcon({
-            className: 'custom-div-icon',
-            html: `
-              <div style="background: rgba(2, 132, 199, 0.9); color: white; padding: 3px 6px; border-radius: 10px; font-weight: 700; font-size: 10px; border: 1.5px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 3px; white-space: nowrap; font-family: sans-serif;">
-                <span>🏛️</span>
-                <span>Upper Raini Spur (+140m)</span>
-              </div>
-            `,
-            iconAnchor: [50, 12],
-          });
-          L.marker(secShelterCoords, { icon: secShelterIcon }).addTo(lg);
-        }
-
-        // Bridge Risk Marker
-        const bridgeCoords: [number, number] = isRaini ? [30.4855, 79.6890] : [lat - 0.005, lon - 0.006];
-        const bridgeIcon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `
-            <div style="background: #475569; color: white; padding: 3px 6px; border-radius: 8px; font-weight: bold; font-size: 9px; border: 1.5px solid #f87171; display: flex; align-items: center; gap: 3px; white-space: nowrap; font-family: sans-serif;">
-              <span>🌉</span>
-              <span>Culvert KM 0.6: OVERTOPPED</span>
-            </div>
-          `,
-          iconAnchor: [45, 10],
-        });
-        L.marker(bridgeCoords, { icon: bridgeIcon })
-          .bindTooltip('⚠️ Bridge KM 0.6: Overtopped by floodwaters — Road impassable', { sticky: true })
-          .addTo(lg);
-      }
-
-      // ── B. RAINFALL DOPPLER RADAR LAYER ──
-      if (activeLayer === 'RAINFALL') {
-        const radarCenter: [number, number] = [lat + 0.008, lon - 0.005];
-        L.circle(radarCenter, {
-          radius: 1800,
-          color: '#ef4444',
-          weight: 2,
-          fillColor: '#ef4444',
-          fillOpacity: 0.35,
-        })
-          .bindTooltip('🌧️ IMD Doppler Radar: Severe Convective Storm Cell (48.2 mm / 3h)', { sticky: true })
-          .addTo(lg);
-
-        L.circle(radarCenter, {
-          radius: 1000,
-          color: '#b91c1c',
-          weight: 2,
-          fillColor: '#991b1b',
-          fillOpacity: 0.45,
-        }).addTo(lg);
-
-        // Rain Gauge Pins
-        const rainGaugeIcon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `
-            <div style="background: #1e3a8a; color: white; padding: 4px 8px; border-radius: 10px; font-weight: 800; font-size: 11px; border: 2px solid #60a5fa; box-shadow: 0 4px 8px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
-              <span>🌧️</span>
-              <span>AWS-001 (Joshimath): 48.2 mm</span>
-            </div>
-          `,
-          iconAnchor: [55, 12],
-        });
-        L.marker([lat + 0.005, lon - 0.008], { icon: rainGaugeIcon })
-          .bindPopup('<b>AWS-001 Rain Gauge</b><br/>Rainfall: 48.2 mm in 3h<br/>Intensity: 16.1 mm/h (Extreme Cloudburst)')
-          .addTo(lg);
-      }
-
-      // ── C. RIVER LEVELS FMCW RADAR LAYER ──
-      if (activeLayer === 'RIVER') {
-        L.polyline(riverVector, {
-          color: '#0284c7',
-          weight: 8,
-          opacity: 0.9,
-        }).addTo(lg);
-
-        L.polyline(riverVector, {
-          color: '#38bdf8',
-          weight: 4,
-          opacity: 1,
-          dashArray: '8, 8',
-        }).addTo(lg);
-
-        // CWC Radar Gauge
-        const riverGaugeIcon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `
-            <div style="background: #0f172a; color: #38bdf8; padding: 4px 8px; border-radius: 10px; font-weight: 800; font-size: 11px; border: 2px solid #38bdf8; box-shadow: 0 4px 8px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
-              <span>🌊</span>
-              <span>CWC Radar Gauge: 3.80m (↑ +0.40m/h)</span>
-            </div>
-          `,
-          iconAnchor: [70, 12],
-        });
-        L.marker([lat + 0.001, lon - 0.003], { icon: riverGaugeIcon })
-          .bindPopup(`
-            <div style="font-family: sans-serif;">
-              <b>CWC Tapovan FMCW Radar Stage Gauge</b><br/>
-              Current Stage: <b>3.80 m</b><br/>
-              Warning Level: <b>3.50 m (EXCEEDED)</b><br/>
-              Danger Level: <b>4.20 m (Approaching in 45 min)</b><br/>
-              Surge Rate: <b>+0.40 m/h</b>
-            </div>
-          `)
-          .addTo(lg);
-      }
-
-      // ── D. SOIL MOISTURE & SLOPE STABILITY LAYER ──
-      if (activeLayer === 'SOIL') {
-        const slopePolygon: [number, number][] = [
-          [lat + 0.006, lon + 0.002],
-          [lat + 0.009, lon + 0.007],
-          [lat + 0.004, lon + 0.010],
-          [lat + 0.002, lon + 0.005],
-        ];
-
-        L.polygon(slopePolygon, {
-          color: '#d97706',
-          weight: 2,
-          fillColor: '#f59e0b',
-          fillOpacity: 0.35,
-          dashArray: '5, 4',
-        })
-          .bindTooltip('⛰️ Steep Colluvial Slope (>38°): High Soil Saturation Liquefaction Risk', { sticky: true })
-          .addTo(lg);
-
-        const soilProbeIcon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `
-            <div style="background: #78350f; color: #fef3c7; padding: 4px 8px; border-radius: 10px; font-weight: 800; font-size: 11px; border: 2px solid #f59e0b; box-shadow: 0 4px 8px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
-              <span>💧</span>
-              <span>SOIL-002: 82.4% Saturation</span>
-            </div>
-          `,
-          iconAnchor: [60, 12],
-        });
-        L.marker([lat + 0.005, lon + 0.004], { icon: soilProbeIcon })
-          .bindPopup('<b>SOIL-002 Mid-Slope TDR Probe</b><br/>Volumetric Saturation: 82.4%<br/>Infiltration Buffer: EXHAUSTED (Runoff coeff: 0.85)')
-          .addTo(lg);
-      }
+      renderAllLayers(mapInstanceRef.current, layerGroupRef.current, L);
     };
 
-    renderLayers();
-  }, [activeLayer, baseMap, activeLoc, customLayers, isRaini]);
+    updateLayers();
+  }, [mapReady, renderAllLayers]);
 
   const handleResetView = () => {
     if (mapInstanceRef.current && activeLoc) {
@@ -560,7 +538,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
               className={`px-2 py-0.5 rounded-md transition ${
                 baseMap === 'SATELLITE' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
               }`}
-              title="Google Earth Satellite Imagery"
+              title="Esri World Satellite Imagery"
             >
               🌍 EARTH
             </button>
@@ -578,7 +556,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
               className={`px-2 py-0.5 rounded-md transition ${
                 baseMap === 'STREET' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
               }`}
-              title="Carto Clean Streets"
+              title="OpenStreetMap Street View"
             >
               🗺️ MAP
             </button>
