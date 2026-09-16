@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import { LocationProvider } from "@/context/LocationContext";
 import { EnvironmentProvider } from "@/context/EnvironmentContext";
 import { AdaptiveProvider } from "@/context/AdaptiveContext";

@@ -341,7 +341,7 @@ export const LiveDashboardAlertsView: React.FC<LiveDashboardAlertsViewProps> = (
         <div className="lg:col-span-6 flex flex-col gap-3 min-h-0">
           
           {/* REALISTIC GIS MAP CONTAINER (EMBEDS LEAFLET SATELLITE/TOPO ENGINE) */}
-          <div className="flex-1 min-h-[340px] sm:min-h-[420px] rounded-2xl overflow-hidden shadow-sm flex flex-col">
+          <div className="flex-1 min-h-[380px] sm:min-h-[440px] flex flex-col">
             <DashboardRealMap
               location={loc}
               activeLayer={activeLayer}

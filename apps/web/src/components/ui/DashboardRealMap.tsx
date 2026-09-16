@@ -1,20 +1,17 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LocationDossier, LOCATIONS } from '@/data/locations';
 import { 
   CloudRain, 
   Waves, 
   Layers, 
   Droplets, 
-  ShieldAlert, 
   MapPin, 
-  Compass, 
   RotateCcw,
-  Navigation,
-  Radio,
-  AlertTriangle,
-  Home
+  Plus,
+  Minus,
+  Check
 } from 'lucide-react';
 import { VERIFIED_OSM_HYDROGRAPHY, getFloodRiskPolygons } from '@/services/gisService';
 
@@ -38,7 +35,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
   const tileLayerRef = useRef<any>(null);
 
   const [baseMap, setBaseMap] = useState<DashboardBaseMap>('SATELLITE');
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
   // Default fallback location is Chamoli / Raini Village
   const activeLoc = location || LOCATIONS.find((l) => l.id === 'loc-uk-chamoli') || LOCATIONS[0];
@@ -53,21 +50,12 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
     riverChannel: true,
   });
 
-  // 1. Initialize Leaflet Map
+  // 1. Initialize Leaflet Map with robust container measurement & resize observer
   useEffect(() => {
     if (typeof window === 'undefined') return;
     let isCancelled = false;
 
     const initMap = async () => {
-      // Inject Leaflet CSS if not already present
-      if (!document.getElementById('leaflet-css')) {
-        const link = document.createElement('link');
-        link.id = 'leaflet-css';
-        link.rel = 'stylesheet';
-        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-        document.head.appendChild(link);
-      }
-
       const L = (await import('leaflet')).default;
       if (isCancelled || !mapContainerRef.current) return;
 
@@ -80,7 +68,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
           scrollWheelZoom: true,
         });
 
-        // Add clean attribution
+        // Add attribution in bottom right
         L.control
           .attribution({ position: 'bottomright', prefix: false })
           .addAttribution('© Google Earth / OSM · FloodGuard AI')
@@ -88,14 +76,34 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
         mapInstanceRef.current = map;
         layerGroupRef.current = L.layerGroup().addTo(map);
-        setMapLoaded(true);
+        setMapReady(true);
+
+        // Force invalidation to ensure tiles fill the whole container
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 100);
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 300);
       }
     };
 
     initMap();
 
+    // ResizeObserver ensures map always resizes when container changes width or height
+    const ro = new ResizeObserver(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    });
+
+    if (mapContainerRef.current) {
+      ro.observe(mapContainerRef.current);
+    }
+
     return () => {
       isCancelled = true;
+      ro.disconnect();
     };
   }, []);
 
@@ -103,6 +111,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
   useEffect(() => {
     if (!mapInstanceRef.current || !activeLoc) return;
     mapInstanceRef.current.setView([activeLoc.lat, activeLoc.lon], 14, { animate: true });
+    mapInstanceRef.current.invalidateSize();
   }, [activeLoc.lat, activeLoc.lon]);
 
   // 3. Render Base Tiles & Vector Overlays based on activeLayer and baseMap
@@ -113,6 +122,9 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
       const L = (await import('leaflet')).default;
       const map = mapInstanceRef.current;
       const lg = layerGroupRef.current;
+
+      // Invalidate size on each layer render to avoid blank margins
+      map.invalidateSize();
 
       // Update Tile Layer
       if (tileLayerRef.current) map.removeLayer(tileLayerRef.current);
@@ -137,14 +149,14 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
       }).addTo(map);
       tileLayerRef.current = tileLayer;
 
-      // Clear previous layers
+      // Clear previous overlay layers
       lg.clearLayers();
 
       // Coordinates setup
       const lat = activeLoc.lat;
       const lon = activeLoc.lon;
 
-      // Real hydrography for Chamoli / Dhauliganga
+      // Authoritative OSM hydrography for Chamoli / Dhauliganga
       const riverVector: [number, number][] = isRaini && VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli']
         ? VERIFIED_OSM_HYDROGRAPHY['loc-uk-chamoli'][0].coords
         : [
@@ -157,7 +169,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
       // Safe assembly shelter coordinates
       const shelterCoords: [number, number] = isRaini
-        ? [30.5020, 79.7040] // Lata Village Assembly Shelter (+320m above gorge)
+        ? [30.5020, 79.7040] // Lata Village Assembly Shelter (+320m above gorge floor)
         : [lat + 0.012, lon + 0.01];
 
       // Secondary shelter
@@ -168,7 +180,6 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
       // ── A. RISK MAP LAYER (Default & Primary Operational View) ──
       if (activeLayer === 'RISK' || activeLayer === 'LAYERS') {
         if (customLayers.floodZone) {
-          // Compute buffered flood zones along actual river course
           const floodZones = getFloodRiskPolygons(activeLoc.id, lat, lon, riverVector);
 
           // Zone 3: Yellow Caution Buffer
@@ -176,10 +187,10 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
             color: '#facc15',
             weight: 1.5,
             fillColor: '#facc15',
-            fillOpacity: 0.18,
+            fillOpacity: 0.20,
             dashArray: '4, 4',
           })
-            .bindTooltip('🟡 Zone 3: Caution Infiltration (<0.5m flow depth)', { sticky: true })
+            .bindTooltip('🟡 Zone 3: Caution Infiltration Buffer (<0.5m depth)', { sticky: true })
             .addTo(lg);
 
           // Zone 2: Orange Flash Surge Wave
@@ -187,7 +198,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
             color: '#f97316',
             weight: 2,
             fillColor: '#ea580c',
-            fillOpacity: 0.28,
+            fillOpacity: 0.32,
           })
             .bindTooltip('🟠 Zone 2: Flash Surge Wave (0.5m – 1.5m depth)', { sticky: true })
             .addTo(lg);
@@ -197,9 +208,9 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
             color: '#ef4444',
             weight: 2.5,
             fillColor: '#dc2626',
-            fillOpacity: 0.42,
+            fillOpacity: 0.45,
           })
-            .bindTooltip('🔴 Zone 1: Active Inundation Channel (>1.5m depth) — CRITICAL', { sticky: true })
+            .bindTooltip('🔴 Zone 1: Active Inundation Channel (>1.5m depth) — EVACUATE', { sticky: true })
             .addTo(lg);
         }
 
@@ -207,13 +218,13 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
         if (customLayers.riverChannel) {
           L.polyline(riverVector, {
             color: '#0284c7',
-            weight: 5,
+            weight: 6,
             opacity: 0.9,
           }).addTo(lg);
 
           L.polyline(riverVector, {
             color: '#38bdf8',
-            weight: 2,
+            weight: 2.5,
             opacity: 1,
             dashArray: '6, 6',
           }).addTo(lg);
@@ -290,7 +301,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
           html: `
             <div style="background: rgba(16, 185, 129, 0.95); color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: sans-serif;">
               <span>🏕️</span>
-              <span>Lata Assembly Shelter (+320m)</span>
+              <span>Lata Shelter (+320m)</span>
               <span style="background: rgba(0,0,0,0.25); padding: 1px 4px; border-radius: 6px; font-size: 9px; color: #d1fae5;">SAFE REFUGE</span>
             </div>
           `,
@@ -343,7 +354,6 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
       // ── B. RAINFALL DOPPLER RADAR LAYER ──
       if (activeLayer === 'RAINFALL') {
-        // High-altitude ridge cloudburst radar footprint
         const radarCenter: [number, number] = [lat + 0.008, lon - 0.005];
         L.circle(radarCenter, {
           radius: 1800,
@@ -381,7 +391,6 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
       // ── C. RIVER LEVELS FMCW RADAR LAYER ──
       if (activeLayer === 'RIVER') {
-        // Vibrant river channel
         L.polyline(riverVector, {
           color: '#0284c7',
           weight: 8,
@@ -421,7 +430,6 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
       // ── D. SOIL MOISTURE & SLOPE STABILITY LAYER ──
       if (activeLayer === 'SOIL') {
-        // Colluvial slope hazard polygon
         const slopePolygon: [number, number][] = [
           [lat + 0.006, lon + 0.002],
           [lat + 0.009, lon + 0.007],
@@ -439,7 +447,6 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
           .bindTooltip('⛰️ Steep Colluvial Slope (>38°): High Soil Saturation Liquefaction Risk', { sticky: true })
           .addTo(lg);
 
-        // TDR Soil Moisture Probe
         const soilProbeIcon = L.divIcon({
           className: 'custom-div-icon',
           html: `
@@ -462,22 +469,35 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
   const handleResetView = () => {
     if (mapInstanceRef.current && activeLoc) {
       mapInstanceRef.current.setView([activeLoc.lat, activeLoc.lon], 14, { animate: true });
+      mapInstanceRef.current.invalidateSize();
+    }
+  };
+
+  const handleZoomIn = () => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.zoomIn();
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.zoomOut();
     }
   };
 
   return (
-    <div className="relative w-full h-full min-h-[340px] sm:min-h-[400px] flex flex-col bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-200">
-      {/* ── TOP CONTROL BAR: LAYER SWITCHER & TILE SELECTOR ── */}
-      <div className="absolute top-2.5 left-2.5 right-2.5 z-[400] flex items-center justify-between gap-1.5 pointer-events-none">
+    <div className="w-full h-full flex flex-col min-h-[380px] sm:min-h-[440px]">
+      {/* ── DEDICATED IN-FLOW MAP CONTROLS BAR (NEVER OVERLAPS TILES) ── */}
+      <div className="bg-white border border-slate-200 rounded-xl p-1.5 flex flex-wrap items-center justify-between gap-2 shadow-2xs shrink-0 mb-2 font-sans select-none">
         
         {/* Left: Scientific Layer Tabs */}
-        <div className="pointer-events-auto flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200 shadow-md overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
           <button
             onClick={() => onLayerChange('RISK')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold font-sans transition flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 ${
               activeLayer === 'RISK'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
             <span>🌊 Risk Map</span>
@@ -485,69 +505,69 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
           <button
             onClick={() => onLayerChange('RAINFALL')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold font-sans transition flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 ${
               activeLayer === 'RAINFALL'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <CloudRain className="w-3.5 h-3.5 text-blue-500" />
+            <CloudRain className="w-3.5 h-3.5 text-blue-600" />
             <span>Rainfall</span>
           </button>
 
           <button
             onClick={() => onLayerChange('RIVER')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold font-sans transition flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 ${
               activeLayer === 'RIVER'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <Waves className="w-3.5 h-3.5 text-teal-500" />
-            <span>River Levels</span>
+            <Waves className="w-3.5 h-3.5 text-teal-600" />
+            <span>River Stage</span>
           </button>
 
           <button
             onClick={() => onLayerChange('SOIL')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold font-sans transition flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 ${
               activeLayer === 'SOIL'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <Droplets className="w-3.5 h-3.5 text-amber-500" />
+            <Droplets className="w-3.5 h-3.5 text-amber-600" />
             <span>Soil Moisture</span>
           </button>
 
           <button
             onClick={() => onLayerChange('LAYERS')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold font-sans transition flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 ${
               activeLayer === 'LAYERS'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <Layers className="w-3.5 h-3.5 text-slate-500" />
+            <Layers className="w-3.5 h-3.5 text-slate-600" />
             <span>Layers</span>
           </button>
         </div>
 
-        {/* Right: Map Style & Reset Controls */}
-        <div className="pointer-events-auto hidden sm:flex items-center gap-1.5">
-          <div className="bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200 shadow-md flex items-center gap-1">
+        {/* Right: Map Style & Controls */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="bg-slate-50 p-0.5 rounded-lg border border-slate-200 flex items-center gap-0.5 text-[10px] font-mono font-bold">
             <button
               onClick={() => setBaseMap('SATELLITE')}
-              className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition ${
-                baseMap === 'SATELLITE' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'
+              className={`px-2 py-0.5 rounded-md transition ${
+                baseMap === 'SATELLITE' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
               }`}
               title="Google Earth Satellite Imagery"
             >
-              🌍 SATELLITE
+              🌍 EARTH
             </button>
             <button
               onClick={() => setBaseMap('TOPO')}
-              className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition ${
-                baseMap === 'TOPO' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'
+              className={`px-2 py-0.5 rounded-md transition ${
+                baseMap === 'TOPO' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
               }`}
               title="OpenTopoMap Elevation Relief"
             >
@@ -555,18 +575,18 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
             </button>
             <button
               onClick={() => setBaseMap('STREET')}
-              className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition ${
-                baseMap === 'STREET' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'
+              className={`px-2 py-0.5 rounded-md transition ${
+                baseMap === 'STREET' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
               }`}
               title="Carto Clean Streets"
             >
-              🗺️ STREET
+              🗺️ MAP
             </button>
           </div>
 
           <button
             onClick={handleResetView}
-            className="p-1.5 bg-white/95 hover:bg-slate-100 rounded-xl text-slate-700 border border-slate-200 shadow-md transition active:scale-95"
+            className="p-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 border border-slate-200 shadow-2xs transition active:scale-95"
             title="Reset Map to Village Center"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -574,99 +594,139 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
         </div>
       </div>
 
-      {/* ── MAP CONTAINER ── */}
-      <div ref={mapContainerRef} className="w-full h-full flex-1" style={{ minHeight: '340px' }} />
+      {/* ── MAP CANVAS (FULL BLEED, NO COLLISION) ── */}
+      <div className="relative flex-1 w-full min-h-[340px] sm:min-h-[380px] bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+        
+        {/* Leaflet Map Div */}
+        <div 
+          ref={mapContainerRef} 
+          className="absolute inset-0 w-full h-full"
+          style={{ zIndex: 1 }}
+        />
 
-      {/* ── FLOATING MAP LEGEND (BOTTOM LEFT) ── */}
-      <div className="absolute bottom-2.5 left-2.5 z-[400] pointer-events-none hidden sm:flex">
-        <div className="pointer-events-auto bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-md text-[10px] font-mono font-semibold text-slate-800 flex items-center gap-3">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded bg-red-600 border border-red-700 inline-block" />
-            <span className="text-red-700 font-bold">Zone 1 (&gt;1.5m)</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded bg-orange-500 border border-orange-600 inline-block" />
-            <span className="text-orange-700 font-bold">Zone 2 (Surge)</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded bg-yellow-400 border border-yellow-500 inline-block" />
-            <span className="text-yellow-800 font-bold">Zone 3 (Caution)</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded bg-emerald-500 border border-emerald-600 inline-block" />
-            <span className="text-emerald-800 font-bold">Refuge (+320m)</span>
-          </span>
+        {/* Floating Zoom Buttons (Top Right of Map) */}
+        <div className="absolute top-3 right-3 z-[400] flex flex-col gap-1 pointer-events-auto">
+          <button
+            onClick={handleZoomIn}
+            className="w-7 h-7 bg-white/95 hover:bg-white text-slate-700 rounded-lg border border-slate-200 shadow-md flex items-center justify-center transition active:scale-90"
+            title="Zoom In"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="w-7 h-7 bg-white/95 hover:bg-white text-slate-700 rounded-lg border border-slate-200 shadow-md flex items-center justify-center transition active:scale-90"
+            title="Zoom Out"
+          >
+            <Minus className="w-4 h-4" />
+          </button>
         </div>
-      </div>
 
-      {/* ── FLOATING COORDINATES & STATUS BADGE (BOTTOM RIGHT) ── */}
-      <div className="absolute bottom-2.5 right-2.5 z-[400] pointer-events-none hidden md:flex">
-        <div className="bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-xl border border-slate-700/80 text-[10px] font-mono text-slate-200 flex items-center gap-2 shadow-md">
-          <MapPin className="w-3 h-3 text-cyan-400" />
-          <span>{activeLoc.lat.toFixed(4)}°N, {activeLoc.lon.toFixed(4)}°E ({activeLoc.elevation})</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-        </div>
-      </div>
-
-      {/* ── LAYERS TAB MODAL / DRAWER (WHEN LAYERS TAB IS ACTIVE) ── */}
-      {activeLayer === 'LAYERS' && (
-        <div className="absolute top-14 left-2.5 z-[450] bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-3 shadow-lg text-xs font-sans w-64 space-y-2 animate-fade-in">
-          <div className="font-bold text-slate-800 border-b border-slate-200 pb-1 flex items-center justify-between">
-            <span>GIS LAYER VISIBILITY</span>
-            <span className="text-[10px] font-mono text-blue-600">LIVE</span>
+        {/* Floating Map Legend (Bottom Left of Map) */}
+        <div className="absolute bottom-2.5 left-2.5 z-[400] pointer-events-none hidden sm:flex">
+          <div className="pointer-events-auto bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-md text-[10px] font-mono font-semibold text-slate-800 flex items-center gap-2.5">
+            <span className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-600 inline-block" />
+              <span className="text-red-700 font-bold">Zone 1 (Core)</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" />
+              <span className="text-orange-700 font-bold">Zone 2 (Surge)</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block" />
+              <span className="text-yellow-800 font-bold">Zone 3 (Caution)</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+              <span className="text-emerald-800 font-bold">Refuge (+320m)</span>
+            </span>
           </div>
-
-          <label className="flex items-center justify-between text-slate-700 cursor-pointer">
-            <span>Flood Inundation Corridor</span>
-            <input
-              type="checkbox"
-              checked={customLayers.floodZone}
-              onChange={(e) => setCustomLayers((p) => ({ ...p, floodZone: e.target.checked }))}
-              className="rounded text-blue-600"
-            />
-          </label>
-
-          <label className="flex items-center justify-between text-slate-700 cursor-pointer">
-            <span>Uphill Evacuation Trail</span>
-            <input
-              type="checkbox"
-              checked={customLayers.evacRoute}
-              onChange={(e) => setCustomLayers((p) => ({ ...p, evacRoute: e.target.checked }))}
-              className="rounded text-emerald-600"
-            />
-          </label>
-
-          <label className="flex items-center justify-between text-slate-700 cursor-pointer">
-            <span>IoT Sensors & Gauges</span>
-            <input
-              type="checkbox"
-              checked={customLayers.sensors}
-              onChange={(e) => setCustomLayers((p) => ({ ...p, sensors: e.target.checked }))}
-              className="rounded text-blue-600"
-            />
-          </label>
-
-          <label className="flex items-center justify-between text-slate-700 cursor-pointer">
-            <span>River Watercourse Channel</span>
-            <input
-              type="checkbox"
-              checked={customLayers.riverChannel}
-              onChange={(e) => setCustomLayers((p) => ({ ...p, riverChannel: e.target.checked }))}
-              className="rounded text-cyan-600"
-            />
-          </label>
-
-          <label className="flex items-center justify-between text-slate-700 cursor-pointer">
-            <span>Steep Slope Stability (&gt;38°)</span>
-            <input
-              type="checkbox"
-              checked={customLayers.slopeHazard}
-              onChange={(e) => setCustomLayers((p) => ({ ...p, slopeHazard: e.target.checked }))}
-              className="rounded text-amber-600"
-            />
-          </label>
         </div>
-      )}
+
+        {/* Floating Coordinates (Bottom Right of Map) */}
+        <div className="absolute bottom-2.5 right-2.5 z-[400] pointer-events-none hidden md:flex">
+          <div className="bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-xl border border-slate-700 text-[10px] font-mono text-slate-200 flex items-center gap-1.5 shadow-md">
+            <MapPin className="w-3 h-3 text-cyan-400" />
+            <span>{activeLoc.lat.toFixed(4)}°N, {activeLoc.lon.toFixed(4)}°E ({activeLoc.elevation})</span>
+          </div>
+        </div>
+
+        {/* Floating Layers Drawer (When Layers Tab is active) */}
+        {activeLayer === 'LAYERS' && (
+          <div className="absolute top-3 left-3 z-[450] bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-3 shadow-xl text-xs font-sans w-64 space-y-2 animate-fade-in pointer-events-auto">
+            <div className="font-bold text-slate-900 border-b border-slate-200 pb-1 flex items-center justify-between">
+              <span>GIS LAYER CONTROLS</span>
+              <span className="text-[10px] font-mono text-blue-600 font-bold">ACTIVE</span>
+            </div>
+
+            <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-red-600" />
+                <span>Flood Inundation Corridor</span>
+              </span>
+              <input
+                type="checkbox"
+                checked={customLayers.floodZone}
+                onChange={(e) => setCustomLayers((p) => ({ ...p, floodZone: e.target.checked }))}
+                className="rounded text-blue-600"
+              />
+            </label>
+
+            <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                <span>Uphill Escape Trail</span>
+              </span>
+              <input
+                type="checkbox"
+                checked={customLayers.evacRoute}
+                onChange={(e) => setCustomLayers((p) => ({ ...p, evacRoute: e.target.checked }))}
+                className="rounded text-emerald-600"
+              />
+            </label>
+
+            <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-blue-600" />
+                <span>IoT Sensors & Gauges</span>
+              </span>
+              <input
+                type="checkbox"
+                checked={customLayers.sensors}
+                onChange={(e) => setCustomLayers((p) => ({ ...p, sensors: e.target.checked }))}
+                className="rounded text-blue-600"
+              />
+            </label>
+
+            <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-cyan-600" />
+                <span>River Watercourse</span>
+              </span>
+              <input
+                type="checkbox"
+                checked={customLayers.riverChannel}
+                onChange={(e) => setCustomLayers((p) => ({ ...p, riverChannel: e.target.checked }))}
+                className="rounded text-cyan-600"
+              />
+            </label>
+
+            <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-600" />
+                <span>Steep Slope Hazards (&gt;38°)</span>
+              </span>
+              <input
+                type="checkbox"
+                checked={customLayers.slopeHazard}
+                onChange={(e) => setCustomLayers((p) => ({ ...p, slopeHazard: e.target.checked }))}
+                className="rounded text-amber-600"
+              />
+            </label>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
