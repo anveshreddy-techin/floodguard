@@ -14,9 +14,10 @@ import {
   X,
   Compass,
   AlertTriangle,
-  CheckCircle2
+  CheckCircle2,
+  ShieldAlert
 } from 'lucide-react';
-import { VERIFIED_OSM_HYDROGRAPHY, makeRiverBufferPolygon } from '@/services/gisService';
+import { VERIFIED_OSM_HYDROGRAPHY } from '@/services/gisService';
 
 export type DashboardLayer = 'RISK' | 'RAINFALL' | 'RIVER' | 'SOIL' | 'LAYERS';
 export type DashboardBaseMap = 'SATELLITE' | 'TOPO' | 'STREET';
@@ -25,6 +26,39 @@ interface DashboardRealMapProps {
   location?: LocationDossier | null;
   activeLayer: DashboardLayer;
   onLayerChange: (layer: DashboardLayer) => void;
+}
+
+/**
+ * Generates an organic, smooth ellipse/envelope polygon on earth coordinates
+ */
+function createSmoothBlob(
+  lat: number,
+  lon: number,
+  rxMeters: number,
+  ryMeters: number,
+  angleDeg = 0,
+  steps = 28
+): [number, number][] {
+  const points: [number, number][] = [];
+  const rad = (angleDeg * Math.PI) / 180;
+  const cosA = Math.cos(rad);
+  const sinA = Math.sin(rad);
+  const latFactor = 111320;
+  const lonFactor = 111320 * Math.cos((lat * Math.PI) / 180);
+
+  for (let i = 0; i < steps; i++) {
+    const theta = (i / steps) * 2 * Math.PI;
+    const dx0 = rxMeters * Math.cos(theta);
+    const dy0 = ryMeters * Math.sin(theta);
+
+    const dx = dx0 * cosA - dy0 * sinA;
+    const dy = dx0 * sinA + dy0 * cosA;
+
+    const ptLat = lat + dy / latFactor;
+    const ptLon = lon + dx / lonFactor;
+    points.push([ptLat, ptLon]);
+  }
+  return points;
 }
 
 export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
@@ -50,7 +84,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
     dangerZones: true,
     safeRefuge: true,
     safeRoute: true,
-    blockedRoute: true,
+    settlements: true,
     riverChannel: true,
     sensors: true,
   });
@@ -62,26 +96,30 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
     // Invalidate size immediately so tiles fill the whole container
     map.invalidateSize();
 
-    // 1. Update Base Tile Layer with Fast, Globally Reliable CDN
+    // 1. Update Realistic Base Tile Layer (Blazing Fast Google Hybrid Satellite or Topo)
     if (tileLayerRef.current) {
       map.removeLayer(tileLayerRef.current);
     }
 
-    let tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-    let maxZoom = 19;
-    let attribution = '© Esri · FloodGuard AI';
+    let tileUrl = 'https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
+    let subdomains: string[] | string = ['0', '1', '2', '3'];
+    let maxZoom = 20;
+    let attribution = 'Imagery © Google Earth · FloodGuard AI';
 
     if (baseMap === 'TOPO') {
       tileUrl = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+      subdomains = ['a', 'b', 'c'];
       maxZoom = 17;
       attribution = '© OpenTopoMap · FloodGuard AI';
     } else if (baseMap === 'STREET') {
-      tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-      maxZoom = 19;
-      attribution = '© OpenStreetMap contributors · FloodGuard AI';
+      tileUrl = 'https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}';
+      subdomains = ['0', '1', '2', '3'];
+      maxZoom = 20;
+      attribution = '© Google Maps · FloodGuard AI';
     }
 
     const tileLayer = L.tileLayer(tileUrl, {
+      subdomains,
       maxZoom,
       attribution,
     }).addTo(map);
@@ -106,176 +144,253 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
     // High Ground Safe Assembly Shelter coordinates (Lata Village +320m above gorge floor)
     const shelterCoords: [number, number] = isRaini
-      ? [30.5020, 79.7040]
-      : [lat + 0.012, lon + 0.01];
+      ? [30.5025, 79.7055]
+      : [lat + 0.0170, lon + 0.0125];
 
-    // Secondary intermediate safe point
-    const spurCoords: [number, number] = isRaini
-      ? [30.4935, 79.7000]
-      : [lat + 0.006, lon + 0.006];
-
-    // ── A. RISK MAP LAYER: CLEAR DANGERS & SAFE PLACE COLOUR REPRESENTATION ──
+    // ── A. RISK MAP LAYER: EXACT DANGER OVERLAYS ON REALISTIC MAP ──
     if (activeLayer === 'RISK' || activeLayer === 'LAYERS') {
       
-      // 1. BROAD, PROMINENT DANGER ZONES (Red, Orange, Yellow Envelopes)
+      // 1. VIBRANT DANGER ZONES OVER REAL SATELLITE IMAGERY (Matching user image)
       if (customLayers.dangerZones) {
-        // Generous, realistic hazard buffer envelopes covering the valley floor & gorge
-        const zone3Yellow = makeRiverBufferPolygon(riverVector, 750); // ~1.5km caution reach
-        const zone2Orange = makeRiverBufferPolygon(riverVector, 480); // ~960m surge reach
-        const zone1Red = makeRiverBufferPolygon(riverVector, 250);    // ~500m core inundation
-
-        // 🟡 Zone 3: Yellow Caution Perimeter (<0.5m inundation depth)
-        L.polygon(zone3Yellow, {
-          color: '#eab308',
-          weight: 1.5,
-          fillColor: '#facc15',
-          fillOpacity: 0.22,
-          dashArray: '6, 5',
+        // Red Blob 1: Upper Gorge & Confluence Core Inundation Zone
+        const redBlob1 = createSmoothBlob(lat + 0.0015, lon + 0.0005, 520, 310, -25);
+        L.polygon(redBlob1, {
+          color: '#ef4444',
+          weight: 2.5,
+          fillColor: '#dc2626',
+          fillOpacity: 0.62,
         })
-          .bindTooltip('🟡 Zone 3 (Caution Buffer): Shallow overland infiltration (<0.5m depth)', { sticky: true })
+          .bindTooltip('🔴 HIGH RISK ZONE: Flash Flood Core Surge (>1.5m) — Immediate Evacuation', { sticky: true })
           .addTo(lg);
 
-        // 🟠 Zone 2: Orange Medium Surge Zone (0.5m – 1.5m surge wave)
-        L.polygon(zone2Orange, {
+        // Red Blob 2: Downstream Gorge Chokepoint & Barrage Bottleneck
+        const redBlob2 = createSmoothBlob(lat - 0.0035, lon - 0.0050, 420, 260, 35);
+        L.polygon(redBlob2, {
+          color: '#ef4444',
+          weight: 2.5,
+          fillColor: '#dc2626',
+          fillOpacity: 0.62,
+        })
+          .bindTooltip('🔴 HIGH RISK ZONE: Secondary Gorge Surge Impact Area', { sticky: true })
+          .addTo(lg);
+
+        // Orange Blob: Medium Risk Surge Wave Reach (0.5m – 1.5m)
+        const orangeBlob = createSmoothBlob(lat + 0.0065, lon + 0.0055, 480, 320, -15);
+        L.polygon(orangeBlob, {
           color: '#f97316',
           weight: 2,
           fillColor: '#ea580c',
-          fillOpacity: 0.32,
+          fillOpacity: 0.52,
         })
-          .bindTooltip('🟠 Zone 2 (Medium Risk): Surge wave reach (0.5m – 1.5m depth) — High Velocity', { sticky: true })
+          .bindTooltip('🟠 MEDIUM RISK ZONE: Surge Spillover Corridor (0.5m – 1.5m depth)', { sticky: true })
           .addTo(lg);
 
-        // 🔴 Zone 1: Red High Danger Core Inundation Zone (>1.5m flood depth)
-        L.polygon(zone1Red, {
-          color: '#ef4444',
-          weight: 3,
-          fillColor: '#dc2626',
-          fillOpacity: 0.50,
+        // Yellow Blob: Low Risk Caution Buffer Perimeter (<0.5m)
+        const yellowBlob = createSmoothBlob(lat + 0.0115, lon + 0.0110, 560, 350, 20);
+        L.polygon(yellowBlob, {
+          color: '#facc15',
+          weight: 2,
+          fillColor: '#eab308',
+          fillOpacity: 0.42,
+          dashArray: '6, 5',
         })
-          .bindTooltip('🔴 Zone 1 (High Danger): Core Inundation (>1.5m depth) — MANDATORY EVACUATION', { sticky: true })
+          .bindTooltip('🟡 LOW RISK ZONE: Peripheral Caution Buffer (Overland Runoff)', { sticky: true })
           .addTo(lg);
       }
 
-      // 2. 🟢 GREEN SAFE REFUGE ZONE (HIGH GROUND SHELTER AREA)
+      // 2. 🟢 GREEN SAFE REFUGE AREA (HIGH GROUND SHELTER ENVELOPE)
       if (customLayers.safeRefuge) {
-        // High-ground plateau buffer around Lata Assembly Shelter (+320m elevation above gorge)
-        L.circle(shelterCoords, {
-          radius: 380, // 380m radius safe zone on the ridge
-          color: '#059669',
+        const safeBlob = createSmoothBlob(shelterCoords[0], shelterCoords[1], 480, 340, 10);
+        L.polygon(safeBlob, {
+          color: '#22c55e',
           weight: 2.5,
-          fillColor: '#10b981',
-          fillOpacity: 0.38,
+          fillColor: '#16a34a',
+          fillOpacity: 0.52,
           dashArray: '5, 4',
         })
-          .bindTooltip('🟢 SAFE REFUGE AREA (+320m Elevation Gain) · Outside 100-Year Surge Reach', { sticky: true })
+          .bindTooltip('🟢 SAFE AREA: High-Elevation Refuge (+320m ASL) · Zero Surge Exposure', { sticky: true })
           .addTo(lg);
 
-        // Prominent Safe Assembly Shelter Marker
+        // 3. 🔵 SAFE SHELTER BADGE (BLUE CIRCULAR ICON MATCHING USER IMAGE)
         const shelterIcon = L.divIcon({
           className: 'custom-div-icon',
           html: `
-            <div style="background: #059669; color: white; padding: 5px 10px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 2.5px solid white; box-shadow: 0 4px 12px rgba(5,150,105,0.6); display: flex; align-items: center; gap: 5px; white-space: nowrap; font-family: sans-serif;">
-              <span style="font-size: 13px;">🏕️</span>
-              <span>LATA SAFE SHELTER (+320m ASL)</span>
-              <span style="background: rgba(0,0,0,0.25); padding: 1px 5px; border-radius: 6px; font-size: 9px; color: #a7f3d0; font-weight: 900;">SAFE PLACE</span>
+            <div style="background: #0284c7; color: white; width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid white; box-shadow: 0 4px 12px rgba(2,132,199,0.7); display: flex; align-items: center; justify-content: center; font-size: 16px;">
+              <span>🏕️</span>
             </div>
           `,
-          iconAnchor: [90, 18],
+          iconAnchor: [17, 17],
         });
 
         L.marker(shelterCoords, { icon: shelterIcon })
           .bindPopup(`
             <div style="font-family: sans-serif; padding: 4px;">
-              <b style="color: #059669; font-size: 13px;">🟢 Lata High School Safe Assembly Shelter</b><br/>
+              <b style="color: #0284c7; font-size: 13px;">🏕️ Lata High School Safe Assembly Shelter</b><br/>
               <span style="font-size: 11px; color: #475569;">Elevation: 2,360m ASL (+320m above riverbed)</span><br/>
-              <div style="margin-top: 6px; padding: 6px; background: #ecfdf5; border-radius: 8px; font-size: 11px; color: #065f46; font-weight: bold; border: 1px solid #a7f3d0;">
-                ✅ DESIGNATED SAFE HAVEN: Completely outside flood reach.<br/>
-                Capacity: 450 persons · Potable Water & Medical First-Aid verified.
+              <div style="margin-top: 6px; padding: 6px; background: #eff6ff; border-radius: 8px; font-size: 11px; color: #1e40af; font-weight: bold; border: 1px solid #bfdbfe;">
+                ✅ DESIGNATED SAFE HAVEN: High ground refuge completely clear of flood waters.<br/>
+                Capacity: 450 persons · Drinking water & medical kits ready.
               </div>
             </div>
           `)
           .addTo(lg);
       }
 
-      // 3. 🟢 GLOWING GREEN & CYAN SAFE ESCAPE ROUTE TO SAFE PLACE
+      // 4. ⚪ WHITE DASHED SAFE EVACUATION ROUTE TO SAFE PLACE
       if (customLayers.safeRoute) {
         const safeTrail: [number, number][] = isRaini
           ? [
-              [30.4850, 79.6920], // Raini Village (DANGER START)
-              [30.4885, 79.6955], // Ridge junction (ascending)
-              [30.4935, 79.7000], // Mid-spur safe contour (+180m)
-              [30.4985, 79.7025], // Upper saddle (+260m)
-              [30.5020, 79.7040], // Lata Assembly Shelter (SAFE PLACE)
+              [30.4855, 79.6920], // Raini Village (High Danger Start)
+              [30.4895, 79.6960], // North Ridge Spur Ascent
+              [30.4950, 79.7005], // Mid-Saddle Contour (+180m)
+              [30.4995, 79.7035], // Upper Pine Ridge (+260m)
+              [shelterCoords[0], shelterCoords[1]], // Lata Safe Shelter (+320m ASL)
             ]
           : [
               [lat, lon],
-              [lat + 0.005, lon + 0.005],
+              [lat + 0.006, lon + 0.005],
+              [lat + 0.012, lon + 0.009],
               [shelterCoords[0], shelterCoords[1]],
             ];
 
-        // Glowing backdrop ribbon
+        // Cyan-blue glowing contrast ribbon behind dashed line
         L.polyline(safeTrail, {
-          color: '#34d399',
-          weight: 9,
-          opacity: 0.45,
+          color: '#0284c7',
+          weight: 8,
+          opacity: 0.55,
         }).addTo(lg);
 
-        // Core dashed safe route line
+        // Core crisp White Dashed Evacuation Trail (Matching user image)
         L.polyline(safeTrail, {
-          color: '#10b981',
-          weight: 5,
+          color: '#ffffff',
+          weight: 4,
           opacity: 1,
-          dashArray: '10, 6',
+          dashArray: '7, 6',
         })
-          .bindTooltip('🟢 RECOMMENDED UPHILL ESCAPE ROUTE (1.4 km · +320m Climb to Safe Shelter)', { sticky: true })
+          .bindTooltip('⚪ RECOMMENDED SAFE ROUTE: North Ridge Trail to Safe Shelter (1.4 km)', { sticky: true })
           .addTo(lg);
 
-        // Mid-route waypoint badge
+        // Intermediate Waypoint on Safe Trail
+        const waypointCoords = safeTrail[Math.floor(safeTrail.length / 2)];
         const waypointIcon = L.divIcon({
           className: 'custom-div-icon',
           html: `
-            <div style="background: rgba(16,185,129,0.9); color: white; padding: 2px 6px; border-radius: 8px; font-weight: 700; font-size: 9px; border: 1.5px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 3px; white-space: nowrap;">
-              <span>🚶‍♂️</span>
-              <span>Uphill Trail (+180m)</span>
+            <div style="background: #ffffff; color: #0284c7; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #0284c7; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">
+              ▲
             </div>
           `,
-          iconAnchor: [45, 10],
+          iconAnchor: [9, 9],
         });
-        L.marker(spurCoords, { icon: waypointIcon }).addTo(lg);
-      }
-
-      // 4. 🔴 BLOCKED LOW-LYING RIVERBED ROUTE
-      if (customLayers.blockedRoute) {
-        const bridgeCoords: [number, number] = isRaini ? [30.4855, 79.6890] : [lat - 0.005, lon - 0.006];
-        const blockedTrail: [number, number][] = [
-          [lat, lon],
-          [bridgeCoords[0], bridgeCoords[1]],
-          [lat - 0.008, lon - 0.010],
-        ];
-
-        L.polyline(blockedTrail, {
-          color: '#ef4444',
-          weight: 4,
-          opacity: 0.9,
-          dashArray: '5, 5',
-        })
-          .bindTooltip('⛔ LOW RIVERBED PATH: BLOCKED BY SURGE (DO NOT USE)', { sticky: true })
+        L.marker(waypointCoords, { icon: waypointIcon })
+          .bindTooltip('Waymark: Uphill North Ridge Path (+180m ASL)', { sticky: true })
           .addTo(lg);
-
-        const blockedIcon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `
-            <div style="background: #991b1b; color: white; padding: 3px 7px; border-radius: 8px; font-weight: bold; font-size: 9px; border: 1.5px solid #fca5a5; box-shadow: 0 2px 8px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 3px; white-space: nowrap; font-family: sans-serif;">
-              <span>⛔</span>
-              <span>Bridge KM 0.6: OVERTOPPED & BLOCKED</span>
-            </div>
-          `,
-          iconAnchor: [70, 10],
-        });
-        L.marker(bridgeCoords, { icon: blockedIcon }).addTo(lg);
       }
 
-      // 5. Active River Flow Vector
+      // 5. 🏠 COLOR-CODED SETTLEMENT DANGER BADGES (MATCHING USER IMAGE)
+      if (customLayers.settlements) {
+        // Red Zone Settlements (White circular badge with Red fill)
+        const redHouses = isRaini
+          ? [
+              { lat: 30.4865, lon: 79.6920, name: 'Raini Lower Settlement (38 Dwellings)' },
+              { lat: 30.4825, lon: 79.6875, name: 'Tapovan Gorge Worksite Basti' },
+            ]
+          : [{ lat: lat + 0.001, lon: lon, name: activeLoc.name }];
+
+        redHouses.forEach((h) => {
+          const redIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: `
+              <div style="background: #dc2626; color: white; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                <span>🏠</span>
+              </div>
+            `,
+            iconAnchor: [13, 13],
+          });
+          L.marker([h.lat, h.lon], { icon: redIcon })
+            .bindPopup(`
+              <div style="font-family: sans-serif; padding: 3px;">
+                <b style="color: #dc2626; font-size: 12px;">🔴 High Danger: ${h.name}</b><br/>
+                <span style="font-size: 10px; color: #64748b;">Direct inundation path · Evacuate via white trail</span>
+              </div>
+            `)
+            .addTo(lg);
+        });
+
+        // Orange Zone Settlements (White circular badge with Orange fill)
+        const orangeHouses = isRaini
+          ? [{ lat: 30.4910, lon: 79.6970, name: 'Upper Raini Hamlet (19 Dwellings)' }]
+          : [{ lat: lat + 0.006, lon: lon + 0.005, name: 'Mid-Slope Dwellings' }];
+
+        orangeHouses.forEach((h) => {
+          const orangeIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: `
+              <div style="background: #ea580c; color: white; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                <span>🏠</span>
+              </div>
+            `,
+            iconAnchor: [13, 13],
+          });
+          L.marker([h.lat, h.lon], { icon: orangeIcon })
+            .bindPopup(`
+              <div style="font-family: sans-serif; padding: 3px;">
+                <b style="color: #ea580c; font-size: 12px;">🟠 Medium Danger: ${h.name}</b><br/>
+                <span style="font-size: 10px; color: #64748b;">Surge wave proximity · Standby for uphill movement</span>
+              </div>
+            `)
+            .addTo(lg);
+        });
+
+        // Yellow Zone Settlements (White circular badge with Yellow fill)
+        const yellowHouses = isRaini
+          ? [{ lat: 30.4965, lon: 79.7025, name: 'Pang Peripheral Hamlet (14 Dwellings)' }]
+          : [{ lat: lat + 0.011, lon: lon + 0.010, name: 'Caution Zone Dwellings' }];
+
+        yellowHouses.forEach((h) => {
+          const yellowIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: `
+              <div style="background: #eab308; color: white; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                <span>🏠</span>
+              </div>
+            `,
+            iconAnchor: [13, 13],
+          });
+          L.marker([h.lat, h.lon], { icon: yellowIcon })
+            .bindPopup(`
+              <div style="font-family: sans-serif; padding: 3px;">
+                <b style="color: #ca8a04; font-size: 12px;">🟡 Low Danger: ${h.name}</b><br/>
+                <span style="font-size: 10px; color: #64748b;">Runoff buffer zone · Monitor emergency broadcast</span>
+              </div>
+            `)
+            .addTo(lg);
+        });
+
+        // Safe Area Houses (White circular badge with Dark Slate fill)
+        const safeHouses = isRaini
+          ? [
+              { lat: 30.4810, lon: 79.6990, name: 'Upper Ridge Terraces' },
+              { lat: 30.4940, lon: 79.7110, name: 'East Mountain Farms' },
+            ]
+          : [{ lat: lat - 0.005, lon: lon + 0.008, name: 'Safe Ridge Homestead' }];
+
+        safeHouses.forEach((h) => {
+          const safeHouseIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: `
+              <div style="background: #0f172a; color: white; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; font-size: 11px;">
+                <span>🏠</span>
+              </div>
+            `,
+            iconAnchor: [12, 12],
+          });
+          L.marker([h.lat, h.lon], { icon: safeHouseIcon })
+            .bindTooltip(`Safe Settlement: ${h.name}`, { sticky: true })
+            .addTo(lg);
+        });
+      }
+
+      // 6. River Watercourse (Vibrant Cyan & Blue Polyline)
       if (customLayers.riverChannel) {
         L.polyline(riverVector, {
           color: '#0284c7',
@@ -285,37 +400,11 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
         L.polyline(riverVector, {
           color: '#38bdf8',
-          weight: 2,
+          weight: 2.5,
           opacity: 1,
           dashArray: '6, 6',
         }).addTo(lg);
       }
-
-      // 6. 🔴 PRIMARY VILLAGE MARKER IN DANGER ZONE (Raini Village)
-      const villageIcon = L.divIcon({
-        className: 'custom-div-icon',
-        html: `
-          <div style="background: #dc2626; color: white; padding: 5px 10px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 2.5px solid white; box-shadow: 0 4px 12px rgba(220,38,38,0.6); display: flex; align-items: center; gap: 5px; white-space: nowrap; font-family: sans-serif;">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background: #ffffff; display: inline-block;"></span>
-            <span>🏠 ${activeLoc.name.split('/')[0].trim()} (${activeLoc.elevation})</span>
-            <span style="background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 6px; font-size: 9px; font-weight: 900;">82% DANGER</span>
-          </div>
-        `,
-        iconAnchor: [70, 18],
-      });
-
-      L.marker([lat, lon], { icon: villageIcon })
-        .bindPopup(`
-          <div style="font-family: sans-serif; padding: 4px;">
-            <b style="color: #dc2626; font-size: 13px;">🔴 ${activeLoc.name} (CRITICAL DANGER ZONE)</b><br/>
-            <span style="font-size: 11px; color: #475569;">Elevation: ${activeLoc.elevation} · Population: ${activeLoc.population.toLocaleString()}</span><br/>
-            <div style="margin-top: 6px; padding: 6px; background: #fee2e2; border-radius: 8px; font-size: 11px; color: #991b1b; font-weight: bold; border: 1px solid #fca5a5;">
-              ⚠️ Direct river surge corridor: Inundation probability 82%.<br/>
-              DIRECTIVE: Follow GREEN route immediately to Lata Shelter (+320m).
-            </div>
-          </div>
-        `)
-        .addTo(lg);
     }
 
     // ── B. RAINFALL DOPPLER RADAR LAYER ──
@@ -438,17 +527,12 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
       if (!mapInstanceRef.current) {
         const map = L.map(mapContainerRef.current, {
-          center: [activeLoc.lat, activeLoc.lon],
+          center: [activeLoc.lat + 0.006, activeLoc.lon + 0.004],
           zoom: 14,
           zoomControl: false,
           attributionControl: false,
           scrollWheelZoom: true,
         });
-
-        L.control
-          .attribution({ position: 'bottomright', prefix: false })
-          .addAttribution('© Esri · FloodGuard AI')
-          .addTo(map);
 
         const lg = L.layerGroup().addTo(map);
         mapInstanceRef.current = map;
@@ -459,8 +543,9 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
         setMapReady(true);
 
-        setTimeout(() => map.invalidateSize(), 60);
+        setTimeout(() => map.invalidateSize(), 50);
         setTimeout(() => map.invalidateSize(), 200);
+        setTimeout(() => map.invalidateSize(), 500);
       }
     };
 
@@ -496,7 +581,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
   const handleResetView = () => {
     if (mapInstanceRef.current && activeLoc) {
-      mapInstanceRef.current.setView([activeLoc.lat, activeLoc.lon], 14, { animate: true });
+      mapInstanceRef.current.setView([activeLoc.lat + 0.006, activeLoc.lon + 0.004], 14, { animate: true });
       mapInstanceRef.current.invalidateSize();
     }
   };
@@ -515,7 +600,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
   return (
     <div className="w-full h-full flex flex-col min-h-[380px] sm:min-h-[440px]">
-      {/* ── DEDICATED IN-FLOW MAP CONTROLS BAR (NEVER OVERLAPS TILES) ── */}
+      {/* ── TOP CONTROL BAR: LAYER TABS + BASE MAP TOGGLE ── */}
       <div className="bg-white border border-slate-200 rounded-xl p-1.5 flex flex-wrap items-center justify-between gap-2 shadow-2xs shrink-0 mb-2 font-sans select-none relative z-30">
         
         {/* Left: Scientific Layer Tabs */}
@@ -531,7 +616,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
                 : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <span>🌊 Risk Map</span>
+            <span>Risk Map</span>
           </button>
 
           <button
@@ -561,7 +646,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
             }`}
           >
             <Waves className="w-3.5 h-3.5 text-teal-600" />
-            <span>River Stage</span>
+            <span>River Levels</span>
           </button>
 
           <button
@@ -594,58 +679,64 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
           </button>
         </div>
 
-        {/* Right: Map Style & Controls */}
+        {/* Right: Map Style (Satellite / Topo / Street) & Controls */}
         <div className="flex items-center gap-1.5 shrink-0">
           <div className="bg-slate-50 p-0.5 rounded-lg border border-slate-200 flex items-center gap-0.5 text-[10px] font-mono font-bold">
             <button
               onClick={() => setBaseMap('SATELLITE')}
-              className={`px-2 py-0.5 rounded-md transition ${
-                baseMap === 'SATELLITE' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+              className={`px-2 py-0.5 rounded transition ${
+                baseMap === 'SATELLITE'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="Esri World Satellite Imagery"
+              title="Realistic Google Earth Hybrid Satellite Imagery"
             >
-              🌍 EARTH
+              🛰️ Satellite
             </button>
             <button
               onClick={() => setBaseMap('TOPO')}
-              className={`px-2 py-0.5 rounded-md transition ${
-                baseMap === 'TOPO' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+              className={`px-2 py-0.5 rounded transition ${
+                baseMap === 'TOPO'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="OpenTopoMap Elevation Relief"
+              title="Topographic Mountain Elevation Contours"
             >
-              🏔️ TOPO
+              ⛰️ Topo
             </button>
             <button
               onClick={() => setBaseMap('STREET')}
-              className={`px-2 py-0.5 rounded-md transition ${
-                baseMap === 'STREET' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+              className={`px-2 py-0.5 rounded transition ${
+                baseMap === 'STREET'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
-              title="OpenStreetMap Street View"
+              title="Standard Street Map"
             >
-              🗺️ MAP
+              🗺️ Street
             </button>
           </div>
 
           <button
             onClick={handleResetView}
-            className="p-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-700 border border-slate-200 shadow-2xs transition active:scale-95"
-            title="Reset Map to Village Center"
+            className="p-1 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition active:scale-95"
+            title="Reset Map Center View"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* ── COMPACT LAYER CUSTOMIZATION POPOVER (NON-INTRUSIVE) ── */}
+        {/* Popover Layer Filter Drawer */}
         {showLayerDrawer && (
-          <div className="absolute top-11 left-2 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-3 shadow-xl text-xs font-sans w-64 space-y-2 animate-fade-in pointer-events-auto">
-            <div className="font-bold text-slate-900 border-b border-slate-200 pb-1 flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-indigo-600" />
-                <span>GIS LAYER VISIBILITY</span>
+          <div className="absolute top-full left-3 mt-1.5 w-72 bg-white/98 backdrop-blur-md border border-slate-200 rounded-xl p-3 shadow-xl z-50 text-xs font-mono flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-1.5 border-b border-slate-100">
+              <span className="font-bold text-slate-900 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-blue-600" />
+                <span>GIS Overlay Layers</span>
               </span>
               <button
                 onClick={() => setShowLayerDrawer(false)}
-                className="p-1 rounded hover:bg-slate-100 text-slate-500 hover:text-slate-800"
+                className="text-slate-400 hover:text-slate-600 p-0.5 rounded"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -667,7 +758,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
             <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded bg-emerald-600 inline-block" />
-                <span>Green Safe Refuge (+320m)</span>
+                <span>Safe Area (+320m Ridge)</span>
               </span>
               <input
                 type="checkbox"
@@ -679,26 +770,26 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
 
             <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-1 rounded bg-emerald-500 inline-block" />
-                <span>Safe Uphill Route</span>
+                <span className="w-2.5 h-1 rounded bg-white border border-slate-400 inline-block" />
+                <span>White Dashed Safe Route</span>
               </span>
               <input
                 type="checkbox"
                 checked={customLayers.safeRoute}
                 onChange={(e) => setCustomLayers((p) => ({ ...p, safeRoute: e.target.checked }))}
-                className="rounded text-emerald-600"
+                className="rounded text-blue-600"
               />
             </label>
 
             <label className="flex items-center justify-between text-slate-700 cursor-pointer hover:text-slate-900">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-1 rounded bg-red-500 inline-block" />
-                <span>Blocked Riverbed Trail</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-red-600 border border-white inline-block" />
+                <span>Settlements (🏠 Badges)</span>
               </span>
               <input
                 type="checkbox"
-                checked={customLayers.blockedRoute}
-                onChange={(e) => setCustomLayers((p) => ({ ...p, blockedRoute: e.target.checked }))}
+                checked={customLayers.settlements}
+                onChange={(e) => setCustomLayers((p) => ({ ...p, settlements: e.target.checked }))}
                 className="rounded text-red-600"
               />
             </label>
@@ -719,7 +810,7 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
         )}
       </div>
 
-      {/* ── MAP CANVAS (FULL BLEED, CRISP VISUAL OVERLAYS) ── */}
+      {/* ── REALISTIC MAP CANVAS (SATELLITE BASE WITH VIBRANT COLOR OVERLAYS) ── */}
       <div className="relative flex-1 w-full min-h-[340px] sm:min-h-[380px] bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
         
         {/* Leaflet Map Div */}
@@ -747,34 +838,26 @@ export const DashboardRealMap: React.FC<DashboardRealMapProps> = ({
           </button>
         </div>
 
-        {/* Floating Map Legend (Bottom Left of Map) — Crystal Clear Dangers & Safe Place */}
-        <div className="absolute bottom-2.5 left-2.5 z-[400] pointer-events-none hidden sm:flex">
-          <div className="pointer-events-auto bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-md text-[10px] font-mono font-semibold text-slate-800 flex items-center gap-2.5">
-            <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded bg-red-600 inline-block" />
-              <span className="text-red-700 font-bold">Zone 1 (Danger &gt;1.5m)</span>
+        {/* Floating Map Legend (Bottom Left of Map) — Exact from Reference Image */}
+        <div className="absolute bottom-3 left-3 z-[400] pointer-events-auto">
+          <div className="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-300 text-[10px] font-mono text-slate-800 flex items-center gap-3 shadow-md">
+            <span className="flex items-center gap-1.5 font-bold">
+              <span className="w-2.5 h-2.5 rounded bg-red-600 inline-block" /> High
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded bg-orange-500 inline-block" />
-              <span className="text-orange-700 font-bold">Zone 2 (Surge)</span>
+            <span className="flex items-center gap-1.5 font-bold">
+              <span className="w-2.5 h-2.5 rounded bg-orange-500 inline-block" /> Medium
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded bg-yellow-400 inline-block" />
-              <span className="text-yellow-800 font-bold">Zone 3 (Caution)</span>
+            <span className="flex items-center gap-1.5 font-bold">
+              <span className="w-2.5 h-2.5 rounded bg-yellow-400 inline-block" /> Low
             </span>
-            <span className="flex items-center gap-1 border-l border-slate-300 pl-2">
-              <span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block" />
-              <span className="text-emerald-800 font-bold">Safe Place (+320m)</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-4 h-1 rounded bg-emerald-500 inline-block border-b border-emerald-600" />
-              <span className="text-emerald-700 font-bold">Safe Route</span>
+            <span className="flex items-center gap-1.5 font-bold">
+              <span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block" /> Safe
             </span>
           </div>
         </div>
 
         {/* Floating Coordinates (Bottom Right of Map) */}
-        <div className="absolute bottom-2.5 right-2.5 z-[400] pointer-events-none hidden md:flex">
+        <div className="absolute bottom-3 right-3 z-[400] pointer-events-none hidden md:flex">
           <div className="bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-xl border border-slate-700 text-[10px] font-mono text-slate-200 flex items-center gap-1.5 shadow-md">
             <MapPin className="w-3 h-3 text-cyan-400" />
             <span>{activeLoc.lat.toFixed(4)}°N, {activeLoc.lon.toFixed(4)}°E ({activeLoc.elevation})</span>
