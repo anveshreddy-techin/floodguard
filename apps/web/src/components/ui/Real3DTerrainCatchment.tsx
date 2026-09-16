@@ -641,9 +641,9 @@ export default function Real3DTerrainCatchment({ location }: Props) {
 
     // ── 8. CALLOUT BADGE: SAFE SHELTER (OUTSIDE RISK ZONE) ──
     const shelterEl = document.createElement('div');
-    shelterEl.style.cssText = 'position: relative; cursor: pointer;';
+    shelterEl.style.cssText = 'display: flex; flex-direction: column; align-items: center; cursor: pointer;';
     shelterEl.innerHTML = `
-      <div style="position: relative; display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); border: 2px solid rgba(255,255,255,0.9); border-radius: 9999px; padding: 5px 14px 5px 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 16px rgba(16,185,129,0.7); white-space: nowrap; transform: translate(-28px, -46px);">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); border: 2px solid rgba(255,255,255,0.9); border-radius: 9999px; padding: 5px 14px 5px 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 16px rgba(16,185,129,0.7); white-space: nowrap;">
         <div style="width: 32px; height: 32px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.4); flex-shrink: 0;">
           <div style="width: 26px; height: 26px; border-radius: 50%; background: #059669; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; line-height: 1;">
             🏠
@@ -653,12 +653,12 @@ export default function Real3DTerrainCatchment({ location }: Props) {
           <span style="color: #ffffff; font-weight: 800; font-size: 12.5px; font-family: system-ui, sans-serif; letter-spacing: 0.1px;">Safe Shelter (Refuge Terrace)</span>
           <span style="color: #a7f3d0; font-weight: 600; font-size: 10px; font-family: system-ui, sans-serif;">${data.primaryShelter.name} (${data.primaryShelter.elevation})</span>
         </div>
-        <div style="position: absolute; bottom: -8px; left: 28px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #064e3b;"></div>
       </div>
-      <div style="position: absolute; left: 0; top: 0; width: 14px; height: 14px; background: #10b981; border: 2.5px solid #ffffff; border-radius: 50%; box-shadow: 0 0 12px #10b981; transform: translate(-7px, -7px); pointer-events: none;"></div>
+      <div style="width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #064e3b; margin-top: -1px;"></div>
+      <div style="width: 14px; height: 14px; background: #10b981; border: 2.5px solid #ffffff; border-radius: 50%; box-shadow: 0 0 12px #10b981; margin-top: -3px; pointer-events: none;"></div>
     `;
 
-    const shelterMarker = new maplibregl.Marker({ element: shelterEl })
+    const shelterMarker = new maplibregl.Marker({ element: shelterEl, anchor: 'bottom' })
       .setLngLat(data.primaryShelter.lngLat)
       .setPopup(
         new maplibregl.Popup({ offset: 25 })
@@ -676,9 +676,9 @@ export default function Real3DTerrainCatchment({ location }: Props) {
 
     // ── 9. CALLOUT BADGE: AFFECTED VILLAGE (HIGH RISK) ──
     const villageEl = document.createElement('div');
-    villageEl.style.cssText = 'position: relative; cursor: pointer;';
+    villageEl.style.cssText = 'display: flex; flex-direction: column; align-items: center; cursor: pointer;';
     villageEl.innerHTML = `
-      <div style="position: relative; display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%); border: 2px solid rgba(255,255,255,0.9); border-radius: 9999px; padding: 5px 14px 5px 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 16px rgba(220,38,38,0.7); white-space: nowrap; transform: translate(-28px, -46px);">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%); border: 2px solid rgba(255,255,255,0.9); border-radius: 9999px; padding: 5px 14px 5px 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 16px rgba(220,38,38,0.7); white-space: nowrap;">
         <div style="width: 32px; height: 32px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.4); flex-shrink: 0;">
           <div style="width: 26px; height: 26px; border-radius: 50%; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-family: system-ui, sans-serif; font-size: 16px; line-height: 1;">
             !
@@ -688,12 +688,12 @@ export default function Real3DTerrainCatchment({ location }: Props) {
           <span style="color: #ffffff; font-weight: 800; font-size: 12.5px; font-family: system-ui, sans-serif; letter-spacing: 0.1px;">Affected Village (High Risk)</span>
           <span style="color: #fca5a5; font-weight: 600; font-size: 10px; font-family: system-ui, sans-serif;">${data.affectedVillage.name} (${data.affectedVillage.elevation})</span>
         </div>
-        <div style="position: absolute; bottom: -8px; left: 28px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #7f1d1d;"></div>
       </div>
-      <div style="position: absolute; left: 0; top: 0; width: 14px; height: 14px; background: #ef4444; border: 2.5px solid #ffffff; border-radius: 50%; box-shadow: 0 0 12px #ef4444; transform: translate(-7px, -7px); pointer-events: none;"></div>
+      <div style="width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #7f1d1d; margin-top: -1px;"></div>
+      <div style="width: 14px; height: 14px; background: #ef4444; border: 2.5px solid #ffffff; border-radius: 50%; box-shadow: 0 0 12px #ef4444; margin-top: -3px; pointer-events: none;"></div>
     `;
 
-    const villageMarker = new maplibregl.Marker({ element: villageEl })
+    const villageMarker = new maplibregl.Marker({ element: villageEl, anchor: 'bottom' })
       .setLngLat(data.affectedVillage.lngLat)
       .setPopup(
         new maplibregl.Popup({ offset: 25 })
