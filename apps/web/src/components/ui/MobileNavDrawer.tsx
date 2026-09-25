@@ -29,7 +29,11 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
   const [expandedHubs, setExpandedHubs] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     APP_HUB_OPTIONS.forEach((h) => {
-      initial[h.id] = true;
+      // Auto-expand only the hub that contains the currently active route
+      const hasActiveChild = h.relatedApps.some(
+        (a) => pathname === a.href || (pathname.startsWith('/village') && a.id === 'village')
+      );
+      initial[h.id] = hasActiveChild;
     });
     return initial;
   });

@@ -466,10 +466,10 @@ export default function MySafetyPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5 text-xs font-mono">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 text-xs font-mono">
               <button
                 onClick={() => setEmergencyMode(!emergencyMode)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-black font-mono flex items-center gap-2 transition transform active:scale-95 shadow-sm ${
+                className={`px-3.5 py-2.5 sm:py-2 rounded-xl text-xs font-black font-mono flex items-center justify-center gap-2 transition transform active:scale-95 shadow-sm ${
                   emergencyMode
                     ? 'bg-red-600 text-white animate-pulse'
                     : 'bg-red-50 hover:bg-red-100 text-red-700 border border-red-300'
@@ -481,7 +481,7 @@ export default function MySafetyPage() {
 
               <button
                 onClick={handleRequestBrowserLocation}
-                className="bg-blue-600 hover:bg-blue-700 px-3.5 py-2 text-white rounded-xl flex items-center gap-2 font-black transition shadow-sm active:scale-95"
+                className="bg-blue-600 hover:bg-blue-700 px-3.5 py-2.5 sm:py-2 text-white rounded-xl flex items-center justify-center gap-2 font-black transition shadow-sm active:scale-95"
               >
                 <MapPin className="w-4 h-4 text-blue-200" />
                 <span>{locationMode === 'BROWSER' ? '📍 GPS: ' + locState : 'My Device GPS'}</span>
@@ -490,45 +490,52 @@ export default function MySafetyPage() {
           </div>
 
           {/* ── FAST REGIONAL DISASTER SCENARIO SWITCHER ── */}
-          <div className="bg-white border border-slate-200 shadow-sm p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 text-xs font-mono">
-            <span className="text-blue-700 font-black flex items-center gap-2">
+          <div className="bg-white border border-slate-200 shadow-sm p-3 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 text-xs font-mono">
+            <span className="text-blue-700 font-black flex items-center gap-2 shrink-0">
               <Waves className="w-4 h-4 text-blue-600" />
-              <span>DISASTER FLOOD RECONSTRUCTION (IF OCCURRING NOW):</span>
+              <span className="hidden sm:inline">DISASTER FLOOD RECONSTRUCTION (IF OCCURRING NOW):</span>
+              <span className="sm:hidden">SCENARIO:</span>
             </span>
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => handleSelectPreset('loc-as-guwahati')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs ${
+                className={`px-3 py-2 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs flex-1 sm:flex-none justify-center ${
                   isAssam
                     ? 'bg-blue-600 text-white font-black shadow-sm'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                 }`}
               >
-                <span>🌊 ASSAM (Brahmaputra Flood)</span>
+                <span>🌊</span>
+                <span className="hidden sm:inline">ASSAM (Brahmaputra Flood)</span>
+                <span className="sm:hidden">ASSAM</span>
                 {isAssam && <span className="w-2 h-2 rounded-full bg-white animate-ping" />}
               </button>
 
               <button
                 onClick={() => handleSelectPreset('loc-uk-chamoli')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs ${
+                className={`px-3 py-2 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs flex-1 sm:flex-none justify-center ${
                   isChamoli
                     ? 'bg-blue-600 text-white font-black shadow-sm'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                 }`}
               >
-                <span>⛰️ UTTARAKHAND (Chamoli GLOF)</span>
+                <span>⛰️</span>
+                <span className="hidden sm:inline">UTTARAKHAND (Chamoli GLOF)</span>
+                <span className="sm:hidden">CHAMOLI</span>
                 {isChamoli && <span className="w-2 h-2 rounded-full bg-white animate-ping" />}
               </button>
 
               <button
                 onClick={() => handleSelectPreset('loc-uk-kedarnath')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs ${
+                className={`px-3 py-2 rounded-xl font-bold transition active:scale-95 flex items-center gap-1.5 shadow-xs flex-1 sm:flex-none justify-center ${
                   isKedarnath
                     ? 'bg-blue-600 text-white font-black shadow-sm'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                 }`}
               >
-                <span>🏔️ KEDARNATH (Mandakini)</span>
+                <span>🏔️</span>
+                <span className="hidden sm:inline">KEDARNATH (Mandakini)</span>
+                <span className="sm:hidden">KEDARNATH</span>
               </button>
             </div>
           </div>
@@ -563,12 +570,35 @@ export default function MySafetyPage() {
           </div>
 
           {/* ── Exposure Level / Emergency Drill Selector ── */}
-          <div className="bg-white border border-slate-200 shadow-sm p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <div className="bg-white border border-slate-200 shadow-sm p-3 rounded-2xl space-y-2 text-xs font-mono">
             <span className="text-slate-700 font-bold flex items-center gap-1.5">
               <Sliders className="w-3.5 h-3.5 text-blue-600" />
-              SIMULATED RISK &amp; FLOOD SCENARIO STAGE:
+              SIMULATED FLOOD STAGE:
             </span>
-            <div className="flex flex-wrap items-center gap-1.5">
+            {/* Mobile: 2×2 grid with shorter labels */}
+            <div className="grid grid-cols-2 gap-1.5 sm:hidden">
+              {exposureLevels.map((lvl, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSimulatedExposureStage(idx)}
+                  className={`px-2 py-2.5 rounded-xl font-black transition active:scale-95 text-[11px] shadow-2xs text-center ${
+                    simulatedExposureStage === idx
+                      ? idx === 0
+                        ? 'bg-emerald-600 text-white shadow-sm'
+                        : idx === 1
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
+                        : idx === 2
+                        ? 'bg-orange-500 text-slate-950 shadow-sm'
+                        : 'bg-red-600 text-white shadow-sm'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
+                  }`}
+                >
+                  {idx === 0 ? '🟢 DRY' : idx === 1 ? '🟡 CAUTION' : idx === 2 ? '🟠 FLOOD' : '🔴 CRITICAL'}
+                </button>
+              ))}
+            </div>
+            {/* Desktop: flex-row with full labels */}
+            <div className="hidden sm:flex flex-wrap items-center gap-1.5">
               {exposureLevels.map((lvl, idx) => (
                 <button
                   key={idx}

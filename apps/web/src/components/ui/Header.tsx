@@ -264,8 +264,8 @@ export const Header: React.FC<{
             </div>
           ) : (
             /* Command & Operator Context Strip */
-            <div className="flex items-center justify-between gap-3 w-full">
-              <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center justify-between gap-3 w-full overflow-hidden">
+              <div className="flex items-center gap-2 shrink-0 min-w-0">
                 {/* Single Location Picker Pill */}
                 <button
                   onClick={() => setLocationModalOpen(true)}
@@ -273,16 +273,16 @@ export const Header: React.FC<{
                   title="Click to switch state/basin or filter geography"
                 >
                   <MapPin className="w-3 h-3 text-blue-200 shrink-0" />
-                  <span className="font-bold">{selectedLocation.name}</span>
+                  <span className="font-bold truncate max-w-[110px] sm:max-w-none">{selectedLocation.name}</span>
                   <span className="text-[9px] text-blue-200">▾</span>
                 </button>
 
-                <span className="text-slate-300">|</span>
-                <span className="text-slate-600 font-medium text-[11px]">
+                <span className="text-slate-300 hidden sm:inline">|</span>
+                <span className="text-slate-600 font-medium text-[11px] hidden sm:inline">
                   State: <strong className="text-blue-800 bg-blue-100/80 px-1.5 py-0.2 rounded border border-blue-200">{selectedLocation.state}</strong>
                 </span>
-                <span className="text-slate-300">•</span>
-                <span className="text-slate-600 font-medium text-[11px] truncate max-w-[280px]">
+                <span className="text-slate-300 hidden sm:inline">•</span>
+                <span className="text-slate-600 font-medium text-[11px] hidden md:inline truncate max-w-[200px]">
                   Region: <strong className="text-indigo-800 bg-indigo-100/80 px-1.5 py-0.2 rounded border border-indigo-200">{selectedLocation.region}</strong>
                 </span>
               </div>
@@ -290,11 +290,12 @@ export const Header: React.FC<{
               {/* Status Badges on the right */}
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 font-mono shadow-2xs">
-                  {dataMode} MODE
+                  {dataMode}
                 </span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1 font-mono shadow-2xs">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                  <span>{systemStatus}</span>
+                  <span className="hidden sm:inline">{systemStatus}</span>
+                  <span className="sm:hidden">OK</span>
                 </span>
               </div>
             </div>

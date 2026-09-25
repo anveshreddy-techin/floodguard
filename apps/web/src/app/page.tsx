@@ -88,8 +88,71 @@ export default function CommandCenterPage() {
         {/* ── MAIN COMMAND HERO AREA ── */}
         <main className="flex-1 relative min-h-0 overflow-hidden flex flex-col">
 
+          {/* ── MOBILE: 2×2 Pillar Grid Card (clean, no scroll) ── */}
+          <div className="sm:hidden bg-white border-b border-slate-200 px-3 pt-2 pb-1.5 shrink-0 shadow-sm z-10 space-y-1.5">
+            {/* Row 1: Location + Risk */}
+            <div className="flex items-center justify-between gap-2">
+              <Link
+                href="/village/loc-uk-chamoli"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold flex-1"
+              >
+                <span>🏘️ Ward:</span>
+                <span className="text-amber-600 font-black">Level 3</span>
+              </Link>
+              <Link
+                href="/safety"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-600 border border-red-500 text-white text-[11px] font-bold animate-pulse flex-1 justify-center"
+              >
+                <span>⏱️ Lead:</span>
+                <span className="font-black">42 Min</span>
+              </Link>
+            </div>
+            {/* Row 2: 4 Physical Pillars */}
+            <div className="grid grid-cols-4 gap-1">
+              <Link href="/weather" className="flex flex-col items-center py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-center">
+                <span className="text-sm">🌧️</span>
+                <span className="text-[9px] font-bold text-blue-800 font-mono">48mm/3h</span>
+                <span className="text-[8px] text-blue-600">Rain</span>
+              </Link>
+              <Link href="/sensors" className="flex flex-col items-center py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-center">
+                <span className="text-sm">🌱</span>
+                <span className="text-[9px] font-bold text-amber-800 font-mono">82%</span>
+                <span className="text-[8px] text-amber-600">Soil</span>
+              </Link>
+              <Link href="/cascade" className="flex flex-col items-center py-1.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-center">
+                <span className="text-sm">⛰️</span>
+                <span className="text-[9px] font-bold text-red-800 font-mono">0.94</span>
+                <span className="text-[8px] text-red-600">Slope</span>
+              </Link>
+              <Link href="/benchmark" className="flex flex-col items-center py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-center">
+                <span className="text-sm">📚</span>
+                <span className="text-[9px] font-bold text-indigo-800 font-mono">18 Ev.</span>
+                <span className="text-[8px] text-indigo-600">History</span>
+              </Link>
+            </div>
+            {/* Row 3: Intelligence Hub + Roles */}
+            <div className="flex items-center gap-2">
+              <Link href="/role-workspace" className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold">
+                <Users className="w-3 h-3 text-indigo-600" />
+                <span>10 Roles</span>
+              </Link>
+              <button
+                onClick={() => setIntelligenceHubOpen(true)}
+                className="flex-1 flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-lg bg-orange-50 border border-orange-300 text-orange-800 text-[11px] font-bold"
+              >
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                  Intel Hub
+                </span>
+                <span className="bg-orange-200/80 px-1.5 py-0.5 rounded text-[10px] font-black text-orange-950">
+                  {selectedLocation?.riskScore || 68.5} {selectedLocation?.riskLevel || 'HIGH'} ➔
+                </span>
+              </button>
+            </div>
+          </div>
+
           {/* Core Prediction Architecture Strip: 4 Physical Pillars + IoT Real-Time + Ward Warnings + Lead Time */}
-          <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-white text-slate-800 border-b border-slate-200 z-10 shrink-0 shadow-sm text-xs overflow-x-auto no-scrollbar gap-2.5 select-none">
+          <div className="hidden sm:flex items-center justify-between px-3 sm:px-4 py-2 bg-white text-slate-800 border-b border-slate-200 z-10 shrink-0 shadow-sm text-xs overflow-x-auto no-scrollbar gap-2.5 select-none">
             
             {/* Left: Core Mission Focus Tagline + Roles + AI Video Trigger */}
             <div className="flex items-center gap-2 shrink-0">

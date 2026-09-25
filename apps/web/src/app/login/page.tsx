@@ -310,38 +310,38 @@ export default function LoginPage() {
               <div className="text-[10px] font-mono text-slate-400 text-center font-bold uppercase">
                 Or Quick 1-Tap Demo Access:
               </div>
-              <div className="grid grid-cols-2 gap-1.5">
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => handleQuickMobileLogin('CITIZEN')}
-                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                  className="min-h-[48px] p-3 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[12px] font-mono text-slate-200 flex items-center justify-center gap-2 transition active:scale-95"
                 >
                   <span>🏠</span>
-                  <span className="truncate">Resident</span>
+                  <span>Resident</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickMobileLogin('DISTRICT_OPERATOR')}
-                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                  className="min-h-[48px] p-3 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[12px] font-mono text-slate-200 flex items-center justify-center gap-2 transition active:scale-95"
                 >
                   <span>🏢</span>
-                  <span className="truncate">District EOC</span>
+                  <span>District EOC</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickMobileLogin('NATIONAL_OPERATOR')}
-                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                  className="min-h-[48px] p-3 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[12px] font-mono text-slate-200 flex items-center justify-center gap-2 transition active:scale-95"
                 >
                   <span>🇮🇳</span>
-                  <span className="truncate">NDMA</span>
+                  <span>NDMA</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickMobileLogin('FIELD_RESPONDER')}
-                  className="p-2 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-mono text-slate-200 text-left flex items-center gap-1.5 transition active:scale-95"
+                  className="min-h-[48px] p-3 rounded-xl bg-[#050d20] hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500/40 text-[12px] font-mono text-slate-200 flex items-center justify-center gap-2 transition active:scale-95"
                 >
                   <span>🚒</span>
-                  <span className="truncate">SDRF Rescue</span>
+                  <span>SDRF Rescue</span>
                 </button>
               </div>
             </div>
@@ -349,7 +349,7 @@ export default function LoginPage() {
         </div>
 
         {/* Mobile Footer */}
-        <div className="py-2 text-center text-[10px] font-mono text-slate-400 flex items-center justify-center gap-2 border-t border-cyan-500/20">
+        <div className="py-3 text-center text-xs font-mono text-slate-400 flex items-center justify-center gap-2 border-t border-cyan-500/20">
           <span>🔒 Gov Auth Protected</span>
           <span>•</span>
           <span>Emergency Helpline: 112</span>
