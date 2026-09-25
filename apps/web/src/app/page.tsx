@@ -137,8 +137,8 @@ export default function CommandCenterPage() {
                 <span>10 Roles</span>
               </Link>
               <button
-                onClick={() => setIntelligenceHubOpen(true)}
-                className="flex-1 flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-lg bg-orange-50 border border-orange-300 text-orange-800 text-[11px] font-bold"
+                onClick={() => setMobileBottomSheetOpen(true)}
+                className="flex-1 flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-lg bg-orange-50 hover:bg-orange-100 border border-orange-300 text-orange-800 text-[11px] font-bold active:scale-95 transition"
               >
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
@@ -342,7 +342,7 @@ export default function CommandCenterPage() {
               onClose={() => setIntelligenceHubOpen(false)}
             />
 
-            {/* ── Mobile Bottom Sheet ── */}
+            {/* ── Mobile Bottom Sheet (Single unified disaster intelligence sheet) ── */}
             <MobileBottomSheet
               score={selectedLocation?.riskScore || 68.5}
               level={selectedLocation?.riskLevel || 'HIGH'}
@@ -353,8 +353,8 @@ export default function CommandCenterPage() {
               onClose={() => setMobileBottomSheetOpen(false)}
             />
 
-            {/* ── Command Timeline Strip (absolute bottom-0, always visible) ── */}
-            <div className="absolute bottom-0 left-0 right-0 z-[600]">
+            {/* ── Command Timeline Strip (desktop only, above map bottom) ── */}
+            <div className="hidden md:block absolute bottom-0 left-0 right-0 z-30">
               <CommandTimeline
                 currentStep={currentStep}
                 onStepChange={(step) => setCurrentStep(step)}
