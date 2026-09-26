@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { LocationProvider } from "@/context/LocationContext";
 import { EnvironmentProvider } from "@/context/EnvironmentContext";
 import { AdaptiveProvider } from "@/context/AdaptiveContext";
+import { ToastProvider } from "@/context/ToastContext";
 import { MobileNavigationWrapper } from "@/components/ui/MobileNavigationWrapper";
 
 export const metadata: Metadata = {
@@ -37,19 +38,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased min-h-screen overflow-x-hidden bg-[#F0F4F8]">
-        <EnvironmentProvider>
-          <AdaptiveProvider>
-            <LocationProvider>
-              {/* Application content */}
-              <div className="min-h-screen flex flex-col pb-16 md:pb-0">
-                {children}
-              </div>
+        <ToastProvider>
+          <EnvironmentProvider>
+            <AdaptiveProvider>
+              <LocationProvider>
+                {/* Application content */}
+                <div className="min-h-screen flex flex-col pb-16 md:pb-0">
+                  {children}
+                </div>
 
-              {/* Mobile Navigation HUD */}
-              <MobileNavigationWrapper />
-            </LocationProvider>
-          </AdaptiveProvider>
-        </EnvironmentProvider>
+                {/* Mobile Navigation HUD */}
+                <MobileNavigationWrapper />
+              </LocationProvider>
+            </AdaptiveProvider>
+          </EnvironmentProvider>
+        </ToastProvider>
       </body>
     </html>
   );

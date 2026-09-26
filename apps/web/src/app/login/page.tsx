@@ -32,6 +32,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { AnimatedRiverScene, FloodStage } from '@/components/ui/login/AnimatedRiverScene';
+import { useToast } from '@/context/ToastContext';
 
 type SceneType = 'HIMALAYAN_MIST' | 'BRAHMAPUTRA_SURGE' | 'RADAR_CYBER';
 
@@ -39,6 +40,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { setPage, setMode } = useEnvironment();
   const { setRole } = useAdaptive();
+  const { showToast } = useToast();
 
   const [selectedRole, setSelectedRole] = useState<UserRole>('DISTRICT_OPERATOR');
   const [username, setUsername] = useState('sih_commander_2026');
@@ -148,13 +150,30 @@ export default function LoginPage() {
   const handleFormLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateEmail(email)) {
+      showToast('Please enter a valid @gmail.com email address', 'error', 'Validation Error');
       return;
     }
     setIsAuthenticating(true);
+    showToast('Verifying official credentials with National Disaster Registry...', 'info', 'Authenticating');
     setTimeout(() => {
       setIsAuthenticating(false);
       setAuthSuccess(true);
       setRole(selectedRole);
+      showToast(`Welcome back, Officer! Role active: ${selectedRole}`, 'success', 'Access Granted');
+      setTimeout(() => {
+        router.push('/');
+      }, 500);
+    }, 600);
+  };
+
+  const handleOAuthLogin = (provider: 'Google' | 'GitHub') => {
+    setIsAuthenticating(true);
+    showToast(`Connecting to ${provider} OAuth 2.0 Identity Provider...`, 'info', 'Single Sign-On');
+    setTimeout(() => {
+      setIsAuthenticating(false);
+      setAuthSuccess(true);
+      setRole('DISTRICT_OPERATOR');
+      showToast(`Signed in via ${provider} OAuth (commander@gmail.com)`, 'success', 'OAuth Session Established');
       setTimeout(() => {
         router.push('/');
       }, 500);
@@ -165,9 +184,11 @@ export default function LoginPage() {
     setSelectedRole(roleName);
     setRole(roleName);
     setIsAuthenticating(true);
+    showToast(`Switching workspace context to ${roleName}...`, 'info', '1-Tap Fast Track');
     setTimeout(() => {
       setIsAuthenticating(false);
       setAuthSuccess(true);
+      showToast(`Signed in as ${roleName}`, 'success', 'Fast Track Demo Active');
       setTimeout(() => {
         router.push('/');
       }, 400);
@@ -304,6 +325,40 @@ export default function LoginPage() {
                 )}
               </button>
             </form>
+
+            {/* OAuth Single Sign-On (Google / GitHub) */}
+            <div className="pt-2 space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="h-px bg-slate-800 flex-1" />
+                <span className="text-[10px] font-mono text-slate-500 uppercase font-bold">Or Social OAuth</span>
+                <div className="h-px bg-slate-800 flex-1" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleOAuthLogin('Google')}
+                  className="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-700 text-xs font-mono text-white flex items-center justify-center gap-2 transition active:scale-95 shadow-sm"
+                >
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z" />
+                    <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z" />
+                    <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2s.7 5.5 1.9 7.9l3.7-2.9c-.3-.7-.5-1.5-.5-2.4z" />
+                    <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 17c1.8 3.7 5.6 6.5 10.1 6.5z" />
+                  </svg>
+                  <span>Google</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOAuthLogin('GitHub')}
+                  className="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-700 text-xs font-mono text-white flex items-center justify-center gap-2 transition active:scale-95 shadow-sm"
+                >
+                  <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
+                  <span>GitHub</span>
+                </button>
+              </div>
+            </div>
 
             {/* Quick 1-Tap Role Bypass */}
             <div className="pt-3 border-t border-cyan-500/20 space-y-2">
@@ -682,6 +737,40 @@ export default function LoginPage() {
                 )}
               </button>
             </form>
+
+            {/* Desktop OAuth Single Sign-On */}
+            <div className="pt-2 space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="h-px bg-slate-800 flex-1" />
+                <span className="text-[10px] font-mono text-slate-500 uppercase font-bold">Or 1-Tap OAuth Login</span>
+                <div className="h-px bg-slate-800 flex-1" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleOAuthLogin('Google')}
+                  className="py-2.5 px-3 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 text-xs font-mono text-white flex items-center justify-center gap-2 transition active:scale-95 shadow-sm"
+                >
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z" />
+                    <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z" />
+                    <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2s.7 5.5 1.9 7.9l3.7-2.9c-.3-.7-.5-1.5-.5-2.4z" />
+                    <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 17c1.8 3.7 5.6 6.5 10.1 6.5z" />
+                  </svg>
+                  <span>Google SSO</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOAuthLogin('GitHub')}
+                  className="py-2.5 px-3 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 text-xs font-mono text-white flex items-center justify-center gap-2 transition active:scale-95 shadow-sm"
+                >
+                  <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
+                  <span>GitHub Auth</span>
+                </button>
+              </div>
+            </div>
 
             <div className="text-center text-[10px] font-mono text-slate-500">
               Demo environment provides automatic credential bypass for evaluators.

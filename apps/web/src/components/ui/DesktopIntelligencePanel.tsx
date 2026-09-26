@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { RiskDial } from './RiskDial';
 import { InteractiveAlertStream } from './InteractiveAlertStream';
 import { WhyRiskChangedPanel } from './WhyRiskChangedPanel';
+import { HydrodynamicInsightsDashboard } from './HydrodynamicInsightsDashboard';
 
 interface DesktopIntelligencePanelProps {
   score?: number;
@@ -38,7 +39,7 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
 
       {/* Slide-in Operations Drawer */}
       <div 
-        className="relative w-full max-w-md h-full bg-white border-l border-slate-200 shadow-2xl p-4 flex flex-col space-y-3 z-10 animate-slide-left font-sans text-slate-800"
+        className="relative w-full max-w-lg h-full bg-white border-l border-slate-200 shadow-2xl p-4 flex flex-col space-y-3 z-10 animate-slide-left font-sans text-slate-800"
       >
         {/* Panel Header */}
         <div className="flex items-center justify-between border-b border-slate-200 pb-3 shrink-0">
@@ -83,6 +84,13 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
               82% RISK ➔
             </span>
           </Link>
+
+          {/* Recharts Hydrodynamic Insights Visualization */}
+          <HydrodynamicInsightsDashboard
+            currentStage={riverStage}
+            rainfall={rainfall}
+            soilPercent={82}
+          />
 
           {/* Risk Dial Gauge */}
           <RiskDial

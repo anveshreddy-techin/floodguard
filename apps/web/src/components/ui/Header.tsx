@@ -10,9 +10,13 @@ import { useAdaptive, UserRole } from '@/context/AdaptiveContext';
 import { LANGUAGES, SupportedLanguage } from '@/data/i18n';
 import {
   Search, Globe, Menu, Bot, UserCheck, ShieldAlert,
-  MapPin, PhoneCall, Compass
+  MapPin, PhoneCall, Compass, BarChart3, Sparkles
 } from 'lucide-react';
 import { LocationSelectorModal } from '@/components/ui/LocationSelectorModal';
+import { ProductOnboardingTour } from '@/components/ui/ProductOnboardingTour';
+import { TelemetryMetricsModal } from '@/components/ui/TelemetryMetricsModal';
+import { useToast } from '@/context/ToastContext';
+import { trackEvent } from '@/lib/analytics';
 
 export const Header: React.FC<{
   dataMode?: string;
@@ -213,6 +217,36 @@ export const Header: React.FC<{
               </select>
             </div>
 
+            {/* Onboarding Tour / Judge Guide Button */}
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  trackEvent('Opened Onboarding Tour');
+                  window.dispatchEvent(new CustomEvent('open-onboarding-tour'));
+                }
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-cyan-950/70 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold transition active:scale-95 shadow-xs"
+              title="Launch 30-Second Animated Product Tour for Judges"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="hidden lg:inline">Tour Guide</span>
+            </button>
+
+            {/* Platform Impact & Analytics Telemetry Button */}
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  trackEvent('Opened Platform Telemetry');
+                  window.dispatchEvent(new CustomEvent('open-telemetry-metrics'));
+                }
+              }}
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-purple-950/70 hover:bg-purple-900 border border-purple-500/40 text-purple-300 text-xs font-mono font-bold transition active:scale-95 shadow-xs"
+              title="View Live Platform Analytics & Impact Metrics"
+            >
+              <BarChart3 className="w-3.5 h-3.5 text-purple-400" />
+              <span className="hidden xl:inline">Impact</span>
+            </button>
+
             {/* Search (Ctrl+K) */}
             <button
               onClick={() => setCommandPaletteOpen(true)}
@@ -296,6 +330,8 @@ export const Header: React.FC<{
       <MobileNavDrawer isOpen={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)} />
       <MobileConfigDrawer isOpen={mobileConfigOpen} onClose={() => setMobileConfigOpen(false)} />
       <LocationSelectorModal isOpen={locationModalOpen} onClose={() => setLocationModalOpen(false)} />
+      <ProductOnboardingTour />
+      <TelemetryMetricsModal />
     </>
   );
 };
