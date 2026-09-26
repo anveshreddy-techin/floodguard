@@ -100,6 +100,22 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
     getRealRiverWaterways(location.id, location.lat, location.lon).then(setOsmWaterways);
   }, [location.id, location.lat, location.lon]);
 
+  // Synchronize external activeLayerFilter (from LiveRiskMap top bar) to internal GIS layers
+  useEffect(() => {
+    if (!activeLayerFilter) return;
+    if (activeLayerFilter === 'RISK') {
+      setLayers({ floodZone: true, evacuationRoute: true, sensors: true, slopeHazards: true, isochrones: false, riverVector: true });
+    } else if (activeLayerFilter === 'RAINFALL') {
+      setLayers({ floodZone: true, evacuationRoute: false, sensors: true, slopeHazards: false, isochrones: false, riverVector: true });
+    } else if (activeLayerFilter === 'SOIL' || activeLayerFilter === 'TERRAIN') {
+      setLayers({ floodZone: false, evacuationRoute: false, sensors: true, slopeHazards: true, isochrones: false, riverVector: true });
+    } else if (activeLayerFilter === 'RIVER') {
+      setLayers({ floodZone: false, evacuationRoute: false, sensors: false, slopeHazards: false, isochrones: false, riverVector: true });
+    } else if (activeLayerFilter === 'EXPOSURE') {
+      setLayers({ floodZone: true, evacuationRoute: true, sensors: false, slopeHazards: false, isochrones: true, riverVector: true });
+    }
+  }, [activeLayerFilter]);
+
   // Location-specific ground-truth flags
   const isRaini = location.id === 'loc-uk-chamoli' || location.name.toLowerCase().includes('raini');
   const isKedarnath = location.id === 'loc-uk-kedarnath' || location.name.toLowerCase().includes('kedarnath');
@@ -1343,9 +1359,13 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
       )}
 
       {/* ── UNIFIED LEFT-SIDE INFORMATION PANEL (ALL INFORMATION NEATLY ON THE LEFT) ── */}
-      <div className="absolute top-2.5 left-3 z-[450] flex flex-col pointer-events-none">
+      <div className={`absolute left-3 z-[450] flex flex-col pointer-events-none transition-all duration-300 ${
+        showControlBar ? 'top-2.5' : 'top-2.5 md:top-14'
+      }`}>
         {hudExpanded ? (
-          <div className="pointer-events-auto w-80 lg:w-[360px] max-h-[calc(100vh-170px)] bg-white/95 border border-slate-200 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 animate-fade-in">
+          <div className={`pointer-events-auto w-80 lg:w-[360px] bg-white/95 border border-slate-200 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 animate-fade-in ${
+            showControlBar ? 'max-h-[calc(100vh-170px)]' : 'max-h-[calc(100vh-220px)]'
+          }`}>
             {/* Panel Header */}
             <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
               <div className="flex items-center gap-2 min-w-0">

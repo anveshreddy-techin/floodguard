@@ -177,7 +177,7 @@ export const LiveRiskMap: React.FC<LiveRiskMapProps> = ({
     <div className={`relative w-full h-full bg-[#F0F4F8] overflow-hidden select-none flex flex-col justify-between transition-opacity duration-700 ${mapLoaded ? 'opacity-100' : 'opacity-0'}`}>
       
       {/* Top Floating Map Controls */}
-      <div className="absolute top-2.5 left-3 right-3 z-20 hidden md:flex items-center justify-between gap-2 pointer-events-none">
+      <div className="absolute top-2.5 left-3 right-3 z-30 hidden md:flex items-center justify-between gap-2 pointer-events-none">
         {/* Layer Selector */}
         <div className="pointer-events-auto bg-white/95 backdrop-blur-md rounded-xl p-1 flex items-center gap-1 shadow-md border border-slate-200 overflow-x-auto no-scrollbar max-w-[calc(100%-100px)] sm:max-w-none">
           {(['RISK', 'RAINFALL', 'SOIL', 'TERRAIN', 'RIVER', 'EXPOSURE'] as MapLayerType[]).map((layer) => (
