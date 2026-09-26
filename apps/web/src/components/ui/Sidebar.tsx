@@ -5,8 +5,11 @@ import Link from 'next/link';
 import { 
   ShieldAlert, Map, Layers, History, Activity, Database, 
   UploadCloud, Compass, BarChart3, ChevronLeft, ChevronRight, ChevronDown,
-  ShieldCheck, Globe, Brain, Users, Waves, CloudRain, AlertTriangle, LucideIcon
+  ShieldCheck, Globe, Brain, Users, Waves, CloudRain, AlertTriangle, LucideIcon,
+  Lock, Eye
 } from 'lucide-react';
+import { useAdaptive } from '@/context/AdaptiveContext';
+import { isHubAllowed, isAppAllowed, getRolePermissions } from '@/lib/rolePermissions';
 
 export interface SubApp {
   id: string;
@@ -183,6 +186,17 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const { role } = useAdaptive();
+  const [viewAll, setViewAll] = useState(false);
+  const perms = getRolePermissions(role);
+
+  // Filter hubs and apps based on role permissions
+  const visibleHubs = APP_HUB_OPTIONS
+    .map((hub) => ({
+      ...hub,
+      relatedApps: hub.relatedApps.filter((app) => isAppAllowed(role, app.id, viewAll)),
+    }))
+    .filter((hub) => isHubAllowed(role, hub.id, viewAll) && hub.relatedApps.length > 0);
 
   const [expandedHubs, setExpandedHubs] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -199,6 +213,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
     }));
   };
 
+
   return (
     <aside
       className={`hidden md:flex flex-col justify-between transition-all duration-300 select-none z-30 shrink-0 bg-[#F8FAFC] border-r border-slate-200 shadow-[1px_0_6px_rgba(0,0,0,0.03)] h-full ${
@@ -208,10 +223,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
       {/* ── Top Bar with Section Title & Collapse Toggle ── */}
       <div className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between shrink-0 bg-white shadow-2xs">
         {!collapsed && (
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-blue-600" />
-            <span className="text-[11px] font-mono font-black tracking-wider text-slate-700 uppercase">
-              DISASTER HUBS
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />
+            <span className="text-[11px] font-mono font-black tracking-wider text-slate-700 uppercase truncate">
+              {perms.citizenMode ? 'MY SAFETY TOOLS' : 'DISASTER HUBS'}
             </span>
           </div>
         )}
@@ -227,7 +242,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
       {/* ── Scrollable Application Hubs Container ── */}
       <div className="p-2.5 space-y-2.5 overflow-y-auto flex-1 min-h-0 custom-sidebar-scroll">
-        {APP_HUB_OPTIONS.map((hub) => {
+        {visibleHubs.map((hub) => {
           const HubIcon = hub.icon;
           const isHubExpanded = !!expandedHubs[hub.id];
           const hasActiveChild = hub.relatedApps.some(
@@ -344,14 +359,35 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
 
       {/* ── Footer ── */}
       {!collapsed && (
-        <div className="p-3 border-t border-slate-200 bg-white text-xs font-sans flex items-center justify-between shadow-2xs shrink-0">
-          <span className="font-bold text-blue-700 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-            SIH26192 • Theme 4
-          </span>
-          <span className="text-emerald-700 font-black bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px]">
-            5 Unified Hubs
-          </span>
+        <div className="p-2.5 border-t border-slate-200 bg-white shrink-0 space-y-2">
+          {/* Role badge */}
+          <div className="flex items-center gap-1.5 px-1">
+            <span className="text-base leading-none">{perms.emoji}</span>
+            <div className="min-w-0">
+              <div className="text-[10px] font-black text-slate-700 truncate">{perms.label}</div>
+              <div className="text-[9px] text-slate-400 font-medium">Access Level {perms.accessLevel} / 6</div>
+            </div>
+          </div>
+          {/* View All / Restrict toggle */}
+          <button
+            onClick={() => setViewAll(!viewAll)}
+            className={`w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-[10px] font-black border transition ${
+              viewAll
+                ? 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
+                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+            }`}
+          >
+            {viewAll ? (
+              <><Lock className="w-3 h-3" /> RESTRICT TO MY ROLE</>
+            ) : (
+              <><Eye className="w-3 h-3" /> EXPLORE ALL HUBS</>
+            )}
+          </button>
+          {viewAll && (
+            <p className="text-[9px] text-amber-700 font-medium text-center px-1">
+              Explore mode — showing all hubs
+            </p>
+          )}
         </div>
       )}
     </aside>

@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, ChevronDown } from 'lucide-react';
+import { X, ChevronDown, Eye, Lock } from 'lucide-react';
 import { APP_HUB_OPTIONS } from '@/components/ui/Sidebar';
+import { useAdaptive } from '@/context/AdaptiveContext';
+import { isHubAllowed, isAppAllowed, getRolePermissions } from '@/lib/rolePermissions';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -13,6 +15,17 @@ interface MobileNavDrawerProps {
 
 export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
+  const { role } = useAdaptive();
+  const [viewAll, setViewAll] = useState(false);
+  const perms = getRolePermissions(role);
+
+  // Filter hubs and apps based on role permissions
+  const visibleHubs = APP_HUB_OPTIONS
+    .map((hub) => ({
+      ...hub,
+      relatedApps: hub.relatedApps.filter((app) => isAppAllowed(role, app.id, viewAll)),
+    }))
+    .filter((hub) => isHubAllowed(role, hub.id, viewAll) && hub.relatedApps.length > 0);
 
   // Prevent background body scroll when drawer is open
   useEffect(() => {
@@ -83,7 +96,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
         {/* Application Hubs Scroll Area */}
         <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/50">
-          {APP_HUB_OPTIONS.map((hub) => {
+          {visibleHubs.map((hub) => {
             const HubIcon = hub.icon;
             const isExpanded = !!expandedHubs[hub.id];
             const hasActiveChild = hub.relatedApps.some(
@@ -169,9 +182,35 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
         </div>
 
         {/* Footer info */}
-        <div className="p-3 border-t border-slate-200 bg-white text-xs font-sans flex items-center justify-between">
-          <span className="font-semibold text-blue-700">SIH26192 • Theme 4</span>
-          <span className="text-emerald-700 font-semibold">5 Unified Hubs</span>
+        <div className="p-3 border-t border-slate-200 bg-white space-y-2 shrink-0">
+          {/* Role badge */}
+          <div className="flex items-center gap-2">
+            <span className="text-lg leading-none">{perms.emoji}</span>
+            <div className="min-w-0">
+              <div className="text-xs font-black text-slate-800 truncate">{perms.label}</div>
+              <div className="text-[10px] text-slate-400 font-medium">Access Level {perms.accessLevel} / 6</div>
+            </div>
+          </div>
+          {/* View All toggle */}
+          <button
+            onClick={() => setViewAll(!viewAll)}
+            className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-black border transition ${
+              viewAll
+                ? 'bg-amber-50 text-amber-800 border-amber-300'
+                : 'bg-slate-50 text-slate-600 border-slate-200'
+            }`}
+          >
+            {viewAll ? (
+              <><Lock className="w-3.5 h-3.5" /> Restrict to My Role</>
+            ) : (
+              <><Eye className="w-3.5 h-3.5" /> Explore All Hubs</>
+            )}
+          </button>
+          {viewAll && (
+            <p className="text-[10px] text-amber-700 font-medium text-center">
+              Explore mode — showing all hubs
+            </p>
+          )}
         </div>
       </div>
     </div>

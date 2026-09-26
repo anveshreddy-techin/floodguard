@@ -9,9 +9,11 @@ import { CommandTimeline } from '@/components/ui/CommandTimeline';
 import { CopilotDrawer } from '@/components/ui/CopilotDrawer';
 import { MobileBottomSheet } from '@/components/ui/MobileBottomSheet';
 import { DesktopIntelligencePanel } from '@/components/ui/DesktopIntelligencePanel';
+import { CitizenHomeView } from '@/components/ui/CitizenHomeView';
 import { useLocation } from '@/context/LocationContext';
 import { useEnvironment } from '@/context/EnvironmentContext';
 import { useAdaptive } from '@/context/AdaptiveContext';
+import { getRolePermissions } from '@/lib/rolePermissions';
 import { 
   Bot, 
   Layers, 
@@ -38,7 +40,9 @@ export default function CommandCenterPage() {
   const router = useRouter();
   const { selectedLocation, setSelectedLocation } = useLocation();
   const { setPage, setMode, setRiskState, setRainfallMm, setRiverStage } = useEnvironment();
-  const { isCitizen, t } = useAdaptive();
+  const { isCitizen, t, role } = useAdaptive();
+  const perms = getRolePermissions(role);
+  const [viewAll, setViewAll] = useState(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState('NOW');
@@ -75,6 +79,22 @@ export default function CommandCenterPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [router]);
+
+  // ── Citizen / Public Viewer mode ──────────────────────────────────────────
+  // Show simplified safety dashboard instead of command center
+  const showCitizenView = perms.citizenMode && !viewAll;
+
+  if (showCitizenView) {
+    return (
+      <div className="flex flex-col h-screen overflow-hidden select-none bg-[#F0F4F8]">
+        <Header dataMode="DEMO" systemStatus="OPERATIONAL" />
+        <div className="flex flex-1 min-h-0 relative">
+          <Sidebar activeTab="safety" />
+          <CitizenHomeView onViewAll={() => setViewAll(true)} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen overflow-hidden select-none bg-[#F0F4F8]">
