@@ -281,8 +281,8 @@ export const PipelineVisualizer: React.FC<{
       </div>
 
       {/* ── INTERACTIVE HORIZONTAL STEPPER (9 STAGES) ── */}
-      <div className="p-3 bg-slate-100/60 border-b border-slate-200 overflow-x-auto">
-        <div className="flex items-center min-w-[820px] gap-1">
+      <div className="p-2 sm:p-3 bg-slate-100/60 border-b border-slate-200 overflow-x-auto touch-pan-x">
+        <div className="flex items-center min-w-[780px] sm:min-w-[820px] gap-1">
           {PIPELINE_STAGES.map((s, idx) => {
             const Icon = s.icon;
             const isSelected = activeStage === idx;

@@ -130,11 +130,11 @@ export default function PublicContactPage() {
                 <MapPin className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
                 <span>{eoc.state}</span>
               </div>
-              <div className="flex justify-between text-slate-600 font-mono text-[11px]">
+              <div className="flex flex-wrap justify-between gap-1 text-slate-600 font-mono text-[11px]">
                 <span>Telephone:</span>
                 <span className="font-bold text-slate-900">{eoc.phone}</span>
               </div>
-              <div className="flex justify-between text-slate-600 text-[11px]">
+              <div className="flex flex-wrap justify-between gap-1 text-slate-600 text-[11px] break-all">
                 <span>Email:</span>
                 <span className="text-blue-700">{eoc.email}</span>
               </div>

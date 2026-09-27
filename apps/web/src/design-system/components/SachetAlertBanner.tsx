@@ -189,42 +189,42 @@ export const SachetAlertBanner: React.FC<SachetAlertProps> = ({
         )}
 
         {/* ── ACTIONS BAR ── */}
-        <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 text-xs">
-          <div className="flex items-center gap-2">
+        <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-t border-slate-100 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold transition active:scale-95 cursor-pointer"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold transition active:scale-95 cursor-pointer text-xs"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copied ? 'Copied Alert Text' : 'Copy Bilingual Warning'}</span>
+              <span>{copied ? 'Copied!' : 'Copy Warning'}</span>
             </button>
 
             <a
               href="/api/v1/alerts/cap.xml"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-blue-300 hover:bg-blue-50 text-blue-800 font-semibold transition active:scale-95"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded border border-blue-300 hover:bg-blue-50 text-blue-800 font-semibold transition active:scale-95 text-xs"
             >
               <FileCode className="w-3.5 h-3.5 text-blue-700" />
-              <span>OASIS CAP v1.2 XML Feed</span>
+              <span>CAP v1.2 XML</span>
               <ExternalLink className="w-3 h-3 text-blue-600" />
             </a>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between sm:justify-end gap-3 pt-1 sm:pt-0">
             <button
               type="button"
               onClick={() => setExpanded(!expanded)}
               className="text-slate-600 hover:text-slate-900 font-semibold text-xs flex items-center gap-1 cursor-pointer"
             >
-              <span>{expanded ? 'Hide CAP Details' : 'View CAP Attributes'}</span>
+              <span>{expanded ? 'Hide Details' : 'CAP Details'}</span>
               {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
 
             <Link
               href="/portal/shelters"
-              className="bg-red-700 hover:bg-red-800 text-white font-bold px-3.5 py-1.5 rounded transition shadow-xs flex items-center gap-1.5"
+              className="bg-red-700 hover:bg-red-800 text-white font-bold px-3.5 py-1.5 rounded transition shadow-xs flex items-center gap-1.5 text-xs"
             >
               <ShieldAlert className="w-3.5 h-3.5" />
               <span>Evacuate to Shelter</span>

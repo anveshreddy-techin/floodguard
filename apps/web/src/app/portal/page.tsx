@@ -202,8 +202,8 @@ export default function PublicPortalDashboardPage() {
 
   return (
     <div className="flex flex-col lg:flex-row w-full min-h-[calc(100vh-130px)] bg-[#f0f3f7] select-none text-slate-900 font-sans">
-      {/* ── LEFT SIDEBAR ── */}
-      <aside className="w-full lg:w-64 bg-white border-r border-slate-200 shrink-0 p-3 space-y-5 shadow-xs">
+      {/* ── LEFT SIDEBAR (desktop only — lg+) ── */}
+      <aside className="hidden lg:block lg:w-64 bg-white border-r border-slate-200 shrink-0 p-3 space-y-5 shadow-xs">
         {/* SECTION 1: MAIN MENU */}
         <div>
           <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 px-2.5 mb-1.5">
@@ -332,8 +332,70 @@ export default function PublicPortalDashboardPage() {
         </div>
       </aside>
 
+      {/* ── MOBILE NAV STRIP (hidden on lg+) ── */}
+      <div className="lg:hidden bg-white border-b border-slate-200 shadow-xs">
+        {/* Quick-action row */}
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-100">
+          <button
+            type="button"
+            onClick={() => setModalEarlyWarningOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-blue-700 text-white text-[11px] font-bold shadow-xs shrink-0"
+          >
+            <Send className="w-3 h-3" />
+            <span>Send Warning</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setModalBroadcastOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-red-600 text-white text-[11px] font-bold shadow-xs shrink-0"
+          >
+            <Volume2 className="w-3 h-3" />
+            <span>Broadcast</span>
+          </button>
+          <a
+            href="tel:112"
+            className="ml-auto flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-red-100 text-red-800 text-[11px] font-black border border-red-300 shrink-0"
+          >
+            <PhoneCall className="w-3 h-3" />
+            <span>DIAL 112</span>
+          </a>
+        </div>
+        {/* Horizontally scrollable menu pills */}
+        <div className="overflow-x-auto flex items-center gap-1.5 px-3 py-2 no-scrollbar">
+          {[
+            { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/portal' },
+            { id: 'monitoring', label: 'Live Monitor', icon: Activity, href: '/portal/weather' },
+            { id: 'risk', label: 'Risk', icon: ShieldAlert, href: '/portal/alerts' },
+            { id: 'warnings', label: 'Warnings', icon: AlertTriangle, href: '/portal/alerts' },
+            { id: 'evac', label: 'Shelters', icon: Users, href: '/portal/shelters' },
+            { id: 'iot', label: 'IoT Network', icon: Radio, href: '/sensors' },
+            { id: 'history', label: 'History', icon: Clock, href: '/incidents' },
+            { id: 'reports', label: 'Reports', icon: FileText, href: '/portal/documents' },
+          ].map((item) => {
+            const Icon = item.icon;
+            const isActive = activeMenu === item.id;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                onClick={() => setActiveMenu(item.id)}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap shrink-0 border transition ${
+                  isActive
+                    ? 'bg-blue-700 text-white border-blue-700 shadow-xs'
+                    : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+                }`}
+              >
+                <Icon className="w-3 h-3 shrink-0" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ── MAIN CONTENT AREA ── */}
-      <div className="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto">
+      <div className="flex-1 p-3 sm:p-5 space-y-4 overflow-y-auto">
+
         {/* Success / Feedback Toast Banner */}
         {actionSuccessMsg && (
           <div className="bg-emerald-50 border border-emerald-300 rounded-xl p-3 flex items-center justify-between shadow-xs animate-fade-in">
@@ -351,15 +413,15 @@ export default function PublicPortalDashboardPage() {
         )}
 
         {/* ── GOV DESK VIEW TABS ── */}
-        <div className="bg-white border border-slate-200 rounded-xl p-1.5 flex flex-wrap items-center justify-between gap-2 shadow-xs">
-          <div className="flex items-center gap-1.5 text-xs flex-wrap">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 px-2">
+        <div className="bg-white border border-slate-200 rounded-xl p-1.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 shadow-xs">
+          <div className="flex items-center gap-1.5 text-xs overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 px-2 shrink-0">
               Gov Desk Views:
             </span>
             <button
               type="button"
               onClick={() => setPortalView('ALL')}
-              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer whitespace-nowrap shrink-0 ${
                 portalView === 'ALL'
                   ? 'bg-[#1b3a63] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
@@ -370,7 +432,7 @@ export default function PublicPortalDashboardPage() {
             <button
               type="button"
               onClick={() => setPortalView('DATA_FLOW')}
-              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer whitespace-nowrap shrink-0 ${
                 portalView === 'DATA_FLOW'
                   ? 'bg-[#1b3a63] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
@@ -381,7 +443,7 @@ export default function PublicPortalDashboardPage() {
             <button
               type="button"
               onClick={() => setPortalView('PIPELINE')}
-              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer whitespace-nowrap shrink-0 ${
                 portalView === 'PIPELINE'
                   ? 'bg-[#1b3a63] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
@@ -392,7 +454,7 @@ export default function PublicPortalDashboardPage() {
             <button
               type="button"
               onClick={() => setPortalView('OPERATIONS')}
-              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer whitespace-nowrap shrink-0 ${
                 portalView === 'OPERATIONS'
                   ? 'bg-[#1b3a63] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
@@ -403,7 +465,7 @@ export default function PublicPortalDashboardPage() {
             <button
               type="button"
               onClick={() => setPortalView('OVERVIEW')}
-              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg font-bold text-xs transition cursor-pointer whitespace-nowrap shrink-0 ${
                 portalView === 'OVERVIEW'
                   ? 'bg-[#1b3a63] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'

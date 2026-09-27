@@ -22,18 +22,23 @@ export const PublicFooter: React.FC = () => {
             <span>24x7 National & State Emergency Helpline Numbers</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 font-mono text-[11px]">
-            <span className="text-slate-400">National Emergency:</span>
-            <a href="tel:112" className="text-red-400 font-bold hover:underline">112</a>
-            <span className="text-slate-600">|</span>
-            <span className="text-slate-400">State EOC:</span>
-            <a href="tel:1070" className="text-amber-300 font-bold hover:underline">1070</a>
-            <span className="text-slate-600">|</span>
-            <span className="text-slate-400">District EOC:</span>
-            <a href="tel:1077" className="text-amber-300 font-bold hover:underline">1077</a>
-            <span className="text-slate-600">|</span>
-            <span className="text-slate-400">NDRF Control Room:</span>
-            <a href="tel:01124363260" className="text-cyan-300 font-bold hover:underline">011-24363260</a>
+          <div className="flex flex-wrap items-center gap-2 font-mono text-[11px]">
+            <div className="bg-slate-900/90 px-2 py-1 rounded border border-slate-700/60 flex items-center gap-1.5">
+              <span className="text-slate-400">National:</span>
+              <a href="tel:112" className="text-red-400 font-bold hover:underline">112</a>
+            </div>
+            <div className="bg-slate-900/90 px-2 py-1 rounded border border-slate-700/60 flex items-center gap-1.5">
+              <span className="text-slate-400">State EOC:</span>
+              <a href="tel:1070" className="text-amber-300 font-bold hover:underline">1070</a>
+            </div>
+            <div className="bg-slate-900/90 px-2 py-1 rounded border border-slate-700/60 flex items-center gap-1.5">
+              <span className="text-slate-400">District EOC:</span>
+              <a href="tel:1077" className="text-amber-300 font-bold hover:underline">1077</a>
+            </div>
+            <div className="bg-slate-900/90 px-2 py-1 rounded border border-slate-700/60 flex items-center gap-1.5">
+              <span className="text-slate-400">NDRF:</span>
+              <a href="tel:01124363260" className="text-cyan-300 font-bold hover:underline">011-24363260</a>
+            </div>
           </div>
         </div>
       </div>

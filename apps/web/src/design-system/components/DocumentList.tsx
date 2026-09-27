@@ -109,13 +109,13 @@ export const DocumentList: React.FC = () => {
     <div className="space-y-4">
       {/* Search & Category Filter Toolbar */}
       <div className="bg-white border border-slate-300 rounded p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
           {categories.map((cat) => (
             <button
               key={cat.key}
               type="button"
               onClick={() => setSelectedCategory(cat.key)}
-              className={`px-3 py-1.5 rounded-lg font-semibold font-sans transition ${
+              className={`px-3 py-1.5 rounded-lg font-semibold font-sans transition whitespace-nowrap shrink-0 ${
                 selectedCategory === cat.key
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
