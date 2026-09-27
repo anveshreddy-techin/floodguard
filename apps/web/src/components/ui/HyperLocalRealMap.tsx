@@ -42,6 +42,19 @@ import {
   type WaterwayFeature,
   type CandidateShelter,
 } from '@/services/gisService';
+import { 
+  CANONICAL_SCENARIO, 
+  CANONICAL_MAP_OBJECTS, 
+  CANONICAL_EVACUATION_ROUTE,
+  CANONICAL_HAZARD_POLYGONS, 
+  CANONICAL_RIVER_VECTORS, 
+  HAZARD_COLORS,
+  RISK_EVIDENCE_CARDS,
+  RISK_OUTPUT_SUMMARY, 
+  MAP_SUMMARY_CARDS, 
+  EVACUATION_PLANNING_PANEL,
+  validateScenarioFeature
+} from '@/data/canonicalScenario';
 
 export type BaseMapTileType = 'SATELLITE' | 'TOPO' | 'DARK' | 'STREET';
 
@@ -93,6 +106,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
   const [selectedEntity, setSelectedEntity] = useState<any>(null);
   const [hudExpanded, setHudExpanded] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [evidenceOpen, setEvidenceOpen] = useState(false);
 
   // Async OSM waterway fetch state (pre-packaged for Chamoli/Guwahati/Kedarnath/Kullu, live Overpass for others)
   const [osmWaterways, setOsmWaterways] = useState<WaterwayFeature[]>([]);
