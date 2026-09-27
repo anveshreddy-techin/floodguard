@@ -105,7 +105,7 @@ export const Header: React.FC<{
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Demo
+                {t('Demo')}
               </button>
               <button
                 onClick={() => setOperatingMode('REAL_PILOT')}
@@ -115,7 +115,7 @@ export const Header: React.FC<{
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Live Pilot
+                {t('Live Pilot')}
               </button>
             </div>
           </div>
@@ -138,7 +138,7 @@ export const Header: React.FC<{
               <PhoneCall className="w-3.5 h-3.5 text-white animate-bounce shrink-0" />
               <span className="tracking-wide font-black">SOS 112</span>
               <span className="hidden md:inline-block px-1.5 py-0.2 text-[10px] bg-red-950/70 rounded-md text-red-200 border border-red-400/30 font-bold">
-                Rescue
+                {t('Rescue')}
               </span>
             </button>
           </div>
@@ -167,7 +167,7 @@ export const Header: React.FC<{
               title="Switch to Government-Style Public Information Portal"
             >
               <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-[11px] font-sans font-bold">Portal</span>
+              <span className="text-[11px] font-sans font-bold">{t('Portal')}</span>
             </Link>
 
             {/* AI Assistant Button (desktop only — mobile has floating GlobalAiAssistant) */}
@@ -182,7 +182,7 @@ export const Header: React.FC<{
               title="Open Grounded AI Disaster Copilot"
             >
               <Bot className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-              <span>AI Copilot</span>
+              <span>{t('AI Copilot')}</span>
             </button>
 
             {/* Desktop Role Selector Dropdown */}
@@ -195,7 +195,7 @@ export const Header: React.FC<{
               >
                 {ROLES_LIST.map((r) => (
                   <option key={r.id} value={r.id} className="bg-slate-900 text-white font-medium">
-                    {r.iconBadge} {r.label}
+                    {r.iconBadge} {t(r.label)}
                   </option>
                 ))}
               </select>
@@ -229,7 +229,7 @@ export const Header: React.FC<{
               title="Launch 30-Second Animated Product Tour for Judges"
             >
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden lg:inline">Tour Guide</span>
+              <span className="hidden lg:inline">{t('Tour Guide')}</span>
             </button>
 
             {/* Platform Impact & Analytics Telemetry Button */}
@@ -244,7 +244,7 @@ export const Header: React.FC<{
               title="View Live Platform Analytics & Impact Metrics"
             >
               <BarChart3 className="w-3.5 h-3.5 text-purple-400" />
-              <span className="hidden xl:inline">Impact</span>
+              <span className="hidden xl:inline">{t('Impact')}</span>
             </button>
 
             {/* Search (Ctrl+K) */}
@@ -271,11 +271,11 @@ export const Header: React.FC<{
                 <MapPin className="w-3 h-3 text-white animate-pulse" />
                 <span>{hierarchy.district || hierarchy.state || selectedLocation?.name}</span>
                 <span className="text-[9px] px-1 py-0.2 rounded bg-blue-800 text-white font-mono font-bold">
-                  GPS ▾
+                  {t('GPS')} ▾
                 </span>
               </button>
               <span className="px-2.5 py-0.5 rounded-lg bg-red-100 text-red-800 border border-red-300 text-[11px] font-bold shrink-0">
-                Risk: {selectedLocation.riskLevel} ({selectedLocation.riskScore}/100)
+                {t('Risk')}: {t(selectedLocation.riskLevel)} ({selectedLocation.riskScore}/100)
               </span>
               <Link
                 href="/safety"
@@ -296,16 +296,16 @@ export const Header: React.FC<{
                 >
                   <MapPin className="w-3 h-3 text-blue-200 shrink-0" />
                   <span className="font-bold truncate max-w-[130px] sm:max-w-none">{selectedLocation.name}</span>
-                  <span className="text-[9px] text-blue-200 font-semibold">Sector ▾</span>
+                  <span className="text-[9px] text-blue-200 font-semibold">{t('Sector')} ▾</span>
                 </button>
 
                 <span className="text-slate-300 hidden sm:inline">|</span>
                 <span className="text-slate-600 font-medium text-[11px] hidden sm:inline">
-                  State: <strong className="text-blue-800 bg-blue-100/80 px-1.5 py-0.2 rounded border border-blue-200">{selectedLocation.state}</strong>
+                  {t('State')}: <strong className="text-blue-800 bg-blue-100/80 px-1.5 py-0.2 rounded border border-blue-200">{selectedLocation.state}</strong>
                 </span>
                 <span className="text-slate-300 hidden sm:inline">•</span>
                 <span className="text-slate-600 font-medium text-[11px] hidden md:inline truncate max-w-[200px]">
-                  Region: <strong className="text-indigo-800 bg-indigo-100/80 px-1.5 py-0.2 rounded border border-indigo-200">{selectedLocation.region}</strong>
+                  {t('Region')}: <strong className="text-indigo-800 bg-indigo-100/80 px-1.5 py-0.2 rounded border border-indigo-200">{selectedLocation.region}</strong>
                 </span>
               </div>
 
@@ -313,11 +313,11 @@ export const Header: React.FC<{
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-300 font-mono shadow-xs flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>{dataMode} MODE</span>
+                  <span>{dataMode === 'DEMO' ? t('Demo') : t('Live Pilot')} MODE</span>
                 </span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 flex items-center gap-1 font-mono shadow-xs">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                  <span>LIVE</span>
+                  <span>{t('LIVE')}</span>
                 </span>
               </div>
             </div>

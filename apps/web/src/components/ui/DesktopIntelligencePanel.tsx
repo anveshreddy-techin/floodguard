@@ -7,6 +7,7 @@ import { RiskDial } from './RiskDial';
 import { InteractiveAlertStream } from './InteractiveAlertStream';
 import { WhyRiskChangedPanel } from './WhyRiskChangedPanel';
 import { HydrodynamicInsightsDashboard } from './HydrodynamicInsightsDashboard';
+import { useAdaptive } from '@/context/AdaptiveContext';
 
 interface DesktopIntelligencePanelProps {
   score?: number;
@@ -27,6 +28,7 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
   isOpen = false,
   onClose = () => {},
 }) => {
+  const { t } = useAdaptive();
   if (!isOpen) return null;
 
   return (
@@ -47,7 +49,7 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
             <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse shrink-0" />
             <div className="min-w-0">
               <h3 className="text-sm font-mono font-black text-slate-900 uppercase tracking-wider truncate">
-                INTELLIGENCE HUB
+                {t('INTELLIGENCE HUB')}
               </h3>
               <div className="text-xs font-mono text-slate-500 truncate max-w-[220px]">
                 {locationName}
@@ -57,7 +59,7 @@ export const DesktopIntelligencePanel: React.FC<DesktopIntelligencePanelProps> =
 
           <div className="flex items-center gap-2 shrink-0">
             <span className="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-orange-100 text-orange-800 border border-orange-200">
-              {score} ({level})
+              {score} ({t(level)})
             </span>
             <button
               onClick={onClose}

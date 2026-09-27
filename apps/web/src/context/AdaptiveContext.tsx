@@ -90,13 +90,53 @@ const AdaptiveContext = createContext<AdaptiveContextType | null>(null);
 
 export const AdaptiveProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [operatingMode, setOperatingMode] = useState<OperatingMode>('DEMO');
-  const [role, setRole] = useState<UserRole>('DISTRICT_OPERATOR');
-  const [language, setLanguage] = useState<SupportedLanguage>('en');
+  const [role, setRoleState] = useState<UserRole>('DISTRICT_OPERATOR');
+  const [language, setLanguageState] = useState<SupportedLanguage>('en');
   const [hierarchy, setHierarchy] = useState<LocationHierarchy>(defaultHierarchy);
   const [dataMode, setDataMode] = useState<InternalDataMode>('SIMULATION_DATA');
   const [fontSize, setFontSize] = useState<FontSizeMultiplier>('NORMAL');
   const [highContrast, setHighContrast] = useState<boolean>(false);
   const [experience, setExperience] = useState<PortalExperience>('PUBLIC_PORTAL');
+
+  // Hydrate language & role from localStorage on client
+  useEffect(() => {
+    try {
+      const savedLang = localStorage.getItem('floodguard_language') as SupportedLanguage;
+      if (savedLang && ['en', 'hi', 'te', 'bn', 'ta', 'mr', 'ne'].includes(savedLang)) {
+        setLanguageState(savedLang);
+        if (typeof document !== 'undefined') {
+          document.documentElement.lang = savedLang;
+        }
+      }
+      const savedRole = localStorage.getItem('floodguard_role') as UserRole;
+      if (savedRole) {
+        setRoleState(savedRole);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const setLanguage = (lang: SupportedLanguage) => {
+    setLanguageState(lang);
+    try {
+      localStorage.setItem('floodguard_language', lang);
+      if (typeof document !== 'undefined') {
+        document.documentElement.lang = lang;
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const setRole = (r: UserRole) => {
+    setRoleState(r);
+    try {
+      localStorage.setItem('floodguard_role', r);
+    } catch {
+      // ignore
+    }
+  };
 
   // Find nearest matching location dossier with strict state-first fallback
   const selectedLocation = useMemo(() => {

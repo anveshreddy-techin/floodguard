@@ -19,6 +19,7 @@ import {
 import { RiskDial } from './RiskDial';
 import { InteractiveAlertStream } from './InteractiveAlertStream';
 import { WhyRiskChangedPanel } from './WhyRiskChangedPanel';
+import { useAdaptive } from '@/context/AdaptiveContext';
 
 interface MobileBottomSheetProps {
   score?: number;
@@ -39,6 +40,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   onToggle,
   onClose,
 }) => {
+  const { t } = useAdaptive();
   const [startY, setStartY] = useState<number | null>(null);
   const [currentY, setCurrentY] = useState<number | null>(null);
 
@@ -109,10 +111,10 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping shrink-0" />
                   <span className="text-xs font-mono font-bold text-slate-800">
-                    RISK:
+                    {t('Risk').toUpperCase()}:
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-red-100 border border-red-300 text-[11px] text-red-700 font-black font-mono">
-                    {level} {score}
+                    {t(level)} {score}
                   </span>
                   <span className="text-[11px] text-blue-700 font-mono font-semibold">
                     · 🌧️ {rainfall}mm
@@ -123,7 +125,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
                   onClick={(e) => { e.stopPropagation(); onToggle(); }}
                   className="flex items-center gap-1 text-[11px] font-mono text-blue-700 font-bold bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2.5 py-1 rounded-lg shadow-xs transition"
                 >
-                  <span>Details</span>
+                  <span>{t('Details')}</span>
                   <ChevronUp className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
                 </button>
               </div>
@@ -133,10 +135,10 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse shrink-0" />
                   <span className="text-xs font-mono font-black text-slate-900 tracking-tight truncate">
-                    DISASTER INTELLIGENCE
+                    {t('DISASTER INTELLIGENCE')}
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-red-100 border border-red-300 text-[10px] text-red-700 font-black font-mono shrink-0">
-                    {level} {score}
+                    {t(level)} {score}
                   </span>
                 </div>
 
@@ -145,7 +147,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
                   className="flex items-center gap-1 text-[11px] font-mono text-slate-700 font-bold bg-white hover:bg-slate-100 border border-slate-300 px-3 py-1 rounded-lg shadow-xs transition active:scale-95 shrink-0"
                 >
                   <X className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Close</span>
+                  <span>{t('Close')}</span>
                 </button>
               </div>
             )}

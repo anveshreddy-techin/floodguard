@@ -116,14 +116,14 @@ export default function CommandCenterPage() {
                 href="/village/loc-uk-chamoli"
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold flex-1"
               >
-                <span>🏘️ Ward:</span>
-                <span className="text-amber-600 font-black">Level 3</span>
+                <span>🏘️ {t('Ward')}:</span>
+                <span className="text-amber-600 font-black">{t('Level 3')}</span>
               </Link>
               <Link
                 href="/safety"
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-600 border border-red-500 text-white text-[11px] font-bold animate-pulse flex-1 justify-center"
               >
-                <span>⏱️ Lead:</span>
+                <span>⏱️ {t('Lead')}:</span>
                 <span className="font-black">42 Min</span>
               </Link>
             </div>
@@ -132,29 +132,29 @@ export default function CommandCenterPage() {
               <Link href="/weather" className="flex flex-col items-center py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-center">
                 <span className="text-sm">🌧️</span>
                 <span className="text-[9px] font-bold text-blue-800 font-mono">48mm/3h</span>
-                <span className="text-[8px] text-blue-600">Rain</span>
+                <span className="text-[8px] text-blue-600">{t('Rain')}</span>
               </Link>
               <Link href="/sensors" className="flex flex-col items-center py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-center">
                 <span className="text-sm">🌱</span>
                 <span className="text-[9px] font-bold text-amber-800 font-mono">82%</span>
-                <span className="text-[8px] text-amber-600">Soil</span>
+                <span className="text-[8px] text-amber-600">{t('Soil')}</span>
               </Link>
               <Link href="/cascade" className="flex flex-col items-center py-1.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-center">
                 <span className="text-sm">⛰️</span>
                 <span className="text-[9px] font-bold text-red-800 font-mono">0.94</span>
-                <span className="text-[8px] text-red-600">Slope</span>
+                <span className="text-[8px] text-red-600">{t('Slope')}</span>
               </Link>
               <Link href="/benchmark" className="flex flex-col items-center py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-center">
                 <span className="text-sm">📚</span>
                 <span className="text-[9px] font-bold text-indigo-800 font-mono">18 Ev.</span>
-                <span className="text-[8px] text-indigo-600">History</span>
+                <span className="text-[8px] text-indigo-600">{t('History')}</span>
               </Link>
             </div>
             {/* Row 3: Intelligence Hub + Roles */}
             <div className="flex items-center gap-2">
               <Link href="/role-workspace" className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold">
                 <Users className="w-3 h-3 text-indigo-600" />
-                <span>10 Roles</span>
+                <span>{t('10 Roles')}</span>
               </Link>
               <button
                 onClick={() => setMobileBottomSheetOpen(true)}
@@ -162,10 +162,10 @@ export default function CommandCenterPage() {
               >
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                  Intel Hub
+                  {t('Intel Hub')}
                 </span>
                 <span className="bg-orange-200/80 px-1.5 py-0.5 rounded text-[10px] font-black text-orange-950">
-                  {selectedLocation?.riskScore || 68.5} {selectedLocation?.riskLevel || 'HIGH'} ➔
+                  {selectedLocation?.riskScore || 68.5} {t(selectedLocation?.riskLevel || 'HIGH')} ➔
                 </span>
               </button>
             </div>
@@ -177,7 +177,7 @@ export default function CommandCenterPage() {
             {/* Left: Core Mission Focus Tagline + Roles + AI Video Trigger */}
             <div className="flex items-center gap-2 shrink-0">
               <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white font-mono text-[10px] font-bold tracking-wider">
-                CORE MANDATE
+                {t('CORE MANDATE')}
               </span>
               <Link
                 href="/role-workspace"
@@ -185,7 +185,7 @@ export default function CommandCenterPage() {
                 title="Open Role-Adaptive Mission Workspace for 10 Statutory Roles (Hotkey: W)"
               >
                 <Users className="w-3.5 h-3.5 text-indigo-600" />
-                <span>ROLES</span>
+                <span>{t('ROLES')}</span>
                 <span className="text-[9px] px-1.5 py-0.2 rounded bg-indigo-600 text-white font-bold">10</span>
               </Link>
             </div>
@@ -197,7 +197,7 @@ export default function CommandCenterPage() {
                 className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-[11px] font-semibold transition"
                 title="Pillar 1: Rainfall (AWS Telemetry & Radar NWP Accumulation)"
               >
-                <span>🌧️ Rainfall</span>
+                <span>🌧️ {t('Rainfall')}</span>
                 <span className="text-[10px] text-blue-800 font-mono bg-blue-100 px-1.5 py-0.5 rounded border border-blue-200 font-bold">48mm/3h</span>
               </Link>
 
@@ -206,7 +206,7 @@ export default function CommandCenterPage() {
                 className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 text-[11px] font-semibold transition"
                 title="Pillar 2: Soil Moisture (TDR Probe & Catchment Saturation)"
               >
-                <span>🌱 Soil Saturation</span>
+                <span>🌱 {t('Soil Saturation')}</span>
                 <span className="text-[10px] text-amber-800 font-mono bg-amber-100 px-1.5 py-0.5 rounded border border-amber-200 font-bold">82%</span>
               </Link>
 
@@ -215,7 +215,7 @@ export default function CommandCenterPage() {
                 className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 text-[11px] font-semibold transition"
                 title="Pillar 3: Slope Stability (Topographic DEM Angle & Factor of Safety)"
               >
-                <span>⛰️ Slope FoS</span>
+                <span>⛰️ {t('Slope FoS')}</span>
                 <span className="text-[10px] text-red-800 font-mono bg-red-100 px-1.5 py-0.5 rounded border border-red-200 font-bold">0.94</span>
               </Link>
 
@@ -224,7 +224,7 @@ export default function CommandCenterPage() {
                 className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 text-[11px] font-semibold transition"
                 title="Pillar 4: Historical Disaster Data (18 Disasters 2000-2026 LOOCV Verified)"
               >
-                <span>📚 Historical Data</span>
+                <span>📚 {t('Historical Data')}</span>
                 <span className="text-[10px] text-indigo-800 font-mono bg-indigo-100 px-1.5 py-0.5 rounded border border-indigo-200 font-bold">18 Events</span>
               </Link>
 
@@ -234,7 +234,7 @@ export default function CommandCenterPage() {
                 title="IoT Sensor Network: FMCW Radar, AWS Rain, TDR Soil, Geophone"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                <span>IoT Mesh: LIVE</span>
+                <span>{t('IoT Mesh: LIVE')}</span>
               </Link>
             </div>
 
@@ -245,8 +245,8 @@ export default function CommandCenterPage() {
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-700 text-[11px] font-bold transition shadow-sm"
                 title="Hyper-Local Village / Ward Level Early Warnings"
               >
-                <span>🏘️ Ward Warning:</span>
-                <span className="text-amber-600 font-mono font-black">Level 3</span>
+                <span>🏘️ {t('Ward Warning')}:</span>
+                <span className="text-amber-600 font-mono font-black">{t('Level 3')}</span>
               </Link>
 
               <Link
@@ -254,7 +254,7 @@ export default function CommandCenterPage() {
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-700 border border-red-500 text-white text-[11px] font-bold transition shadow-sm animate-pulse"
                 title="Actionable Early Lead Time for Safe Evacuation"
               >
-                <span>⏱️ Lead Time:</span>
+                <span>⏱️ {t('Lead Time')}:</span>
                 <span className="text-white font-mono font-black">42 Min</span>
               </Link>
 
@@ -265,9 +265,9 @@ export default function CommandCenterPage() {
                 title="Open Comprehensive Intelligence Hub (Risk Dial, Telemetry, Alerts)"
               >
                 <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                <span>INTELLIGENCE HUB:</span>
+                <span>{t('INTELLIGENCE HUB')}:</span>
                 <span className="text-orange-950 bg-orange-200/80 px-1.5 py-0.2 rounded font-black">
-                  {selectedLocation?.riskScore || 68.5} ({selectedLocation?.riskLevel || 'HIGH'})
+                  {selectedLocation?.riskScore || 68.5} ({t(selectedLocation?.riskLevel || 'HIGH')})
                 </span>
                 <span className="text-orange-600 font-bold">➔</span>
               </button>
@@ -305,7 +305,7 @@ export default function CommandCenterPage() {
                     href="/safety"
                     className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow transition active:scale-95"
                   >
-                    <Compass className="w-3.5 h-3.5" /> SAFE ROUTE
+                    <Compass className="w-3.5 h-3.5" /> {t('SAFE ROUTE')}
                   </Link>
                   <button
                     onClick={() => {
@@ -315,11 +315,11 @@ export default function CommandCenterPage() {
                     }}
                     className="px-3 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow transition active:scale-95 animate-pulse"
                   >
-                    <PhoneCall className="w-3.5 h-3.5" /> CALL 112
+                    <PhoneCall className="w-3.5 h-3.5" /> {t('CALL 112')}
                   </button>
                 </div>
                 <div className="pt-1 border-t border-slate-100 text-[10px] font-mono text-slate-500">
-                  <span>Nearest Shelter: </span>
+                  <span>{t('Nearest Shelter')}: </span>
                   <strong className="text-slate-800">Govt. High School (1.4 km)</strong>
                 </div>
               </div>
@@ -333,18 +333,18 @@ export default function CommandCenterPage() {
                     <MapPin className="w-4 h-4 text-blue-600" /> {t('what_to_do')}
                   </span>
                   <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-red-100 text-red-700 border border-red-200">
-                    {selectedLocation?.riskLevel || 'HIGH'} RISK
+                    {t(selectedLocation?.riskLevel || 'HIGH')} {t('Risk')}
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/safety" className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow transition active:scale-95">
-                    <Compass className="w-3.5 h-3.5" /> SAFE ROUTE
+                    <Compass className="w-3.5 h-3.5" /> {t('SAFE ROUTE')}
                   </Link>
                   <button
                     onClick={() => { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('open-emergency-modal')); }}
                     className="px-3 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow transition active:scale-95 animate-pulse"
                   >
-                    <PhoneCall className="w-3.5 h-3.5" /> CALL 112
+                    <PhoneCall className="w-3.5 h-3.5" /> {t('CALL 112')}
                   </button>
                 </div>
               </div>

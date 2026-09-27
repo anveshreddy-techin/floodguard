@@ -186,7 +186,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const { role } = useAdaptive();
+  const { role, t } = useAdaptive();
   const [viewAll, setViewAll] = useState(false);
   const perms = getRolePermissions(role);
 
@@ -226,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />
             <span className="text-[11px] font-mono font-black tracking-wider text-slate-700 uppercase truncate">
-              {perms.citizenMode ? 'MY SAFETY TOOLS' : 'DISASTER HUBS'}
+              {t(perms.citizenMode ? 'MY SAFETY TOOLS' : 'DISASTER HUBS')}
             </span>
           </div>
         )}
@@ -265,7 +265,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                   <Link
                     href={hub.defaultHref}
                     className="flex items-center gap-2 min-w-0 flex-1 hover:opacity-95 group"
-                    title={hub.desc}
+                    title={t(hub.desc)}
                   >
                     <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${style.iconBg}`}>
                       <HubIcon className="w-4 h-4" />
@@ -274,13 +274,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                       <div className={`text-xs font-black tracking-normal truncate transition ${
                         hasActiveChild ? style.hubTitleActive : 'text-slate-900 group-hover:text-blue-600'
                       }`}>
-                        {hub.shortTitle}
+                        {t(hub.shortTitle)}
                       </div>
                       <div className="flex items-center gap-1 mt-0.5">
                         <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${
                           hasActiveChild ? style.badgeActive : style.badgeDefault
                         }`}>
-                          {hub.badge}
+                          {t(hub.badge)}
                         </span>
                       </div>
                     </div>
@@ -305,7 +305,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                     color: hasActiveChild ? '#FFFFFF' : '#475569',
                     border: hasActiveChild ? 'none' : '1px solid #E2E8F0',
                   }}
-                  title={`${hub.title} (${hub.relatedApps.length} related apps)`}
+                  title={`${t(hub.title)} (${hub.relatedApps.length} related apps)`}
                 >
                   <HubIcon className="w-4 h-4" />
                 </Link>
@@ -337,14 +337,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
                       >
                         <div className="flex items-center gap-2 min-w-0">
                           <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-blue-600'}`} />
-                          <span className="truncate text-xs">{subApp.label}</span>
+                          <span className="truncate text-xs">{t(subApp.label)}</span>
                         </div>
 
                         {subApp.tag && (
                           <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md shrink-0 border ${
                             isActive ? 'bg-white/20 text-white border-white/30' : badgeColorClasses
                           }`}>
-                            {subApp.tag}
+                            {t(subApp.tag)}
                           </span>
                         )}
                       </Link>
@@ -364,8 +364,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
           <div className="flex items-center gap-1.5 px-1">
             <span className="text-base leading-none">{perms.emoji}</span>
             <div className="min-w-0">
-              <div className="text-[10px] font-black text-slate-700 truncate">{perms.label}</div>
-              <div className="text-[9px] text-slate-400 font-medium">Access Level {perms.accessLevel} / 6</div>
+              <div className="text-[10px] font-black text-slate-700 truncate">{t(perms.label)}</div>
+              <div className="text-[9px] text-slate-400 font-medium">{t('Access Level')} {perms.accessLevel} / 6</div>
             </div>
           </div>
           {/* View All / Restrict toggle */}
@@ -378,14 +378,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab = '' }) => {
             }`}
           >
             {viewAll ? (
-              <><Lock className="w-3 h-3" /> RESTRICT TO MY ROLE</>
+              <><Lock className="w-3 h-3" /> {t('RESTRICT TO MY ROLE')}</>
             ) : (
-              <><Eye className="w-3 h-3" /> EXPLORE ALL HUBS</>
+              <><Eye className="w-3 h-3" /> {t('EXPLORE ALL HUBS')}</>
             )}
           </button>
           {viewAll && (
             <p className="text-[9px] text-amber-700 font-medium text-center px-1">
-              Explore mode — showing all hubs
+              {t('Explore mode — showing all hubs')}
             </p>
           )}
         </div>

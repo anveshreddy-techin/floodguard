@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, ChevronDown, Eye, Lock } from 'lucide-react';
+import { X, ChevronDown, Eye, Lock, Globe } from 'lucide-react';
 import { APP_HUB_OPTIONS } from '@/components/ui/Sidebar';
 import { useAdaptive } from '@/context/AdaptiveContext';
 import { isHubAllowed, isAppAllowed, getRolePermissions } from '@/lib/rolePermissions';
+import { LANGUAGES, SupportedLanguage } from '@/data/i18n';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ interface MobileNavDrawerProps {
 
 export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
-  const { role } = useAdaptive();
+  const { role, t, language, setLanguage } = useAdaptive();
   const [viewAll, setViewAll] = useState(false);
   const perms = getRolePermissions(role);
 
@@ -125,10 +126,10 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs font-bold text-slate-900 truncate">
-                        {hub.shortTitle}
+                        {t(hub.shortTitle)}
                       </div>
                       <div className="text-[10px] text-slate-500 truncate font-medium">
-                        {hub.badge} · {hub.relatedApps.length} tools
+                        {t(hub.badge)} · {hub.relatedApps.length} tools
                       </div>
                     </div>
                   </Link>
@@ -161,14 +162,14 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
                             <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-500'}`} />
-                            <span className="truncate text-xs">{item.label}</span>
+                            <span className="truncate text-xs">{t(item.label)}</span>
                           </div>
 
                           {item.tag && (
                             <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
                               isActive ? 'bg-blue-700 text-blue-100' : 'bg-slate-100 border border-slate-200 text-slate-600'
                             }`}>
-                              {item.tag}
+                              {t(item.tag)}
                             </span>
                           )}
                         </Link>
@@ -181,14 +182,33 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           })}
         </div>
 
-        {/* Footer info */}
-        <div className="p-3 border-t border-slate-200 bg-white space-y-2 shrink-0">
+        {/* Footer info & Language Selector */}
+        <div className="p-3 border-t border-slate-200 bg-white space-y-2.5 shrink-0">
+          {/* Mobile Language Selector */}
+          <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200">
+            <div className="flex items-center gap-2">
+              <Globe className="w-4 h-4 text-cyan-600" />
+              <span className="text-xs font-bold text-slate-700">Language / भाषा</span>
+            </div>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
+              className="bg-white border border-slate-300 rounded-lg text-xs font-semibold px-2 py-1 text-slate-800 focus:outline-none"
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>
+                  {l.native}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Role badge */}
           <div className="flex items-center gap-2">
             <span className="text-lg leading-none">{perms.emoji}</span>
             <div className="min-w-0">
-              <div className="text-xs font-black text-slate-800 truncate">{perms.label}</div>
-              <div className="text-[10px] text-slate-400 font-medium">Access Level {perms.accessLevel} / 6</div>
+              <div className="text-xs font-black text-slate-800 truncate">{t(perms.label)}</div>
+              <div className="text-[10px] text-slate-400 font-medium">{t('Access Level')} {perms.accessLevel} / 6</div>
             </div>
           </div>
           {/* View All toggle */}
@@ -201,14 +221,14 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
             }`}
           >
             {viewAll ? (
-              <><Lock className="w-3.5 h-3.5" /> Restrict to My Role</>
+              <><Lock className="w-3.5 h-3.5" /> {t('Restrict to My Role')}</>
             ) : (
-              <><Eye className="w-3.5 h-3.5" /> Explore All Hubs</>
+              <><Eye className="w-3.5 h-3.5" /> {t('Explore All Hubs')}</>
             )}
           </button>
           {viewAll && (
             <p className="text-[10px] text-amber-700 font-medium text-center">
-              Explore mode — showing all hubs
+              {t('Explore mode — showing all hubs')}
             </p>
           )}
         </div>
