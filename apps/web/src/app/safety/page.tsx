@@ -18,6 +18,7 @@ import { RiskBadge } from '@/components/ui/Badges';
 import { GuidanceLevel, ExposureStatus, RiskLevel } from '@/types';
 import { FloodZonePolygons, SafePlaceItem } from '@/components/ui/EvacuationLeafletMap';
 import { getFloodRiskPolygons, getEvacuationRoute, VERIFIED_OSM_HYDROGRAPHY } from '@/services/gisService';
+import { MAP_SUMMARY_CARDS, EVACUATION_PLANNING_PANEL } from '@/data/canonicalScenario';
 
 // Dynamically import Leaflet map (avoid SSR in Next.js static export)
 const EvacuationLeafletMap = dynamic(
@@ -665,29 +666,62 @@ export default function MySafetyPage() {
               historicalEventLabel={historicalContext}
             />
 
-            {/* Info strip below map */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="text-[10px] text-slate-500 uppercase font-bold">Primary Safe Shelter</div>
-                <div className="font-bold text-slate-900 mt-0.5 truncate">{primaryShelter.name.split('(')[0]}</div>
-                <div className="text-[10px] text-emerald-700 font-bold">{primaryShelter.elevation}</div>
-              </div>
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="text-[10px] text-slate-500 uppercase font-bold">Local Inundation Status</div>
-                <div className={`font-black mt-0.5 text-sm truncate ${isSafeZone ? 'text-emerald-700' : 'text-red-600'}`}>
-                  {isSafeZone ? 'NO ACTIVE SURGE' : isAssam ? '50.25m (+0.57m Above Danger)' : selectedLocation.riverStage}
+            {/* Info strip below map — 1 col on mobile, 2 col on tablet, 4 col on desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs font-mono">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+                    {MAP_SUMMARY_CARDS.card1.title}
+                  </div>
+                  <div className="font-bold text-slate-900 mt-1 text-sm">
+                    {primaryShelter.name.split('(')[0].trim()}
+                  </div>
                 </div>
-                <div className="text-[10px] text-slate-600 font-medium">{isSafeZone ? 'Dry Roadway Terrain' : 'Severe Inundation Active'}</div>
+                <div className="text-[11px] text-emerald-700 font-bold mt-2">
+                  {primaryShelter.elevation} · {MAP_SUMMARY_CARDS.card1.subtitle}
+                </div>
               </div>
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="text-[10px] text-slate-500 uppercase font-bold">Response Agency</div>
-                <div className="font-bold text-blue-800 mt-0.5 truncate">{locState} SDRF / 112</div>
-                <div className="text-[10px] text-blue-600 font-medium">Emergency Radio &amp; SOS Ready</div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+                    {MAP_SUMMARY_CARDS.card2.title}
+                  </div>
+                  <div className={`font-black mt-1 text-sm ${isSafeZone ? 'text-emerald-700' : 'text-red-600'}`}>
+                    {isSafeZone ? 'NO ACTIVE SURGE' : selectedLocation.riverStage}
+                  </div>
+                </div>
+                <div className="text-[11px] text-slate-600 font-medium mt-2">
+                  {MAP_SUMMARY_CARDS.card2.subtitle}
+                </div>
               </div>
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="text-[10px] text-slate-500 uppercase font-bold">Your Position</div>
-                <div className="font-black text-blue-700 mt-0.5 text-[11px]">{activeLat.toFixed(4)}°N</div>
-                <div className="text-[10px] text-slate-600 font-bold">{activeLon.toFixed(4)}°E · ±15m</div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+                    {MAP_SUMMARY_CARDS.card3.title}
+                  </div>
+                  <div className="font-bold text-blue-900 mt-1 text-sm">
+                    {MAP_SUMMARY_CARDS.card3.value}
+                  </div>
+                </div>
+                <div className="text-[11px] text-blue-700 font-medium mt-2">
+                  {MAP_SUMMARY_CARDS.card3.subtitle}
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+                    {MAP_SUMMARY_CARDS.card4.title}
+                  </div>
+                  <div className="font-black text-blue-800 mt-1 text-sm">
+                    {activeLat.toFixed(4)}°N, {activeLon.toFixed(4)}°E
+                  </div>
+                </div>
+                <div className="text-[11px] text-slate-600 font-bold mt-2">
+                  {MAP_SUMMARY_CARDS.card4.subtitle}
+                </div>
               </div>
             </div>
           </div>

@@ -632,17 +632,17 @@ export default function PublicPortalDashboardPage() {
               {/* LEFT 7 COLS: RISK MAP - CURRENT SITUATION */}
               <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl shadow-xs p-4 flex flex-col justify-between">
                 {/* Map Header Controls */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5 mb-2">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xs font-bold text-slate-900 tracking-tight uppercase font-mono">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 border-b border-slate-200 pb-2.5 mb-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <h2 className="text-xs font-bold text-slate-900 tracking-tight uppercase font-mono truncate">
                       RISK MAP — CURRENT SITUATION
                     </h2>
-                    <span className="text-[10px] font-mono bg-blue-100 text-blue-900 font-bold px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-mono bg-blue-100 text-blue-900 font-bold px-2 py-0.5 rounded shrink-0">
                       {currentDistData.name} ({currentDistData.level})
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 shrink-0">
                     <select
                       value={selectedState}
                       onChange={(e) => setSelectedState(e.target.value)}
@@ -657,7 +657,7 @@ export default function PublicPortalDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setModalDistrictDossierOpen(true)}
-                      className="bg-[#1b3a63] hover:bg-blue-900 text-white text-xs font-bold px-3 py-1 rounded transition active:scale-95 shadow-xs cursor-pointer flex items-center gap-1"
+                      className="bg-[#1b3a63] hover:bg-blue-900 text-white text-xs font-bold px-3 py-1 rounded transition active:scale-95 shadow-xs cursor-pointer flex items-center gap-1 whitespace-nowrap"
                     >
                       <span>District Dossier</span>
                       <ArrowRight className="w-3 h-3" />
@@ -666,14 +666,14 @@ export default function PublicPortalDashboardPage() {
                 </div>
 
                 {/* NDEM GIS Multi-Layer Toggles */}
-                <div className="flex flex-wrap items-center gap-1.5 py-1 px-2 bg-slate-100 rounded text-[10px] font-mono mb-2 border border-slate-200">
-                  <span className="font-bold text-slate-500 uppercase tracking-wide mr-1">
+                <div className="overflow-x-auto no-scrollbar flex items-center gap-1.5 py-1 px-2 bg-slate-100 rounded text-[10px] font-mono mb-2 border border-slate-200">
+                  <span className="font-bold text-slate-500 uppercase tracking-wide mr-1 whitespace-nowrap shrink-0">
                     NDEM GIS Layers:
                   </span>
                   <button
                     type="button"
                     onClick={() => setGisLayers((p) => ({ ...p, inundation: !p.inundation }))}
-                    className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                    className={`px-2 py-0.5 rounded border transition cursor-pointer whitespace-nowrap shrink-0 ${
                       gisLayers.inundation
                         ? 'bg-blue-800 text-white border-blue-900 font-bold shadow-xs'
                         : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
@@ -684,7 +684,7 @@ export default function PublicPortalDashboardPage() {
                   <button
                     type="button"
                     onClick={() => setGisLayers((p) => ({ ...p, slope: !p.slope }))}
-                    className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                    className={`px-2 py-0.5 rounded border transition cursor-pointer whitespace-nowrap shrink-0 ${
                       gisLayers.slope
                         ? 'bg-purple-800 text-white border-purple-900 font-bold shadow-xs'
                         : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
@@ -695,7 +695,7 @@ export default function PublicPortalDashboardPage() {
                   <button
                     type="button"
                     onClick={() => setGisLayers((p) => ({ ...p, drainage: !p.drainage }))}
-                    className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                    className={`px-2 py-0.5 rounded border transition cursor-pointer whitespace-nowrap shrink-0 ${
                       gisLayers.drainage
                         ? 'bg-cyan-800 text-white border-cyan-900 font-bold shadow-xs'
                         : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
@@ -706,7 +706,7 @@ export default function PublicPortalDashboardPage() {
                   <button
                     type="button"
                     onClick={() => setGisLayers((p) => ({ ...p, analogs: !p.analogs }))}
-                    className={`px-2 py-0.5 rounded border transition cursor-pointer ${
+                    className={`px-2 py-0.5 rounded border transition cursor-pointer whitespace-nowrap shrink-0 ${
                       gisLayers.analogs
                         ? 'bg-amber-700 text-white border-amber-800 font-bold shadow-xs'
                         : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
@@ -718,6 +718,10 @@ export default function PublicPortalDashboardPage() {
 
                 {/* Vector Map Canvas (Uttarakhand District Geometry with Interactive Clicks) */}
                 <div className="relative w-full h-[320px] bg-slate-50 border border-slate-200 rounded overflow-hidden flex items-center justify-center">
+                  {/* Mobile tap hint — only visible on touch screens */}
+                  <div className="absolute top-2 right-2 z-10 sm:hidden bg-white/90 border border-slate-200 rounded px-2 py-0.5 text-[9px] font-mono text-slate-500 pointer-events-none">
+                    Tap district to inspect
+                  </div>
                   {/* Zoom Controls */}
                   <div className="absolute top-2.5 left-2.5 z-10 bg-white border border-slate-300 rounded shadow-xs flex flex-col overflow-hidden text-xs">
                     <button

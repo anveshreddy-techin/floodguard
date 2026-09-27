@@ -325,32 +325,6 @@ export default function CommandCenterPage() {
               </div>
             )}
 
-            {/* Mobile Citizen HUD */}
-            {isCitizen && (
-              <div className="md:hidden absolute top-14 left-2 right-2 z-[450] bg-white/95 border border-slate-200 rounded-2xl p-3.5 shadow-xl backdrop-blur-md space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-800 font-bold flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-blue-600" /> {t('what_to_do')}
-                  </span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-red-100 text-red-700 border border-red-200">
-                    {t(selectedLocation?.riskLevel || 'HIGH')} {t('Risk')}
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Link href="/safety" className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow transition active:scale-95">
-                    <Compass className="w-3.5 h-3.5" /> {t('SAFE ROUTE')}
-                  </Link>
-                  <button
-                    onClick={() => { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('open-emergency-modal')); }}
-                    className="px-3 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold font-mono text-center flex items-center justify-center gap-1 shadow transition active:scale-95 animate-pulse"
-                  >
-                    <PhoneCall className="w-3.5 h-3.5" /> {t('CALL 112')}
-                  </button>
-                </div>
-              </div>
-            )}
-
-
             {/* ── Slide-in Intelligence Hub Operations Drawer ── */}
             <DesktopIntelligencePanel
               score={selectedLocation?.riskScore || 68.5}

@@ -1346,16 +1346,32 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         </div>
       )}
 
-      {/* Mobile Map Style Bar (compact right pill, never collides) */}
+      {/* ── UNIFIED MOBILE TOP ACTION BAR (Never Collides, Perfectly Proportioned) ── */}
       {showControlBar && (
-        <div className="md:hidden absolute top-2.5 right-3 z-[400] flex items-center gap-1.5 pointer-events-none">
-          <div className="pointer-events-auto bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-md border border-slate-200 flex items-center gap-1">
+        <div className="md:hidden absolute top-2 left-2 right-2 z-[420] pointer-events-none flex items-center justify-between gap-1.5">
+          {/* Left: Compact Ground Situation Pill */}
+          <button
+            onClick={() => setHudExpanded(true)}
+            className="pointer-events-auto px-2.5 py-1.5 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 text-slate-800 shadow-md flex items-center gap-1.5 text-[11px] font-mono font-bold active:scale-95 transition truncate max-w-[180px]"
+            title="Tap to open Ground Situation Drawer"
+          >
+            <span className={`w-2 h-2 rounded-full shrink-0 ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}`} />
+            <span className="truncate">{location.name.split('/')[0].trim()}</span>
+            <span className={`px-1.5 py-0.2 rounded text-[9px] font-black shrink-0 ${
+              isHighRisk ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+            }`}>
+              {location.riskLevel}
+            </span>
+          </button>
+
+          {/* Right: Map Style Toggles + Reset */}
+          <div className="pointer-events-auto bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-md border border-slate-200 flex items-center gap-1 shrink-0">
             {(['SATELLITE', 'TOPO', 'DARK'] as BaseMapTileType[]).map((tile) => (
               <button
                 key={tile}
                 onClick={() => setActiveBaseMap(tile)}
-                className={`px-2 py-0.5 rounded-lg text-[9px] font-mono font-bold ${
-                  activeBaseMap === tile ? 'bg-blue-600 text-white font-black' : 'text-slate-600 hover:bg-slate-100'
+                className={`px-2 py-0.5 rounded-lg text-[9px] font-mono font-bold transition ${
+                  activeBaseMap === tile ? 'bg-blue-600 text-white font-black shadow-xs' : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 {tile === 'SATELLITE' ? 'EARTH' : tile}
@@ -1363,7 +1379,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             ))}
             <button
               onClick={handleResetView}
-              className="p-1 rounded-lg text-slate-600 hover:bg-slate-100"
+              className="p-1 rounded-lg text-slate-600 hover:bg-slate-100 active:scale-95"
               title="Reset View"
             >
               <RotateCcw className="w-3 h-3" />
@@ -1372,8 +1388,8 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
         </div>
       )}
 
-      {/* ── UNIFIED LEFT-SIDE INFORMATION PANEL (ALL INFORMATION NEATLY ON THE LEFT) ── */}
-      <div className={`absolute left-3 z-[450] flex flex-col pointer-events-none transition-all duration-300 ${
+      {/* ── DESKTOP UNIFIED LEFT-SIDE INFORMATION PANEL ── */}
+      <div className={`hidden md:flex absolute left-3 z-[450] flex-col pointer-events-none transition-all duration-300 ${
         showControlBar ? 'top-2.5' : 'top-2.5 md:top-14'
       }`}>
         {hudExpanded ? (
@@ -1433,7 +1449,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                   )}
                   {selectedEntity.reading && (
                     <div className="bg-white p-1.5 rounded-lg border border-slate-200">
-                      <span className="text-slate-500 block text-[9px]">LIVE READING:</span>
+                      <span className="text-slate-500 block text-[9px]">SCENARIO READING:</span>
                       <span className="text-blue-700 font-bold">{selectedEntity.reading}</span>
                     </div>
                   )}
@@ -1451,7 +1467,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             {/* Real-time Physical Telemetry */}
             <div className="space-y-1.5">
               <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider font-bold block">
-                {gisLang === 'hi' ? 'जमीनी टेलीमेट्री' : 'LIVE HYDROLOGIC TELEMETRY'}
+                {gisLang === 'hi' ? 'जमीनी टेलीमेट्री' : 'SCENARIO TELEMETRY (SIMULATION)'}
               </span>
 
               {/* River Status */}
@@ -1490,12 +1506,12 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                 </div>
               </div>
 
-              {/* Designated Evacuation Shelter Vector */}
+              {/* Candidate Refuge Shelter Vector */}
               <div className="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 flex items-start gap-2">
                 <Navigation className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
                   <div className="text-slate-500 text-[9px] uppercase font-bold font-mono">
-                    {gisLang === 'hi' ? 'नामित शरण स्थल' : 'DESIGNATED ASSEMBLY SHELTER'}
+                    {gisLang === 'hi' ? 'नामित शरण स्थल' : 'CANDIDATE REFUGE SHELTER'}
                   </div>
                   <div className="text-emerald-700 font-bold text-xs mt-0.5 truncate font-mono">
                     {spatialEntities.primaryShelter.name}
@@ -1508,7 +1524,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
                 </div>
               </div>
 
-              {/* Provenance & Illustrative Disclaimer Banner */}
+              {/* Provenance Disclaimer */}
               <div className="px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-[9px] font-mono text-amber-800 leading-tight">
                 ⚠️ <strong>OVERLAY FIDELITY:</strong> Flood corridor &amp; river centerline are illustrative hydraulic estimates (not survey-grade LiDAR/DEM simulations).
               </div>
@@ -1524,7 +1540,7 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
             </a>
           </div>
         ) : (
-          /* Collapsed Pill Button on Left */
+          /* Desktop Collapsed Pill Button on Left */
           <button
             onClick={() => setHudExpanded(true)}
             className="pointer-events-auto px-3.5 py-2 rounded-2xl bg-white/95 hover:bg-white border border-slate-200 text-slate-800 hover:text-blue-600 shadow-md backdrop-blur-md flex items-center gap-2 text-xs font-mono font-bold transition active:scale-95 group max-w-[260px] sm:max-w-none"
@@ -1540,6 +1556,111 @@ export const HyperLocalRealMap: React.FC<HyperLocalRealMapProps> = ({
           </button>
         )}
       </div>
+
+      {/* ── MOBILE GROUND SITUATION BOTTOM DRAWER (Clean Slide-Up, Never Collides) ── */}
+      {hudExpanded && (
+        <div className="md:hidden fixed inset-x-0 bottom-0 z-[700] animate-slide-up pointer-events-auto">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"
+            onClick={() => setHudExpanded(false)}
+          />
+          <div className="relative bg-white rounded-t-3xl border-t border-slate-200 shadow-2xl p-4 max-h-[75vh] overflow-y-auto space-y-3.5">
+            {/* Pull Handle */}
+            <div className="w-12 h-1 bg-slate-300 rounded-full mx-auto -mt-1 mb-1" />
+
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isHighRisk ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}`} />
+                <div className="min-w-0">
+                  <span className="text-[9px] font-mono text-blue-600 uppercase font-bold block truncate">
+                    GROUND SITUATION
+                  </span>
+                  <h4 className="text-sm font-black text-slate-900 truncate">
+                    {location.name}
+                  </h4>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <RiskBadge level={location.riskLevel} />
+                <button
+                  onClick={() => setHudExpanded(false)}
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition active:scale-95"
+                >
+                  ✕ Done
+                </button>
+              </div>
+            </div>
+
+            {/* Selected Feature / Pin Inspector */}
+            {selectedEntity && (
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-mono text-blue-600 uppercase font-bold tracking-wider">
+                    📌 {selectedEntity.category || 'MAP FEATURE'}
+                  </span>
+                  {selectedEntity.id !== spatialEntities.village.id && (
+                    <button
+                      onClick={() => setSelectedEntity(spatialEntities.village)}
+                      className="text-[9px] font-mono text-slate-500 hover:text-blue-600 underline"
+                    >
+                      Reset to Village
+                    </button>
+                  )}
+                </div>
+                <h5 className="text-xs font-black text-slate-900">{selectedEntity.name}</h5>
+                <p className="text-[11px] text-slate-600 leading-relaxed">{selectedEntity.desc}</p>
+                {selectedEntity.elevation && (
+                  <div className="text-[10px] font-mono text-emerald-700 font-bold">
+                    Elevation: {selectedEntity.elevation}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Telemetry Summary Cards */}
+            <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                <div className="text-slate-500 text-[9px] uppercase font-bold">RIVER STAGE</div>
+                <div className="font-bold text-slate-800 text-xs mt-0.5 truncate">{location.riverStage}</div>
+                <div className="text-[10px] text-amber-700 font-bold mt-0.5">Rain: {location.rainfall3h}</div>
+              </div>
+
+              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                <div className="text-slate-500 text-[9px] uppercase font-bold">LEAD TIME</div>
+                <div className="font-black text-rose-600 text-xs mt-0.5">{location.leadTimeMinutes} MIN WARNING</div>
+                <div className="text-[10px] text-slate-500 mt-0.5">Model Estimate</div>
+              </div>
+            </div>
+
+            {/* Candidate Shelter Info */}
+            <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-start gap-2.5">
+              <Navigation className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <div className="text-slate-500 text-[9px] uppercase font-bold font-mono">
+                  CANDIDATE REFUGE SHELTER
+                </div>
+                <div className="text-emerald-800 font-bold text-xs truncate mt-0.5">
+                  {spatialEntities.primaryShelter.name}
+                </div>
+                <div className="text-[10px] text-slate-600 mt-0.5">
+                  {isRaini ? '+320m Climb (Lata Plateau) · ~1.4 km' : '+150m Ridge Spur'}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Action Button */}
+            <a
+              href="/safety"
+              className="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition"
+            >
+              <Compass className="w-4 h-4" />
+              <span>OPEN CITIZEN ESCAPE GUIDANCE (HUD)</span>
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* ── ON-MAP EXPLANATORY SPATIAL GUIDE / LEGEND (Bottom Right) ── */}
       <div className="absolute bottom-4 right-3 z-[400] hidden lg:flex flex-col items-end pointer-events-none">
