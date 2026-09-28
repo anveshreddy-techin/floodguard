@@ -70,6 +70,7 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
   const layerGroupRef = useRef<any>(null);
   const [baseMapType, setBaseMapType] = useState<'SATELLITE' | 'STREET'>('SATELLITE');
   const [mapReady, setMapReady] = useState(false);
+  const [mobileLegendOpen, setMobileLegendOpen] = useState(false);
 
   // Clean location title for top-left badge
   const displayTitle = locationName
@@ -522,20 +523,28 @@ export const EvacuationLeafletMap: React.FC<EvacMapProps> = ({
   ]);
 
   return (
-    <div className="relative w-full h-[520px] sm:h-[600px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-950">
+    <div className="relative w-full h-[400px] sm:h-[600px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-950">
       {/* ── MAP CONTAINER ── */}
       <div ref={mapRef} className="w-full h-full" />
 
       {/* ── TOP-LEFT BADGE: Flood Risk Map (Location) ── */}
-      <div className="absolute top-4 left-4 z-[400] bg-white/95 border border-slate-200 rounded-full px-4 py-1.5 shadow-md backdrop-blur-md flex items-center gap-2.5 pointer-events-auto">
-        <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
-        <span className="text-slate-900 text-xs sm:text-sm font-bold font-sans tracking-wide">
+      <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-[400] bg-white/95 border border-slate-200 rounded-full px-3 sm:px-4 py-1.5 shadow-md backdrop-blur-md flex items-center gap-2 pointer-events-auto max-w-[170px] sm:max-w-none">
+        <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse shrink-0" />
+        <span className="text-slate-900 text-xs sm:text-sm font-bold font-sans tracking-wide truncate">
           Flood Risk Map ({displayTitle})
         </span>
       </div>
 
+      {/* Mobile Legend Toggle Button */}
+      <button
+        onClick={() => setMobileLegendOpen(!mobileLegendOpen)}
+        className="sm:hidden absolute top-3 right-3 z-[410] bg-white/95 text-slate-800 font-bold text-xs px-2.5 py-1.5 rounded-xl border border-slate-200 shadow-md backdrop-blur-md active:scale-95 transition cursor-pointer"
+      >
+        {mobileLegendOpen ? '✕ Legend' : '🗺️ Legend'}
+      </button>
+
       {/* ── TOP-RIGHT LEGEND CARD (MATCHING REFERENCE IMAGE) ── */}
-      <div className="absolute top-4 right-4 z-[400] bg-white/95 text-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-2xl border border-slate-200/90 backdrop-blur-md text-[11px] font-sans w-[190px] sm:w-[205px] pointer-events-auto">
+      <div className={`${mobileLegendOpen ? 'block' : 'hidden'} sm:block absolute top-12 sm:top-4 right-3 sm:right-4 z-[400] bg-white/95 text-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-2xl border border-slate-200/90 backdrop-blur-md text-[11px] font-sans w-[190px] sm:w-[205px] pointer-events-auto`}>
         {/* Header with North Compass Arrow */}
         <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
           <span className="font-bold text-slate-700 text-[11px] uppercase tracking-wider">Map Legend</span>

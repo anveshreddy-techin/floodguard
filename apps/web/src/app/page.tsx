@@ -108,65 +108,71 @@ export default function CommandCenterPage() {
         {/* ── MAIN COMMAND HERO AREA ── */}
         <main className="flex-1 relative min-h-0 overflow-hidden flex flex-col">
 
-          {/* ── MOBILE: 2×2 Pillar Grid Card (clean, no scroll) ── */}
-          <div className="sm:hidden bg-white border-b border-slate-200 px-3 pt-2 pb-1.5 shrink-0 shadow-sm z-10 space-y-1.5">
-            {/* Row 1: Location + Risk */}
+          {/* ── MOBILE: Consumer-grade Situation & Action Card (Amazon/Flipkart Clarity) ── */}
+          <div className="sm:hidden bg-white border-b border-slate-200/90 px-3.5 py-3 shrink-0 shadow-sm z-10 space-y-2.5">
+            {/* Top Row: Location & Danger Level Badge */}
             <div className="flex items-center justify-between gap-2">
-              <Link
-                href="/village/loc-uk-chamoli"
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold flex-1"
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('open-location-selector'));
+                  }
+                }}
+                className="flex items-center gap-1.5 text-left min-w-0 flex-1 active:opacity-75 transition cursor-pointer"
               >
-                <span>🏘️ {t('Ward')}:</span>
-                <span className="text-amber-600 font-black">{t('Level 3')}</span>
-              </Link>
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0 border border-blue-200">
+                  <MapPin className="w-4 h-4 text-blue-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-black text-slate-900 truncate flex items-center gap-1">
+                    <span>{selectedLocation?.name || 'Raini Village'}</span>
+                    <span className="text-[10px] text-blue-600 font-semibold">▾</span>
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate font-medium">
+                    {selectedLocation?.region || 'Chamoli District'}, {selectedLocation?.state || 'Uttarakhand'}
+                  </div>
+                </div>
+              </button>
+
+              {/* High Visibility Risk Pill */}
+              <div className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 font-bold text-xs">
+                <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+                <span className="font-black font-mono">HIGH RISK</span>
+              </div>
+            </div>
+
+            {/* Quick Metrics Bar: 3 Vital Numbers (Clean, readable numbers like Flipkart order status) */}
+            <div className="grid grid-cols-3 gap-2 py-1 px-2.5 bg-slate-50 rounded-xl border border-slate-200/70 text-center">
+              <div>
+                <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-tight">Lead Time</div>
+                <div className="text-xs font-black text-red-600 font-mono mt-0.5">42 Min</div>
+              </div>
+              <div className="border-x border-slate-200">
+                <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-tight">Rain (3h)</div>
+                <div className="text-xs font-black text-blue-700 font-mono mt-0.5">48 mm</div>
+              </div>
+              <div>
+                <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-tight">River Stage</div>
+                <div className="text-xs font-black text-amber-700 font-mono mt-0.5">3.8 m ↗</div>
+              </div>
+            </div>
+
+            {/* Primary Action Buttons (Amazon/Flipkart Style: One prominent primary + one secondary) */}
+            <div className="grid grid-cols-2 gap-2 pt-0.5">
               <Link
                 href="/safety"
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-600 border border-red-500 text-white text-[11px] font-bold animate-pulse flex-1 justify-center"
+                className="h-10 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition"
               >
-                <span>⏱️ {t('Lead')}:</span>
-                <span className="font-black">42 Min</span>
+                <Compass className="w-4 h-4 text-white" />
+                <span>Safe Evacuation</span>
               </Link>
-            </div>
-            {/* Row 2: 4 Physical Pillars */}
-            <div className="grid grid-cols-4 gap-1">
-              <Link href="/weather" className="flex flex-col items-center py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-center">
-                <span className="text-sm">🌧️</span>
-                <span className="text-[9px] font-bold text-blue-800 font-mono">48mm/3h</span>
-                <span className="text-[8px] text-blue-600">{t('Rain')}</span>
-              </Link>
-              <Link href="/sensors" className="flex flex-col items-center py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-center">
-                <span className="text-sm">🌱</span>
-                <span className="text-[9px] font-bold text-amber-800 font-mono">82%</span>
-                <span className="text-[8px] text-amber-600">{t('Soil')}</span>
-              </Link>
-              <Link href="/cascade" className="flex flex-col items-center py-1.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-center">
-                <span className="text-sm">⛰️</span>
-                <span className="text-[9px] font-bold text-red-800 font-mono">0.94</span>
-                <span className="text-[8px] text-red-600">{t('Slope')}</span>
-              </Link>
-              <Link href="/benchmark" className="flex flex-col items-center py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-center">
-                <span className="text-sm">📚</span>
-                <span className="text-[9px] font-bold text-indigo-800 font-mono">18 Ev.</span>
-                <span className="text-[8px] text-indigo-600">{t('History')}</span>
-              </Link>
-            </div>
-            {/* Row 3: Intelligence Hub + Roles */}
-            <div className="flex items-center gap-2">
-              <Link href="/role-workspace" className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold">
-                <Users className="w-3 h-3 text-indigo-600" />
-                <span>{t('10 Roles')}</span>
-              </Link>
+
               <button
                 onClick={() => setMobileBottomSheetOpen(true)}
-                className="flex-1 flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-lg bg-orange-50 hover:bg-orange-100 border border-orange-300 text-orange-800 text-[11px] font-bold active:scale-95 transition"
+                className="h-10 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-300/80 active:scale-95 transition cursor-pointer"
               >
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                  {t('Intel Hub')}
-                </span>
-                <span className="bg-orange-200/80 px-1.5 py-0.5 rounded text-[10px] font-black text-orange-950">
-                  {selectedLocation?.riskScore || 68.5} {t(selectedLocation?.riskLevel || 'HIGH')} ➔
-                </span>
+                <Activity className="w-4 h-4 text-slate-600" />
+                <span>Telemetry Intel</span>
               </button>
             </div>
           </div>

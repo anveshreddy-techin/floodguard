@@ -97,6 +97,22 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
         {/* Application Hubs Scroll Area */}
         <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/50">
+          {/* Quick Emergency Call Strip inside Drawer */}
+          <div className="flex items-center gap-2 p-2 bg-red-50 border border-red-200 rounded-xl">
+            <a
+              href="tel:112"
+              className="flex-1 py-2 px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition"
+            >
+              <span>🚨 CALL 112</span>
+            </a>
+            <a
+              href="tel:1078"
+              className="flex-1 py-2 px-3 rounded-lg bg-white border border-red-300 text-red-700 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition"
+            >
+              <span>NDMA 1078</span>
+            </a>
+          </div>
+
           {visibleHubs.map((hub) => {
             const HubIcon = hub.icon;
             const isExpanded = !!expandedHubs[hub.id];
@@ -112,23 +128,23 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 }`}
               >
                 {/* Hub Header Button */}
-                <div className="p-2.5 flex items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/70">
+                <div className="p-3 flex items-center justify-between gap-2.5 border-b border-slate-100 bg-slate-50/70">
                   <Link
                     href={hub.defaultHref}
                     onClick={onClose}
-                    className="flex items-center gap-2 flex-1 min-w-0"
+                    className="flex items-center gap-2.5 flex-1 min-w-0"
                   >
                     <div 
-                      className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 shadow-xs"
+                      className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-xs"
                       style={{ background: `${hub.accentColor}18`, color: hub.accentColor }}
                     >
-                      <HubIcon className="w-3.5 h-3.5" />
+                      <HubIcon className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-xs font-bold text-slate-900 truncate">
+                      <div className="text-xs sm:text-sm font-bold text-slate-900 truncate">
                         {t(hub.shortTitle)}
                       </div>
-                      <div className="text-[10px] text-slate-500 truncate font-medium">
+                      <div className="text-[11px] text-slate-500 truncate font-medium">
                         {t(hub.badge)} · {hub.relatedApps.length} tools
                       </div>
                     </div>
@@ -136,7 +152,8 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
                   <button
                     onClick={() => toggleHub(hub.id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition"
+                    className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition cursor-pointer"
+                    aria-label="Toggle Category"
                   >
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
                   </button>
@@ -144,7 +161,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
 
                 {/* Related Apps List */}
                 {isExpanded && (
-                  <div className="p-1.5 space-y-0.5 font-sans">
+                  <div className="p-2 space-y-1 font-sans">
                     {hub.relatedApps.map((item) => {
                       const Icon = item.icon;
                       const isActive = pathname === item.href || (pathname.startsWith('/village') && item.id === 'village');
@@ -154,19 +171,19 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                           key={item.id}
                           href={item.href}
                           onClick={onClose}
-                          className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs transition font-medium active:scale-98 ${
+                          className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition font-medium active:scale-98 min-h-[44px] ${
                             isActive
                               ? 'bg-blue-600 text-white font-bold shadow-xs'
                               : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                           }`}
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex items-center gap-3 min-w-0">
                             <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-500'}`} />
-                            <span className="truncate text-xs">{t(item.label)}</span>
+                            <span className="truncate">{t(item.label)}</span>
                           </div>
 
                           {item.tag && (
-                            <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
+                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md shrink-0 ${
                               isActive ? 'bg-blue-700 text-blue-100' : 'bg-slate-100 border border-slate-200 text-slate-600'
                             }`}>
                               {t(item.tag)}

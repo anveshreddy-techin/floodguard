@@ -68,20 +68,20 @@ export const Header: React.FC<{
         className="sticky top-0 z-40 select-none safe-top shrink-0 border-b border-slate-800/80 shadow-md"
       >
         {/* Row 1: Executive Dark Navy Command Bar (56px) */}
-        <div className="h-14 px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-2 sm:gap-3 max-w-full relative bg-[#0C1527] text-white">
+        <div className="h-14 px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-2 max-w-full relative bg-[#0C1527] text-white">
           
-          {/* Left: Mobile Trigger + Brand Identity + Mode Switch */}
+          {/* Left: Mobile Drawer Trigger + Brand Identity + Location Indicator */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
             <button
               onClick={() => setMobileDrawerOpen(true)}
-              className="md:hidden w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-200 active:scale-95 transition shrink-0"
+              className="md:hidden w-9 h-9 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 flex items-center justify-center text-slate-200 active:scale-95 transition shrink-0 cursor-pointer shadow-xs"
               aria-label="Open Navigation Menu"
               title="Open Navigation Menu"
             >
-              <Menu className="w-4 h-4" />
+              <Menu className="w-4.5 h-4.5" />
             </button>
 
-            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+            <Link href="/" className="flex items-center gap-2 group shrink-0">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition shrink-0 ring-1 ring-white/20">
                 <ShieldAlert className="w-4.5 h-4.5 text-white" />
               </div>
@@ -95,7 +95,17 @@ export const Header: React.FC<{
               </div>
             </Link>
 
-            {/* Mode Switcher */}
+            {/* Mobile Location Quick-Pill (Amazon / Delivery style) */}
+            <button
+              onClick={() => setLocationModalOpen(true)}
+              className="md:hidden flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700/90 border border-slate-700/70 text-slate-200 text-[11px] font-medium max-w-[130px] truncate active:scale-95 transition cursor-pointer"
+              title="Tap to change location"
+            >
+              <MapPin className="w-3 h-3 text-cyan-400 shrink-0" />
+              <span className="truncate">{selectedLocation.name}</span>
+            </button>
+
+            {/* Mode Switcher (Desktop) */}
             <div className="hidden lg:flex items-center gap-0.5 bg-slate-800/90 border border-slate-700/80 rounded-xl p-0.5 shrink-0 ml-1">
               <button
                 onClick={() => setOperatingMode('DEMO')}
@@ -120,7 +130,7 @@ export const Header: React.FC<{
             </div>
           </div>
 
-          {/* Center: SOS 112 Emergency Button - Exactly Centered in Header */}
+          {/* Center: SOS 112 Emergency Button - Exactly Centered in Header (Desktop) */}
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 pointer-events-none z-10">
             <button
               onClick={() => {
@@ -128,7 +138,7 @@ export const Header: React.FC<{
                   window.dispatchEvent(new CustomEvent('open-emergency-modal'));
                 }
               }}
-              className="pointer-events-auto relative group flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 transition-all shadow-[0_0_15px_rgba(239,68,68,0.5)] ring-2 ring-rose-400/50 ring-offset-1 ring-offset-slate-900 shrink-0"
+              className="pointer-events-auto relative group flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 transition-all shadow-[0_0_15px_rgba(239,68,68,0.5)] ring-2 ring-rose-400/50 ring-offset-1 ring-offset-slate-900 shrink-0 cursor-pointer"
               title="Immediate Emergency Rescue & Disaster Helpline Dispatch (Hotkey: E)"
             >
               <span className="relative flex h-2 w-2">
@@ -146,24 +156,28 @@ export const Header: React.FC<{
           {/* Right: Actions & Tools */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             
-            {/* Mobile SOS Button */}
+            {/* Mobile SOS Button - Prominent & Tap-Friendly */}
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new CustomEvent('open-emergency-modal'));
                 }
               }}
-              className="md:hidden flex items-center gap-1 px-3 py-1 rounded-full font-bold text-xs text-white bg-red-600 active:scale-95 shadow-sm ring-1 ring-red-400 shrink-0"
+              className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full font-black text-xs text-white bg-red-600 hover:bg-red-500 active:scale-95 shadow-md shadow-red-600/30 ring-1 ring-red-400 shrink-0 cursor-pointer"
               title="Immediate Emergency Rescue (112)"
             >
-              <PhoneCall className="w-3 h-3 text-white animate-bounce shrink-0" />
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-90" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+              </span>
+              <PhoneCall className="w-3 h-3 text-white shrink-0" />
               <span>SOS 112</span>
             </button>
 
             {/* Public Portal Button */}
             <Link
               href="/portal"
-              className="flex px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 items-center gap-1.5 active:scale-95 transition shrink-0 shadow-xs"
+              className="flex px-2 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 items-center gap-1 active:scale-95 transition shrink-0 shadow-xs"
               title="Switch to Government-Style Public Information Portal"
             >
               <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -258,8 +272,8 @@ export const Header: React.FC<{
           </div>
         </div>
 
-        {/* Row 2: Crisp Geographic Context & Status Ribbon (32px) */}
-        <div className="h-8 border-t border-slate-200 bg-[#EDF2F7] px-3 sm:px-4 flex items-center justify-between gap-2 text-xs select-none overflow-x-auto no-scrollbar shadow-xs">
+        {/* Row 2: Crisp Geographic Context & Status Ribbon (32px - Desktop Only) */}
+        <div className="hidden sm:flex h-8 border-t border-slate-200 bg-[#EDF2F7] px-3 sm:px-4 items-center justify-between gap-2 text-xs select-none overflow-x-auto no-scrollbar shadow-xs">
           {isCitizen ? (
             /* Citizen Context Strip */
             <div className="flex items-center gap-2 shrink-0">

@@ -450,6 +450,24 @@ export default function MySafetyPage() {
 
         <main className="flex-1 min-h-0 overflow-y-auto p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto space-y-5 pb-24 md:pb-6">
 
+          {/* Mobile Sticky Quick-Status Header */}
+          <div className="sm:hidden sticky -top-3.5 z-20 -mx-3.5 px-3.5 py-2.5 bg-white/95 backdrop-blur-md border-b border-slate-200/90 flex items-center justify-between shadow-xs">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping shrink-0" />
+              <span className="text-xs font-black text-slate-900 truncate">{locName}</span>
+              <span className="text-[10px] font-black text-red-700 bg-red-100 px-2 py-0.5 rounded-full border border-red-200 shrink-0">
+                {currentExp.risk}
+              </span>
+            </div>
+            <a
+              href="tel:112"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 hover:bg-red-700 text-white font-black text-xs active:scale-95 shadow-sm shrink-0"
+            >
+              <PhoneCall className="w-3.5 h-3.5 animate-pulse" />
+              <span>CALL 112</span>
+            </a>
+          </div>
+
           {/* ── Top Bar & Location Presets ── */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
             <div>
