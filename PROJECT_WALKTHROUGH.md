@@ -246,12 +246,15 @@ Flash flood warnings must reach mountain residents in their native language. Flo
 6. **मराठी / Marathi** (`mr`) — Maharashtra, Western Ghats
 7. **नेपाली / Nepali** (`ne`) — Uttarakhand / Sikkim Himalayan border communities
 
-### Mobile-First Design & Low-Bandwidth Optimizations
-In mountain disasters, 80%+ of citizens access warnings via smartphones over congested 2G/3G networks:
-- **Dual-Layout Public Header:** Compact 2-row layout on mobile (`md:hidden`), preserving ministry branding without clutter.
-- **Touch Navigation Drawer:** Hamburger menu with an icon-and-text grid, active route indicators, and persistent `SOS 112` / `SEOC 1070` quick-dial buttons.
-- **Horizontal Scrolling Strips:** Sub-menus and category filters scroll smoothly (`overflow-x-auto no-scrollbar`) with `touch-pan-x` enabled.
-- **Accessible Typography:** Interactive font size controls (`A-`, `A`, `A+`) complying with GIGW accessibility guidelines.
+### Consumer-Grade Mobile Experience (Amazon/Flipkart Clarity)
+In mountain disasters, 85%+ of citizens and field responders access warnings via mobile phones. The mobile experience has been re-architected following the clarity and accessibility standards of consumer apps (like Amazon/Flipkart):
+- **5-Tab Mobile Navigation Bar (`MobileBottomNav`):** Persistent, high-contrast bottom navigation with large touch targets: `Home`, `Map`, `Safety`, `Alerts`, and `SOS 112` (one-tap emergency dispatch).
+- **Slim Executive Header:** Mobile header streamlined to a single high-clarity bar with quick location picker (`Raini Village ▾`), prominent pulsing `SOS 112` trigger, and hamburger drawer. Cluttered ribbons eliminated on mobile.
+- **Consumer Situation & Action Card:** Replaced cramped micro-text with an uncluttered status card displaying lead time countdown (`42 Min`), key metrics (`Rain 48mm`, `River 3.8m ↗`), and a prominent `Safe Evacuation` primary CTA.
+- **Priority Emergency Helplines:** 24/7 one-tap toll-free calling (`NDMA 1078`, `Ambulance 108`, `Fire 101`, `Police 100`, `112`) placed directly below the danger level hero card.
+- **Responsive Map Viewport:** Interactive evacuation map optimized to 400px height with a collapsible legend button to prevent overlay obstruction on mobile screens.
+- **Sticky Quick-Status Bar on Evacuation Guide:** Persistent top strip displaying location risk and instant `CALL 112` button as citizens scroll.
+- **Touch-Friendly Drawer:** Navigation items enlarged to ≥44px touch targets conforming to Apple HIG and Material Design standards.
 
 ---
 
