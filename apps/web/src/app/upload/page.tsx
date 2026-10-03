@@ -14,6 +14,7 @@ import {
   Sliders, Send, Terminal, Key, Smartphone, Play, Square, Gauge
 } from 'lucide-react';
 import { DataModeBadge } from '@/components/ui/Badges';
+import { DEVICE_PRESETS } from '@/data/devicePresets';
 
 export default function DataIngestionWorkbenchPage() {
   const { setPage, setMode } = useEnvironment();
@@ -54,61 +55,6 @@ export default function DataIngestionWorkbenchPage() {
   const [isPushingDevice, setIsPushingDevice] = useState<boolean>(false);
   const [devicePushResult, setDevicePushResult] = useState<any>(null);
   const [devicePushError, setDevicePushError] = useState<string | null>(null);
-
-  // Sensor-specific preset payload templates that auto-populate on type click
-  const DEVICE_PRESETS: Record<string, { device_id: string; device_type: string; location: object; telemetry: object }> = {
-    ULTRASONIC_STAGE: {
-      device_id: 'DEV-ESP32-RISHI-001',
-      device_type: 'ULTRASONIC_WATER_LEVEL',
-      location: { village_id: 'uk-chamoli-raini', lat: 30.485, lon: 79.692, altitude_m: 1180 },
-      telemetry: {
-        water_distance_m: 3.42,
-        calculated_stage_m: 4.80,
-        rate_of_rise_m_per_h: 0.55,
-        battery_voltage_v: 4.12,
-        signal_rssi_dbm: -78,
-        ambient_temp_c: 16.4,
-      },
-    },
-    RAIN_GAUGE: {
-      device_id: 'DEV-AWS-CHAMOLI-002',
-      device_type: 'RAIN_GAUGE',
-      location: { village_id: 'uk-chamoli-raini', lat: 30.485, lon: 79.692, altitude_m: 1180 },
-      telemetry: {
-        rainfall_1h_mm: 55.0,
-        rainfall_3h_mm: 88.0,
-        peak_intensity_mm_h: 70.0,
-        tip_count_15m: 42,
-        battery_voltage_v: 3.92,
-        signal_rssi_dbm: -71,
-      },
-    },
-    SOIL_TDR: {
-      device_id: 'DEV-TDR-SLOPE-003',
-      device_type: 'SOIL_TDR',
-      location: { village_id: 'uk-chamoli-raini', lat: 30.485, lon: 79.692, altitude_m: 1180 },
-      telemetry: {
-        soil_saturation_index: 0.92,
-        volumetric_water_content_pct: 47.8,
-        sensor_depth_cm: 30,
-        pore_water_pressure_kpa: 12.4,
-        soil_temp_c: 18.2,
-        battery_voltage_v: 3.85,
-      },
-    },
-    LORAWAN_GATEWAY: {
-      device_id: 'GW-LORA-ALAKNANDA-004',
-      device_type: 'LORAWAN_GATEWAY',
-      location: { village_id: 'uk-chamoli-raini', lat: 30.485, lon: 79.692, altitude_m: 1180 },
-      telemetry: {
-        geophone_debris_vibration_db: 42.0,
-        culvert_backpressure_ratio: 0.82,
-        connected_nodes: 8,
-        gateway_rssi_dbm: -65,
-        uplink_frequency_hz: 865100000,
-      },
-    },
-  };
 
   const [devicePayloadJson, setDevicePayloadJson] = useState<string>(
     JSON.stringify(DEVICE_PRESETS['ULTRASONIC_STAGE'], null, 2)
