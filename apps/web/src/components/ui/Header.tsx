@@ -10,7 +10,7 @@ import { useAdaptive, UserRole } from '@/context/AdaptiveContext';
 import { LANGUAGES, SupportedLanguage } from '@/data/i18n';
 import {
   Search, Globe, Menu, Bot, UserCheck, ShieldAlert,
-  MapPin, PhoneCall, Compass, BarChart3, Sparkles
+  MapPin, PhoneCall, Compass, BarChart3, Sparkles, Lock
 } from 'lucide-react';
 import { LocationSelectorModal } from '@/components/ui/LocationSelectorModal';
 import { ProductOnboardingTour } from '@/components/ui/ProductOnboardingTour';
@@ -245,6 +245,16 @@ export const Header: React.FC<{
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
               <span className="hidden lg:inline">{t('Tour Guide')}</span>
             </button>
+
+            {/* Officer Sign In / Login Button */}
+            <Link
+              href="/login"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/80 border border-slate-700 text-slate-200 hover:text-white text-xs font-semibold transition active:scale-95 shadow-xs"
+              title="Officer Mission Authentication & Login"
+            >
+              <Lock className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="hidden sm:inline">{t('Sign In')}</span>
+            </Link>
 
             {/* Platform Impact & Analytics Telemetry Button */}
             <button

@@ -196,19 +196,23 @@ export const PublicHeader: React.FC = () => {
               </button>
             </div>
 
-            {/* User Profile */}
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200 text-xs">
+            {/* User Profile / Officer Sign In */}
+            <Link
+              href="/login"
+              className="flex items-center gap-2 pl-2 border-l border-slate-200 text-xs hover:opacity-80 transition cursor-pointer"
+              title="Go to FloodGuard Officer Mission Login"
+            >
               <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold">
                 <User className="w-4 h-4" />
               </div>
               <div className="text-left">
                 <div className="text-[10px] text-slate-500 leading-none">Welcome,</div>
                 <div className="font-bold text-[#0c1f38] leading-tight flex items-center gap-0.5">
-                  <span>Control Room</span>
+                  <span>Sign In</span>
                   <ChevronDown className="w-3 h-3 text-slate-500" />
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Real-time IST Timestamp */}
             <div className="hidden xl:block text-right pl-3 border-l border-slate-200">
@@ -250,9 +254,13 @@ export const PublicHeader: React.FC = () => {
               </button>
 
               {/* User Avatar */}
-              <div className="w-6 h-6 rounded-full bg-slate-800 text-white flex items-center justify-center text-[10px] font-bold">
+              <Link
+                href="/login"
+                className="w-6 h-6 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center text-[10px] font-bold active:scale-95 transition"
+                title="Go to Officer Login"
+              >
                 CR
-              </div>
+              </Link>
             </div>
           </div>
 

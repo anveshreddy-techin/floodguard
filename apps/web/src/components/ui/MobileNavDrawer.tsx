@@ -113,6 +113,21 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
             </a>
           </div>
 
+          {/* Quick Officer Login Link */}
+          <Link
+            href="/login"
+            onClick={onClose}
+            className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-cyan-500/40 text-white text-xs font-bold shadow-sm active:scale-95 transition"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span>Officer Mission Login & Auth</span>
+            </div>
+            <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded-full border border-cyan-800">
+              Sign In ➔
+            </span>
+          </Link>
+
           {visibleHubs.map((hub) => {
             const HubIcon = hub.icon;
             const isExpanded = !!expandedHubs[hub.id];

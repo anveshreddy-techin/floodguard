@@ -204,7 +204,7 @@ export const isHubAllowed = (role: UserRole, hubId: string, viewAll = false): bo
 };
 
 export const isAppAllowed = (role: UserRole, appId: string, viewAll = false): boolean => {
-  if (viewAll) return true;
+  if (viewAll || appId === 'login') return true;
   const perms = getRolePermissions(role);
   if (perms.allowedApps.length === 0) return true;
   return perms.allowedApps.includes(appId);

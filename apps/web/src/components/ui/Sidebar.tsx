@@ -108,6 +108,7 @@ export const APP_HUB_OPTIONS: AppHubOption[] = [
       { id: 'model-monitoring', label: 'NDRF ML Model Studio', href: '/model-monitoring', icon: Brain, tag: 'AI Eval', badgeColor: 'blue' },
       { id: 'admin', label: 'Admin Governance & Cross-Border', href: '/admin', icon: ShieldCheck, tag: 'Admin & Basins', badgeColor: 'purple' },
       { id: 'public-portal', label: 'Public Citizen Portal & Recovery', href: '/portal', icon: Globe, tag: 'Public & Rehab', badgeColor: 'amber' },
+      { id: 'login', label: 'Officer Login & Mission Auth', href: '/login', icon: Lock, tag: 'Auth & Roles', badgeColor: 'green' },
     ],
   },
 ];
